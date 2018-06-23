@@ -3,6 +3,7 @@ import numpy as np
 import resnet
 from net import Net
 import os
+import time
 
 train, test = tf.keras.datasets.cifar10.load_data()
 train_x, train_y_cls = train
@@ -86,6 +87,7 @@ with tf.Session() as sess:
 	writer = tf.summary.FileWriter(log_dir, sess.graph)
 
 	for epoch in range(start_epoch, epochs+1):
+		tStart = time.time()
 		current = 0
 		mean_train_acc = 0
 		num_batches = 0
@@ -120,7 +122,9 @@ with tf.Session() as sess:
 		if mean_test_acc > best_test_acc:
 			best_test_acc = mean_test_acc
 
-		print("End of epoch {}. Train accuracy: {}, Test accuracy: {}".format(epoch, mean_train_acc, mean_test_acc))
+		tElapsed = time.time() - tStart
+
+		print("End of epoch {}. Train accuracy: {}, Test accuracy: {}, Time: {}s".format(epoch, mean_train_acc, mean_test_acc, tElapsed))
 
 		summary = tf.Summary()
 		summary.value.add(tag="Train accuracy", simple_value=mean_train_acc)
