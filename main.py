@@ -15,8 +15,8 @@ num_classes = 10
 
 #train_y = np.zeros((len(train_y_cls), 10))
 #train_y[np.arange(10), train_y_cls] = 1
-train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls),10])
-test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls),10])
+train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls),num_classes])
+test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls),num_classes])
 
 #np.set_printoptions(threshold=np.nan)
 #print(train_y)
@@ -32,7 +32,7 @@ checkpoint_file = 'model.ckpt'
 
 
 x = tf.placeholder(dtype=tf.float32, shape=[None, 32, 32, 3], name='x')
-y_true = tf.placeholder(dtype=tf.int32, shape=[None, 10], name='y_true')
+y_true = tf.placeholder(dtype=tf.int32, shape=[None, num_classes], name='y_true')
 
 #net = resnet.inference(x, 9, False)
 #vgg = Vgg19()
