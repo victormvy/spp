@@ -15,7 +15,9 @@ import click
 @click.option('--log_dir', '-l', required=True, help=u'Log files directory')
 @click.option('--activation', '-a', default='relu', help=u'Activation function')
 @click.option('--spp_alpha', default=0.2, help=u'Alpha value for spp transfer function')
-def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha):
+@click.option('--lr', default=0.1, help=u'Learning rate')
+@click.option('--momentum', '-m', default=0.1, help=u'Momentum for optimizer')
+def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum):
 
 	if db == '10':
 		train, test = tf.keras.datasets.cifar10.load_data()
@@ -65,7 +67,7 @@ def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, 
 	cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y_true)
 
 	cost = tf.reduce_mean(cross_entropy)
-	optimizer = tf.train.MomentumOptimizer(learning_rate=0.5, momentum=0.1, use_nesterov=True).minimize(cost)
+	optimizer = tf.train.MomentumOptimizer(learning_rate=lr, momentum=momentum, use_nesterov=True).minimize(cost)
 
 	saver = tf.train.Saver()
 
