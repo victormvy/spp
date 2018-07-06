@@ -6,9 +6,16 @@ import os
 import time
 import click
 
-@click.command()
+
+@click.group()
+def cli():
+	pass
+
+
+@cli.command('train', help='Train model')
 @click.option('--db', default='10', help=u'Database that will be used: Cifar10 (10) or Cifar100 (100).')
-@click.option('--net_type', '-n', default='vgg19', help=u'Net model that will be used. Must be one of: vgg19, resnet56, resnet110')
+@click.option('--net_type', '-n', default='vgg19',
+			  help=u'Net model that will be used. Must be one of: vgg19, resnet56, resnet110')
 @click.option('--batch_size', '-b', default=128, help=u'Batch size')
 @click.option('--epochs', '-e', default=100, help=u'Number of epochs')
 @click.option('--checkpoint_dir', '-d', required=True, help=u'Checkpoint files directory')
@@ -18,7 +25,9 @@ import click
 @click.option('--lr', default=0.1, help=u'Learning rate')
 @click.option('--momentum', '-m', default=0.1, help=u'Momentum for optimizer')
 def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum):
+	train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum)
 
+def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum):
 	if db == '10':
 		train, test = tf.keras.datasets.cifar10.load_data()
 		num_classes = 10
@@ -34,9 +43,8 @@ def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, 
 	train_x = train_x / 255.0
 	test_x = test_x / 255.0
 
-
-	train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls),num_classes])
-	test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls),num_classes])
+	train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls), num_classes])
+	test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
 
 	train = None
 	test = None
@@ -73,7 +81,6 @@ def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, 
 
 	print(net)
 
-
 	with tf.Session() as sess:
 		if not os.path.exists(checkpoint_dir):
 			os.makedirs(checkpoint_dir)
@@ -100,18 +107,19 @@ def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, 
 
 		writer = tf.summary.FileWriter(log_dir, sess.graph)
 
-		for epoch in range(start_epoch, epochs+1):
+		for epoch in range(start_epoch, epochs + 1):
 			tStart = time.time()
 			current = 0
 			mean_train_acc = 0
 			num_batches = 0
 			while current < 50000:
-				_, acc = sess.run([optimizer, accuracy], feed_dict= {
-					x: train_x[current:current+batch_size],
-					y_true: train_y[current:current+batch_size]
+				_, acc = sess.run([optimizer, accuracy], feed_dict={
+					x: train_x[current:current + batch_size],
+					y_true: train_y[current:current + batch_size]
 				})
 
-				print("Epoch {}/{}. Images from {} to {}. Accuracy: {}".format(epoch, epochs, current, current+batch_size, acc))
+				print("Epoch {}/{}. Images from {} to {}. Accuracy: {}".format(epoch, epochs, current,
+																			   current + batch_size, acc))
 				current = current + batch_size
 				mean_train_acc += acc
 				num_batches += 1
@@ -125,8 +133,8 @@ def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, 
 			while current < 10000:
 				num_batches += 1
 				test_acc = sess.run(accuracy, feed_dict={
-					x: test_x[current:current+batch_size],
-					y_true: test_y[current:current+batch_size]
+					x: test_x[current:current + batch_size],
+					y_true: test_y[current:current + batch_size]
 				})
 				mean_test_acc += test_acc
 				current = current + batch_size
@@ -138,7 +146,8 @@ def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, 
 
 			tElapsed = time.time() - tStart
 
-			print("End of epoch {}. Train accuracy: {}, Test accuracy: {}, Time: {}s".format(epoch, mean_train_acc, mean_test_acc, tElapsed))
+			print("End of epoch {}. Train accuracy: {}, Test accuracy: {}, Time: {}s".format(epoch, mean_train_acc,
+																							 mean_test_acc, tElapsed))
 
 			summary = tf.Summary()
 			summary.value.add(tag="Train accuracy", simple_value=mean_train_acc)
@@ -153,5 +162,35 @@ def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, 
 				f.write(str(best_test_acc))
 
 
+# def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum):
+
+@cli.command('experiment', help='Train model with different set of parameters')
+def experiment():
+	dbs = ['10']
+	net_types = ['vgg19']
+	bss = [128]
+	epochs = 10
+	activations = ['spp']
+	spp_alphas = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+	lrs = [0.1]
+	momentums = [0.9]
+
+	for db in dbs:
+		for net_type in net_types:
+			for bs in bss:
+				for activation in activations:
+					if activation == 'spp':
+						_spp_alphas = spp_alphas
+					else:
+						_spp_alphas = [0]
+					for spp_alpha in _spp_alphas:
+						for lr in lrs:
+							for momentum in momentums:
+								dirname = "{}_{}_{}_{}_{}_{}_{}".format(db, net_type, bs, activation, spp_alpha, lr,
+																		momentum)
+								print("RUNNING {}".format(dirname))
+								train(db, net_type, bs, epochs, dirname, dirname, activation, spp_alpha, lr, momentum)
+
+
 if __name__ == '__main__':
-	main()
+	cli()
