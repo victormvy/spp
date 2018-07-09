@@ -190,6 +190,7 @@ def experiment():
 																		momentum)
 								print("RUNNING {}".format(dirname))
 								train(db, net_type, bs, epochs, dirname, dirname, activation, spp_alpha, lr, momentum)
+								tf.reset_default_graph()
 
 
 if __name__ == '__main__':
