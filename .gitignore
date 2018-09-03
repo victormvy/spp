@@ -1,1 +1,4 @@
+*
 vgg19.npy
+!*.py
+*.pyc

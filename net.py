@@ -146,11 +146,9 @@ class Net:
 			return x
 			
 	def __parametric_relu(self, _x):
-		alphas = tf.get_variable('alpha', _x.get_shape()[-1], initializer=tf.constant_initializer(0.0), dtype=tf.float32)
-		pos = tf.nn.relu(_x)
-		neg = alphas * (_x - abs(_x)) * 0.5
-		
-		return pos + neg
+		with tf.variable_scope('prelu', default_name='prelu', reuse=tf.AUTO_REUSE):
+			_alpha = tf.get_variable('alpha', shape=_x.get_shape()[-1], initializer=tf.constant_initializer(0.0), dtype=_x.dtype)
+			return tf.maximum(_alpha*_x, _x)
 		
 	def __parametric_softplus(self, x):
 		return tf.log(1 + tf.exp(x)) - self.spp_alpha

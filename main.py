@@ -166,14 +166,14 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 
 @cli.command('experiment', help='Train model with different set of parameters')
 def experiment():
-	dbs = ['10']
+	dbs = ['10','100']
 	net_types = ['vgg19']
 	bss = [128]
-	epochs = 10
-	activations = ['spp']
+	epochs = 100
+	activations = ['relu','lrelu','elu','softplus','spp']
 	spp_alphas = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-	lrs = [0.1]
-	momentums = [0.9]
+	lrs = [0.1, 0.01, 0.001]
+	momentums = [0.9, 0.5, 0.1]
 
 	for db in dbs:
 		for net_type in net_types:
@@ -186,7 +186,7 @@ def experiment():
 					for spp_alpha in _spp_alphas:
 						for lr in lrs:
 							for momentum in momentums:
-								dirname = "{}_{}_{}_{}_{}_{}_{}".format(db, net_type, bs, activation, spp_alpha, lr,
+								dirname = "results3/{}_{}_{}_{}_{}_{}_{}".format(db, net_type, bs, activation, spp_alpha, lr,
 																		momentum)
 								print("RUNNING {}".format(dirname))
 								train(db, net_type, bs, epochs, dirname, dirname, activation, spp_alpha, lr, momentum)
