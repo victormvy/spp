@@ -114,7 +114,11 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 			
 			# Reduce learning rate in epochs 60, 80 and 90.
 			if epoch in { 60, 80, 90 }:
-				lr -= 0.02
+				if lr > 0.02:
+					lr -= 0.02
+					print('Learning rate reduced ({})'.format(lr))
+				else:
+					print('Learning rate could not be reduced ({})'.format(lr))
 			
 			current = 0
 			mean_train_acc = 0
@@ -174,7 +178,8 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 # def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum):
 
 @cli.command('experiment', help='Train model with different set of parameters')
-def experiment():
+@click.option('--path', '-p', required=True, help=u'Directory where results will be stored.')
+def experiment(path):
 	dbs = ['10','100']
 	net_types = ['vgg19']
 	bss = [128]
@@ -195,7 +200,7 @@ def experiment():
 					for spp_alpha in _spp_alphas:
 						for lr in lrs:
 							for momentum in momentums:
-								dirname = "results3/{}_{}_{}_{}_{}_{}_{}".format(db, net_type, bs, activation, spp_alpha, lr,
+								dirname = "{}/{}_{}_{}_{}_{}_{}_{}".format(path, db, net_type, bs, activation, spp_alpha, lr,
 																		momentum)
 								print("RUNNING {}".format(dirname))
 								train(db, net_type, bs, epochs, dirname, dirname, activation, spp_alpha, lr, momentum)
