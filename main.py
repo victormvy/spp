@@ -74,8 +74,10 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 
 	cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y_true)
 
+	lrt = tf.placeholder(dtype=tf.float32, shape=[1], name='lr')
+
 	cost = tf.reduce_mean(cross_entropy)
-	optimizer = tf.train.MomentumOptimizer(learning_rate=lr, momentum=momentum, use_nesterov=True).minimize(cost)
+	optimizer = tf.train.MomentumOptimizer(learning_rate=lrt, momentum=momentum, use_nesterov=True).minimize(cost)
 
 	saver = tf.train.Saver()
 
@@ -107,15 +109,21 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 
 		writer = tf.summary.FileWriter(log_dir, sess.graph)
 
-		for epoch in range(start_epoch, epochs + 1):
+		for epoch in range(start_epoch, epochs + 1):		
 			tStart = time.time()
+			
+			# Reduce learning rate in epochs 60, 80 and 90.
+			if epoch in { 1, 60, 80, 90 }:
+				lr -= 0.02
+			
 			current = 0
 			mean_train_acc = 0
 			num_batches = 0
 			while current < 50000:
 				_, acc = sess.run([optimizer, accuracy], feed_dict={
 					x: train_x[current:current + batch_size],
-					y_true: train_y[current:current + batch_size]
+					y_true: train_y[current:current + batch_size],
+					lrt: lr
 				})
 
 				print("Epoch {}/{}. Images from {} to {}. Accuracy: {}".format(epoch, epochs, current,
@@ -134,7 +142,8 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 				num_batches += 1
 				test_acc = sess.run(accuracy, feed_dict={
 					x: test_x[current:current + batch_size],
-					y_true: test_y[current:current + batch_size]
+					y_true: test_y[current:current + batch_size],
+					lrt: lr
 				})
 				mean_test_acc += test_acc
 				current = current + batch_size
