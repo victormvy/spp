@@ -74,7 +74,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 
 	cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y_true)
 
-	lrt = tf.placeholder(dtype=tf.float32, shape=[1], name='lr')
+	lrt = tf.placeholder(dtype=tf.float32, name='lr')
 
 	cost = tf.reduce_mean(cross_entropy)
 	optimizer = tf.train.MomentumOptimizer(learning_rate=lrt, momentum=momentum, use_nesterov=True).minimize(cost)
@@ -113,7 +113,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 			tStart = time.time()
 			
 			# Reduce learning rate in epochs 60, 80 and 90.
-			if epoch in { 1, 60, 80, 90 }:
+			if epoch in { 60, 80, 90 }:
 				lr -= 0.02
 			
 			current = 0
