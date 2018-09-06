@@ -44,10 +44,10 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 		emnist = spio.loadmat('emnist/emnist-byclass.mat')
 		
 		train_x = np.reshape(emnist['dataset'][0][0][0][0][0][0], (-1, 28, 28, 1)).astype(np.float32)
-		train_y = emnist['dataset'][0][0][0][0][0][1]
+		train_y_cls = emnist['dataset'][0][0][0][0][0][1]
 		
 		test_x = np.reshape(emnist['dataset'][0][0][1][0][0][0], (-1, 28, 28, 1)).astype(np.float32)
-		test_y = emnist['dataset'][0][0][1][0][0][1]
+		test_y_cls = emnist['dataset'][0][0][1][0][0][1]
 		
 		num_classes = 62
 		num_channels = 1
@@ -58,10 +58,11 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 
 	if train:
 		train_x, train_y_cls = train
-		train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls), num_classes])
+	train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls), num_classes])
+	
 	if test:
 		test_x, test_y_cls = test
-		test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
+	test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
 
 	train_x = train_x / 255.0
 	test_x = test_x / 255.0
