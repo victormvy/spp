@@ -203,9 +203,9 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 				with open(os.path.join(checkpoint_dir, 'current_epoch.txt'), 'w') as f:
 					f.write("{}\n{}\n{}".format(str(epoch + 1), str(best_test_acc), str(execution + 1)))
 	
-				# Save result
-				results['best_test_acc'].append(best_test_acc)
-		start_epoch = 0
+			# Save result
+			results['best_test_acc'].append(best_test_acc)
+		start_epoch = 1
 		best_test_acc = 0.0
 	print(results)
 	return results
