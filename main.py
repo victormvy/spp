@@ -142,7 +142,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 			current = 0
 			mean_train_acc = 0
 			num_batches = 0
-			while current < 50000:
+			while current < len(train_x):
 				_, acc = sess.run([optimizer, accuracy], feed_dict={
 					x: train_x[current:current + batch_size],
 					y_true: train_y[current:current + batch_size],
