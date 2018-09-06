@@ -149,8 +149,8 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 					lrt: lr
 				})
 
-				print("Epoch {}/{}. Images from {} to {}. Accuracy: {}".format(epoch, epochs, current,
-																			   current + batch_size, acc))
+				print("Epoch {}/{}. Images from {} to {} of {}. Accuracy: {}".format(epoch, epochs, current,
+																			   current + batch_size, len(train_x), acc))
 				current = current + batch_size
 				mean_train_acc += acc
 				num_batches += 1
@@ -161,7 +161,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 			mean_test_acc = 0
 			current = 0
 			num_batches = 0
-			while current < 10000:
+			while current < len(test_x):
 				num_batches += 1
 				test_acc = sess.run(accuracy, feed_dict={
 					x: test_x[current:current + batch_size],
