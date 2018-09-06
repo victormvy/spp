@@ -207,6 +207,8 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 			results['best_test_acc'].append(best_test_acc)
 		start_epoch = 1
 		best_test_acc = 0.0
+	results['test_acc_mean'] = np.mean(results['best_test_acc'])
+	results['test_acc_var'] = np.var(results['best_test_acc'])
 	print(results)
 	return results
 
