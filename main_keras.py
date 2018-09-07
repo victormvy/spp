@@ -39,10 +39,10 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 	img_size = 32
 	
 	if db == '10':
-		train, test = tf.keras.datasets.cifar10.load_data()
+		(train_x, train_y_cls), (test_x, test_y_cls) = tf.keras.datasets.cifar10.load_data()
 		num_classes = 10
 	elif db == '100':
-		train, test = tf.keras.datasets.cifar100.load_data()
+		(train_x, train_y_cls), (test_x, test_y_cls) = tf.keras.datasets.cifar100.load_data()
 		num_classes = 100
 	elif db == 'emnist':
 		emnist = spio.loadmat('emnist/emnist-byclass.mat')
@@ -60,31 +60,18 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 	else:
 		print("Invalid database. Database must be 10, 100 or emnist")
 
-	if train:
-		train_x, train_y_cls = train
-	train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls), num_classes])
-	
-	if test:
-		test_x, test_y_cls = test
-	test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
-
 	train_x = train_x / 255.0
 	test_x = test_x / 255.0
-	
-	train = None
-	test = None
 
-	checkpoint_file = 'model.ckpt'
-
-	#x = tf.placeholder(dtype=tf.float32, shape=[None, img_size, img_size, num_channels], name='x')
-	#y_true = tf.placeholder(dtype=tf.int32, shape=[None, num_classes], name='y_true')
+	train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls), num_classes])
+	test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
 
 	if net_type == 'resnet56':
 		net = resnet.inference(x, 9, False)
 	elif net_type == 'resnet110':
 		net = resnet.inference(x, 18, False)
 	elif net_type == 'vgg19':
-		net_object = Net(32, activation, num_channels, num_classes)
+		net_object = Net(img_size, activation, num_channels, num_classes, spp_alpha)
 		net_object.spp_alpha = spp_alpha
 		model = net_object.vgg19()
 	else:
