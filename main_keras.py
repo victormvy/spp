@@ -3,7 +3,7 @@ import keras
 from keras import backend as K
 import numpy as np
 import resnet
-from net import Net
+from net_keras import Net
 import os
 import time
 import click
