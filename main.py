@@ -55,7 +55,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 		img_size = 28
 		
 	else:
-		print("Invalid database. Database must be 10 or 100")
+		print("Invalid database. Database must be 10, 100 or emnist")
 
 	if train:
 		train_x, train_y_cls = train
@@ -97,9 +97,10 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 	cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=net, labels=y_true)
 
 	lrt = tf.placeholder(dtype=tf.float32, name='lr')
+	momentumt = tf.placeholder(dtype=tf.float32, name='momentum')
 
 	cost = tf.reduce_mean(cross_entropy)
-	optimizer = tf.train.MomentumOptimizer(learning_rate=lrt, momentum=momentum, use_nesterov=True).minimize(cost)
+	optimizer = tf.train.MomentumOptimizer(learning_rate=lrt, momentum=momentumt, use_nesterov=True).minimize(cost)
 
 	saver = tf.train.Saver()
 	
@@ -139,6 +140,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 			writer = tf.summary.FileWriter(execution_log, sess.graph)
 			
 			curr_lr = lr
+			curr_momentum = momentum
 			
 			for epoch in range(start_epoch, epochs + 1):		
 				tStart = time.time()
@@ -150,6 +152,12 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 						print('Learning rate reduced ({})'.format(curr_lr))
 					else:
 						print('Learning rate could not be reduced ({})'.format(curr_lr))
+
+					if curr_momentum > 0.02:
+						curr_momentum -= 0.02
+						print('Momentum rate reduced ({})'.format(curr_momentum))
+					else:
+						print('Momentum could not be reduced ({})'.format(curr_momentum))
 				
 				current = 0
 				mean_train_acc = 0
@@ -158,7 +166,8 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 					_, acc = sess.run([optimizer, accuracy], feed_dict={
 						x: train_x[current:current + batch_size],
 						y_true: train_y[current:current + batch_size],
-						lrt: curr_lr
+						lrt: curr_lr,
+						momentumt: curr_momentum
 					})
 	
 					print("Epoch {}/{}. Images from {} to {} of {}. Accuracy: {}".format(epoch, epochs, current,
@@ -178,7 +187,8 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 					test_acc = sess.run(accuracy, feed_dict={
 						x: test_x[current:current + batch_size],
 						y_true: test_y[current:current + batch_size],
-						lrt: curr_lr
+						lrt: curr_lr,
+						momentumt: curr_momentum
 					})
 					mean_test_acc += test_acc
 					current = current + batch_size
