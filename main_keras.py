@@ -33,9 +33,7 @@ def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, 
 	train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum, rep)
 
 def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum, rep):
-	train = None
-	test = None	
-	num_channels = 3	
+	num_channels = 3
 	img_size = 32
 	
 	if db == '10':
@@ -67,9 +65,11 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 	test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
 
 	if net_type == 'resnet56':
-		net = resnet.inference(x, 9, False)
+		#net = resnet.inference(x, 9, False)
+		raise NotImplementedError
 	elif net_type == 'resnet110':
-		net = resnet.inference(x, 18, False)
+		#net = resnet.inference(x, 18, False)
+		raise NotImplementedError
 	elif net_type == 'vgg19':
 		net_object = Net(img_size, activation, num_channels, num_classes, spp_alpha)
 		net_object.spp_alpha = spp_alpha
