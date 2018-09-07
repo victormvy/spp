@@ -83,6 +83,7 @@ class Net:
 			keras.layers.MaxPooling2D(),
 
 			# Classification block
+			keras.layers.Flatten(),
 			keras.layers.Dense(4096),
 			self.__get_activation(),
 			keras.layers.Dense(4096),
