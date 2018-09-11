@@ -54,7 +54,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 		img_size = 28
 		
 	else:
-		print("Invalid database. Database must be 10, 100 or emnist")
+		print("Invalid database. Database must be 10, 100 or EMNIST")
 		return
 
 	train_x = train_x / 255.0
@@ -84,26 +84,26 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 	)
 
 	def learning_rate_scheduler(epoch, curr_lr):
-		if epoch in { 60, 80, 90 }:
+		if epoch in {60, 80, 90}:
 			return curr_lr - 0.02
 		else:
 			return curr_lr
 
 	def momentum_scheduler(epoch, curr_momentum):
-		if epoch in { 60, 80, 90 }:
+		if epoch in {60, 80, 90}:
 			return curr_momentum - 0.0005
 		else:
 			return curr_momentum
 
-	model.fit(x = train_x, y = train_y, batch_size= batch_size, epochs = epochs,
-			  callbacks=[ tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-						  MomentumScheduler(momentum_scheduler),
-						  tf.keras.callbacks.ProgbarLogger(count_mode='steps'),
-						  tf.keras.callbacks.ModelCheckpoint(checkpoint_dir)
-						  ],
-			  validation_data = (test_x, test_y)
-			  )
-
+	for execution in range(1, rep + 1):
+		model.fit(x=train_x, y=train_y, batch_size=batch_size, epochs=epochs,
+				  callbacks=[ tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+							  MomentumScheduler(momentum_scheduler),
+							  tf.keras.callbacks.ProgbarLogger(count_mode='steps'),
+							  tf.keras.callbacks.ModelCheckpoint(checkpoint_dir)
+							  ],
+				  validation_data=(test_x, test_y)
+				  )
 
 
 
