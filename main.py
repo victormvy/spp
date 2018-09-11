@@ -36,10 +36,10 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 	img_size = 32
 	
 	if db == '10':
-		train, test = tf.keras.datasets.cifar10.load_data()
+		(train_x, train_y_cls), (test_x, test_y_cls) = tf.keras.datasets.cifar10.load_data()
 		num_classes = 10
 	elif db == '100':
-		train, test = tf.keras.datasets.cifar100.load_data()
+		(train_x, train_y_cls), (test_x, test_y_cls) = tf.keras.datasets.cifar100.load_data()
 		num_classes = 100
 	elif db == 'emnist':
 		emnist = spio.loadmat('emnist/emnist-byclass.mat')
@@ -56,20 +56,13 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 		
 	else:
 		print("Invalid database. Database must be 10, 100 or emnist")
+		return
 
-	if train:
-		train_x, train_y_cls = train
 	train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls), num_classes])
-	
-	if test:
-		test_x, test_y_cls = test
 	test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
 
 	train_x = train_x / 255.0
 	test_x = test_x / 255.0
-	
-	train = None
-	test = None
 
 	checkpoint_file = 'model.ckpt'
 
@@ -86,6 +79,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 		net = net_object.vgg19(x)
 	else:
 		print('Invalid net type. You must select one of these: vgg19, resnet56, resnet110')
+		return
 
 	y_pred = tf.nn.softmax(net)
 	y_pred_cls = tf.argmax(y_pred, axis=1)

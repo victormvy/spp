@@ -1,8 +1,9 @@
-import keras
+import tensorflow as tf
+
 
 def parametric_softplus(spp_alpha):
 	def spp(x):
-		return K.log(1 + K.exp(x)) - spp_alpha
+		return tf.log(1 + tf.exp(x)) - spp_alpha
 	return spp
 
 class Net:
@@ -14,81 +15,81 @@ class Net:
 		self.spp_alpha = spp_alpha
 
 		# Add new activation function
-		keras.utils.generic_utils.get_custom_objects().update({'spp': keras.layers.Activation(parametric_softplus(spp_alpha))})
+		tf.keras.utils.get_custom_objects().update({'spp': tf.keras.layers.Activation(parametric_softplus(spp_alpha))})
 
 	def vgg19(self):
-		model = keras.models.Sequential([
+		model = tf.keras.Sequential([
 			# Block 1
-			keras.layers.Conv2D(64, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',
+			tf.keras.layers.Conv2D(64, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',
 								input_shape=(self.size, self.size, self.num_channels), data_format='channels_last'),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(64, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(64, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.MaxPooling2D(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(),
 
 			# Block 2
-			keras.layers.Conv2D(128, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.Conv2D(128, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(128, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(128, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.MaxPooling2D(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(),
 
 			# Block 3
-			keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.MaxPooling2D(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(),
 
 			# Block 4
-			keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.MaxPooling2D(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(),
 
 			# Block 5
-			keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',),
 			self.__get_activation(),
-			keras.layers.BatchNormalization(),
-			keras.layers.MaxPooling2D(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(),
 
 			# Classification block
-			keras.layers.Flatten(),
-			keras.layers.Dense(4096),
+			tf.keras.layers.Flatten(),
+			tf.keras.layers.Dense(4096),
 			self.__get_activation(),
-			keras.layers.Dense(4096),
+			tf.keras.layers.Dense(4096),
 			self.__get_activation(),
-			keras.layers.Dense(4096, activation='softmax'),
+			tf.keras.layers.Dense(4096, activation='softmax'),
 
 		])
 
@@ -96,17 +97,17 @@ class Net:
 		
 	def __get_activation(self):
 		if self.activation == 'relu':
-			return keras.layers.Activation('relu')
+			return tf.keras.layers.Activation('relu')
 		elif self.activation == 'lrelu':
-			return keras.layers.LeakyReLU()
+			return tf.keras.layers.LeakyReLU()
 		elif self.activation == 'prelu':
-			return keras.layers.PReLU()
+			return tf.keras.layers.PReLU()
 		elif self.activation == 'elu':
-			return keras.layers.ELU()
+			return tf.keras.layers.ELU()
 		elif self.activation == 'softplus':
-			return keras.layers.Activation('softplus')
+			return tf.keras.layers.Activation('softplus')
 		elif self.activation == 'spp':
-			return keras.layers.Activation('spp')
+			return tf.keras.layers.Activation('spp')
 		else:
-			return keras.layers.Activation('relu')
+			return tf.keras.layers.Activation('relu')
 

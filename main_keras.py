@@ -1,6 +1,4 @@
 import tensorflow as tf
-import keras
-from keras import backend as K
 import numpy as np
 import resnet
 from net_keras import Net
@@ -17,7 +15,7 @@ def cli():
 
 
 @cli.command('train', help='Train model')
-@click.option('--db', default='10', help=u'Database that will be used: Cifar10 (10) or Cifar100 (100).')
+@click.option('--db', default='10', help=u'Database that will be used: Cifar10 (10), Cifar100 (100) or EMNIST.')
 @click.option('--net_type', '-n', default='vgg19',
 			  help=u'Net model that will be used. Must be one of: vgg19, resnet56, resnet110')
 @click.option('--batch_size', '-b', default=128, help=u'Batch size')
@@ -42,7 +40,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 	elif db == '100':
 		(train_x, train_y_cls), (test_x, test_y_cls) = tf.keras.datasets.cifar100.load_data()
 		num_classes = 100
-	elif db == 'emnist':
+	elif db.lower() == 'emnist':
 		emnist = spio.loadmat('emnist/emnist-byclass.mat')
 		
 		train_x = np.reshape(emnist['dataset'][0][0][0][0][0][0], (-1, 28, 28, 1)).astype(np.float32)
@@ -57,6 +55,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 		
 	else:
 		print("Invalid database. Database must be 10, 100 or emnist")
+		return
 
 	train_x = train_x / 255.0
 	test_x = test_x / 255.0
@@ -76,9 +75,10 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 		model = net_object.vgg19()
 	else:
 		print('Invalid net type. You must select one of these: vgg19, resnet56, resnet110')
+		return
 
 	model.compile(
-		optimizer = keras.optimizers.SGD(lr=lr, momentum=momentum, nesterov=True),
+		optimizer = tf.keras.optimizers.SGD(lr=lr, momentum=momentum, nesterov=True),
 		loss = 'categorical_crossentropy',
 		metrics = ['accuracy']
 	)
@@ -96,10 +96,10 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 			return curr_momentum
 
 	model.fit(x = train_x, y = train_y, batch_size= batch_size, epochs = epochs,
-			  callbacks=[ keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+			  callbacks=[ tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 						  MomentumScheduler(momentum_scheduler),
-						  keras.callbacks.ProgbarLogger(count_mode='steps'),
-						  keras.callbacks.ModelCheckpoint(checkpoint_dir)
+						  tf.keras.callbacks.ProgbarLogger(count_mode='steps'),
+						  tf.keras.callbacks.ModelCheckpoint(checkpoint_dir)
 						  ],
 			  validation_data = (test_x, test_y)
 			  )
