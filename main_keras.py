@@ -83,6 +83,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alph
 											   momentum)
 	model_file = "{}.h5py".format(model_name)
 	model_file_extra = "{}.txt".format(model_name)
+	csv_file = "{}.csv".format(model_name)
 
 	start_epoch = 0
 
@@ -137,7 +138,9 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alph
 							  MomentumScheduler(momentum_scheduler),
 							  # tf.keras.callbacks.ProgbarLogger(count_mode='steps'),
 							  tf.keras.callbacks.ModelCheckpoint(os.path.join(checkpoint_dir, model_file)),
-							  save_epoch_callback
+							  save_epoch_callback,
+							  tf.keras.callbacks.CSVLogger(os.path.join(checkpoint_dir, csv_file)),
+							  tf.keras.callbacks.TensorBoard(log_dir=checkpoint_dir)
 							  ],
 				  validation_data=(test_x, test_y)
 				  )
@@ -170,12 +173,12 @@ def experiment(path):
 					for spp_alpha in _spp_alphas:
 						for lr in lrs:
 							for momentum in momentums:
-									# dirname = "{}/{}_{}_{}_{}_{}_{}_{}".format(path, db, net_type, bs, activation, spp_alpha, lr,
-									#										momentum)
+									dirname = "{}/{}_{}_{}_{}_{}_{}_{}".format(path, db, net_type, bs, activation, spp_alpha, lr,
+																			momentum)
 									print("==================================")
 									print("RUNNING DB: {}\nNET: {}\nBATCH SIZE: {}\nACTIVATION: {}\nSPP ALPHA: {}\nLEARNING RATE: {}\nMOMENTUM: {}".format(db, net_type, bs ,activation, spp_alpha, lr, momentum))
 									print("==================================")
-									train(db, net_type, bs, epochs, path, activation, spp_alpha, lr, momentum, 10)
+									train(db, net_type, bs, epochs, dirname, activation, spp_alpha, lr, momentum, 10)
 									tf.reset_default_graph()
 
 
