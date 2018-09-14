@@ -18,7 +18,7 @@ class Net:
 		tf.keras.utils.get_custom_objects().update({'spp': tf.keras.layers.Activation(parametric_softplus(spp_alpha))})
 
 	def vgg19(self):
-		model = tf.keras.Sequential([
+		model = tf.keras.models.Sequential([
 			# Block 1
 			tf.keras.layers.Conv2D(64, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',
 								input_shape=(self.size, self.size, self.num_channels), data_format='channels_last'),
@@ -89,7 +89,7 @@ class Net:
 			self.__get_activation(),
 			tf.keras.layers.Dense(4096),
 			self.__get_activation(),
-			tf.keras.layers.Dense(4096, activation='softmax'),
+			tf.keras.layers.Dense(10, activation='softmax'),
 
 		])
 

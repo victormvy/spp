@@ -1,8 +1,7 @@
-import keras
-from keras import backend as K
+import tensorflow as tf
 
 
-class MomentumScheduler(keras.callbacks.Callback):
+class MomentumScheduler(tf.keras.callbacks.Callback):
 	'''Momentum scheduler.
 	# Arguments
 	schedule: a function that takes an epoch index (integer, indexed from 0) and current momentum as input
@@ -15,6 +14,6 @@ class MomentumScheduler(keras.callbacks.Callback):
 	def on_epoch_begin(self, epoch, logs={}):
 		assert hasattr(self.model.optimizer, 'momentum'), \
 		'Optimizer must have a "momentum" attribute.'
-		mmtm = self.schedule(epoch, self.model.optimizer.momentum)
+		mmtm = self.schedule(epoch)
 		assert type(mmtm) == float, 'The output of the "schedule" function should be float.'
-		K.set_value(self.model.optimizer.momentum, mmtm)
+		tf.assign(self.model.optimizer.momentum, mmtm)

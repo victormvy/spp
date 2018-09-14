@@ -21,16 +21,15 @@ def cli():
 @click.option('--batch_size', '-b', default=128, help=u'Batch size')
 @click.option('--epochs', '-e', default=100, help=u'Number of epochs')
 @click.option('--checkpoint_dir', '-d', required=True, help=u'Checkpoint files directory')
-@click.option('--log_dir', '-l', required=True, help=u'Log files directory')
 @click.option('--activation', '-a', default='relu', help=u'Activation function')
 @click.option('--spp_alpha', default=0.2, help=u'Alpha value for spp transfer function')
 @click.option('--lr', default=0.1, help=u'Learning rate')
 @click.option('--momentum', '-m', default=0.1, help=u'Momentum for optimizer')
 @click.option('--rep', '-r', default=1, help=u'Repetitions for this execution.')
-def main(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum, rep):
-	train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum, rep)
+def main(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum, rep):
+	train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum, rep)
 
-def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation, spp_alpha, lr, momentum, rep):
+def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum, rep):
 	num_channels = 3
 	img_size = 32
 	
@@ -77,30 +76,68 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, log_dir, activation,
 		print('Invalid net type. You must select one of these: vgg19, resnet56, resnet110')
 		return
 
+	if not os.path.isdir(checkpoint_dir):
+		os.makedirs(checkpoint_dir)
+
+	model_name = "{}_{}_{}_{}_{}_{}_{}".format(db, net_type, batch_size, activation, spp_alpha, lr,
+											   momentum)
+	model_file = "{}.h5py".format(model_name)
+	model_file_extra = "{}.txt".format(model_name)
+
+	start_epoch = 0
+
+
+	if os.path.isfile(os.path.join(checkpoint_dir, model_file)) and os.path.isfile(os.path.join(checkpoint_dir, model_file_extra)):
+		print("===== RESTORING SAVED MODEL =====")
+		# tf.keras.models.load_model(os.path.join(checkpoint_dir, model_file))
+		model.load_weights(os.path.join(checkpoint_dir, model_file))
+
+		with open(os.path.join(checkpoint_dir, model_file_extra), 'r') as f:
+			start_epoch = int(f.readline())
+
 	model.compile(
 		optimizer = tf.keras.optimizers.SGD(lr=lr, momentum=momentum, nesterov=True),
 		loss = 'categorical_crossentropy',
 		metrics = ['accuracy']
 	)
 
-	def learning_rate_scheduler(epoch, curr_lr):
-		if epoch in {60, 80, 90}:
-			return curr_lr - 0.02
-		else:
-			return curr_lr
+	model.summary()
 
-	def momentum_scheduler(epoch, curr_momentum):
-		if epoch in {60, 80, 90}:
-			return curr_momentum - 0.0005
-		else:
-			return curr_momentum
+	def learning_rate_scheduler(epoch):
+		final_lr = lr
+		if epoch >= 60:
+			final_lr -= 0.02
+		if epoch >= 80:
+			final_lr -= 0.02
+		if epoch >= 90:
+			final_lr -= 0.02
+		return float(final_lr)
+
+	def momentum_scheduler(epoch):
+		final_mmt = momentum
+		if epoch >= 60:
+			final_mmt -= 0.0005
+		if epoch >= 80:
+			final_mmt -= 0.0005
+		if epoch >= 90:
+			final_mmt -= 0.0005
+		return float(final_mmt)
+
+	def save_epoch(epoch, logs):
+		with open(os.path.join(checkpoint_dir, model_file_extra), 'w') as f:
+			f.write(str(epoch))
+
+	save_epoch_callback = tf.keras.callbacks.LambdaCallback(
+		on_epoch_end=save_epoch
+	)
 
 	for execution in range(1, rep + 1):
-		model.fit(x=train_x, y=train_y, batch_size=batch_size, epochs=epochs,
+		model.fit(x=train_x, y=train_y, batch_size=batch_size, epochs=epochs, initial_epoch=start_epoch,
 				  callbacks=[ tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 							  MomentumScheduler(momentum_scheduler),
-							  tf.keras.callbacks.ProgbarLogger(count_mode='steps'),
-							  tf.keras.callbacks.ModelCheckpoint(checkpoint_dir)
+							  # tf.keras.callbacks.ProgbarLogger(count_mode='steps'),
+							  tf.keras.callbacks.ModelCheckpoint(os.path.join(checkpoint_dir, model_file)),
+							  save_epoch_callback
 							  ],
 				  validation_data=(test_x, test_y)
 				  )
@@ -133,10 +170,12 @@ def experiment(path):
 					for spp_alpha in _spp_alphas:
 						for lr in lrs:
 							for momentum in momentums:
-									dirname = "{}/{}_{}_{}_{}_{}_{}_{}".format(path, db, net_type, bs, activation, spp_alpha, lr,
-																			momentum)
-									print("RUNNING {}".format(dirname))
-									train(db, net_type, bs, epochs, dirname, dirname, activation, spp_alpha, lr, momentum, 10)
+									# dirname = "{}/{}_{}_{}_{}_{}_{}_{}".format(path, db, net_type, bs, activation, spp_alpha, lr,
+									#										momentum)
+									print("==================================")
+									print("RUNNING DB: {}\nNET: {}\nBATCH SIZE: {}\nACTIVATION: {}\nSPP ALPHA: {}\nLEARNING RATE: {}\nMOMENTUM: {}".format(db, net_type, bs ,activation, spp_alpha, lr, momentum))
+									print("==================================")
+									train(db, net_type, bs, epochs, path, activation, spp_alpha, lr, momentum, 10)
 									tf.reset_default_graph()
 
 
