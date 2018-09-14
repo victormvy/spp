@@ -136,7 +136,7 @@ def experiment(path):
 									dirname = "{}/{}_{}_{}_{}_{}_{}_{}".format(path, db, net_type, bs, activation, spp_alpha, lr,
 																			momentum)
 									print("RUNNING {}".format(dirname))
-									train(db, net_type, bs, epochs, dirname, dirname, activation, spp_alpha, lr, momentum)
+									train(db, net_type, bs, epochs, dirname, dirname, activation, spp_alpha, lr, momentum, 10)
 									tf.reset_default_graph()
 
 
