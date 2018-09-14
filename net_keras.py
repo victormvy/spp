@@ -89,7 +89,7 @@ class Net:
 			self.__get_activation(),
 			tf.keras.layers.Dense(4096),
 			self.__get_activation(),
-			tf.keras.layers.Dense(10, activation='softmax'),
+			tf.keras.layers.Dense(self.num_classes, activation='softmax'),
 
 		])
 
