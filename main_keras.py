@@ -62,47 +62,6 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alph
 	train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls), num_classes])
 	test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
 
-	if net_type == 'resnet56':
-		#net = resnet.inference(x, 9, False)
-		raise NotImplementedError
-	elif net_type == 'resnet110':
-		#net = resnet.inference(x, 18, False)
-		raise NotImplementedError
-	elif net_type == 'vgg19':
-		net_object = Net(img_size, activation, num_channels, num_classes, spp_alpha)
-		net_object.spp_alpha = spp_alpha
-		model = net_object.vgg19()
-	else:
-		print('Invalid net type. You must select one of these: vgg19, resnet56, resnet110')
-		return
-
-	if not os.path.isdir(checkpoint_dir):
-		os.makedirs(checkpoint_dir)
-
-	model_name = "{}_{}_{}_{}_{}_{}_{}".format(db, net_type, batch_size, activation, spp_alpha, lr,
-											   momentum)
-	model_file = "{}.h5py".format(model_name)
-	model_file_extra = "{}.txt".format(model_name)
-	csv_file = "{}.csv".format(model_name)
-
-	start_epoch = 0
-
-
-	if os.path.isfile(os.path.join(checkpoint_dir, model_file)) and os.path.isfile(os.path.join(checkpoint_dir, model_file_extra)):
-		print("===== RESTORING SAVED MODEL =====")
-		# tf.keras.models.load_model(os.path.join(checkpoint_dir, model_file))
-		model.load_weights(os.path.join(checkpoint_dir, model_file))
-
-		with open(os.path.join(checkpoint_dir, model_file_extra), 'r') as f:
-			start_epoch = int(f.readline())
-
-	model.compile(
-		optimizer = tf.keras.optimizers.SGD(lr=lr, momentum=momentum, nesterov=True),
-		loss = 'categorical_crossentropy',
-		metrics = ['accuracy']
-	)
-
-	model.summary()
 
 	def learning_rate_scheduler(epoch):
 		final_lr = lr
@@ -132,11 +91,51 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alph
 		on_epoch_end=save_epoch
 	)
 
+	if net_type == 'resnet56':
+		#net = resnet.inference(x, 9, False)
+		raise NotImplementedError
+	elif net_type == 'resnet110':
+		#net = resnet.inference(x, 18, False)
+		raise NotImplementedError
+	elif net_type == 'vgg19':
+		net_object = Net(img_size, activation, num_channels, num_classes, spp_alpha)
+		net_object.spp_alpha = spp_alpha
+		model = net_object.vgg19()
+	else:
+		print('Invalid net type. You must select one of these: vgg19, resnet56, resnet110')
+		return
+
+	if not os.path.isdir(checkpoint_dir):
+		os.makedirs(checkpoint_dir)
+
+	model_name = "{}_{}_{}_{}_{}_{}_{}".format(db, net_type, batch_size, activation, spp_alpha, lr,
+											   momentum)
+	model_file = "{}.h5py".format(model_name)
+	model_file_extra = "{}.txt".format(model_name)
+	csv_file = "{}.csv".format(model_name)
+
+	start_epoch = 0
+
+
+	if os.path.isfile(os.path.join(checkpoint_dir, model_file)) and os.path.isfile(os.path.join(checkpoint_dir, model_file_extra)):
+		print("===== RESTORING SAVED MODEL =====")
+		model.load_weights(os.path.join(checkpoint_dir, model_file))
+
+		with open(os.path.join(checkpoint_dir, model_file_extra), 'r') as f:
+			start_epoch = int(f.readline())
+
+	model.compile(
+		optimizer = tf.keras.optimizers.SGD(lr=lr, momentum=momentum, nesterov=True),
+		loss = 'categorical_crossentropy',
+		metrics = ['accuracy']
+	)
+
+	model.summary()
+
 	for execution in range(1, rep + 1):
 		model.fit(x=train_x, y=train_y, batch_size=batch_size, epochs=epochs, initial_epoch=start_epoch,
 				  callbacks=[ tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 							  MomentumScheduler(momentum_scheduler),
-							  # tf.keras.callbacks.ProgbarLogger(count_mode='steps'),
 							  tf.keras.callbacks.ModelCheckpoint(os.path.join(checkpoint_dir, model_file)),
 							  save_epoch_callback,
 							  tf.keras.callbacks.CSVLogger(os.path.join(checkpoint_dir, csv_file)),
