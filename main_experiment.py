@@ -22,7 +22,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alph
 	for execution in range(1, rep + 1):
 		experiment = Experiment('', db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum)
 		experiment.set_auto_name()
-		experiment.checkpoint_dir = "{}/{}_{}".format(checkpoint_dir, experiment.get_auto_name(), execution)
+		experiment.checkpoint_dir = "{}/{}/{}".format(checkpoint_dir, experiment.get_auto_name(), execution)
 		experiment.run()
 
 

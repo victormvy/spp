@@ -25,7 +25,7 @@ class Experiment():
 		self.name = self.get_auto_name()
 
 	def get_auto_name(self):
-		self.name = "{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.spp_alpha, self.lr,
+		return "{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.spp_alpha, self.lr,
 													  self.momentum)
 
 	# PROPERTIES
