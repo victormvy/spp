@@ -111,7 +111,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alph
 	for execution in range(1, rep + 1):
 
 		model_name = "{}_{}_{}_{}_{}_{}_{}_{}".format(db, net_type, batch_size, activation, spp_alpha, lr,
-													  momentum, rep)
+													  momentum, execution)
 
 		if not os.path.isdir(os.path.join(checkpoint_dir, model_name)):
 			os.makedirs(os.path.join(checkpoint_dir, model_name))
