@@ -239,7 +239,7 @@ class Experiment():
 				start_epoch = int(f.readline())
 
 		model.compile(
-			optimizer = tf.keras.optimizers.SGD(lr=lr, momentum=momentum, nesterov=True),
+			optimizer = tf.keras.optimizers.SGD(lr=self.lr, momentum=self.momentum, nesterov=True),
 			loss = 'categorical_crossentropy',
 			metrics = ['accuracy']
 		)
