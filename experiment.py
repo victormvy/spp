@@ -22,7 +22,7 @@ class Experiment():
 		self._momentum = momentum
 
 	def set_auto_name(self):
-		self.name = self.getAutoName()
+		self.name = self.get_auto_name()
 
 	def get_auto_name(self):
 		self.name = "{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.spp_alpha, self.lr,
@@ -231,11 +231,11 @@ class Experiment():
 
 		start_epoch = 0
 
-		if os.path.isfile(os.path.join(checkpoint_dir, model_file)) and os.path.isfile(os.path.join(checkpoint_dir, model_file_extra)):
+		if os.path.isfile(os.path.join(self.checkpoint_dir, model_file)) and os.path.isfile(os.path.join(self.checkpoint_dir, model_file_extra)):
 			print("===== RESTORING SAVED MODEL =====")
-			model.load_weights(os.path.join(checkpoint_dir, model_file))
+			model.load_weights(os.path.join(self.checkpoint_dir, model_file))
 
-			with open(os.path.join(checkpoint_dir, model_file_extra), 'r') as f:
+			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
 
 		model.compile(
@@ -247,13 +247,13 @@ class Experiment():
 		model.summary()
 
 
-		model.fit(x=train_x, y=train_y, batch_size=batch_size, epochs=epochs, initial_epoch=start_epoch,
+		model.fit(x=train_x, y=train_y, batch_size=self.batch_size, epochs=self.epochs, initial_epoch=start_epoch,
 				  callbacks=[ tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 							  MomentumScheduler(momentum_scheduler),
-							  tf.keras.callbacks.ModelCheckpoint(os.path.join(checkpoint_dir, model_file)),
+							  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
 							  save_epoch_callback,
-							  tf.keras.callbacks.CSVLogger(os.path.join(checkpoint_dir, csv_file)),
-							  tf.keras.callbacks.TensorBoard(log_dir=checkpoint_dir)
+							  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file)),
+							  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir)
 							  ],
 				  validation_data=(test_x, test_y)
 				  )
