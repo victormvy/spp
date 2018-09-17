@@ -252,7 +252,7 @@ class Experiment():
 							  MomentumScheduler(momentum_scheduler),
 							  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
 							  save_epoch_callback,
-							  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file)),
+							  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
 							  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir)
 							  ],
 				  validation_data=(test_x, test_y)
