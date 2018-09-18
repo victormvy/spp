@@ -1,10 +1,6 @@
 import tensorflow as tf
+from spp import SPP
 
-
-def parametric_softplus(spp_alpha):
-	def spp(x):
-		return tf.log(1 + tf.exp(x)) - spp_alpha
-	return spp
 
 class Net:
 	def __init__(self, size, activation, num_channels=3, num_classes=5, spp_alpha=0.2):
@@ -15,7 +11,7 @@ class Net:
 		self.spp_alpha = spp_alpha
 
 		# Add new activation function
-		tf.keras.utils.get_custom_objects().update({'spp': tf.keras.layers.Activation(parametric_softplus(spp_alpha))})
+		tf.keras.utils.get_custom_objects().update({'spp': SPP(parametric_softplus(spp_alpha))})
 
 	def vgg19(self):
 		model = tf.keras.models.Sequential([
