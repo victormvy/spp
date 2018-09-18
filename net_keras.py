@@ -1,5 +1,5 @@
 import tensorflow as tf
-from spp import SPP
+from spp import SPP, parametric_softplus
 
 
 class Net:
