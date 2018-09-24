@@ -9,7 +9,7 @@ from scipy import io as spio
 from callbacks import MomentumScheduler
 
 class Experiment():
-	def __init__(self, name, db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum):
+	def __init__(self, name, db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum, dropout=0):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -20,6 +20,7 @@ class Experiment():
 		self._spp_alpha = spp_alpha
 		self._lr = lr
 		self._momentum = momentum
+		self._dropout = dropout
 
 	def set_auto_name(self):
 		self.name = self.get_auto_name()
@@ -150,6 +151,18 @@ class Experiment():
 	def momentum(self):
 		del self._momentum
 
+	@property
+	def dropout(self):
+		return self._dropout
+
+	@dropout.setter
+	def dropout(self, dropout):
+		self._dropout = dropout
+
+	@dropout.deleter
+	def dropout(self):
+		del self._dropout
+
 	def run(self):
 		num_channels = 3
 		img_size = 32
@@ -217,7 +230,7 @@ class Experiment():
 			# net = resnet.inference(x, 18, False)
 			raise NotImplementedError
 		elif self.net_type == 'vgg19':
-			net_object = Net(img_size, self.activation, num_channels, num_classes, self.spp_alpha)
+			net_object = Net(img_size, self.activation, num_channels, num_classes, self.spp_alpha, self._dropout)
 			model = net_object.vgg19()
 		else:
 			raise Exception('Invalid net type. You must select one of these: vgg19, resnet56, resnet110')

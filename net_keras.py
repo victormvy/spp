@@ -3,12 +3,13 @@ from spp import SPP, parametric_softplus
 
 
 class Net:
-	def __init__(self, size, activation, num_channels=3, num_classes=5, spp_alpha=0.2):
+	def __init__(self, size, activation, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
 		self.size = size
 		self.activation = activation
 		self.num_channels = num_channels
 		self.num_classes = num_classes
 		self.spp_alpha = spp_alpha
+		self.dropout = dropout
 
 		# Add new activation function
 		tf.keras.utils.get_custom_objects().update({'spp': SPP(parametric_softplus(spp_alpha))})
@@ -81,6 +82,7 @@ class Net:
 
 			# Classification block
 			tf.keras.layers.Flatten(),
+			tf.keras.layers.Dropout(rate=self.dropout),
 			tf.keras.layers.Dense(4096),
 			self.__get_activation(),
 			tf.keras.layers.Dense(4096),
