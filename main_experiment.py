@@ -18,9 +18,10 @@ def cli():
 @click.option('--lr', default=0.1, help=u'Learning rate')
 @click.option('--momentum', '-m', default=0.1, help=u'Momentum for optimizer')
 @click.option('--rep', '-r', default=1, help=u'Repetitions for this execution.')
-def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum, rep):
+@click.option('--dropout', '-o', default=0.0, help=u'Drop rate.')
+def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum, rep, dropout):
 	for execution in range(1, rep + 1):
-		experiment = Experiment('', db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum)
+		experiment = Experiment('', db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum, dropout)
 		experiment.set_auto_name()
 		experiment.checkpoint_dir = "{}/{}/{}".format(checkpoint_dir, experiment.get_auto_name(), execution)
 		experiment.run()
