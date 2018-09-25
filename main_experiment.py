@@ -1,5 +1,6 @@
 import click
 from experiment import Experiment
+from experimentset import ExperimentSet
 
 @click.group()
 def cli():
@@ -25,6 +26,12 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alph
 		experiment.set_auto_name()
 		experiment.checkpoint_dir = "{}/{}/{}".format(checkpoint_dir, experiment.get_auto_name(), execution)
 		experiment.run()
+
+@cli.command('experiment', help='Experiment mode')
+@click.option('--file', '-f', required=True, help=u'File that contains the experiments that will be executed.')
+def experiment(file):
+	experimentSet = ExperimentSet()
+	experimentSet.load_from_file(file)
 
 
 if __name__ == '__main__':

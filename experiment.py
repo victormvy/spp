@@ -289,7 +289,6 @@ class Experiment():
 		}
 
 	def set_config(self, config):
-		self.name = config['name']
 		self.db = config['db']
 		self.net_type = config['net_type']
 		self.batch_size = config['batch_size']
@@ -300,6 +299,11 @@ class Experiment():
 		self.lr = config['lr']
 		self.momentum = config['momentum']
 		self.dropout = config['dropout']
+
+		if config['name']:
+			self.name = config['name']
+		else:
+			self.set_auto_name()
 
 	def save_to_file(self, path):
 		pickle.dump(self.get_config(), path)
