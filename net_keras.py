@@ -116,6 +116,8 @@ class Net:
 			return PairedReLU()
 		elif self.activation == 'erelu':
 			return EReLU()
+		elif self.activation == 'eprelu':
+			return EReLU()
 		else:
 			return tf.keras.layers.Activation('relu')
 

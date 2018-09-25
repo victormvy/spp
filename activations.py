@@ -104,7 +104,7 @@ class EReLU(tf.keras.layers.Layer):
 		self.alpha = alpha
 
 	def build(self, input_shape):
-		shape = input_shape[1:]  # Number of channels
+		shape = input_shape[1:]
 
 		self.k = self.add_weight(name='k', shape=shape, dtype=tf.float32,
 								 initializer=tf.random_uniform_initializer(minval=1 - self.alpha, maxval=1 + self.alpha,
@@ -118,3 +118,25 @@ class EReLU(tf.keras.layers.Layer):
 
 	def compute_output_shape(self, input_shape):
 		return input_shape
+
+
+class EPReLU(tf.keras.layers.PReLU):
+	def __init__(self, alpha=0.5, **kwargs):
+		super(EPReLU, self).__init__(**kwargs)
+		self.alpha = alpha
+
+	def build(self, input_shape):
+		shape = input_shape[1:]
+
+		self.k = self.add_weight(name='k', shape=shape, dtype=tf.float32,
+								 initializer=tf.random_uniform_initializer(minval=1 - self.alpha, maxval=1 + self.alpha,
+																		   dtype=tf.float32), trainable=False)
+
+		# Call PReLU build method
+		super(EPReLU, self).build(input_shape)
+
+	def call(self, inputs):
+		pos = tf.nn.relu(inputs * self.k)
+		neg = -self.alpha * tf.nn.relu(-(inputs))
+
+		return pos + neg
