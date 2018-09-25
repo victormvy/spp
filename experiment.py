@@ -5,11 +5,12 @@ from net_keras import Net
 import os
 import time
 import click
+import pickle
 from scipy import io as spio
 from callbacks import MomentumScheduler
 
 class Experiment():
-	def __init__(self, name, db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alpha, lr, momentum, dropout=0):
+	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100, checkpoint_dir='checkpoint', activation='relu', spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -270,3 +271,39 @@ class Experiment():
 							  ],
 				  validation_data=(test_x, test_y)
 				  )
+
+
+	def get_config(self):
+		return {
+			'name' : self.name,
+			'db' : self.db,
+			'net_type' : self.net_type,
+			'batch_size' : self.batch_size,
+			'epochs' : self.epochs,
+			'checkpoint_dir' : self.checkpoint_dir,
+			'activation' : self.activation,
+			'spp_alpha' : self.spp_alpha,
+			'lr' : self.lr,
+			'momentum' : self.momentum,
+			'dropout' : self.dropout
+		}
+
+	def set_config(self, config):
+		self.name = config['name']
+		self.db = config['db']
+		self.net_type = config['net_type']
+		self.batch_size = config['batch_size']
+		self.epochs = config['epochs']
+		self.checkpoint_dir = config['checkpoint_dir']
+		self.activation = config['activation']
+		self.spp_alpha = config['spp_alpha']
+		self.lr = config['lr']
+		self.momentum = config['momentum']
+		self.dropout = config['dropout']
+
+	def save_to_file(self, path):
+		pickle.dump(self.get_config(), path)
+
+	def load_from_file(self, path):
+		if os.file.exists(path):
+			self.set_config(pickle.load(path))
