@@ -1,5 +1,5 @@
 import tensorflow as tf
-from spp import SPP, parametric_softplus
+from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU
 
 
 class Net:
@@ -106,6 +106,16 @@ class Net:
 			return tf.keras.layers.Activation('softplus')
 		elif self.activation == 'spp':
 			return tf.keras.layers.Activation('spp')
+		elif self.activation == 'mpelu':
+			return MPELU(channel_wise=True)
+		elif self.activation == 'rtrelu':
+			return RTReLU()
+		elif self.activation == 'rtprelu':
+			return RTPReLU()
+		elif self.activation == 'pairedrelu':
+			return PairedReLU()
+		elif self.activation == 'erelu':
+			return EReLU()
 		else:
 			return tf.keras.layers.Activation('relu')
 
