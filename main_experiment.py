@@ -32,6 +32,7 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, spp_alph
 def experiment(file):
 	experimentSet = ExperimentSet()
 	experimentSet.load_from_file(file)
+	experimentSet.run_all()
 
 
 if __name__ == '__main__':

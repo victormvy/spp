@@ -42,7 +42,8 @@ class ExperimentSet():
 		self.experiments = []
 
 	def load_from_file(self, path):
-		configs = json.load(path)
+		with open(path) as f:
+			configs = json.load(f)
 
 		for config in configs:
 			experiment = Experiment()
