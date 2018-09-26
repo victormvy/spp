@@ -2,3 +2,4 @@
 vgg19.npy
 !*.py
 *.pyc
+.idea/*

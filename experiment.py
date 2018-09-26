@@ -22,6 +22,7 @@ class Experiment():
 		self._lr = lr
 		self._momentum = momentum
 		self._dropout = dropout
+		self._finished = False
 
 	def set_auto_name(self):
 		self.name = self.get_auto_name()
@@ -164,7 +165,23 @@ class Experiment():
 	def dropout(self):
 		del self._dropout
 
+	@property
+	def finished(self):
+		return self._finished
+
+	@finished.setter
+	def finished(self, finished):
+		self._finished = finished
+
+	@finished.deleter
+	def finished(self):
+		del self._finished
+
+	# # # # # # #
+
 	def run(self):
+		print('=== RUNNING {} ==='.format(self.name))
+
 		num_channels = 3
 		img_size = 32
 
@@ -271,6 +288,7 @@ class Experiment():
 							  ],
 				  validation_data=(test_x, test_y)
 				  )
+		self.finished = True
 
 
 	def get_config(self):

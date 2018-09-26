@@ -19,6 +19,8 @@ class ExperimentSet():
 	def experiments(self):
 		del self._experiments
 
+	# # # # # #
+
 	def _validate_experiments(self):
 		if not type(self.experiments) is list:
 			if type(self.experiments) is tuple:
@@ -54,3 +56,9 @@ class ExperimentSet():
 			configs.append(experiment.get_config())
 
 		json.dump(configs, path)
+
+
+	def run_all(self):
+		for experiment in self.experiments:
+			if not experiment.finished:
+				experiment.run()
