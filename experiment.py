@@ -9,6 +9,8 @@ import click
 import pickle
 from scipy import io as spio
 from callbacks import MomentumScheduler
+from losses import qwk_loss, make_cost_matrix
+from metrics import quadratic_weighted_kappa
 
 class Experiment():
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100, checkpoint_dir='checkpoint', activation='relu', spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0):
@@ -338,8 +340,8 @@ class Experiment():
 
 		model.compile(
 			optimizer = tf.keras.optimizers.SGD(lr=self.lr, momentum=self.momentum, nesterov=True),
-			loss = 'categorical_crossentropy',
-			metrics = ['accuracy']
+			loss =  'categorical_crossentropy', # qwk_loss(make_cost_matrix(num_classes)), 
+			metrics = ['accuracy', quadratic_weighted_kappa(num_classes, make_cost_matrix(num_classes))]
 		)
 
 		model.summary()
@@ -357,7 +359,7 @@ class Experiment():
 					  )
 		elif train_dataset and test_dataset:
 			model.fit(x=train_dataset.make_one_shot_iterator(), y=None, batch_size=None, epochs=self.epochs, initial_epoch=start_epoch,
-					  steps_per_epoch=100000//self.batch_size,
+					  steps_per_epoch=10000//self.batch_size,
 					  callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 								 MomentumScheduler(momentum_scheduler),
 								 tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
