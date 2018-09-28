@@ -1,4 +1,6 @@
 import tensorflow as tf
+import numpy as np
+from sklearn.metrics import confusion_matrix
 
 
 class MomentumScheduler(tf.keras.callbacks.Callback):
@@ -17,3 +19,20 @@ class MomentumScheduler(tf.keras.callbacks.Callback):
 		mmtm = self.schedule(epoch)
 		assert type(mmtm) == float, 'The output of the "schedule" function should be float.'
 		tf.assign(self.model.optimizer.momentum, mmtm)
+
+
+class QWKCalculation(tf.keras.callbacks.Callback):
+
+	def on_epoch_begin(self, epoch, logs={}):
+		# Clear confusion matrix on epoch begin
+		self.losses = []
+
+
+	def on_batch_end(self, batch, logs={}):
+		self.losses.append(logs.get('loss'))
+
+
+	def on_epoch_end(self, epoch, logs={}):
+		pass
+		#print(self.losses)
+
