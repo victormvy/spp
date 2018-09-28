@@ -8,7 +8,7 @@ import time
 import click
 import pickle
 from scipy import io as spio
-from callbacks import MomentumScheduler
+from callbacks import MomentumScheduler, QWKCalculation
 from losses import qwk_loss, make_cost_matrix
 from metrics import quadratic_weighted_kappa
 
@@ -310,6 +310,7 @@ class Experiment():
 			on_epoch_end=save_epoch
 		)
 
+		net_object = Net(img_size, self.activation, num_channels, num_classes, self.spp_alpha, self._dropout)
 		if self.net_type == 'resnet56':
 			# net = resnet.inference(x, 9, False)
 			raise NotImplementedError
@@ -317,10 +318,11 @@ class Experiment():
 			# net = resnet.inference(x, 18, False)
 			raise NotImplementedError
 		elif self.net_type == 'vgg19':
-			net_object = Net(img_size, self.activation, num_channels, num_classes, self.spp_alpha, self._dropout)
 			model = net_object.vgg19()
+		elif self.net_type == 'conv128':
+			model = net_object.conv128()
 		else:
-			raise Exception('Invalid net type. You must select one of these: vgg19, resnet56, resnet110')
+			raise Exception('Invalid net type. You must select one of these: vgg19, resnet56, resnet110, conv128')
 
 		if not os.path.isdir(self.checkpoint_dir):
 			os.makedirs(self.checkpoint_dir)
@@ -338,10 +340,13 @@ class Experiment():
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
 
+
+		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
+
 		model.compile(
 			optimizer = tf.keras.optimizers.SGD(lr=self.lr, momentum=self.momentum, nesterov=True),
-			loss =  'categorical_crossentropy', # qwk_loss(make_cost_matrix(num_classes)), 
-			metrics = ['accuracy', quadratic_weighted_kappa(num_classes, make_cost_matrix(num_classes))]
+			loss =  qwk_loss(cost_matrix), # 'categorical_crossentropy',
+			metrics = ['accuracy', quadratic_weighted_kappa(num_classes, cost_matrix)]
 		)
 
 		model.summary()
@@ -359,13 +364,13 @@ class Experiment():
 					  )
 		elif train_dataset and test_dataset:
 			model.fit(x=train_dataset.make_one_shot_iterator(), y=None, batch_size=None, epochs=self.epochs, initial_epoch=start_epoch,
-					  steps_per_epoch=10000//self.batch_size,
+					  steps_per_epoch=100000//self.batch_size,
 					  callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 								 MomentumScheduler(momentum_scheduler),
 								 tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
 								 save_epoch_callback,
 								 tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
-								 tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir)
+								 tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 								 ],
 					  validation_data=test_dataset.make_one_shot_iterator(),
 					  validation_steps=3525 // self.batch_size

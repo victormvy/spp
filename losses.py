@@ -26,7 +26,7 @@ def qwk_loss(cost_matrix):
 	:param cost_matrix: cost matrix.
 	:return: QWK loss value.
 	"""
-	def qwk_loss(true_prob, pred_prob):
+	def _qwk_loss(true_prob, pred_prob):
 		targets = tf.argmax(true_prob, axis=1)
 		costs = tf.gather(cost_matrix, targets)
 
@@ -42,6 +42,6 @@ def qwk_loss(cost_matrix):
 		denominator = a * b
 		denominator = tf.reduce_sum(denominator)
 
-		return 1 - numerator / denominator
+		return numerator / denominator
 
-	return qwk_loss
+	return _qwk_loss

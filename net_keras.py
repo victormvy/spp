@@ -92,6 +92,64 @@ class Net:
 		])
 
 		return model
+
+	def conv128(self):
+
+		feature_filter_size = 3
+		classif_filter_size = 4
+
+		model = tf.keras.Sequential([
+			tf.keras.layers.Conv2D(32, feature_filter_size, strides=(1, 1),
+								   kernel_initializer='he_uniform', input_shape=(128, 128, 3),
+								   data_format='channels_last'),
+			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(32, feature_filter_size, strides=(1, 1),
+								   kernel_initializer='he_uniform'),
+			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(),
+
+			tf.keras.layers.Conv2D(64, feature_filter_size, strides=(1, 1),
+								   kernel_initializer='he_uniform'),
+			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(64, feature_filter_size, strides=(1, 1),
+								   kernel_initializer='he_uniform'),
+			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(),
+
+			tf.keras.layers.Conv2D(128, feature_filter_size, strides=(1, 1),
+								   kernel_initializer='he_uniform'),
+			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(128, feature_filter_size, strides=(1, 1),
+								   kernel_initializer='he_uniform'),
+			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(),
+
+			tf.keras.layers.Conv2D(128, feature_filter_size, strides=(1, 1),
+								   kernel_initializer='he_uniform'),
+			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.Conv2D(128, feature_filter_size, strides=(1, 1),
+								   kernel_initializer='he_uniform'),
+			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(),
+
+			tf.keras.layers.Conv2D(128, classif_filter_size, strides=(1, 1),
+								   kernel_initializer='he_uniform'),
+			self.__get_activation(),
+
+			tf.keras.layers.Flatten(),
+			tf.keras.layers.Dense(self.num_classes, activation='softmax'),
+
+		])
+
+		return model
 		
 	def __get_activation(self):
 		if self.activation == 'relu':

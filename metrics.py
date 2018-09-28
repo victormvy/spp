@@ -1,11 +1,9 @@
 import tensorflow as tf
 
 def quadratic_weighted_kappa(num_classes, cost_matrix):
-	def quadratic_weighted_kappa(y_true, y_pred):
+	def _quadratic_weighted_kappa(y_true, y_pred):
 		y_pred = tf.argmax(y_pred, 1, output_type=tf.int32)
 		y_true = tf.argmax(y_true, 1, output_type=tf.int32)
-		print(y_pred)
-		print(y_true)
 		conf_mat = tf.confusion_matrix(y_true, y_pred, num_classes=num_classes, dtype=tf.float32)
 
 		hist_y_pred = tf.reshape(
@@ -24,4 +22,4 @@ def quadratic_weighted_kappa(num_classes, cost_matrix):
 
 		return 1.0 - numerator / denominator
 
-	return quadratic_weighted_kappa
+	return _quadratic_weighted_kappa
