@@ -40,12 +40,14 @@ class ValidationCallback(tf.keras.callbacks.Callback):
 		sess.run(self.val_iterator.initializer)
 		conf_mat = None
 		mean_acc = 0
+		mean_loss = 0
 		batch_count = 0
 
 		while True:
 			try:
 				x, y = sess.run(next_element)
 				prediction = self.model.predict_on_batch(x)
+				loss = self.model.test_on_batch(x, y)[0]
 				y = np.argmax(y, axis=1)
 				prediction = np.argmax(prediction, axis=1)
 
@@ -56,14 +58,16 @@ class ValidationCallback(tf.keras.callbacks.Callback):
 
 				batch_count += 1
 				mean_acc += accuracy_score(y, prediction)
-
+				mean_loss += loss
 
 			except tf.errors.OutOfRangeError:
 				break
 
 		mean_acc /= batch_count
+		mean_loss /= batch_count
 		qwk = sess.run(quadratic_weighted_kappa_cm(conf_mat, self.num_classes, self.cost_matrix))
 		logs['val_acc'] = mean_acc
 		logs['val_qwk'] = qwk
+		logs['val_loss'] = mean_loss
 
-		print('val_acc: {} - val_qwk: {}'.format(mean_acc, qwk))
+		print('val_loss: {} - val_acc: {} - val_qwk: {}'.format(mean_loss, mean_acc, qwk))
