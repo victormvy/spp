@@ -34,8 +34,9 @@ class ValidationCallback(tf.keras.callbacks.Callback):
 		for i in range(0, num_classes):
 			self.classes.append(i)
 
+		self.next_element = self.val_iterator.get_next()
+
 	def on_epoch_end(self, epoch, logs={}):
-		next_element = self.val_iterator.get_next()
 		sess = tf.keras.backend.get_session()
 		sess.run(self.val_iterator.initializer)
 		conf_mat = None
@@ -45,7 +46,7 @@ class ValidationCallback(tf.keras.callbacks.Callback):
 
 		while True:
 			try:
-				x, y = sess.run(next_element)
+				x, y = sess.run(self.next_element)
 				prediction = self.model.predict_on_batch(x)
 				loss = self.model.test_on_batch(x, y)[0]
 				y = np.argmax(y, axis=1)
