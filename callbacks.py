@@ -1,7 +1,8 @@
 import tensorflow as tf
 import numpy as np
-from sklearn.metrics import confusion_matrix
-
+from sklearn.metrics import confusion_matrix, accuracy_score
+from metrics import quadratic_weighted_kappa_cm
+from losses import make_cost_matrix
 
 class MomentumScheduler(tf.keras.callbacks.Callback):
 	'''Momentum scheduler.
@@ -21,18 +22,48 @@ class MomentumScheduler(tf.keras.callbacks.Callback):
 		tf.assign(self.model.optimizer.momentum, mmtm)
 
 
-class QWKCalculation(tf.keras.callbacks.Callback):
+class ValidationCallback(tf.keras.callbacks.Callback):
 
-	def on_epoch_begin(self, epoch, logs={}):
-		# Clear confusion matrix on epoch begin
-		self.losses = []
+	def __init__(self, val_dataset, num_classes):
+		self.val_dataset = val_dataset
+		self.val_iterator = val_dataset.make_initializable_iterator()
+		self.classes = []
+		self.num_classes = num_classes
+		self.cost_matrix = make_cost_matrix(self.num_classes)
 
-
-	def on_batch_end(self, batch, logs={}):
-		self.losses.append(logs.get('loss'))
-
+		for i in range(0, num_classes):
+			self.classes.append(i)
 
 	def on_epoch_end(self, epoch, logs={}):
-		pass
-		#print(self.losses)
+		next_element = self.val_iterator.get_next()
+		sess = tf.keras.backend.get_session()
+		sess.run(self.val_iterator.initializer)
+		conf_mat = None
+		mean_acc = 0
+		batch_count = 0
 
+		while True:
+			try:
+				x, y = sess.run(next_element)
+				prediction = self.model.predict_on_batch(x)
+				y = np.argmax(y, axis=1)
+				prediction = np.argmax(prediction, axis=1)
+
+				if conf_mat is None:
+					conf_mat = confusion_matrix(y, prediction, labels=self.classes)
+				else:
+					conf_mat += confusion_matrix(y, prediction, labels=self.classes)
+
+				batch_count += 1
+				mean_acc += accuracy_score(y, prediction)
+
+
+			except tf.errors.OutOfRangeError:
+				break
+
+		mean_acc /= batch_count
+		qwk = sess.run(quadratic_weighted_kappa_cm(conf_mat, self.num_classes, self.cost_matrix))
+		logs['val_acc'] = mean_acc
+		logs['val_qwk'] = qwk
+
+		print('val_acc: {} - val_qwk: {}'.format(mean_acc, qwk))

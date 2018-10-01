@@ -8,7 +8,7 @@ import time
 import click
 import pickle
 from scipy import io as spio
-from callbacks import MomentumScheduler, QWKCalculation
+from callbacks import MomentumScheduler, ValidationCallback
 from losses import qwk_loss, make_cost_matrix
 from metrics import quadratic_weighted_kappa
 
@@ -267,7 +267,6 @@ class Experiment():
 				.prefetch(tf.contrib.data.AUTOTUNE)
 
 			test_dataset = tf.data.TFRecordDataset(test_filenames, compression_type='GZIP')\
-				.repeat()\
 				.apply(tf.contrib.data.map_and_batch(parser, self.batch_size, num_parallel_calls=8))\
 				.prefetch(tf.contrib.data.AUTOTUNE)
 
@@ -353,28 +352,27 @@ class Experiment():
 
 		if not train_x is None and not test_x is None and not train_y is None and not test_y is None:
 			model.fit(x=train_x, y=train_y, batch_size=self.batch_size, epochs=self.epochs, initial_epoch=start_epoch,
-					  callbacks=[ tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-								  MomentumScheduler(momentum_scheduler),
+					  callbacks=[ # tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+								  # MomentumScheduler(momentum_scheduler),
+						  		  ValidationCallback(test_dataset, num_classes),
 								  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
 								  save_epoch_callback,
 								  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
 								  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir)
 								  ],
-					  validation_data=(test_x, test_y)
+					  # validation_data=(test_x, test_y)
 					  )
 		elif train_dataset and test_dataset:
 			model.fit(x=train_dataset.make_one_shot_iterator(), y=None, batch_size=None, epochs=self.epochs, initial_epoch=start_epoch,
 					  steps_per_epoch=100000//self.batch_size,
 					  callbacks=[# tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 								 # MomentumScheduler(momentum_scheduler),
+								 ValidationCallback(test_dataset, num_classes),
 								 tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
 								 save_epoch_callback,
 								 tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
 								 tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
-								 QWKCalculation(),
 								 ],
-					  validation_data=test_dataset.make_one_shot_iterator(),
-					  validation_steps=3525 // self.batch_size
 					  )
 		else:
 			raise Exception('Database not initialized')
