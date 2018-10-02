@@ -153,3 +153,39 @@ class SQRTActivation(tf.keras.layers.Layer):
 		neg = - tf.sqrt(tf.nn.relu(-inputs))
 
 		return pos + neg
+
+class NNPOM(tf.keras.layers.Layer):
+	def __init__(self, num_classes, **kwargs):
+		self.num_classes = num_classes
+		super(NNPOM, self).__init__(**kwargs)
+
+	def _convert_thresholds(self, b, a):
+		a = tf.pow(a, 2)
+		thresholds_param = tf.concat([b, a], axis=0)
+		th = tf.reduce_sum(tf.matrix_band_part(tf.ones([self.num_classes - 1, self.num_classes - 1]), -1, 0) * tf.reshape(
+			tf.tile(thresholds_param, [self.num_classes - 1]), shape=[self.num_classes - 1, self.num_classes - 1]), axis=1)
+		return th
+
+	def _nnpom(self, projected, thresholds):
+		projected = tf.reshape(projected, shape=[-1])
+		m = tf.shape(projected)[0]
+		a = tf.reshape(tf.tile(thresholds, [m]), shape=[m, -1])
+		b = tf.transpose(tf.reshape(tf.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
+		z3 = a - b
+		a3T = 1.0 / (1.0 + tf.exp(-z3))
+		a3 = tf.concat([a3T, tf.ones([m, 1])], axis=1)
+		a3 = tf.concat([tf.reshape(a3[:, 0], shape=[-1, 1]), a3[:, 1:] - a3[:, 0:-1]], axis=-1)
+
+		return a3
+
+	def build(self, input_shape):
+		self.thresholds_b = self.add_weight('b_b_nnpom', shape=(1,), initializer=tf.random_uniform(shape=(1,), minval=-1, maxval=1))
+		self.thresholds_a = self.add_weight('b_a_nnpom', shape=(self.num_classes - 2,),
+											initializer=tf.random_uniform(shape=(self.num_classes -2,), minval=-0.5, maxval=0.5))
+
+	def call(self, x):
+		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)
+		return self._nnpom(x / 1000.0, thresholds / 1000.0)
+
+	def compute_output_shape(self, input_shape):
+		return (input_shape[0], 1)

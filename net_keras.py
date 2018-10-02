@@ -1,11 +1,12 @@
 import tensorflow as tf
-from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation
+from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, NNPOM
 
 
 class Net:
-	def __init__(self, size, activation, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
+	def __init__(self, size, activation, final_activation, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
 		self.size = size
 		self.activation = activation
+		self.final_activation = final_activation
 		self.num_channels = num_channels
 		self.num_classes = num_classes
 		self.spp_alpha = spp_alpha
@@ -87,9 +88,14 @@ class Net:
 			self.__get_activation(),
 			tf.keras.layers.Dense(4096),
 			self.__get_activation(),
-			tf.keras.layers.Dense(self.num_classes, activation='softmax'),
-
 		])
+
+		if self.final_activation == 'pom':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes))
+		else:
+			model.add(tf.keras.layers.Dense(self.num_classes))
+			model.add(tf.keras.layers.Activation(self.final_activation))
 
 		return model
 

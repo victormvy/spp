@@ -13,7 +13,7 @@ from losses import qwk_loss, make_cost_matrix
 from metrics import quadratic_weighted_kappa
 
 class Experiment():
-	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100, checkpoint_dir='checkpoint', activation='relu', spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0):
+	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100, checkpoint_dir='checkpoint', activation='relu', final_activation='softmax', spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -21,6 +21,7 @@ class Experiment():
 		self._epochs = epochs
 		self._checkpoint_dir = checkpoint_dir
 		self._activation = activation
+		self._final_activation = final_activation
 		self._spp_alpha = spp_alpha
 		self._lr = lr
 		self._momentum = momentum
@@ -31,7 +32,7 @@ class Experiment():
 		self.name = self.get_auto_name()
 
 	def get_auto_name(self):
-		return "{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.spp_alpha, self.lr,
+		return "{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.final_activation, self.spp_alpha, self.lr,
 													  self.momentum)
 
 	# PROPERTIES
@@ -119,6 +120,18 @@ class Experiment():
 	@activation.deleter
 	def activation(self):
 		del self._activation
+
+	@property
+	def final_activation(self):
+		return self._final_activation
+
+	@final_activation.setter
+	def final_activation(self, final_activation):
+		self._final_activation = final_activation
+
+	@final_activation.deleter
+	def final_activation(self):
+		del self._final_activation
 
 	@property
 	def spp_alpha(self):
@@ -310,7 +323,7 @@ class Experiment():
 			on_epoch_end=save_epoch
 		)
 
-		net_object = Net(img_size, self.activation, num_channels, num_classes, self.spp_alpha, self._dropout)
+		net_object = Net(img_size, self.activation, self.final_activation, num_channels, num_classes, self.spp_alpha, self._dropout)
 		if self.net_type == 'resnet56':
 			# net = resnet.inference(x, 9, False)
 			raise NotImplementedError
@@ -390,6 +403,7 @@ class Experiment():
 			'epochs' : self.epochs,
 			'checkpoint_dir' : self.checkpoint_dir,
 			'activation' : self.activation,
+			'final_activation' : self.final_activation,
 			'spp_alpha' : self.spp_alpha,
 			'lr' : self.lr,
 			'momentum' : self.momentum,
@@ -403,6 +417,7 @@ class Experiment():
 		self.epochs = config['epochs']
 		self.checkpoint_dir = config['checkpoint_dir']
 		self.activation = config['activation']
+		self.final_activation = config['final_activation']
 		self.spp_alpha = config['spp_alpha']
 		self.lr = config['lr']
 		self.momentum = config['momentum']
