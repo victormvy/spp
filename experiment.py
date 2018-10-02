@@ -261,14 +261,15 @@ class Experiment():
 			train_dataset = tf.data.Dataset.from_tensor_slices(train_filenames) \
 				.interleave(lambda x: tf.data.TFRecordDataset(x, compression_type='GZIP'),
 							cycle_length=len(train_filenames), block_length=1)\
-				.shuffle(buffer_size=10000, reshuffle_each_iteration=False)\
-				.repeat() \
+				.apply(tf.contrib.data.shuffle_and_repeat(10000))\
 				.apply(tf.contrib.data.map_and_batch(parser, self.batch_size, num_parallel_calls=8)) \
 				.prefetch(tf.contrib.data.AUTOTUNE)
+				# .apply(tf.contrib.data.prefetch_to_device("/device:GPU:0"))
 
 			test_dataset = tf.data.TFRecordDataset(test_filenames, compression_type='GZIP')\
-				.apply(tf.contrib.data.map_and_batch(parser, self.batch_size, num_parallel_calls=8))\
+				.apply(tf.contrib.data.map_and_batch(parser, self.batch_size, num_parallel_calls=8)) \
 				.prefetch(tf.contrib.data.AUTOTUNE)
+				# .apply(tf.contrib.data.prefetch_to_device("/device:GPU:0"))
 
 		else:
 			raise Exception('Invalid database. Choose one of: 10, 100, EMNIST or Retinopathy.')

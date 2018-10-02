@@ -140,3 +140,16 @@ class EPReLU(tf.keras.layers.PReLU):
 		neg = -self.alpha * tf.nn.relu(-(inputs))
 
 		return pos + neg
+
+class SQRTActivation(tf.keras.layers.Layer):
+	def __init__(self, **kwargs):
+		super(SQRTActivation, self).__init__(**kwargs)
+
+	def build(self, input_shape):
+		super(SQRTActivation, self).build(input_shape)
+
+	def call(self, inputs):
+		pos = tf.sqrt(tf.nn.relu(inputs))
+		neg = - tf.sqrt(tf.nn.relu(-inputs))
+
+		return pos + neg

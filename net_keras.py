@@ -1,5 +1,5 @@
 import tensorflow as tf
-from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU
+from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation
 
 
 class Net:
@@ -175,7 +175,9 @@ class Net:
 		elif self.activation == 'erelu':
 			return EReLU()
 		elif self.activation == 'eprelu':
-			return EReLU()
+			return EPReLU()
+		elif self.activation == 'sqrt':
+			return SQRTActivation()
 		else:
 			return tf.keras.layers.Activation('relu')
 
