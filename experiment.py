@@ -12,14 +12,18 @@ from callbacks import MomentumScheduler, ValidationCallback
 from losses import qwk_loss, make_cost_matrix
 from metrics import quadratic_weighted_kappa
 
+
 class Experiment():
-	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100, checkpoint_dir='checkpoint', activation='relu', final_activation='softmax', spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0):
+	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
+				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
+				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
 		self._batch_size = batch_size
 		self._epochs = epochs
 		self._checkpoint_dir = checkpoint_dir
+		self._loss = loss
 		self._activation = activation
 		self._final_activation = final_activation
 		self._spp_alpha = spp_alpha
@@ -32,8 +36,9 @@ class Experiment():
 		self.name = self.get_auto_name()
 
 	def get_auto_name(self):
-		return "{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.final_activation, self.spp_alpha, self.lr,
-													  self.momentum)
+		return "{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation,
+												self.final_activation, self.spp_alpha, self.lr,
+												self.momentum)
 
 	# PROPERTIES
 
@@ -108,6 +113,18 @@ class Experiment():
 	@checkpoint_dir.deleter
 	def checkpoint_dir(self):
 		del self._checkpoint_dir
+
+	@property
+	def loss(self):
+		return self._loss
+
+	@loss.setter
+	def loss(self, loss):
+		self._loss = loss
+
+	@loss.deleter
+	def loss(self):
+		del self._loss
 
 	@property
 	def activation(self):
@@ -273,20 +290,19 @@ class Experiment():
 
 			train_dataset = tf.data.Dataset.from_tensor_slices(train_filenames) \
 				.interleave(lambda x: tf.data.TFRecordDataset(x, compression_type='GZIP'),
-							cycle_length=len(train_filenames), block_length=1)\
-				.apply(tf.contrib.data.shuffle_and_repeat(10000))\
+							cycle_length=len(train_filenames), block_length=1) \
+				.apply(tf.contrib.data.shuffle_and_repeat(10000)) \
 				.apply(tf.contrib.data.map_and_batch(parser, self.batch_size, num_parallel_calls=8)) \
 				.prefetch(tf.contrib.data.AUTOTUNE)
-				# .apply(tf.contrib.data.prefetch_to_device("/device:GPU:0"))
+			# .apply(tf.contrib.data.prefetch_to_device("/device:GPU:0"))
 
-			test_dataset = tf.data.TFRecordDataset(test_filenames, compression_type='GZIP')\
+			test_dataset = tf.data.TFRecordDataset(test_filenames, compression_type='GZIP') \
 				.apply(tf.contrib.data.map_and_batch(parser, self.batch_size, num_parallel_calls=8)) \
 				.prefetch(tf.contrib.data.AUTOTUNE)
-				# .apply(tf.contrib.data.prefetch_to_device("/device:GPU:0"))
+		# .apply(tf.contrib.data.prefetch_to_device("/device:GPU:0"))
 
 		else:
 			raise Exception('Invalid database. Choose one of: 10, 100, EMNIST or Retinopathy.')
-
 
 		if not train_x is None and not test_x is None and not train_y_cls is None and not test_y_cls is None:
 			train_x = train_x / 255.0
@@ -323,7 +339,8 @@ class Experiment():
 			on_epoch_end=save_epoch
 		)
 
-		net_object = Net(img_size, self.activation, self.final_activation, num_channels, num_classes, self.spp_alpha, self._dropout)
+		net_object = Net(img_size, self.activation, self.final_activation, num_channels, num_classes, self.spp_alpha,
+						 self._dropout)
 		if self.net_type == 'resnet56':
 			# net = resnet.inference(x, 9, False)
 			raise NotImplementedError
@@ -346,82 +363,90 @@ class Experiment():
 
 		start_epoch = 0
 
-		if os.path.isfile(os.path.join(self.checkpoint_dir, model_file)) and os.path.isfile(os.path.join(self.checkpoint_dir, model_file_extra)):
+		if os.path.isfile(os.path.join(self.checkpoint_dir, model_file)) and os.path.isfile(
+				os.path.join(self.checkpoint_dir, model_file_extra)):
 			print("===== RESTORING SAVED MODEL =====")
 			model.load_weights(os.path.join(self.checkpoint_dir, model_file))
 
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
 
-
 		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
 
+		loss = 'categorical_crossentropy'
+
+		if self.loss == 'qwk':
+			loss = qwk_loss(cost_matrix)
+
 		model.compile(
-			optimizer = tf.keras.optimizers.SGD(lr=self.lr, momentum=self.momentum, nesterov=True),
-			loss =  qwk_loss(cost_matrix), # 'categorical_crossentropy',
-			metrics = ['accuracy', quadratic_weighted_kappa(num_classes, cost_matrix)]
+			optimizer=tf.keras.optimizers.Adam(lr=self.lr),
+			# tf.keras.optimizers.SGD(lr=self.lr, momentum=self.momentum, nesterov=True),
+			loss=loss,
+			metrics=['accuracy', quadratic_weighted_kappa(num_classes, cost_matrix)]
 		)
 
 		model.summary()
 
 		if not train_x is None and not test_x is None and not train_y is None and not test_y is None:
 			model.fit(x=train_x, y=train_y, batch_size=self.batch_size, epochs=self.epochs, initial_epoch=start_epoch,
-					  callbacks=[ # tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-								  # MomentumScheduler(momentum_scheduler),
-						  		  ValidationCallback(test_dataset, num_classes),
-								  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
-								  save_epoch_callback,
-								  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
-								  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir)
-								  ],
+					  callbacks=[  # tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+						  # MomentumScheduler(momentum_scheduler),
+						  ValidationCallback(test_dataset, num_classes),
+						  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
+						  save_epoch_callback,
+						  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
+						  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir)
+					  ],
 					  # validation_data=(test_x, test_y)
 					  )
 		elif train_dataset and test_dataset:
-			model.fit(x=train_dataset.make_one_shot_iterator(), y=None, batch_size=None, epochs=self.epochs, initial_epoch=start_epoch,
-					  steps_per_epoch=100000//self.batch_size,
-					  callbacks=[# tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-								 # MomentumScheduler(momentum_scheduler),
-								 ValidationCallback(test_dataset, num_classes),
-								 tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
-								 save_epoch_callback,
-								 tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
-								 tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
-								 ],
+			model.fit(x=train_dataset.make_one_shot_iterator(), y=None, batch_size=None, epochs=self.epochs,
+					  initial_epoch=start_epoch,
+					  steps_per_epoch=100000 // self.batch_size,
+					  callbacks=[  # tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+						  # MomentumScheduler(momentum_scheduler),
+						  ValidationCallback(test_dataset, num_classes),
+						  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
+						  save_epoch_callback,
+						  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
+						  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
+					  ],
 					  )
 		else:
 			raise Exception('Database not initialized')
 
 		self.finished = True
 
-
 	def get_config(self):
 		return {
-			'name' : self.name,
-			'db' : self.db,
-			'net_type' : self.net_type,
-			'batch_size' : self.batch_size,
-			'epochs' : self.epochs,
-			'checkpoint_dir' : self.checkpoint_dir,
-			'activation' : self.activation,
-			'final_activation' : self.final_activation,
-			'spp_alpha' : self.spp_alpha,
-			'lr' : self.lr,
-			'momentum' : self.momentum,
-			'dropout' : self.dropout
+			'name': self.name,
+			'db': self.db,
+			'net_type': self.net_type,
+			'batch_size': self.batch_size,
+			'epochs': self.epochs,
+			'checkpoint_dir': self.checkpoint_dir,
+			'loss' : self.loss,
+			'activation': self.activation,
+			'final_activation': self.final_activation,
+			'spp_alpha': self.spp_alpha,
+			'lr': self.lr,
+			'momentum': self.momentum,
+			'dropout': self.dropout
 		}
 
 	def set_config(self, config):
-		self.db = config['db']
-		self.net_type = config['net_type']
-		self.batch_size = config['batch_size']
-		self.epochs = config['epochs']
-		self.checkpoint_dir = config['checkpoint_dir']
-		self.activation = config['activation']
-		self.final_activation = config['final_activation']
-		self.spp_alpha = config['spp_alpha']
-		self.lr = config['lr']
-		self.momentum = config['momentum']
-		self.dropout = config['dropout']
+		self.db = 'db' in config and config['db'] or '10'
+		self.net_type = 'net_type' in config and config['net_type'] or 'vgg19'
+		self.batch_size = 'batch_size' in config and config['batch_size'] or 128
+		self.epochs = 'epochs' in config and config['epochs'] or 100
+		self.checkpoint_dir = 'checkpoint_dir' in config and config['checkpoint_dir'] or 'results'
+		self.loss = 'loss' in config and config['loss'] or 'crossentropy'
+		self.activation = 'activation' in config and config['activation'] or 'relu'
+		self.final_activation = 'final_activation' in config and config['final_activation'] or 'softmax'
+		self.spp_alpha = 'spp_alpha' in config and config['spp_alpha'] or 0
+		self.lr = 'lr' in config and config['lr'] or 0.1
+		self.momentum = 'momentum' in config and config['momentum'] or 0
+		self.dropout = 'dropout' in config and config['dropout'] or 0
 
 		if 'name' in config:
 			self.name = config['name']
