@@ -46,9 +46,20 @@ class ExperimentSet():
 			configs = json.load(f)
 
 		for config in configs:
-			experiment = Experiment()
-			experiment.set_config(config)
-			self.add_experiment(experiment)
+			if 'executions' in config and config['executions'] > 1:
+				for execution in range(1, int(config['executions'])):
+					exec_config = config
+					if 'name' in exec_config:
+						exec_config['name'] += "_{}".format(execution)
+					exec_config['checkpoint_dir'] += "/{}".format(execution)
+					experiment = Experiment()
+					experiment.set_config(exec_config)
+					self.add_experiment(experiment)
+
+			elif not 'executions' in config or ('executions' in config and config['executions'] > 0):
+				experiment = Experiment()
+				experiment.set_config(config)
+				self.add_experiment(experiment)
 
 	def save_to_file(self, path):
 		configs = []

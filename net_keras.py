@@ -18,81 +18,65 @@ class Net:
 	def vgg19(self):
 		model = tf.keras.models.Sequential([
 			# Block 1
-			tf.keras.layers.Conv2D(64, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same',
+			tf.keras.layers.Conv2D(64, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same',
 								   input_shape=(self.size, self.size, self.num_channels), data_format='channels_last'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(64, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(64, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.MaxPooling2D(),
 
 			# Block 2
-			tf.keras.layers.Conv2D(128, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(128, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(128, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(128, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.MaxPooling2D(),
 
 			# Block 3
-			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(256, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.MaxPooling2D(),
 
 			# Block 4
-			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.MaxPooling2D(),
 
 			# Block 5
-			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
-			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform',
-								   kernel_regularizer=tf.keras.regularizers.l2(0.01), padding='same', ),
+			tf.keras.layers.Conv2D(512, 3, strides=(1, 1), kernel_initializer='he_uniform', padding='same', ),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.MaxPooling2D(),
@@ -100,9 +84,9 @@ class Net:
 			# Classification block
 			tf.keras.layers.Flatten(),
 			tf.keras.layers.Dropout(rate=self.dropout),
-			tf.keras.layers.Dense(4096, kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+			tf.keras.layers.Dense(4096),
 			self.__get_activation(),
-			tf.keras.layers.Dense(4096, kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+			tf.keras.layers.Dense(4096),
 			self.__get_activation(),
 		])
 
@@ -122,54 +106,61 @@ class Net:
 
 		model = tf.keras.Sequential([
 			tf.keras.layers.Conv2D(32, feature_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l2(0.01), input_shape=(128, 128, 3),
+								   kernel_initializer='he_uniform', input_shape=(128, 128, 3),
 								   data_format='channels_last'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.Conv2D(32, feature_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+								   kernel_initializer='he_uniform'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.MaxPooling2D(),
 
 			tf.keras.layers.Conv2D(64, feature_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+								   kernel_initializer='he_uniform'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.Conv2D(64, feature_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+								   kernel_initializer='he_uniform'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.MaxPooling2D(),
 
 			tf.keras.layers.Conv2D(128, feature_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+								   kernel_initializer='he_uniform'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.Conv2D(128, feature_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+								   kernel_initializer='he_uniform'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.MaxPooling2D(),
 
 			tf.keras.layers.Conv2D(128, feature_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+								   kernel_initializer='he_uniform'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.Conv2D(128, feature_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+								   kernel_initializer='he_uniform'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),
 			tf.keras.layers.MaxPooling2D(),
 
 			tf.keras.layers.Conv2D(128, classif_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+								   kernel_initializer='he_uniform'),
 			self.__get_activation(),
 
 			tf.keras.layers.Flatten(),
-			tf.keras.layers.Dense(self.num_classes, activation='softmax', kernel_regularizer=tf.keras.regularizers.l2(0.01)),
+			# tf.keras.layers.Dense(self.num_classes, activation='softmax),
 
 		])
+
+		if self.final_activation == 'pom':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes))
+		else:
+			model.add(tf.keras.layers.Dense(self.num_classes))
+			model.add(tf.keras.layers.Activation(self.final_activation))
 
 		return model
 

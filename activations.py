@@ -1,13 +1,16 @@
 import tensorflow as tf
 
+
 class SPP(tf.keras.layers.Activation):
 	def __init__(self, activation, **kwargs):
 		super(SPP, self).__init__(activation, **kwargs)
 		self.__name__ = 'SPP'
 
+
 def parametric_softplus(spp_alpha):
 	def spp(x):
 		return tf.log(1 + tf.exp(x)) - spp_alpha
+
 	return spp
 
 
@@ -20,10 +23,14 @@ class MPELU(tf.keras.layers.Layer):
 		shape = [1]
 
 		if self.channel_wise:
-			shape = [int(input_shape[-1])] # Number of channels
+			shape = [int(input_shape[-1])]  # Number of channels
 
-		self.alpha = self.add_weight(name='alpha', shape=shape, dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32), trainable=True)
-		self.beta = self.add_weight(name='beta', shape=shape, dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32), trainable=True)
+		self.alpha = self.add_weight(name='alpha', shape=shape, dtype=tf.float32,
+									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+									 trainable=True)
+		self.beta = self.add_weight(name='beta', shape=shape, dtype=tf.float32,
+									initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+									trainable=True)
 
 		# Finish buildidng
 		super(MPELU, self).build(input_shape)
@@ -45,7 +52,9 @@ class RTReLU(tf.keras.layers.Layer):
 	def build(self, input_shape):
 		shape = [int(input_shape[-1])]  # Number of channels
 
-		self.a = self.add_weight(name='a', shape=shape, dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32), trainable=False)
+		self.a = self.add_weight(name='a', shape=shape, dtype=tf.float32,
+								 initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+								 trainable=False)
 
 		# Finish building
 		super(RTReLU, self).build(input_shape)
@@ -64,7 +73,9 @@ class RTPReLU(tf.keras.layers.PReLU):
 	def build(self, input_shape):
 		shape = [int(input_shape[-1])]  # Number of channels
 
-		self.a = self.add_weight(name='a', shape=shape, dtype=tf.float32, initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32), trainable=False)
+		self.a = self.add_weight(name='a', shape=shape, dtype=tf.float32,
+								 initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+								 trainable=False)
 
 		# Call PReLU build method
 		super(RTPReLU, self).build(input_shape)
@@ -74,6 +85,7 @@ class RTPReLU(tf.keras.layers.PReLU):
 		neg = -self.alpha * tf.nn.relu(-(inputs * self.a))
 
 		return pos + neg
+
 
 class PairedReLU(tf.keras.layers.Layer):
 	def __init__(self, scale=0.5, **kwargs):
@@ -85,14 +97,16 @@ class PairedReLU(tf.keras.layers.Layer):
 									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
 									 trainable=True)
 		self.theta_p = self.add_weight(name='theta_p', shape=[1], dtype=tf.float32,
-									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
-									 trainable=True)
+									   initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+									   trainable=True)
 
 		# Finish building
 		super(PairedReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		return tf.concat((tf.nn.relu(self.scale * inputs - self.theta), tf.nn.relu(-self.scale * inputs - self.theta_p)), axis=len(inputs.get_shape()) - 1)
+		return tf.concat(
+			(tf.nn.relu(self.scale * inputs - self.theta), tf.nn.relu(-self.scale * inputs - self.theta_p)),
+			axis=len(inputs.get_shape()) - 1)
 
 	def compute_output_shape(self, input_shape):
 		return [input_shape[:-1], input_shape[-1] * 2]
@@ -141,6 +155,7 @@ class EPReLU(tf.keras.layers.PReLU):
 
 		return pos + neg
 
+
 class SQRTActivation(tf.keras.layers.Layer):
 	def __init__(self, **kwargs):
 		super(SQRTActivation, self).__init__(**kwargs)
@@ -154,6 +169,7 @@ class SQRTActivation(tf.keras.layers.Layer):
 
 		return pos + neg
 
+
 class NNPOM(tf.keras.layers.Layer):
 	def __init__(self, num_classes, **kwargs):
 		self.num_classes = num_classes
@@ -162,8 +178,10 @@ class NNPOM(tf.keras.layers.Layer):
 	def _convert_thresholds(self, b, a):
 		a = tf.pow(a, 2)
 		thresholds_param = tf.concat([b, a], axis=0)
-		th = tf.reduce_sum(tf.matrix_band_part(tf.ones([self.num_classes - 1, self.num_classes - 1]), -1, 0) * tf.reshape(
-			tf.tile(thresholds_param, [self.num_classes - 1]), shape=[self.num_classes - 1, self.num_classes - 1]), axis=1)
+		th = tf.reduce_sum(
+			tf.matrix_band_part(tf.ones([self.num_classes - 1, self.num_classes - 1]), -1, 0) * tf.reshape(
+				tf.tile(thresholds_param, [self.num_classes - 1]), shape=[self.num_classes - 1, self.num_classes - 1]),
+			axis=1)
 		return th
 
 	def _nnpom(self, projected, thresholds):
@@ -179,13 +197,17 @@ class NNPOM(tf.keras.layers.Layer):
 		return a3
 
 	def build(self, input_shape):
-		self.thresholds_b = self.add_weight('b_b_nnpom', shape=(1,), initializer=tf.random_uniform(shape=(1,), minval=-1, maxval=1))
+		self.thresholds_b = self.add_weight('b_b_nnpom', shape=(1,),
+											initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 		self.thresholds_a = self.add_weight('b_a_nnpom', shape=(self.num_classes - 2,),
-											initializer=tf.random_uniform(shape=(self.num_classes -2,), minval=-0.5, maxval=0.5))
+											initializer=tf.random_uniform_initializer(minval=-0.5, maxval=0.5))
+		self.thresholds_t = self.add_weight('t_nnpom', shape=(1,), initializer=tf.constant_initializer(1000.0),
+											dtype=tf.float32)
 
 	def call(self, x):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)
-		return self._nnpom(x / 1000.0, thresholds / 1000.0)
+		return self._nnpom(x / self.thresholds_t, thresholds / self.thresholds_t)
 
 	def compute_output_shape(self, input_shape):
+		print(input_shape)
 		return (input_shape[0], 1)
