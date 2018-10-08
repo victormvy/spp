@@ -151,6 +151,7 @@ class Net:
 			tf.keras.layers.Conv2D(128, classif_filter_size, strides=(1, 1),
 								   kernel_initializer='he_uniform'),
 			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
 
 			tf.keras.layers.Flatten(),
 			# tf.keras.layers.Dense(self.num_classes, activation='softmax),
