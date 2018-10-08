@@ -16,6 +16,7 @@ from metrics import quadratic_weighted_kappa
 class Experiment():
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
+				 prob_layer=None,
 				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0):
 		self._name = name
 		self._db = db
@@ -26,6 +27,7 @@ class Experiment():
 		self._loss = loss
 		self._activation = activation
 		self._final_activation = final_activation
+		self._prob_layer = prob_layer
 		self._spp_alpha = spp_alpha
 		self._lr = lr
 		self._momentum = momentum
@@ -36,9 +38,10 @@ class Experiment():
 		self.name = self.get_auto_name()
 
 	def get_auto_name(self):
-		return "{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation,
-												self.final_activation, self.spp_alpha, self.lr,
-												self.momentum)
+		return "{}_{}_{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.loss,
+												   self.final_activation, self.prob_layer and self.prob_layer or '',
+												   self.spp_alpha, self.lr,
+												   self.momentum)
 
 	# PROPERTIES
 
@@ -149,6 +152,18 @@ class Experiment():
 	@final_activation.deleter
 	def final_activation(self):
 		del self._final_activation
+
+	@property
+	def prob_layer(self):
+		return self._prob_layer
+
+	@prob_layer.setter
+	def prob_layer(self, prob_layer):
+		self._prob_layer = prob_layer
+
+	@prob_layer.deleter
+	def prob_layer(self):
+		del self._prob_layer
 
 	@property
 	def spp_alpha(self):
@@ -339,7 +354,8 @@ class Experiment():
 			on_epoch_end=save_epoch
 		)
 
-		net_object = Net(img_size, self.activation, self.final_activation, num_channels, num_classes, self.spp_alpha,
+		net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels, num_classes,
+						 self.spp_alpha,
 						 self._dropout)
 		if self.net_type == 'resnet56':
 			# net = resnet.inference(x, 9, False)
@@ -425,7 +441,8 @@ class Experiment():
 			'batch_size': self.batch_size,
 			'epochs': self.epochs,
 			'checkpoint_dir': self.checkpoint_dir,
-			'loss' : self.loss,
+			'prob_layer': self.prob_layer,
+			'loss': self.loss,
 			'activation': self.activation,
 			'final_activation': self.final_activation,
 			'spp_alpha': self.spp_alpha,
@@ -443,6 +460,7 @@ class Experiment():
 		self.loss = 'loss' in config and config['loss'] or 'crossentropy'
 		self.activation = 'activation' in config and config['activation'] or 'relu'
 		self.final_activation = 'final_activation' in config and config['final_activation'] or 'softmax'
+		self.prob_layer = 'prob_layer' in config and config['prob_layer'] or None
 		self.spp_alpha = 'spp_alpha' in config and config['spp_alpha'] or 0
 		self.lr = 'lr' in config and config['lr'] or 0.1
 		self.momentum = 'momentum' in config and config['momentum'] or 0

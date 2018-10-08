@@ -72,3 +72,4 @@ class ValidationCallback(tf.keras.callbacks.Callback):
 		logs['val_loss'] = mean_loss
 
 		print('val_loss: {} - val_acc: {} - val_qwk: {}'.format(mean_loss, mean_acc, qwk))
+		print(conf_mat)

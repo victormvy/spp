@@ -1,12 +1,14 @@
 import tensorflow as tf
 from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, NNPOM
+from layers import GeometricLayer
 
 
 class Net:
-	def __init__(self, size, activation, final_activation, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
+	def __init__(self, size, activation, final_activation, prob_layer=None, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
 		self.size = size
 		self.activation = activation
 		self.final_activation = final_activation
+		self.prob_layer = prob_layer
 		self.num_channels = num_channels
 		self.num_classes = num_classes
 		self.spp_alpha = spp_alpha
@@ -160,6 +162,8 @@ class Net:
 			model.add(NNPOM(self.num_classes))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
+			if self.prob_layer == 'geometric':
+				model.add(GeometricLayer())
 			model.add(tf.keras.layers.Activation(self.final_activation))
 
 		return model
