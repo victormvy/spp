@@ -108,7 +108,7 @@ class Net:
 
 		model = tf.keras.Sequential([
 			tf.keras.layers.Conv2D(32, feature_filter_size, strides=(1, 1),
-								   kernel_initializer='he_uniform', input_shape=(128, 128, 3),
+								   kernel_initializer='he_uniform', input_shape=(self.size, self.size, self.num_channels),
 								   data_format='channels_last'),
 			self.__get_activation(),
 			tf.keras.layers.BatchNormalization(),

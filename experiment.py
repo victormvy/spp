@@ -394,11 +394,16 @@ class Experiment():
 		if self.loss == 'qwk':
 			loss = qwk_loss(cost_matrix)
 
+		metrics = ['accuracy']
+		# If database is retinopathy, add qwk metric
+		if self.db == 'retinopathy':
+			metrics.append(quadratic_weighted_kappa(num_classes, cost_matrix))
+
 		model.compile(
 			optimizer=tf.keras.optimizers.Adam(lr=self.lr),
 			# tf.keras.optimizers.SGD(lr=self.lr, momentum=self.momentum, nesterov=True),
 			loss=loss,
-			metrics=['accuracy', quadratic_weighted_kappa(num_classes, cost_matrix)]
+			metrics=metrics
 		)
 
 		model.summary()
@@ -407,13 +412,13 @@ class Experiment():
 			model.fit(x=train_x, y=train_y, batch_size=self.batch_size, epochs=self.epochs, initial_epoch=start_epoch,
 					  callbacks=[  # tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 						  # MomentumScheduler(momentum_scheduler),
-						  ValidationCallback(test_dataset, num_classes),
+						  # ValidationCallback(test_dataset, num_classes),
 						  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
 						  save_epoch_callback,
 						  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
 						  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir)
 					  ],
-					  # validation_data=(test_x, test_y)
+					   validation_data=(test_x, test_y)
 					  )
 		elif train_dataset and test_dataset:
 			model.fit(x=train_dataset.make_one_shot_iterator(), y=None, batch_size=None, epochs=self.epochs,
