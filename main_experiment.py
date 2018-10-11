@@ -14,6 +14,7 @@ def cli():
 @click.option('--batch_size', '-b', default=128, help=u'Batch size')
 @click.option('--epochs', '-e', default=100, help=u'Number of epochs')
 @click.option('--checkpoint_dir', '-d', required=True, help=u'Checkpoint files directory')
+@click.option('--loss', '-l', default='categorical_crossentropy', help=u'Loss function for training')
 @click.option('--activation', '-a', default='relu', help=u'Activation function')
 @click.option('--final_activation', '-f', default='softmax', help=u'Final layer activation function')
 @click.option('--prob_layer', '-p', default='', help=u'Probability layer')
@@ -22,9 +23,9 @@ def cli():
 @click.option('--momentum', '-m', default=0.1, help=u'Momentum for optimizer')
 @click.option('--rep', '-r', default=1, help=u'Repetitions for this execution.')
 @click.option('--dropout', '-o', default=0.0, help=u'Drop rate.')
-def train(db, net_type, batch_size, epochs, checkpoint_dir, activation, final_activation, prob_layer, spp_alpha, lr, momentum, rep, dropout):
+def train(db, net_type, batch_size, epochs, checkpoint_dir, loss, activation, final_activation, prob_layer, spp_alpha, lr, momentum, rep, dropout):
 	for execution in range(1, rep + 1):
-		experiment = Experiment('', db, net_type, batch_size, epochs, checkpoint_dir, activation, final_activation, prob_layer, spp_alpha, lr, momentum, dropout)
+		experiment = Experiment('', db, net_type, batch_size, epochs, checkpoint_dir, loss, activation, final_activation, prob_layer, spp_alpha, lr, momentum, dropout)
 		experiment.set_auto_name()
 		experiment.checkpoint_dir = "{}/{}/{}".format(checkpoint_dir, experiment.get_auto_name(), execution)
 		experiment.run()

@@ -97,6 +97,7 @@ class Net:
 			model.add(NNPOM(self.num_classes))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
+			print(self.final_activation)
 			model.add(tf.keras.layers.Activation(self.final_activation))
 
 		return model
