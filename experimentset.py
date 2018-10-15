@@ -1,4 +1,5 @@
 import json
+import tensorflow as tf
 from experiment import Experiment
 
 class ExperimentSet():
@@ -74,3 +75,5 @@ class ExperimentSet():
 		for experiment in self.experiments:
 			if not experiment.finished:
 				experiment.run()
+				# Clear graph
+				tf.reset_default_graph()
