@@ -75,5 +75,5 @@ class ExperimentSet():
 		for experiment in self.experiments:
 			if not experiment.finished:
 				experiment.run()
-				# Clear graph
-				tf.reset_default_graph()
+				# Clear session
+				tf.keras.backend.clear_session()

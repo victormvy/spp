@@ -97,7 +97,6 @@ class Net:
 			model.add(NNPOM(self.num_classes))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
-			print(self.final_activation)
 			model.add(tf.keras.layers.Activation(self.final_activation))
 
 		return model
@@ -155,9 +154,11 @@ class Net:
 			tf.keras.layers.BatchNormalization(),
 
 			tf.keras.layers.Flatten(),
-			# tf.keras.layers.Dense(self.num_classes, activation='softmax),
 
 		])
+
+		if self.dropout > 0:
+			model.add(tf.keras.layers.Dropout(rate=self.dropout))
 
 		if self.final_activation == 'pom':
 			model.add(tf.keras.layers.Dense(1))
