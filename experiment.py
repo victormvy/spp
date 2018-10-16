@@ -38,10 +38,10 @@ class Experiment():
 		self.name = self.get_auto_name()
 
 	def get_auto_name(self):
-		return "{}_{}_{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.loss,
+		return "{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.loss,
 												   self.final_activation, self.prob_layer and self.prob_layer or '',
 												   self.spp_alpha, self.lr,
-												   self.momentum)
+												   self.momentum, self.dropout)
 
 	# PROPERTIES
 
