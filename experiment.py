@@ -327,14 +327,7 @@ class Experiment():
 			test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
 
 		def learning_rate_scheduler(epoch):
-			final_lr = self.lr
-			if epoch >= 60:
-				final_lr -= 0.02
-			if epoch >= 80:
-				final_lr -= 0.02
-			if epoch >= 90:
-				final_lr -= 0.02
-			return float(final_lr)
+			return self.lr / (1 + epoch / 30)
 
 		def momentum_scheduler(epoch):
 			final_mmt = self.momentum
@@ -424,7 +417,7 @@ class Experiment():
 			model.fit(x=train_dataset.make_one_shot_iterator(), y=None, batch_size=None, epochs=self.epochs,
 					  initial_epoch=start_epoch,
 					  steps_per_epoch=100000 // self.batch_size,
-					  callbacks=[  # tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+					  callbacks=[  tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 						  # MomentumScheduler(momentum_scheduler),
 						  ValidationCallback(test_dataset, num_classes),
 						  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
