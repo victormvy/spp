@@ -38,10 +38,12 @@ class Experiment():
 		self.name = self.get_auto_name()
 
 	def get_auto_name(self):
-		return "{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation, self.loss,
-												   self.final_activation, self.prob_layer and self.prob_layer or '',
-												   self.spp_alpha, self.lr,
-												   self.momentum, self.dropout)
+		return "{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation,
+														 self.loss,
+														 self.final_activation,
+														 self.prob_layer and self.prob_layer or '',
+														 self.spp_alpha, self.lr,
+														 self.momentum, self.dropout)
 
 	# PROPERTIES
 
@@ -349,7 +351,7 @@ class Experiment():
 
 		net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels, num_classes,
 						 self.spp_alpha,
-						 self._dropout)
+						 self.dropout)
 		if self.net_type == 'resnet56':
 			# net = resnet.inference(x, 9, False)
 			raise NotImplementedError
@@ -411,20 +413,20 @@ class Experiment():
 						  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
 						  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir)
 					  ],
-					   validation_data=(test_x, test_y)
+					  validation_data=(test_x, test_y)
 					  )
 		elif train_dataset and test_dataset:
 			model.fit(x=train_dataset.make_one_shot_iterator(), y=None, batch_size=None, epochs=self.epochs,
 					  initial_epoch=start_epoch,
 					  steps_per_epoch=100000 // self.batch_size,
-					  callbacks=[  tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-						  # MomentumScheduler(momentum_scheduler),
-						  ValidationCallback(test_dataset, num_classes),
-						  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
-						  save_epoch_callback,
-						  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
-						  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
-					  ],
+					  callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+								 # MomentumScheduler(momentum_scheduler),
+								 ValidationCallback(test_dataset, num_classes),
+								 tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
+								 save_epoch_callback,
+								 tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
+								 tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
+								 ],
 					  )
 		else:
 			raise Exception('Database not initialized')
