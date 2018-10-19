@@ -241,8 +241,25 @@ class Experiment():
 		test_y_cls = None
 		train_y = None
 		test_y = None
-		train_dataset = None
-		test_dataset = None
+
+		class_weight = None
+
+
+		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
+			rescale=1. / 255,
+			shear_range=0.2,
+			zoom_range=0.2,
+			horizontal_flip=True,
+			vertical_flip=True,
+			brightness_range=(0.5, 1.5),
+			rotation_range=90,
+			fill_mode='nearest'
+		)
+
+		test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255)
+
+		train_generator = None
+		test_generator = None
 
 		if self.db == '10':
 			(train_x, train_y_cls), (test_x, test_y_cls) = tf.keras.datasets.cifar10.load_data()
@@ -263,60 +280,34 @@ class Experiment():
 			num_channels = 1
 			img_size = 28
 		elif self.db.lower() == 'retinopathy':
-			train_path = "../retinopathy_small/tiny/train"
-			test_path = "../retinopathy_small/tiny/val"
+			train_path = "../retinopathy/128/train"
+			test_path = "../retinopathy/128/val"
 			num_classes = 5
 			num_channels = 3
 			img_size = 128
 			img_shape = (img_size, img_size, num_channels)
 
-			train_filenames = []
-			for file in glob.glob(os.path.join(train_path, "*.tfrecords")):
-				train_filenames.append(file)
+			train_generator = train_datagen.flow_from_directory(
+				train_path,
+				target_size=(img_size, img_size),
+				batch_size=self.batch_size,
+				class_mode='categorical'
+			)
 
-			test_filenames = []
-			for file in glob.glob(os.path.join(test_path, "*.tfrecords")):
-				test_filenames.append(file)
+			test_generator = test_datagen.flow_from_directory(
+				test_path,
+				target_size=(img_size, img_size),
+				batch_size=self.batch_size,
+				class_mode='categorical'
+			)
 
-			if len(train_filenames) == 0 or len(test_filenames) == 0:
-				raise Exception('Invalid database')
-
-			def parser(record):
-				"""
-				Read samples from record and decode them as image-label.
-				This function is used with dataset.map() function
-
-				:param record: record from tfrecords file.
-				:return: image, label.
-				"""
-
-				keys_to_features = {
-					"image": tf.FixedLenFeature((), tf.string, default_value=""),
-					"label": tf.FixedLenFeature((), tf.int64, default_value=tf.zeros([], dtype=tf.int64)),
-				}
-				parsed = tf.parse_single_example(record, keys_to_features)
-
-				# Perform additional preprocessing on the parsed data.
-				image = tf.decode_raw(parsed["image"], tf.int64)
-				image = tf.reshape(image, img_shape)
-				image = (tf.cast(image, tf.float32) / 255.0) * 2.0 - 1.0
-				label = tf.cast(parsed["label"], tf.int32)
-				label = tf.one_hot(label, depth=num_classes, dtype=tf.float32)
-
-				return image, label
-
-			train_dataset = tf.data.Dataset.from_tensor_slices(train_filenames) \
-				.interleave(lambda x: tf.data.TFRecordDataset(x, compression_type='GZIP'),
-							cycle_length=len(train_filenames), block_length=1) \
-				.apply(tf.contrib.data.shuffle_and_repeat(10000)) \
-				.apply(tf.contrib.data.map_and_batch(parser, self.batch_size, num_parallel_calls=8)) \
-				.prefetch(tf.contrib.data.AUTOTUNE)
-			# .apply(tf.contrib.data.prefetch_to_device("/device:GPU:0"))
-
-			test_dataset = tf.data.TFRecordDataset(test_filenames, compression_type='GZIP') \
-				.apply(tf.contrib.data.map_and_batch(parser, self.batch_size, num_parallel_calls=8)) \
-				.prefetch(tf.contrib.data.AUTOTUNE)
-		# .apply(tf.contrib.data.prefetch_to_device("/device:GPU:0"))
+			class_weight = {
+				0: 1,
+				1: 3.4,
+				2: 3.15,
+				3: 3.59,
+				4: 3.63
+			}
 
 		else:
 			raise Exception('Invalid database. Choose one of: 10, 100, EMNIST or Retinopathy.')
@@ -330,16 +321,6 @@ class Experiment():
 
 		def learning_rate_scheduler(epoch):
 			return self.lr / (1 + epoch / 30)
-
-		def momentum_scheduler(epoch):
-			final_mmt = self.momentum
-			if epoch >= 60:
-				final_mmt -= 0.0005
-			if epoch >= 80:
-				final_mmt -= 0.0005
-			if epoch >= 90:
-				final_mmt -= 0.0005
-			return float(final_mmt)
 
 		def save_epoch(epoch, logs):
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'w') as f:
@@ -415,18 +396,22 @@ class Experiment():
 					  ],
 					  validation_data=(test_x, test_y)
 					  )
-		elif train_dataset and test_dataset:
-			model.fit(x=train_dataset.make_one_shot_iterator(), y=None, batch_size=None, epochs=self.epochs,
+		elif train_generator and test_generator:
+			model.fit_generator(train_generator, epochs=self.epochs,
 					  initial_epoch=start_epoch,
 					  steps_per_epoch=100000 // self.batch_size,
 					  callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 								 # MomentumScheduler(momentum_scheduler),
-								 ValidationCallback(test_dataset, num_classes),
+								 ValidationCallback(test_generator, num_classes),
 								 tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
 								 save_epoch_callback,
 								 tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
 								 tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 								 ],
+						workers=8,
+						use_multiprocessing=True,
+						max_queue_size=self.batch_size * 3,
+						class_weight=class_weight
 					  )
 		else:
 			raise Exception('Database not initialized')

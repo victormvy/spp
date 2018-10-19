@@ -24,9 +24,8 @@ class MomentumScheduler(tf.keras.callbacks.Callback):
 
 class ValidationCallback(tf.keras.callbacks.Callback):
 
-	def __init__(self, val_dataset, num_classes):
-		self.val_dataset = val_dataset
-		self.val_iterator = val_dataset.make_initializable_iterator()
+	def __init__(self, val_generator, num_classes):
+		self.val_generator = val_generator
 		self.classes = []
 		self.num_classes = num_classes
 		self.cost_matrix = make_cost_matrix(self.num_classes)
@@ -34,35 +33,33 @@ class ValidationCallback(tf.keras.callbacks.Callback):
 		for i in range(0, num_classes):
 			self.classes.append(i)
 
-		self.next_element = self.val_iterator.get_next()
 
 	def on_epoch_end(self, epoch, logs={}):
 		sess = tf.keras.backend.get_session()
-		sess.run(self.val_iterator.initializer)
 		conf_mat = None
 		mean_acc = 0
 		mean_loss = 0
 		batch_count = 0
 
-		while True:
-			try:
-				x, y = sess.run(self.next_element)
-				prediction = self.model.predict_on_batch(x)
-				loss = self.model.test_on_batch(x, y)[0]
-				y = np.argmax(y, axis=1)
-				prediction = np.argmax(prediction, axis=1)
-
-				if conf_mat is None:
-					conf_mat = confusion_matrix(y, prediction, labels=self.classes)
-				else:
-					conf_mat += confusion_matrix(y, prediction, labels=self.classes)
-
-				batch_count += 1
-				mean_acc += accuracy_score(y, prediction)
-				mean_loss += loss
-
-			except tf.errors.OutOfRangeError:
+		for x, y in self.val_generator:
+			if batch_count >= 300:
 				break
+
+			prediction = self.model.predict_on_batch(x)
+			loss = self.model.test_on_batch(x, y)[0]
+			y = np.argmax(y, axis=1)
+			prediction = np.argmax(prediction, axis=1)
+
+			if conf_mat is None:
+				conf_mat = confusion_matrix(y, prediction, labels=self.classes)
+			else:
+				conf_mat += confusion_matrix(y, prediction, labels=self.classes)
+
+			batch_count += 1
+			mean_acc += accuracy_score(y, prediction)
+			mean_loss += loss
+
+
 
 		mean_acc /= batch_count
 		mean_loss /= batch_count
@@ -71,5 +68,5 @@ class ValidationCallback(tf.keras.callbacks.Callback):
 		logs['val_qwk'] = qwk
 		logs['val_loss'] = mean_loss
 
-		print('val_loss: {} - val_acc: {} - val_qwk: {}'.format(mean_loss, mean_acc, qwk))
+		print('\nval_loss: {} - val_acc: {} - val_qwk: {}'.format(mean_loss, mean_acc, qwk))
 		print(conf_mat)
