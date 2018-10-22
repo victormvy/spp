@@ -171,8 +171,10 @@ class SQRTActivation(tf.keras.layers.Layer):
 
 
 class NNPOM(tf.keras.layers.Layer):
-	def __init__(self, num_classes, **kwargs):
+	def __init__(self, num_classes, transfer_function, **kwargs):
 		self.num_classes = num_classes
+		self.dist = tf.distributions.Normal(loc=0., scale=1.)
+		self.transfer_function = transfer_function
 		super(NNPOM, self).__init__(**kwargs)
 
 	def _convert_thresholds(self, b, a):
@@ -190,7 +192,10 @@ class NNPOM(tf.keras.layers.Layer):
 		a = tf.reshape(tf.tile(thresholds, [m]), shape=[m, -1])
 		b = tf.transpose(tf.reshape(tf.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
 		z3 = a - b
-		a3T = 1.0 / (1.0 + tf.exp(-z3))
+		if self.transfer_function == 'probit':
+			a3T = self.dist.cdf(z3)
+		else:
+			a3T = 1.0 / (1.0 + tf.exp(-z3))
 		a3 = tf.concat([a3T, tf.ones([m, 1])], axis=1)
 		a3 = tf.concat([tf.reshape(a3[:, 0], shape=[-1, 1]), a3[:, 1:] - a3[:, 0:-1]], axis=-1)
 

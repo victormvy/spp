@@ -92,9 +92,12 @@ class Net:
 			self.__get_activation(),
 		])
 
-		if self.final_activation == 'pom':
+		if self.final_activation == 'poml':
 			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes))
+			model.add(NNPOM(self.num_classes, 'logit'))
+		elif self.final_activation == 'pomp':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'probit'))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			model.add(tf.keras.layers.Activation(self.final_activation))
@@ -160,9 +163,12 @@ class Net:
 		if self.dropout > 0:
 			model.add(tf.keras.layers.Dropout(rate=self.dropout))
 
-		if self.final_activation == 'pom':
+		if self.final_activation == 'poml':
 			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes))
+			model.add(NNPOM(self.num_classes, 'logit'))
+		elif self.final_activation == 'pomp':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'probit'))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':
