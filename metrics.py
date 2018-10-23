@@ -20,6 +20,9 @@ def quadratic_weighted_kappa(num_classes, cost_matrix):
 		numerator = tf.reduce_sum(cost_matrix * conf_mat)
 		denominator = tf.reduce_sum(cost_matrix * expected_count)
 
+		if denominator == 0:
+			return 0
+
 		return 1.0 - numerator / denominator
 
 	return _quadratic_weighted_kappa
