@@ -49,7 +49,7 @@ class ExperimentSet():
 		for config in configs:
 			if 'executions' in config and config['executions'] > 1:
 				for execution in range(1, int(config['executions'])):
-					exec_config = config
+					exec_config = config.copy()
 					if 'name' in exec_config:
 						exec_config['name'] += "_{}".format(execution)
 					exec_config['checkpoint_dir'] += "/{}".format(execution)
