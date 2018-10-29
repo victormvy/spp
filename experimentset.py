@@ -48,7 +48,7 @@ class ExperimentSet():
 
 		for config in configs:
 			if 'executions' in config and config['executions'] > 1:
-				for execution in range(1, int(config['executions'])):
+				for execution in range(1, int(config['executions']) + 1):
 					exec_config = config.copy()
 					if 'name' in exec_config:
 						exec_config['name'] += "_{}".format(execution)
@@ -71,9 +71,10 @@ class ExperimentSet():
 		json.dump(configs, path)
 
 
-	def run_all(self):
-		for experiment in self.experiments:
-			if not experiment.finished:
-				experiment.run()
-				# Clear session
-				tf.keras.backend.clear_session()
+	def run_all(self, gpu_number=0):
+		with tf.device('/device:GPU:' + str(gpu_number)):
+			for experiment in self.experiments:
+				if not experiment.finished:
+					experiment.run()
+					# Clear session
+					tf.keras.backend.clear_session()

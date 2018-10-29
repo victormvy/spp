@@ -32,10 +32,11 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, loss, activation, fi
 
 @cli.command('experiment', help='Experiment mode')
 @click.option('--file', '-f', required=True, help=u'File that contains the experiments that will be executed.')
-def experiment(file):
+@click.option('--gpu', '-g', required=False, default=0, help=u'GPU index')
+def experiment(file, gpu):
 	experimentSet = ExperimentSet()
 	experimentSet.load_from_file(file)
-	experimentSet.run_all()
+	experimentSet.run_all(gpu_number=gpu)
 
 
 if __name__ == '__main__':
