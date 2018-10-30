@@ -320,7 +320,8 @@ class Experiment():
 			test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
 
 		def learning_rate_scheduler(epoch):
-			return self.lr / (1 + epoch / 30)
+			return self.lr * tf.exp(-0.025 * epoch)
+			# return self.lr / (1 + epoch / 30)
 
 		def save_epoch(epoch, logs):
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'w') as f:
