@@ -11,6 +11,7 @@ from scipy import io as spio
 from callbacks import MomentumScheduler, ValidationCallback
 from losses import qwk_loss, make_cost_matrix
 from metrics import quadratic_weighted_kappa
+from dataset import Dataset
 
 
 class Experiment():
@@ -287,18 +288,23 @@ class Experiment():
 			img_size = 128
 			img_shape = (img_size, img_size, num_channels)
 
-			train_generator = train_datagen.flow_from_directory(
-				train_path,
-				target_size=(img_size, img_size),
+			ds_train = Dataset(train_path)
+			ds_test = Dataset(test_path)
+
+			train_generator = train_datagen.flow(
+				ds_train.x,
+				ds_train.y,
+				# target_size=(img_size, img_size),
 				batch_size=self.batch_size,
-				class_mode='categorical'
+				# class_mode='categorical'
 			)
 
-			test_generator = test_datagen.flow_from_directory(
-				test_path,
-				target_size=(img_size, img_size),
+			test_generator = test_datagen.flow(
+				ds_test.x,
+				ds_test.y,
+				# target_size=(img_size, img_size),
 				batch_size=self.batch_size,
-				class_mode='categorical'
+				# class_mode='categorical'
 			)
 
 			class_weight = {
@@ -411,7 +417,7 @@ class Experiment():
 								 ],
 						workers=8,
 						use_multiprocessing=True,
-						max_queue_size=self.batch_size * 3,
+						max_queue_size=self.batch_size * 100,
 						class_weight=class_weight
 					  )
 		else:
