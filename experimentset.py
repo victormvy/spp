@@ -1,3 +1,4 @@
+import os
 import json
 import tensorflow as tf
 from experiment import Experiment
@@ -72,9 +73,10 @@ class ExperimentSet():
 
 
 	def run_all(self, gpu_number=0):
-		with tf.device('/device:GPU:' + str(gpu_number)):
-			for experiment in self.experiments:
-				if not experiment.finished:
-					experiment.run()
-					# Clear session
-					tf.keras.backend.clear_session()
+		# with tf.device('/device:GPU:' + str(gpu_number)):
+		os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_number)
+		for experiment in self.experiments:
+			if not experiment.finished:
+				experiment.run()
+				# Clear session
+				tf.keras.backend.clear_session()
