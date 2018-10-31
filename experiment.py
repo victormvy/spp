@@ -8,7 +8,7 @@ import time
 import click
 import pickle
 from scipy import io as spio
-from callbacks import MomentumScheduler, ValidationCallback
+from callbacks import MomentumScheduler, ComputeMetricsCallback
 from losses import qwk_loss, make_cost_matrix
 from metrics import quadratic_weighted_kappa
 from dataset import Dataset
@@ -245,7 +245,6 @@ class Experiment():
 
 		class_weight = None
 
-
 		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
 			rescale=1. / 255,
 			shear_range=0.2,
@@ -257,7 +256,7 @@ class Experiment():
 			fill_mode='nearest'
 		)
 
-		test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1./255)
+		test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
 
 		train_generator = None
 		test_generator = None
@@ -327,7 +326,8 @@ class Experiment():
 
 		def learning_rate_scheduler(epoch):
 			return self.lr * np.exp(-0.025 * epoch)
-			# return self.lr / (1 + epoch / 30)
+
+		# return self.lr / (1 + epoch / 30)
 
 		def save_epoch(epoch, logs):
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'w') as f:
@@ -370,7 +370,7 @@ class Experiment():
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
 
-		cost_matrix = tf.convert_to_tensor(make_cost_matrix(num_classes))
+		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
 
 		loss = 'categorical_crossentropy'
 
@@ -395,7 +395,6 @@ class Experiment():
 			model.fit(x=train_x, y=train_y, batch_size=self.batch_size, epochs=self.epochs, initial_epoch=start_epoch,
 					  callbacks=[  # tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 						  # MomentumScheduler(momentum_scheduler),
-						  # ValidationCallback(test_dataset, num_classes),
 						  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
 						  save_epoch_callback,
 						  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
@@ -405,21 +404,24 @@ class Experiment():
 					  )
 		elif train_generator and test_generator:
 			model.fit_generator(train_generator, epochs=self.epochs,
-					  initial_epoch=start_epoch,
-					  steps_per_epoch=100000 // self.batch_size,
-					  callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-								 # MomentumScheduler(momentum_scheduler),
-								 ValidationCallback(test_generator, num_classes),
-								 tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
-								 save_epoch_callback,
-								 tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
-								 tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
-								 ],
-						workers=8,
-						use_multiprocessing=True,
-						max_queue_size=self.batch_size * 100,
-						class_weight=class_weight
-					  )
+								initial_epoch=start_epoch,
+								steps_per_epoch=10000 // self.batch_size,
+								callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+										   # MomentumScheduler(momentum_scheduler),
+										   ComputeMetricsCallback(num_classes, val_generator=test_generator,
+																  val_batches=ds_test.num_batches(self.batch_size)),
+										   tf.keras.callbacks.ModelCheckpoint(
+											   os.path.join(self.checkpoint_dir, model_file)),
+										   save_epoch_callback,
+										   tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file),
+																		append=True),
+										   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
+										   ],
+								workers=8,
+								use_multiprocessing=True,
+								max_queue_size=self.batch_size * 100,
+								class_weight=class_weight
+								)
 		else:
 			raise Exception('Database not initialized')
 

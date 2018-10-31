@@ -1,6 +1,7 @@
 import imageio
 import numpy as np
 import os
+import math
 
 class Dataset():
 
@@ -60,5 +61,13 @@ class Dataset():
 					cls_onehot = np.zeros(num_classes)
 					cls_onehot[int(cls) - 1] = 1
 					self._data['y'].append(cls_onehot)
+
+		assert(len(self._data['x']) == len(self._data['y']))
+
+	def size(self):
+		return len(self._data['y'])
+
+	def num_batches(self, batch_size):
+		return math.ceil(self.size() / batch_size)
 
 
