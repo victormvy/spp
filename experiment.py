@@ -370,7 +370,7 @@ class Experiment():
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
 
-		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
+		cost_matrix = tf.convert_to_tensor(make_cost_matrix(num_classes))
 
 		loss = 'categorical_crossentropy'
 
