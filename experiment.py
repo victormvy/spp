@@ -379,8 +379,8 @@ class Experiment():
 
 		metrics = ['accuracy']
 		# If database is retinopathy, add qwk metric
-		if self.db == 'retinopathy':
-			metrics.append(quadratic_weighted_kappa(num_classes, cost_matrix))
+		# if self.db == 'retinopathy':
+		# 	metrics.append(quadratic_weighted_kappa(num_classes, cost_matrix))
 
 		model.compile(
 			optimizer=tf.keras.optimizers.Adam(lr=self.lr),
