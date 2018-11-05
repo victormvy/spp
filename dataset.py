@@ -59,7 +59,7 @@ class Dataset():
 					im = imageio.imread(file_path)
 					self._data['x'].append(im)
 					cls_onehot = np.zeros(num_classes)
-					cls_onehot[int(cls) - 1] = 1
+					cls_onehot[int(cls)] = 1
 					self._data['y'].append(cls_onehot)
 
 		assert(len(self._data['x']) == len(self._data['y']))
