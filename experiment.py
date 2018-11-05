@@ -405,7 +405,7 @@ class Experiment():
 		elif train_generator and test_generator:
 			model.fit_generator(train_generator, epochs=self.epochs,
 								initial_epoch=start_epoch,
-								steps_per_epoch=10000 // self.batch_size,
+								steps_per_epoch=100000 // self.batch_size,
 								callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 										   # MomentumScheduler(momentum_scheduler),
 										   ComputeMetricsCallback(num_classes, val_generator=test_generator,
