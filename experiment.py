@@ -314,6 +314,37 @@ class Experiment():
 				4: 3.63
 			}
 
+		elif self.db.lower() == 'adience':
+			train_path = "../adience/"
+			test_path = "../adience/"
+			num_channels = 3
+			img_size = 140
+
+			ds_train = Dataset(train_path)
+			ds_test = Dataset(test_path)
+
+			num_classes = ds_test.num_classes
+
+			train_generator = train_datagen.flow(
+				ds_train.x,
+				ds_train.y,
+				# target_size=(img_size, img_size),
+				batch_size=self.batch_size,
+				# class_mode='categorical'
+			)
+
+			test_generator = test_datagen.flow(
+				ds_test.x,
+				ds_test.y,
+				# target_size=(img_size, img_size),
+				batch_size=self.batch_size,
+				# class_mode='categorical'
+			)
+
+			class_weight = ds_train.get_class_weights()
+
+			print(class_weight)
+
 		else:
 			raise Exception('Invalid database. Choose one of: 10, 100, EMNIST or Retinopathy.')
 

@@ -192,10 +192,14 @@ class NNPOM(tf.keras.layers.Layer):
 		a = tf.reshape(tf.tile(thresholds, [m]), shape=[m, -1])
 		b = tf.transpose(tf.reshape(tf.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
 		z3 = a - b
+
 		if self.transfer_function == 'probit':
 			a3T = self.dist.cdf(z3)
+		elif self.transfer_function == 'cloglog':
+			a3T = 1 - tf.exp(-tf.exp(z3))
 		else:
 			a3T = 1.0 / (1.0 + tf.exp(-z3))
+
 		a3 = tf.concat([a3T, tf.ones([m, 1])], axis=1)
 		a3 = tf.concat([tf.reshape(a3[:, 0], shape=[-1, 1]), a3[:, 1:] - a3[:, 0:-1]], axis=-1)
 
