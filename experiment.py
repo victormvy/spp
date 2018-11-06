@@ -376,7 +376,7 @@ class Experiment():
 		def save_epoch(epoch, logs):
 			# Check whether new qwk is better than best qwk
 			if (self.new_qwk(logs['val_qwk'])):
-				model.save_weights(os.path.join(self.checkpoint_dir, best_model_dir, model_file))
+				model.save(os.path.join(self.checkpoint_dir, best_model_file))
 
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'w') as f:
 				f.write(str(epoch + 1))
@@ -406,14 +406,11 @@ class Experiment():
 			os.makedirs(self.checkpoint_dir)
 
 		model_file = 'model.hdf5'
-		best_model_dir = 'best'
+		best_model_file = 'best_model.hdf5'
 		model_file_extra = 'model.txt'
 		csv_file = 'results.csv'
 
 		start_epoch = 0
-
-		if not os.path.isdir(os.path.join(self.checkpoint_dir, best_model_dir)):
-			os.makedirs(os.path.join(self.checkpoint_dir, best_model_dir))
 
 		if os.path.isfile(os.path.join(self.checkpoint_dir, model_file)) and os.path.isfile(
 				os.path.join(self.checkpoint_dir, model_file_extra)):
