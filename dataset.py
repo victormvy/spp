@@ -99,8 +99,6 @@ class Dataset():
 
 		weights = {}
 
-		print(counts)
-
 		for k in counts:
 			weights[k] = np.log(total_count / counts[k])
 

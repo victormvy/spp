@@ -35,6 +35,8 @@ class Experiment():
 		self._dropout = dropout
 		self._finished = False
 
+		self._best_qwk = -1
+
 	def set_auto_name(self):
 		self.name = self.get_auto_name()
 
@@ -228,6 +230,16 @@ class Experiment():
 	def finished(self):
 		del self._finished
 
+	@property
+	def best_qwk(self):
+		return self._best_qwk
+
+	def new_qwk(self, qwk):
+		if qwk >= self._best_qwk:
+			self._best_qwk = qwk
+			return True
+		return False
+
 	# # # # # # #
 
 	def run(self):
@@ -314,6 +326,8 @@ class Experiment():
 				4: 3.63
 			}
 
+			print(ds_train.get_class_weights())
+
 		elif self.db.lower() == 'adience':
 			train_path = "../adience/"
 			test_path = "../adience/"
@@ -357,12 +371,16 @@ class Experiment():
 
 		def learning_rate_scheduler(epoch):
 			return self.lr * np.exp(-0.025 * epoch)
-
 		# return self.lr / (1 + epoch / 30)
 
 		def save_epoch(epoch, logs):
+			# Check whether new qwk is better than best qwk
+			if (self.new_qwk(logs['val_qwk'])):
+				model.save_weights(os.path.join(self.checkpoint_dir, best_model_dir, model_file))
+
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'w') as f:
 				f.write(str(epoch + 1))
+				f.write('\n' + str(self.best_qwk))
 
 		save_epoch_callback = tf.keras.callbacks.LambdaCallback(
 			on_epoch_end=save_epoch
@@ -387,11 +405,15 @@ class Experiment():
 		if not os.path.isdir(self.checkpoint_dir):
 			os.makedirs(self.checkpoint_dir)
 
-		model_file = 'model.h5py'
+		model_file = 'model.hdf5'
+		best_model_dir = 'best'
 		model_file_extra = 'model.txt'
 		csv_file = 'results.csv'
 
 		start_epoch = 0
+
+		if not os.path.isdir(os.path.join(self.checkpoint_dir, best_model_dir)):
+			os.makedirs(os.path.join(self.checkpoint_dir, best_model_dir))
 
 		if os.path.isfile(os.path.join(self.checkpoint_dir, model_file)) and os.path.isfile(
 				os.path.join(self.checkpoint_dir, model_file_extra)):
@@ -400,6 +422,7 @@ class Experiment():
 
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
+				self.new_qwk(float(f.readline()))
 
 		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
 
@@ -500,5 +523,5 @@ class Experiment():
 		pickle.dump(self.get_config(), path)
 
 	def load_from_file(self, path):
-		if os.file.exists(path):
+		if os.path.isfile(path):
 			self.set_config(pickle.load(path))
