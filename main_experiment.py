@@ -1,6 +1,7 @@
 import click
 from experiment import Experiment
 from experimentset import ExperimentSet
+import tensorflow as tf
 
 @click.group()
 def cli():
@@ -24,6 +25,9 @@ def cli():
 @click.option('--rep', '-r', default=1, help=u'Repetitions for this execution.')
 @click.option('--dropout', '-o', default=0.0, help=u'Drop rate.')
 def train(db, net_type, batch_size, epochs, checkpoint_dir, loss, activation, final_activation, prob_layer, spp_alpha, lr, momentum, rep, dropout):
+	config = tf.ConfigProto()
+	config.gpu_options.allow_growth = True
+	tf.keras.backend.set_session(tf.Session(config=config))
 	for execution in range(1, rep + 1):
 		experiment = Experiment('', db, net_type, batch_size, epochs, checkpoint_dir, loss, activation, final_activation, prob_layer, spp_alpha, lr, momentum, dropout)
 		experiment.set_auto_name()
@@ -34,6 +38,9 @@ def train(db, net_type, batch_size, epochs, checkpoint_dir, loss, activation, fi
 @click.option('--file', '-f', required=True, help=u'File that contains the experiments that will be executed.')
 @click.option('--gpu', '-g', required=False, default=0, help=u'GPU index')
 def experiment(file, gpu):
+	config = tf.ConfigProto()
+	config.gpu_options.allow_growth = True
+	tf.keras.backend.set_session(tf.Session(config=config))
 	experimentSet = ExperimentSet()
 	experimentSet.load_from_file(file)
 	experimentSet.run_all(gpu_number=gpu)

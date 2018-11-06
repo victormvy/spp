@@ -326,7 +326,6 @@ class Experiment():
 				4: 3.63
 			}
 
-			print(ds_train.get_class_weights())
 
 		elif self.db.lower() == 'adience':
 			train_path = "../adience/"
@@ -356,8 +355,6 @@ class Experiment():
 			)
 
 			class_weight = ds_train.get_class_weights()
-
-			print(class_weight)
 
 		else:
 			raise Exception('Invalid database. Choose one of: 10, 100, EMNIST or Retinopathy.')
@@ -468,9 +465,9 @@ class Experiment():
 																		append=True),
 										   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 										   ],
-								workers=8,
+								workers=4,
 								use_multiprocessing=True,
-								max_queue_size=self.batch_size * 100,
+								max_queue_size=self.batch_size * 20,
 								class_weight=class_weight
 								)
 		else:
