@@ -7,9 +7,9 @@ class Dataset():
 
 	def __init__(self, path=""):
 		self._data = {'x' : [], 'y' : []}
+		self._num_classes = 0
 		if path != "":
 			self.load(path)
-		self._num_classes = 0
 		super(Dataset, self).__init__()
 
 	@property
@@ -50,7 +50,7 @@ class Dataset():
 
 	@property
 	def num_classes(self):
-		return np.array(self._num_classes)
+		return self._num_classes
 
 	@num_classes.setter
 	def num_classes(self, data):

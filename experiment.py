@@ -257,6 +257,9 @@ class Experiment():
 
 		class_weight = None
 
+		# Default steps value
+		steps = 100000 // self.batch_size
+
 		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
 			rescale=1. / 255,
 			shear_range=0.2,
@@ -297,7 +300,6 @@ class Experiment():
 			num_classes = 5
 			num_channels = 3
 			img_size = 128
-			img_shape = (img_size, img_size, num_channels)
 
 			ds_train = Dataset(train_path)
 			ds_test = Dataset(test_path)
@@ -305,17 +307,13 @@ class Experiment():
 			train_generator = train_datagen.flow(
 				ds_train.x,
 				ds_train.y,
-				# target_size=(img_size, img_size),
 				batch_size=self.batch_size,
-				# class_mode='categorical'
 			)
 
 			test_generator = test_datagen.flow(
 				ds_test.x,
 				ds_test.y,
-				# target_size=(img_size, img_size),
 				batch_size=self.batch_size,
-				# class_mode='categorical'
 			)
 
 			class_weight = {
@@ -328,30 +326,30 @@ class Experiment():
 
 
 		elif self.db.lower() == 'adience':
-			train_path = "../adience/"
-			test_path = "../adience/"
+			train_path = "../adience/train"
+			test_path = "../adience/test"
 			num_channels = 3
 			img_size = 140
 
 			ds_train = Dataset(train_path)
 			ds_test = Dataset(test_path)
 
-			num_classes = ds_test.num_classes
+			steps = len(ds_train.y) // self.batch_size
+
+			assert(ds_train.num_classes == ds_test.num_classes)
+
+			num_classes = ds_train.num_classes
 
 			train_generator = train_datagen.flow(
 				ds_train.x,
 				ds_train.y,
-				# target_size=(img_size, img_size),
 				batch_size=self.batch_size,
-				# class_mode='categorical'
 			)
 
 			test_generator = test_datagen.flow(
 				ds_test.x,
 				ds_test.y,
-				# target_size=(img_size, img_size),
 				batch_size=self.batch_size,
-				# class_mode='categorical'
 			)
 
 			class_weight = ds_train.get_class_weights()
@@ -453,7 +451,7 @@ class Experiment():
 		elif train_generator and test_generator:
 			model.fit_generator(train_generator, epochs=self.epochs,
 								initial_epoch=start_epoch,
-								steps_per_epoch=100000 // self.batch_size,
+								steps_per_epoch=steps,
 								callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 										   # MomentumScheduler(momentum_scheduler),
 										   ComputeMetricsCallback(num_classes, val_generator=test_generator,
