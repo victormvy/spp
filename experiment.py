@@ -467,7 +467,7 @@ class Experiment():
 										   ],
 								workers=4,
 								use_multiprocessing=True,
-								max_queue_size=self.batch_size * 20,
+								max_queue_size=self.batch_size * 10,
 								class_weight=class_weight
 								)
 		else:

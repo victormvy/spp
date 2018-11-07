@@ -73,10 +73,10 @@ class ExperimentSet():
 
 
 	def run_all(self, gpu_number=0):
-		os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_number)
-		with tf.device('/device:GPU:' + str(gpu_number)):
-			for experiment in self.experiments:
-				if not experiment.finished:
+		for experiment in self.experiments:
+			if not experiment.finished:
+				os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_number)
+				with tf.device('/device:GPU:' + str(gpu_number)):
 					experiment.run()
 					# Clear session
 					tf.keras.backend.clear_session()
