@@ -334,7 +334,7 @@ class Experiment():
 			ds_train = Dataset(train_path)
 			ds_test = Dataset(test_path)
 
-			steps = len(ds_train.y) // self.batch_size
+			steps = (len(ds_train.y) * 3) // self.batch_size
 
 			assert(ds_train.num_classes == ds_test.num_classes)
 
