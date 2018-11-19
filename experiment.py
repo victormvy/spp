@@ -15,6 +15,9 @@ from dataset import Dataset
 
 
 class Experiment():
+	"""
+	Class that represents a single experiment that can be run and evaluated.
+	"""
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
 				 prob_layer=None,

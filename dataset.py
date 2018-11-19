@@ -4,7 +4,9 @@ import os
 import math
 
 class Dataset():
-
+	"""
+	Class that represents a dataset that is loaded from a file.
+	"""
 	def __init__(self, path=""):
 		self._data = {'x' : [], 'y' : []}
 		self._num_classes = 0
@@ -73,6 +75,12 @@ class Dataset():
 		del self._sample_shape
 
 	def load(self, path):
+		"""
+		Load dataset from directory.
+		There should be one subdirectory for each class.
+		:param path: dataset path.
+		:return: None
+		"""
 		self._data = {}
 		self._data['x'] = []
 		self._data['y'] = []
@@ -95,12 +103,28 @@ class Dataset():
 		assert(len(self._data['x']) == len(self._data['y']))
 
 	def size(self):
+		"""
+		Get dataset size.
+		:return: number of samples.
+		"""
 		return len(self._data['y'])
 
 	def num_batches(self, batch_size):
+		"""
+		Get number of batches for a given batch size.
+		:param batch_size: batch size.
+		:return: number of batches.
+		"""
 		return math.ceil(self.size() / batch_size)
 
 	def get_class_weights(self):
+		"""
+		Get class weights that you can use to counter-act the dataset unbalance.
+		Class weights are calculated based on the frequency of each class.
+		:return: dictionary that contains the weight for each class.
+		"""
+
+		# No weights if no data
 		if not self._data or not self._data['y']:
 			return {}
 
@@ -123,11 +147,23 @@ class Dataset():
 
 	@property
 	def num_channels(self):
+		"""
+		Get number of channels of the images.
+		:return: number of channels.
+		"""
 		return len(self.sample_shape) == 3 and self.sample_shape[2] or 1
 
 	@property
 	def img_size(self):
+		"""
+		Get image size for squared images.
+		:return: image size (integer).
+		"""
 		return self.sample_shape[0]
 
 	def is_rgb(self):
+		"""
+		Check whether the images are RGB.
+		:return:
+		"""
 		return self.num_channels == 3
