@@ -38,9 +38,17 @@ class Experiment():
 		self._best_qwk = -1
 
 	def set_auto_name(self):
+		"""
+		Set experiment name based on experiment parameters.
+		:return: None
+		"""
 		self.name = self.get_auto_name()
 
 	def get_auto_name(self):
+		"""
+		Get experiment auto-generated name based on experiment parameters.
+		:return: experiment auto-generated name.
+		"""
 		return "{}_{}_{}_{}_{}_{}_{}_{}_{}_{}_{}".format(self.db, self.net_type, self.batch_size, self.activation,
 														 self.loss,
 														 self.final_activation,
@@ -235,6 +243,11 @@ class Experiment():
 		return self._best_qwk
 
 	def new_qwk(self, qwk):
+		"""
+		Updates best qwk if qwk provided is better than the best qwk stored.
+		:param qwk: new qwk.
+		:return: True if new qwk is better than best qwk or False otherwise.
+		"""
 		if qwk >= self._best_qwk:
 			self._best_qwk = qwk
 			return True
@@ -243,6 +256,11 @@ class Experiment():
 	# # # # # # #
 
 	def run(self):
+		"""
+		Run training process.
+		:return: None
+		"""
+
 		print('=== RUNNING {} ==='.format(self.name))
 
 		# Train data generator
@@ -296,10 +314,11 @@ class Experiment():
 		# Get class weights based on frequency
 		class_weight = ds_train.get_class_weights()
 
+		# Learning rate scheduler callback
 		def learning_rate_scheduler(epoch):
 			return self.lr * np.exp(-0.025 * epoch)
-		# return self.lr / (1 + epoch / 30)
 
+		# Save epoch callback for training process
 		def save_epoch(epoch, logs):
 			# Check whether new qwk is better than best qwk
 			if (self.new_qwk(logs['val_qwk'])):
@@ -313,92 +332,104 @@ class Experiment():
 			on_epoch_end=save_epoch
 		)
 
+		# NNet object
 		net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels, num_classes,
 						 self.spp_alpha,
 						 self.dropout)
-		if self.net_type == 'resnet56':
-			# net = resnet.inference(x, 9, False)
-			raise NotImplementedError
-		elif self.net_type == 'resnet110':
-			# net = resnet.inference(x, 18, False)
-			raise NotImplementedError
-		elif self.net_type == 'vgg19':
+
+		if self.net_type == 'vgg19':
 			model = net_object.vgg19()
 		elif self.net_type == 'conv128':
 			model = net_object.conv128()
 		else:
-			raise Exception('Invalid net type. You must select one of these: vgg19, resnet56, resnet110, conv128')
+			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
 
+		# Create checkpoint dir if not exists
 		if not os.path.isdir(self.checkpoint_dir):
 			os.makedirs(self.checkpoint_dir)
 
+		# Model and results file names
 		model_file = 'model.hdf5'
 		best_model_file = 'best_model.hdf5'
 		model_file_extra = 'model.txt'
 		csv_file = 'results.csv'
 
+		# Initial epoch. 0 by default
 		start_epoch = 0
 
+		# Check whether a saved model exists
 		if os.path.isfile(os.path.join(self.checkpoint_dir, model_file)) and os.path.isfile(
 				os.path.join(self.checkpoint_dir, model_file_extra)):
 			print("===== RESTORING SAVED MODEL =====")
 			model.load_weights(os.path.join(self.checkpoint_dir, model_file))
 
+			# Continue from the epoch where we were and load the best qwk
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
 				self.new_qwk(float(f.readline()))
 
+		# Create the cost matrix that will be used to compute qwk
 		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
 
+		# Cross-entropy loss by default
 		loss = 'categorical_crossentropy'
 
+		# Quadratic Weighted Kappa loss
 		if self.loss == 'qwk':
 			loss = qwk_loss(cost_matrix)
 
+		# Only accuracy for training.
+		# Computing QWK for training properly is too expensive
 		metrics = ['accuracy']
 		# If database is retinopathy, add qwk metric
 		# if self.db == 'retinopathy':
 		# 	metrics.append(quadratic_weighted_kappa(num_classes, cost_matrix))
 
+		# Compile the keras model
 		model.compile(
 			optimizer=tf.keras.optimizers.Adam(lr=self.lr),
-			# tf.keras.optimizers.SGD(lr=self.lr, momentum=self.momentum, nesterov=True),
 			loss=loss,
 			metrics=metrics
 		)
 
+		# Print model summary
 		model.summary()
 
-		if train_generator and val_generator:
-			model.fit_generator(train_generator, epochs=self.epochs,
-								initial_epoch=start_epoch,
-								steps_per_epoch=steps,
-								callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-										   # MomentumScheduler(momentum_scheduler),
-										   ComputeMetricsCallback(num_classes, val_generator=val_generator,
-																  val_batches=ds_val.num_batches(self.batch_size)),
-										   tf.keras.callbacks.ModelCheckpoint(
-											   os.path.join(self.checkpoint_dir, model_file)),
-										   save_epoch_callback,
-										   tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file),
-																		append=True),
-										   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
-										   ],
-								workers=4,
-								use_multiprocessing=True,
-								max_queue_size=self.batch_size * 10,
-								class_weight=class_weight
-								)
-		else:
-			raise Exception('Database not initialized')
+		# Run training
+		model.fit_generator(train_generator, epochs=self.epochs,
+							initial_epoch=start_epoch,
+							steps_per_epoch=steps,
+							callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+									   ComputeMetricsCallback(num_classes, val_generator=val_generator,
+															  val_batches=ds_val.num_batches(self.batch_size)),
+									   tf.keras.callbacks.ModelCheckpoint(
+										   os.path.join(self.checkpoint_dir, model_file)),
+									   save_epoch_callback,
+									   tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file),
+																	append=True),
+									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
+									   ],
+							workers=4,
+							use_multiprocessing=True,
+							max_queue_size=self.batch_size * 10,
+							class_weight=class_weight
+							)
 
 		self.finished = True
 
-
 	def evaluate(self):
+		"""
+		Run evaluation on test data.
+		:return:
+		"""
 		print('=== EVALUATING {} ==='.format(self.name))
 
 	def get_db_path(self, db):
+		"""
+		Get dataset path for train, validation and test for a given database name.
+		:param db: database name.
+		:return: train path, validation path, test path.
+		"""
 		if db.lower() == 'retinopathy':
 			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
 		elif db.lower() == 'adience':
@@ -407,6 +438,10 @@ class Experiment():
 			return "", "", ""
 
 	def get_config(self):
+		"""
+		Get config dictionary from object config.
+		:return: config dictionary.
+		"""
 		return {
 			'name': self.name,
 			'db': self.db,
@@ -425,6 +460,11 @@ class Experiment():
 		}
 
 	def set_config(self, config):
+		"""
+		Set object config from config dictionary
+		:param config: config dictionary.
+		:return: None
+		"""
 		self.db = 'db' in config and config['db'] or '10'
 		self.net_type = 'net_type' in config and config['net_type'] or 'vgg19'
 		self.batch_size = 'batch_size' in config and config['batch_size'] or 128
@@ -445,8 +485,18 @@ class Experiment():
 			self.set_auto_name()
 
 	def save_to_file(self, path):
+		"""
+		Save experiment to pickle file.
+		:param path: path where pickle file will be saved.
+		:return: None
+		"""
 		pickle.dump(self.get_config(), path)
 
 	def load_from_file(self, path):
+		"""
+		Load experiment from pickle file.
+		:param path: path where pickle file is located.
+		:return: None
+		"""
 		if os.path.isfile(path):
 			self.set_config(pickle.load(path))
