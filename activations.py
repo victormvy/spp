@@ -2,12 +2,20 @@ import tensorflow as tf
 
 
 class SPP(tf.keras.layers.Activation):
+	"""
+	Parametric softplus activation layer.
+	"""
 	def __init__(self, activation, **kwargs):
 		super(SPP, self).__init__(activation, **kwargs)
 		self.__name__ = 'SPP'
 
 
 def parametric_softplus(spp_alpha):
+	"""
+	Compute parametric softplus function with given alpha.
+	:param spp_alpha: alpha parameter for softplus function.
+	:return: parametric softplus activation value.
+	"""
 	def spp(x):
 		return tf.log(1 + tf.exp(x)) - spp_alpha
 
@@ -171,6 +179,9 @@ class SQRTActivation(tf.keras.layers.Layer):
 
 
 class NNPOM(tf.keras.layers.Layer):
+	"""
+	Proportional Odds Model activation layer.
+	"""
 	def __init__(self, num_classes, transfer_function, **kwargs):
 		self.num_classes = num_classes
 		self.dist = tf.distributions.Normal(loc=0., scale=1.)

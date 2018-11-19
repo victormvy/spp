@@ -1,7 +1,19 @@
 import tensorflow as tf
 
 def quadratic_weighted_kappa(num_classes, cost_matrix):
+	"""
+	Compute Quadratic Weighted Kappa metric.
+	:param num_classes: number of classes of the dataset.
+	:param cost_matrix: cost matrix that will be used for error weights.
+	:return: qwk value.
+	"""
 	def _quadratic_weighted_kappa(y_true, y_pred):
+		"""
+		Compute Quadratic Weighted Kappa metric.
+		:param y_true: true labels.
+		:param y_pred: predicted labels.
+		:return: qwk value.
+		"""
 		y_pred = tf.argmax(y_pred, 1, output_type=tf.int32)
 		y_true = tf.argmax(y_true, 1, output_type=tf.int32)
 		conf_mat = tf.confusion_matrix(y_true, y_pred, num_classes=num_classes, dtype=tf.float32)

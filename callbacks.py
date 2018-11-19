@@ -23,6 +23,10 @@ class MomentumScheduler(tf.keras.callbacks.Callback):
 
 
 class ComputeMetricsCallback(tf.keras.callbacks.Callback):
+	"""
+	Callback that computes train and/or validation metrics for a batch.
+	Computed metrics are: accuracy, loss and QWK.
+	"""
 
 	def __init__(self, num_classes, train_generator=None, val_generator=None, train_batches=None, val_batches=None):
 		self.train_generator = train_generator

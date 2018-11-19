@@ -427,6 +427,66 @@ class Experiment():
 		"""
 		print('=== EVALUATING {} ==='.format(self.name))
 
+		_, _, test_path = self.get_db_path(self.db)
+
+		ds_test = Dataset(test_path)
+
+		# Validation data generator
+		test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
+
+		# Validation generator
+		test_generator = test_datagen.flow(
+			ds_test.x,
+			ds_test.y,
+			batch_size=self.batch_size
+		)
+
+		# NNet object
+		net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels, num_classes,
+						 self.spp_alpha,
+						 self.dropout)
+
+		if self.net_type == 'vgg19':
+			model = net_object.vgg19()
+		elif self.net_type == 'conv128':
+			model = net_object.conv128()
+		else:
+			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
+
+		best_model_file = 'best_model.hdf5'
+
+		# Check if best model file exists
+		if not os.path.isfile(os.path.join(self.checkpoint_dir, best_model_file)):
+			print('Best model file not found')
+			return
+
+		# Create the cost matrix that will be used to compute qwk
+		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
+
+		# Cross-entropy loss by default
+		loss = 'categorical_crossentropy'
+
+		# Quadratic Weighted Kappa loss
+		if self.loss == 'qwk':
+			loss = qwk_loss(cost_matrix)
+
+		# Only accuracy for training.
+		# Computing QWK for training properly is too expensive
+		metrics = ['accuracy']
+
+		# Compile the keras model
+		model.compile(
+			optimizer=tf.keras.optimizers.Adam(lr=self.lr),
+			loss=loss,
+			metrics=metrics
+		)
+
+		# Evaluate
+		model.evaluate_generator(
+			test_generator,
+			max_queue_size = self.batch_size * 10
+		)
+
 	def get_db_path(self, db):
 		"""
 		Get dataset path for train, validation and test for a given database name.
