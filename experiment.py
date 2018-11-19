@@ -245,21 +245,7 @@ class Experiment():
 	def run(self):
 		print('=== RUNNING {} ==='.format(self.name))
 
-		num_channels = 3
-		img_size = 32
-
-		train_x = None
-		test_x = None
-		train_y_cls = None
-		test_y_cls = None
-		train_y = None
-		test_y = None
-
-		class_weight = None
-
-		# Default steps value
-		steps = 100000 // self.batch_size
-
+		# Train data generator
 		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
 			rescale=1. / 255,
 			shear_range=0.2,
@@ -271,98 +257,44 @@ class Experiment():
 			fill_mode='nearest'
 		)
 
-		test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
+		# Validation data generator
+		val_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
 
-		train_generator = None
-		test_generator = None
+		# Get database paths
+		train_path, val_path, _ = self.get_db_path(self.db)
 
-		if self.db == '10':
-			(train_x, train_y_cls), (test_x, test_y_cls) = tf.keras.datasets.cifar10.load_data()
-			num_classes = 10
-		elif self.db == '100':
-			(train_x, train_y_cls), (test_x, test_y_cls) = tf.keras.datasets.cifar100.load_data()
-			num_classes = 100
-		elif self.db.lower() == 'emnist':
-			emnist = spio.loadmat('emnist/emnist-byclass.mat')
+		# Check that database exists and paths are correct
+		if train_path == '' or val_path == '':
+			raise Exception('Invalid database. Choose one of: Retinopathy or Adience.')
 
-			train_x = np.reshape(emnist['dataset'][0][0][0][0][0][0], (-1, 28, 28, 1)).astype(np.float32)
-			train_y_cls = emnist['dataset'][0][0][0][0][0][1]
+		# Load datasets
+		ds_train = Dataset(train_path)
+		ds_val = Dataset(val_path)
 
-			test_x = np.reshape(emnist['dataset'][0][0][1][0][0][0], (-1, 28, 28, 1)).astype(np.float32)
-			test_y_cls = emnist['dataset'][0][0][1][0][0][1]
+		# Get dataset details
+		num_classes = ds_train.num_classes
+		num_channels = ds_train.num_channels
+		img_size = ds_train.img_size
 
-			num_classes = 62
-			num_channels = 1
-			img_size = 28
-		elif self.db.lower() == 'retinopathy':
-			train_path = "../retinopathy/128/train"
-			test_path = "../retinopathy/128/val"
-			num_classes = 5
-			num_channels = 3
-			img_size = 128
+		# Train data generator used for training
+		train_generator = train_datagen.flow(
+			ds_train.x,
+			ds_train.y,
+			batch_size=self.batch_size
+		)
 
-			ds_train = Dataset(train_path)
-			ds_test = Dataset(test_path)
+		# Validation generator
+		val_generator = val_datagen.flow(
+			ds_val.x,
+			ds_val.y,
+			batch_size=self.batch_size
+		)
 
-			train_generator = train_datagen.flow(
-				ds_train.x,
-				ds_train.y,
-				batch_size=self.batch_size,
-			)
+		# Calculate the number of steps per epoch
+		steps = (len(ds_train.y) * 3) // self.batch_size
 
-			test_generator = test_datagen.flow(
-				ds_test.x,
-				ds_test.y,
-				batch_size=self.batch_size,
-			)
-
-			class_weight = {
-				0: 1,
-				1: 3.4,
-				2: 3.15,
-				3: 3.59,
-				4: 3.63
-			}
-
-
-		elif self.db.lower() == 'adience':
-			train_path = "../adience/train"
-			test_path = "../adience/test"
-			num_channels = 3
-			img_size = 140
-
-			ds_train = Dataset(train_path)
-			ds_test = Dataset(test_path)
-
-			steps = (len(ds_train.y) * 3) // self.batch_size
-
-			assert(ds_train.num_classes == ds_test.num_classes)
-
-			num_classes = ds_train.num_classes
-
-			train_generator = train_datagen.flow(
-				ds_train.x,
-				ds_train.y,
-				batch_size=self.batch_size,
-			)
-
-			test_generator = test_datagen.flow(
-				ds_test.x,
-				ds_test.y,
-				batch_size=self.batch_size,
-			)
-
-			class_weight = ds_train.get_class_weights()
-
-		else:
-			raise Exception('Invalid database. Choose one of: 10, 100, EMNIST or Retinopathy.')
-
-		if not train_x is None and not test_x is None and not train_y_cls is None and not test_y_cls is None:
-			train_x = train_x / 255.0
-			test_x = test_x / 255.0
-
-			train_y = np.eye(num_classes)[train_y_cls].reshape([len(train_y_cls), num_classes])
-			test_y = np.eye(num_classes)[test_y_cls].reshape([len(test_y_cls), num_classes])
+		# Get class weights based on frequency
+		class_weight = ds_train.get_class_weights()
 
 		def learning_rate_scheduler(epoch):
 			return self.lr * np.exp(-0.025 * epoch)
@@ -437,25 +369,14 @@ class Experiment():
 
 		model.summary()
 
-		if not train_x is None and not test_x is None and not train_y is None and not test_y is None:
-			model.fit(x=train_x, y=train_y, batch_size=self.batch_size, epochs=self.epochs, initial_epoch=start_epoch,
-					  callbacks=[  # tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-						  # MomentumScheduler(momentum_scheduler),
-						  tf.keras.callbacks.ModelCheckpoint(os.path.join(self.checkpoint_dir, model_file)),
-						  save_epoch_callback,
-						  tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file), append=True),
-						  tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir)
-					  ],
-					  validation_data=(test_x, test_y)
-					  )
-		elif train_generator and test_generator:
+		if train_generator and val_generator:
 			model.fit_generator(train_generator, epochs=self.epochs,
 								initial_epoch=start_epoch,
 								steps_per_epoch=steps,
 								callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 										   # MomentumScheduler(momentum_scheduler),
-										   ComputeMetricsCallback(num_classes, val_generator=test_generator,
-																  val_batches=ds_test.num_batches(self.batch_size)),
+										   ComputeMetricsCallback(num_classes, val_generator=val_generator,
+																  val_batches=ds_val.num_batches(self.batch_size)),
 										   tf.keras.callbacks.ModelCheckpoint(
 											   os.path.join(self.checkpoint_dir, model_file)),
 										   save_epoch_callback,
@@ -472,6 +393,18 @@ class Experiment():
 			raise Exception('Database not initialized')
 
 		self.finished = True
+
+
+	def evaluate(self):
+		print('=== EVALUATING {} ==='.format(self.name))
+
+	def get_db_path(self, db):
+		if db.lower() == 'retinopathy':
+			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
+		elif db.lower() == 'adience':
+			return "../adience/train", "../adience/test", "../adience/test"
+		else:
+			return "", "", ""
 
 	def get_config(self):
 		return {

@@ -9,7 +9,7 @@ def cli():
 
 
 @cli.command('train', help='Train model')
-@click.option('--db', default='10', help=u'Database that will be used: Cifar10 (10), Cifar100 (100) or EMNIST.')
+@click.option('--db', default='10', help=u'Database that will be used: Retinopathy or Adience.')
 @click.option('--net_type', '-n', default='vgg19',
 			  help=u'Net model that will be used. Must be one of: vgg19, resnet56, resnet110')
 @click.option('--batch_size', '-b', default=128, help=u'Batch size')
