@@ -4,6 +4,9 @@ import tensorflow as tf
 from experiment import Experiment
 
 class ExperimentSet():
+	"""
+	Set of experiments that can be executed sequentially.
+	"""
 	def __init__(self, experiments=[]):
 		self._experiments = experiments
 
@@ -24,6 +27,10 @@ class ExperimentSet():
 	# # # # # #
 
 	def _validate_experiments(self):
+		"""
+		Validate experiments list
+		:return: None
+		"""
 		if not type(self.experiments) is list:
 			if type(self.experiments) is tuple:
 				self.experiments = list(self.experiments)
@@ -31,22 +38,44 @@ class ExperimentSet():
 				self.experiments = []
 
 	def add_experiment(self, experiment):
+		"""
+		Add experiment to experiments list.
+		:param experiment: new experiment that will be added.
+		:return: None
+		"""
 		self._validate_experiments()
 		self.experiments.append(experiment)
 
 	def remove_experiment(self, name):
+		"""
+		Remove experiment from the experiments list by its name.
+		:param name: name of the experiment that will be removed.
+		:return: None
+		"""
 		self._validate_experiments()
 		for experiment in self.experiments:
 			if experiment.name == name:
 				self.experiments.remove(experiment)
 
 	def clear_experiments(self):
+		"""
+		Clear experiments list.
+		:return:
+		"""
 		self.experiments = []
 
 	def load_from_file(self, path):
+		"""
+		Load experiments from json file.
+		:param path: path of the json file.
+		:return: None
+		"""
+
+		# Load JSON file
 		with open(path) as f:
 			configs = json.load(f)
 
+		# Add experiments
 		for config in configs:
 			if 'executions' in config and config['executions'] > 1:
 				for execution in range(1, int(config['executions']) + 1):
@@ -64,6 +93,11 @@ class ExperimentSet():
 				self.add_experiment(experiment)
 
 	def save_to_file(self, path):
+		"""
+		Save experiments set to json file
+		:param path: path of the saved file.
+		:return: None
+		"""
 		configs = []
 
 		for experiment in self.experiments:
@@ -73,10 +107,16 @@ class ExperimentSet():
 
 
 	def run_all(self, gpu_number=0):
+		"""
+		Execute all the experiments
+		:param gpu_number: GPU that will be used.
+		:return: None
+		"""
 		for experiment in self.experiments:
 			if not experiment.finished:
 				os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_number)
 				with tf.device('/device:GPU:' + str(gpu_number)):
 					experiment.run()
+					print(experiment.evaluate())
 					# Clear session
 					tf.keras.backend.clear_session()

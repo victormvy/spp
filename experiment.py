@@ -423,13 +423,19 @@ class Experiment():
 	def evaluate(self):
 		"""
 		Run evaluation on test data.
-		:return:
+		:return: None
 		"""
 		print('=== EVALUATING {} ==='.format(self.name))
 
 		_, _, test_path = self.get_db_path(self.db)
 
+		# Load test dataset
 		ds_test = Dataset(test_path)
+
+		# Get dataset details
+		num_classes = ds_test.num_classes
+		num_channels = ds_test.num_channels
+		img_size = ds_test.img_size
 
 		# Validation data generator
 		test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
@@ -482,7 +488,7 @@ class Experiment():
 		)
 
 		# Evaluate
-		model.evaluate_generator(
+		return model.evaluate_generator(
 			test_generator,
 			max_queue_size = self.batch_size * 10
 		)
