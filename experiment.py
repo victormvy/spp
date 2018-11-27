@@ -10,7 +10,7 @@ import pickle
 from scipy import io as spio
 from callbacks import MomentumScheduler, ComputeMetricsCallback
 from losses import qwk_loss, make_cost_matrix
-from metrics import quadratic_weighted_kappa
+from metrics import np_quadratic_weighted_kappa
 from dataset import Dataset
 
 
@@ -487,11 +487,16 @@ class Experiment():
 			metrics=metrics
 		)
 
-		# Evaluate
-		return model.evaluate_generator(
+		# Get predictions
+		predictions = model.predict_generator(
 			test_generator,
 			max_queue_size = self.batch_size * 10
 		)
+
+		# Calculate QWK
+		qwk = np_quadratic_weighted_kappa(ds_test.y, predictions, 0, num_classes-1)
+
+		return qwk
 
 	def get_db_path(self, db):
 		"""
@@ -502,7 +507,7 @@ class Experiment():
 		if db.lower() == 'retinopathy':
 			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
 		elif db.lower() == 'adience':
-			return "../adience/train", "../adience/test", "../adience/test"
+			return "../adience/train", "../adience/val", "../adience/test"
 		else:
 			return "", "", ""
 
