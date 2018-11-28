@@ -427,6 +427,15 @@ class Experiment():
 		"""
 		print('=== EVALUATING {} ==='.format(self.name))
 
+		evaluation_file = 'evaluation.txt'
+
+		if os.path.isfile(os.path.join(self.checkpoint_dir, evaluation_file)):
+			with open(os.path.join(self.checkpoint_dir, evaluation_file), 'r') as f:
+				qwk = float(f.readline())
+				print('QWK found in file: {} (Evaluation skipped)'.format(qwk))
+				return qwk
+
+
 		_, _, test_path = self.get_db_path(self.db)
 
 		# Load test dataset
@@ -466,6 +475,9 @@ class Experiment():
 			print('Best model file not found')
 			return
 
+		# Restore weights
+		model.load_weights(os.path.join(self.checkpoint_dir, best_model_file))
+
 		# Create the cost matrix that will be used to compute qwk
 		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
 
@@ -495,6 +507,9 @@ class Experiment():
 
 		# Calculate QWK
 		qwk = np_quadratic_weighted_kappa(ds_test.y, predictions, 0, num_classes-1)
+
+		with open(os.path.join(self.checkpoint_dir, evaluation_file), 'w') as f:
+			f.write(str(qwk))
 
 		return qwk
 

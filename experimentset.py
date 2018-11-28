@@ -113,10 +113,10 @@ class ExperimentSet():
 		:return: None
 		"""
 		for experiment in self.experiments:
-			if not experiment.finished:
 				os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_number)
 				with tf.device('/device:GPU:' + str(gpu_number)):
-					experiment.run()
+					if not experiment.finished:
+						experiment.run()
 					print(experiment.evaluate())
 					# Clear session
 					tf.keras.backend.clear_session()
