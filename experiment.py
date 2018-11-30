@@ -522,7 +522,7 @@ class Experiment():
 		if db.lower() == 'retinopathy':
 			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
 		elif db.lower() == 'adience':
-			return "../adience/train", "../adience/val", "../adience/test"
+			return "../adience/256/train", "../adience/256/val", "../adience/256/test"
 		else:
 			return "", "", ""
 

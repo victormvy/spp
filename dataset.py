@@ -2,6 +2,7 @@ import imageio
 import numpy as np
 import os
 import math
+import h5py
 
 class Dataset():
 	"""
@@ -75,6 +76,12 @@ class Dataset():
 		del self._sample_shape
 
 	def load(self, path):
+		if os.path.isdir(path):
+			self._load_from_dir(path)
+		else:
+			self._load_from_h5(path)
+
+	def _load_from_dir(self, path):
 		"""
 		Load dataset from directory.
 		There should be one subdirectory for each class.
@@ -101,6 +108,9 @@ class Dataset():
 					self._data['y'].append(cls_onehot)
 
 		assert(len(self._data['x']) == len(self._data['y']))
+
+	def _load_from_h5(self, path):
+		pass
 
 	def size(self):
 		"""
