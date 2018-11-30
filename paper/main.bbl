@@ -1,0 +1,121 @@
+% $ biblatex auxiliary file $
+% $ biblatex version 2.6 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\entry{de2018weighted}{article}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Torre}{T.}%
+     {Jordi}{J.}%
+     {de~la}{d.~l.}%
+     {}{}}%
+    {{}%
+     {Puig}{P.}%
+     {Domenec}{D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Valls}{V.}%
+     {Aida}{A.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Elsevier}%
+  }
+  \strng{namehash}{TJdlPDVA1}
+  \strng{fullhash}{TJdlPDVA1}
+  \field{pages}{144\bibrangedash 154}
+  \field{title}{Weighted kappa loss function for multi-class classification of
+  ordinal data in deep learning}
+  \field{volume}{105}
+  \field{journaltitle}{Pattern Recognition Letters}
+  \field{year}{2018}
+\endentry
+
+\entry{beckham2017unimodal}{article}{}
+  \name{author}{2}{}{%
+    {{}%
+     {Beckham}{B.}%
+     {Christopher}{C.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Pal}{P.}%
+     {Christopher}{C.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{BCPC1}
+  \strng{fullhash}{BCPC1}
+  \field{title}{Unimodal probability distributions for deep ordinal
+  classification}
+  \field{journaltitle}{arXiv preprint arXiv:1705.05278}
+  \field{year}{2017}
+\endentry
+
+\entry{clevert2015fast}{article}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Clevert}{C.}%
+     {Djork-Arn{\'e}}{D.-A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Unterthiner}{U.}%
+     {Thomas}{T.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hochreiter}{H.}%
+     {Sepp}{S.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{CDAUTHS1}
+  \strng{fullhash}{CDAUTHS1}
+  \field{title}{Fast and accurate deep network learning by exponential linear
+  units (elus)}
+  \field{journaltitle}{arXiv preprint arXiv:1511.07289}
+  \field{year}{2015}
+\endentry
+
+\entry{ioffe2015batch}{article}{}
+  \name{author}{2}{}{%
+    {{}%
+     {Ioffe}{I.}%
+     {Sergey}{S.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Szegedy}{S.}%
+     {Christian}{C.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{ISSC1}
+  \strng{fullhash}{ISSC1}
+  \field{title}{Batch normalization: Accelerating deep network training by
+  reducing internal covariate shift}
+  \field{journaltitle}{arXiv preprint arXiv:1502.03167}
+  \field{year}{2015}
+\endentry
+
+\lossort
+\endlossort
+
+\endinput

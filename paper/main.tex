@@ -1,0 +1,61 @@
+% !TeX spellcheck = en_UK
+\documentclass[10pt, a4paper, titlepage]{article}
+
+\input{preambulo.tex}
+
+\setlength{\columnsep}{0.7cm}
+
+\begin{document}
+	\fontfamily{lmr}\selectfont
+	
+	\begin{multicols}{2}
+	
+	\section{Experiments}
+	\subsection{Data}
+	We make use of two ordinal datasets appropriate for deep neural networks:
+	
+	\begin{itemize}
+		\item \textit{Diabetic Retinopathy}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. This is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair  consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras, illumination conditions and resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works \cite{de2018weighted} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve a better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 256 by 256 pixels. Data augmentation techniques are applied in order to achieve a higher number of samples.
+		
+		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work \cite{beckham2017unimodal}, so that the images are 256px in width and height and pixels values follow a $(0;1)$ normal distribution. The original dataset is splitted in 5 cross-validation folds. The training set consists of merging the first four folds together which comprises a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
+	\end{itemize}
+	
+	\subsection{The model}
+	A convolutional neural network (CNN) has been used for both datasets. The architecture of this CNN is presented in the Table \ref{table:CNNArquitecture}.
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|l|c|}
+			\hline
+			Layer & Output shape\\
+			\hline
+			Conv\_32\_3x3 & 254x254x32\\\hline
+			Conv\_32\_3x3 & 252x252x32\\\hline
+			MaxPool\_2x2 & 126x126x32\\\hline
+			
+			Conv\_64\_3x3 & 124x124x64\\\hline
+			Conv\_64\_3x3 & 122x122x64\\\hline
+			MaxPool\_2x2 & 61x61x64\\\hline
+			
+			Conv\_128\_3x3 & 59x59x128\\\hline
+			Conv\_128\_3x3 & 57x57x128\\\hline
+			MaxPool\_2x2 & 28x28x128\\\hline
+			
+			Conv\_128\_3x3 & 26x26x128\\\hline
+			Conv\_128\_3x3 & 24x24x128\\\hline
+			MaxPool\_2x2 & 12x12x128\\\hline
+			
+			Conv\_128\_4x4 & 9x9x128\\\hline
+			Dense\_1\_output & 1\\
+			\hline
+		\end{tabular}
+		\caption{Description of the architecture used in the experiments. For convolutional layers, Conv\_N\_WxH, where N is the number of filters, W the filter width and H the filter height. Stride is 1 for every convolutional layer. For max pool layers, MaxPool\_SxS, where S is the pool size.}
+		\label{table:CNNArquitecture}
+	\end{table}
+	
+	Every convolutional layer is followed by an ELU activation layer \cite{clevert2015fast} and a batch normalization \cite{ioffe2015batch}. At the output, a Proportional Odds Model is used with different link functions (logit, probit, complementary log-log).
+	
+	\printbibliography
+	
+	\end{multicols}
+\end{document}

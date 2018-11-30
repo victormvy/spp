@@ -312,7 +312,7 @@ class Experiment():
 		)
 
 		# Calculate the number of steps per epoch
-		steps = (len(ds_train.y) * 3) // self.batch_size
+		steps = (len(ds_train.y) * 1) // self.batch_size
 
 		# Get class weights based on frequency
 		class_weight = ds_train.get_class_weights()
