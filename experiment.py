@@ -23,7 +23,7 @@ class Experiment():
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
 				 prob_layer=None,
-				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, only_eval=False):
+				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both'):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -38,7 +38,7 @@ class Experiment():
 		self._lr = lr
 		self._momentum = momentum
 		self._dropout = dropout
-		self._only_eval = only_eval
+		self._task = task
 		self._finished = False
 
 		self._best_qwk = -1
@@ -233,16 +233,16 @@ class Experiment():
 		del self._dropout
 
 	@property
-	def only_eval(self):
-		return self._only_eval
+	def task(self):
+		return self._task
 
-	@only_eval.setter
-	def only_eval(self, only_eval):
-		self._only_eval = only_eval
+	@task.setter
+	def task(self, task):
+		self._task = task
 
-	@only_eval.deleter
-	def only_eval(self):
-		del self._only_eval
+	@task.deleter
+	def task(self):
+		del self._task
 
 	@property
 	def finished(self):
@@ -577,7 +577,7 @@ class Experiment():
 			'lr': self.lr,
 			'momentum': self.momentum,
 			'dropout': self.dropout,
-			'only_eval': self.only_eval
+			'task': self.task
 		}
 
 	def set_config(self, config):
@@ -599,7 +599,7 @@ class Experiment():
 		self.lr = 'lr' in config and config['lr'] or 0.1
 		self.momentum = 'momentum' in config and config['momentum'] or 0
 		self.dropout = 'dropout' in config and config['dropout'] or 0
-		self.only_eval = 'only_eval' in config and config['only_eval'] or False
+		self.task = 'task' in config and config['task'] or 'both'
 
 		if 'name' in config:
 			self.name = config['name']

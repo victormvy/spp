@@ -115,8 +115,9 @@ class ExperimentSet():
 		for experiment in self.experiments:
 				os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_number)
 				with tf.device('/device:GPU:' + str(gpu_number)):
-					if not experiment.finished and not experiment.only_eval:
+					if not experiment.finished and experiment.task != 'test': # 'train' or 'both'
 						experiment.run()
-					print(experiment.evaluate())
+					if experiment.task != 'train': # 'test' or 'both'
+						print(experiment.evaluate())
 					# Clear session
 					tf.keras.backend.clear_session()
