@@ -140,6 +140,7 @@ def np_quadratic_weighted_kappa(rater_a, rater_b, min_rating=None, max_rating=No
 		max_rating = max(max(rater_a), max(rater_b))
 	conf_mat = confusion_matrix(rater_a, rater_b,
 								min_rating, max_rating)
+
 	num_ratings = len(conf_mat)
 	num_scored_items = float(len(rater_a))
 

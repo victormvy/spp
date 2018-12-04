@@ -183,6 +183,38 @@ class Net:
 
 		return model
 
+	def testing(self):
+		model = tf.keras.Sequential([
+			tf.keras.layers.Conv2D(32, 3, strides=(1, 1),
+								   kernel_initializer='he_uniform', input_shape=(self.size, self.size, self.num_channels),
+								   data_format='channels_last'),
+			self.__get_activation(),
+			tf.keras.layers.BatchNormalization(),
+			tf.keras.layers.MaxPooling2D(pool_size=8),
+
+			tf.keras.layers.Flatten(),
+		])
+
+		if self.dropout > 0:
+			model.add(tf.keras.layers.Dropout(rate=self.dropout))
+
+		if self.final_activation == 'poml':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'logit'))
+		elif self.final_activation == 'pomp':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'probit'))
+		elif self.final_activation == 'pomclog':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'cloglog'))
+		else:
+			model.add(tf.keras.layers.Dense(self.num_classes))
+			if self.prob_layer == 'geometric':
+				model.add(GeometricLayer())
+			model.add(tf.keras.layers.Activation(self.final_activation))
+
+		return model
+
 	def __get_activation(self):
 		if self.activation == 'relu':
 			return tf.keras.layers.Activation('relu')

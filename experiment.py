@@ -7,11 +7,13 @@ import glob
 import time
 import click
 import pickle
+import h5py
 from scipy import io as spio
 from callbacks import MomentumScheduler, ComputeMetricsCallback
 from losses import qwk_loss, make_cost_matrix
-from metrics import np_quadratic_weighted_kappa
+from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm
 from dataset import Dataset
+from sklearn.metrics import confusion_matrix
 
 
 class Experiment():
@@ -21,7 +23,7 @@ class Experiment():
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
 				 prob_layer=None,
-				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0):
+				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, only_eval=False):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -36,6 +38,7 @@ class Experiment():
 		self._lr = lr
 		self._momentum = momentum
 		self._dropout = dropout
+		self._only_eval = only_eval
 		self._finished = False
 
 		self._best_qwk = -1
@@ -230,6 +233,18 @@ class Experiment():
 		del self._dropout
 
 	@property
+	def only_eval(self):
+		return self._only_eval
+
+	@only_eval.setter
+	def only_eval(self, only_eval):
+		self._only_eval = only_eval
+
+	@only_eval.deleter
+	def only_eval(self):
+		del self._only_eval
+
+	@property
 	def finished(self):
 		return self._finished
 
@@ -344,6 +359,8 @@ class Experiment():
 			model = net_object.vgg19()
 		elif self.net_type == 'conv128':
 			model = net_object.conv128()
+		elif self.net_type == 'testing':
+			model = net_object.testing()
 		else:
 			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
 
@@ -352,8 +369,8 @@ class Experiment():
 			os.makedirs(self.checkpoint_dir)
 
 		# Model and results file names
-		model_file = 'model.hdf5'
-		best_model_file = 'best_model.hdf5'
+		model_file = 'model.h5'
+		best_model_file = 'best_model.h5'
 		model_file_extra = 'model.txt'
 		csv_file = 'results.csv'
 
@@ -435,7 +452,6 @@ class Experiment():
 				print('QWK found in file: {} (Evaluation skipped)'.format(qwk))
 				return qwk
 
-
 		_, _, test_path = self.get_db_path(self.db)
 
 		# Load test dataset
@@ -465,10 +481,12 @@ class Experiment():
 			model = net_object.vgg19()
 		elif self.net_type == 'conv128':
 			model = net_object.conv128()
+		elif self.net_type == 'testing':
+			model = net_object.testing()
 		else:
 			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
 
-		best_model_file = 'best_model.hdf5'
+		best_model_file = 'best_model.h5'
 
 		# Check if best model file exists
 		if not os.path.isfile(os.path.join(self.checkpoint_dir, best_model_file)):
@@ -500,13 +518,26 @@ class Experiment():
 		)
 
 		# Get predictions
-		predictions = model.predict_generator(
-			test_generator,
-			max_queue_size = self.batch_size * 10
+		predictions = model.predict(
+			ds_test.x / 255.0
 		)
 
+
+
+		# conf_mat = confusion_matrix(np.argmax(ds_test.y, axis=1), np.argmax(predictions, axis=1), labels=range(0, num_classes))
+
+		# print(conf_mat)
+		# print(num_classes)
+		# print(cost_matrix)
+
+		# sess = tf.keras.backend.get_session()
+		# qwk = sess.run(quadratic_weighted_kappa_cm(conf_mat, num_classes, cost_matrix))
+
+		# print(qwk)
+
 		# Calculate QWK
-		qwk = np_quadratic_weighted_kappa(ds_test.y, predictions, 0, num_classes-1)
+		print(np.bincount(np.argmax(ds_test.y, axis=1)))
+		qwk = np_quadratic_weighted_kappa(np.argmax(ds_test.y, axis=1), np.argmax(predictions, axis=1), 0, num_classes-1)
 
 		with open(os.path.join(self.checkpoint_dir, evaluation_file), 'w') as f:
 			f.write(str(qwk))
@@ -545,7 +576,8 @@ class Experiment():
 			'spp_alpha': self.spp_alpha,
 			'lr': self.lr,
 			'momentum': self.momentum,
-			'dropout': self.dropout
+			'dropout': self.dropout,
+			'only_eval': self.only_eval
 		}
 
 	def set_config(self, config):
@@ -567,6 +599,7 @@ class Experiment():
 		self.lr = 'lr' in config and config['lr'] or 0.1
 		self.momentum = 'momentum' in config and config['momentum'] or 0
 		self.dropout = 'dropout' in config and config['dropout'] or 0
+		self.only_eval = 'only_eval' in config and config['only_eval'] or False
 
 		if 'name' in config:
 			self.name = config['name']

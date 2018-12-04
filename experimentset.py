@@ -115,7 +115,7 @@ class ExperimentSet():
 		for experiment in self.experiments:
 				os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_number)
 				with tf.device('/device:GPU:' + str(gpu_number)):
-					if not experiment.finished:
+					if not experiment.finished and not experiment.only_eval:
 						experiment.run()
 					print(experiment.evaluate())
 					# Clear session
