@@ -16,6 +16,58 @@
   {}
 \endgroup
 
+\entry{smith2017cyclical}{inproceedings}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Smith}{S.}%
+     {Leslie~N}{L.~N.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{organization}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{SLN1}
+  \strng{fullhash}{SLN1}
+  \field{booktitle}{Applications of Computer Vision (WACV), 2017 IEEE Winter
+  Conference on}
+  \field{pages}{464\bibrangedash 472}
+  \field{title}{Cyclical learning rates for training neural networks}
+  \field{year}{2017}
+\endentry
+
+\entry{senior2013empirical}{inproceedings}{}
+  \true{moreauthor}
+  \name{author}{3}{}{%
+    {{}%
+     {Senior}{S.}%
+     {Andrew}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Heigold}{H.}%
+     {Georg}{G.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Yang}{Y.}%
+     {Ke}{K.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{organization}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{SAHGYK+1}
+  \strng{fullhash}{SAHGYK+1}
+  \field{booktitle}{Acoustics, Speech and Signal Processing (ICASSP), 2013 IEEE
+  International Conference on}
+  \field{pages}{6724\bibrangedash 6728}
+  \field{title}{An empirical study of learning rates in deep neural networks
+  for speech recognition}
+  \field{year}{2013}
+\endentry
+
 \entry{de2018weighted}{article}{}
   \name{author}{3}{}{%
     {{}%
@@ -113,6 +165,119 @@
   reducing internal covariate shift}
   \field{journaltitle}{arXiv preprint arXiv:1502.03167}
   \field{year}{2015}
+\endentry
+
+\entry{agresti2010analysis}{book}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Agresti}{A.}%
+     {Alan}{A.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {John Wiley \& Sons}%
+  }
+  \strng{namehash}{AA1}
+  \strng{fullhash}{AA1}
+  \field{title}{Analysis of ordinal categorical data}
+  \field{volume}{656}
+  \field{year}{2010}
+\endentry
+
+\entry{kingma2014adam}{article}{}
+  \name{author}{2}{}{%
+    {{}%
+     {Kingma}{K.}%
+     {Diederik~P}{D.~P.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Ba}{B.}%
+     {Jimmy}{J.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{KDPBJ1}
+  \strng{fullhash}{KDPBJ1}
+  \field{title}{Adam: A method for stochastic optimization}
+  \field{journaltitle}{arXiv preprint arXiv:1412.6980}
+  \field{year}{2014}
+\endentry
+
+\entry{van2001art}{article}{}
+  \name{author}{2}{}{%
+    {{}%
+     {Van~Dyk}{V.~D.}%
+     {David~A}{D.~A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Meng}{M.}%
+     {Xiao-Li}{X.-L.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Taylor \& Francis}%
+  }
+  \strng{namehash}{VDDAMXL1}
+  \strng{fullhash}{VDDAMXL1}
+  \field{number}{1}
+  \field{pages}{1\bibrangedash 50}
+  \field{title}{The art of data augmentation}
+  \field{volume}{10}
+  \field{journaltitle}{Journal of Computational and Graphical Statistics}
+  \field{year}{2001}
+\endentry
+
+\entry{krizhevsky2012imagenet}{inproceedings}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Krizhevsky}{K.}%
+     {Alex}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Sutskever}{S.}%
+     {Ilya}{I.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hinton}{H.}%
+     {Geoffrey~E}{G.~E.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{KASIHGE1}
+  \strng{fullhash}{KASIHGE1}
+  \field{booktitle}{Advances in neural information processing systems}
+  \field{pages}{1097\bibrangedash 1105}
+  \field{title}{Imagenet classification with deep convolutional neural
+  networks}
+  \field{year}{2012}
+\endentry
+
+\entry{ben2008comparison}{article}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Ben-David}{B.-D.}%
+     {Arie}{A.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Elsevier}%
+  }
+  \strng{namehash}{BDA1}
+  \strng{fullhash}{BDA1}
+  \field{number}{2}
+  \field{pages}{825\bibrangedash 832}
+  \field{title}{Comparison of classification accuracy using Cohen’s Weighted
+  Kappa}
+  \field{volume}{34}
+  \field{journaltitle}{Expert Systems with Applications}
+  \field{year}{2008}
 \endentry
 
 \lossort

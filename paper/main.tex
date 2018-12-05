@@ -9,19 +9,29 @@
 	\fontfamily{lmr}\selectfont
 	
 	\begin{multicols}{2}
+		
+	\section{Introduction}
+	...
+		
+	\section{Related work}
+	\begin{itemize}
+		\item Cyclical learning rates for training neural networks \cite{smith2017cyclical}.
+		\item An empirical study of learning rates in deep neural networks for speech recognition \cite{senior2013empirical}.
+	\end{itemize}
+
 	
 	\section{Experiments}
 	\subsection{Data}
 	We make use of two ordinal datasets appropriate for deep neural networks:
 	
 	\begin{itemize}
-		\item \textit{Diabetic Retinopathy}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. This is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair  consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras, illumination conditions and resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works \cite{de2018weighted} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve a better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 256 by 256 pixels. Data augmentation techniques are applied in order to achieve a higher number of samples.
+		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras, illumination conditions and resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works \cite{de2018weighted} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 256 by 256 pixels. Data augmentation techniques are applied to achieve a higher number of samples.
 		
-		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work \cite{beckham2017unimodal}, so that the images are 256px in width and height and pixels values follow a $(0;1)$ normal distribution. The original dataset is splitted in 5 cross-validation folds. The training set consists of merging the first four folds together which comprises a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
+		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work \cite{beckham2017unimodal}, so that the images are 256px in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset is split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
 	\end{itemize}
 	
 	\subsection{The model}
-	A convolutional neural network (CNN) has been used for both datasets. The architecture of this CNN is presented in the Table \ref{table:CNNArquitecture}.
+	A convolutional neural network (CNN) has been used for both datasets. The architecture of this CNN is presented in the Table \ref{table:CNNArchitecture}.
 	
 	\begin{table}[H]
 		\centering
@@ -50,11 +60,97 @@
 			\hline
 		\end{tabular}
 		\caption{Description of the architecture used in the experiments. For convolutional layers, Conv\_N\_WxH, where N is the number of filters, W the filter width and H the filter height. Stride is 1 for every convolutional layer. For max pool layers, MaxPool\_SxS, where S is the pool size.}
-		\label{table:CNNArquitecture}
+		\label{table:CNNArchitecture}
 	\end{table}
 	
-	Every convolutional layer is followed by an ELU activation layer \cite{clevert2015fast} and a batch normalization \cite{ioffe2015batch}. At the output, a Proportional Odds Model is used with different link functions (logit, probit, complementary log-log).
+	Every convolutional layer is followed by an ELU activation layer \cite{clevert2015fast} and a batch normalization \cite{ioffe2015batch}. At the output, a Proportional Odds Model (POM) is used with different link functions \cite{agresti2010analysis}. The logit link function is commonly used within POM. In this paper, we are comparing other link functions like probit or complementary log-log with the logit link. These three types of links are explained below.
 	
+	\begin{itemize}
+		\item \textit{Logit}. Logit link function is the most widely used function for Proportional Odds Models. These kind of models are also called Cummulative Logit Models. The logit link is shown in Equation \ref{eq:logit}.
+		\begin{equation}
+		\small
+		logit[P(Y_i \le j)] = \alpha_j + \beta'x_i,\quad j = 1, ..., c - 1
+		\label{eq:logit}
+		\end{equation}
+		\item \textit{Probit}. Probit link function is the inverse of the standard normal cummulative distribution function (cdf). Its expression is shown in Equation \ref{eq:probit}.	
+		\begin{equation}
+		\small
+		\Phi^-1[P(Y \le j)] = \alpha_j + \beta'x,\quad j = 1, ..., c - 1
+		\label{eq:probit}
+		\end{equation}
+		\item \textit{Complementary log-log}. Unlike logit and probit, complementary log-log function is not symmetric. With a continuous predictor $x$, for example, $P(Y \le j)$ approaches 0 at a different rate than it approaches 1. Complementary log-log expression is shown in Equation \ref{eq:cloglog}.
+		\begin{equation}
+		\footnotesize
+		log[-log[1 - P(Y \le j)]] = \alpha_j + \beta'x,\quad j = 1, ..., c - 1
+		\label{eq:cloglog}
+		\end{equation}
+	\end{itemize}
+	
+	\subsection{Procedure}
+	The model is optimized using a batch based first-order optimization algorithm called Adam \cite{kingma2014adam}. We study different initial learning rates in order to find the optimal one for each problem. We apply an exponential decay across training epochs to the initial learning rate.
+	
+	Quadratic Weighted Kappa Loss, that J. de la Torre described in previous work, is considered as loss function for this optimizer as it gives better performance for ordinal classification problems.
+	
+	Both datasets have been artificially equalised using data augmentation techniques \cite{van2001art}\cite{krizhevsky2012imagenet} based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. In the case of Diabetic Retinopathy Detection, the epoch size has been fixed to $100000$ images per epoch. For the Adience dataset, epoch size is the number of images in the training set.
+	
+	The model is evaluated with Quadratic Weighted Kappa metric \cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class.
+	
+	\subsection{Parameters}
+	Three different parameters have been considered: learning rate, batch size and link function for the final output layer.
+	
+	\begin{itemize}
+		\item \textit{Learning rate}. Learning rate is one of the most critical hyper-parameters to tune for training deep neural networks. Optimal learning rate can vary depending on the dataset and the CNN architecture. Within this work, we have considered three different values for this parameter: $10^-2$, $10^-3$ and $10^-4$.
+		\item \textit{Batch size}. Batch size is also an important parameter as it controls the number of weight updates that are made on every epoch. It can affect the training time and the model performance. In this paper, we have tried three separate batch sizes: $5$, $10$ and $15$.
+		\item \textit{Link function}. Different link functions have been used for the POM at the last layer output: logit, probit and complementary log-log.
+	\end{itemize}
+	
+	\section{Results}
+	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments done training the model with each combination of parameters.
+	
+	\subsection{Diabetic Retinopathy}
+	... \ref{table:DRresults}
+	
+	\begin{table}[H]
+		\footnotesize
+		\centering
+		\begin{tabular}{ccc|cc}
+			BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline
+			$5$ & $10^{-02}$ & poml & $0.44888$ & $0.5009$\\
+			$5$ & $10^{-02}$ & pomp & $0.46724$ & $0.49614$\\
+			$5$ & $10^{-02}$ & cloglog & $0.42854$ & $0.50006$\\
+			$5$ & $10^{-03}$ & poml & $0.56496$ & $0.5198$\\
+			$5$ & $10^{-03}$ & pomp & $0.57084$ & $0.51114$\\
+			$5$ & $10^{-03}$ & cloglog & $0.54796$ & $0.50808$\\
+			$5$ & $10^{-04}$ & poml & $0.52884$ & $0.57954$\\
+			$5$ & $10^{-04}$ & pomp & $0.53802$ & $0.5772$\\
+			$5$ & $10^{-04}$ & cloglog & $0.53824$ & $0.57636$\\
+			$10$ & $10^{-02}$ & poml & $0.5497$ & $0.48474$\\
+			$10$ & $10^{-02}$ & pomp & $0.52124$ & $0.5092$\\
+			$10$ & $10^{-02}$ & cloglog & $0.4276$ & $0.52524$\\
+			$10$ & $10^{-03}$ & poml & $0.58036$ & $0.54692$\\
+			$10$ & $10^{-03}$ & pomp & $0.56536$ & $0.52716$\\
+			$10$ & $10^{-03}$ & cloglog & $0.5883$ & $0.53076$\\
+			$10$ & $10^{-04}$ & poml & $0.53158$ & $0.59238$\\
+			$10$ & $10^{-04}$ & pomp & $0.5456$ & $0.59372$\\
+			$10$ & $10^{-04}$ & cloglog & $0.53928$ & $0.59242$\\
+			$15$ & $10^{-02}$ & poml & $0.55828$ & $0.50664$\\
+			$15$ & $10^{-02}$ & pomp & $0.54112$ & $0.50426$\\
+			$15$ & $10^{-02}$ & cloglog & $0.56676$ & $0.4991$\\
+			$15$ & $10^{-03}$ & poml & $0.55748$ & $0.57388$\\
+			$15$ & $10^{-03}$ & pomp & $0.58182$ & $0.5573$\\
+			$15$ & $10^{-03}$ & cloglog & $0.5634$ & $0.55906$\\
+			$15$ & $10^{-04}$ & poml & $0.54686$ & $0.5994$\\
+			$15$ & $10^{-04}$ & pomp & $0.53258$ & $0.60264$\\
+			$15$ & $10^{-04}$ & cloglog & $0.539$ & $0.6005$
+		\end{tabular}
+		\caption{Diabetic Retinopathy results.}
+		\label{table:DRresults}
+	\end{table}
+	
+	\subsection{Adience}
+	...
+	
+
 	\printbibliography
 	
 	\end{multicols}

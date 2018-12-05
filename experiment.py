@@ -323,7 +323,8 @@ class Experiment():
 		val_generator = val_datagen.flow(
 			ds_val.x,
 			ds_val.y,
-			batch_size=self.batch_size
+			batch_size=self.batch_size,
+			shuffle=False
 		)
 
 		# Calculate the number of steps per epoch
@@ -469,7 +470,8 @@ class Experiment():
 		test_generator = test_datagen.flow(
 			ds_test.x,
 			ds_test.y,
-			batch_size=self.batch_size
+			batch_size=self.batch_size,
+			shuffle=False
 		)
 
 		# NNet object
@@ -518,11 +520,13 @@ class Experiment():
 		)
 
 		# Get predictions
-		predictions = model.predict(
-			ds_test.x / 255.0
+		# predictions = model.predict(
+		#	ds_test.x / 255.0
+		# )
+		test_generator.reset()
+		predictions = model.predict_generator(
+			test_generator
 		)
-
-
 
 		# conf_mat = confusion_matrix(np.argmax(ds_test.y, axis=1), np.argmax(predictions, axis=1), labels=range(0, num_classes))
 
@@ -536,7 +540,6 @@ class Experiment():
 		# print(qwk)
 
 		# Calculate QWK
-		print(np.bincount(np.argmax(ds_test.y, axis=1)))
 		qwk = np_quadratic_weighted_kappa(np.argmax(ds_test.y, axis=1), np.argmax(predictions, axis=1), 0, num_classes-1)
 
 		with open(os.path.join(self.checkpoint_dir, evaluation_file), 'w') as f:
