@@ -14,10 +14,7 @@
 	...
 		
 	\section{Related work}
-	\begin{itemize}
-		\item Cyclical learning rates for training neural networks \cite{smith2017cyclical}.
-		\item An empirical study of learning rates in deep neural networks for speech recognition \cite{senior2013empirical}.
-	\end{itemize}
+	...
 
 	
 	\section{Experiments}
@@ -37,7 +34,7 @@
 		\centering
 		\begin{tabular}{|l|c|}
 			\hline
-			Layer & Output shape\\
+			\textbf{Layer} & \textbf{Output shape}\\
 			\hline
 			Conv\_32\_3x3 & 254x254x32\\\hline
 			Conv\_32\_3x3 & 252x252x32\\\hline
@@ -66,19 +63,19 @@
 	Every convolutional layer is followed by an ELU activation layer \cite{clevert2015fast} and a batch normalization \cite{ioffe2015batch}. At the output, a Proportional Odds Model (POM) is used with different link functions \cite{agresti2010analysis}. The logit link function is commonly used within POM. In this paper, we are comparing other link functions like probit or complementary log-log with the logit link. These three types of links are explained below.
 	
 	\begin{itemize}
-		\item \textit{Logit}. Logit link function is the most widely used function for Proportional Odds Models. These kind of models are also called Cummulative Logit Models. The logit link is shown in Equation \ref{eq:logit}.
+		\item \textit{Logit}. Logit link function is the most widely used function for Proportional Odds Models. These kind of models are also called Cummulative Logit Models. The logit link is shown in Eq. \ref{eq:logit}.
 		\begin{equation}
 		\small
 		logit[P(Y_i \le j)] = \alpha_j + \beta'x_i,\quad j = 1, ..., c - 1
 		\label{eq:logit}
 		\end{equation}
-		\item \textit{Probit}. Probit link function is the inverse of the standard normal cummulative distribution function (cdf). Its expression is shown in Equation \ref{eq:probit}.	
+		\item \textit{Probit}. Probit link function is the inverse of the standard normal cummulative distribution function (cdf). Its expression is shown in Eq. \ref{eq:probit}.	
 		\begin{equation}
 		\small
 		\Phi^-1[P(Y \le j)] = \alpha_j + \beta'x,\quad j = 1, ..., c - 1
 		\label{eq:probit}
 		\end{equation}
-		\item \textit{Complementary log-log}. Unlike logit and probit, complementary log-log function is not symmetric. With a continuous predictor $x$, for example, $P(Y \le j)$ approaches 0 at a different rate than it approaches 1. Complementary log-log expression is shown in Equation \ref{eq:cloglog}.
+		\item \textit{Complementary log-log}. Unlike logit and probit, complementary log-log function is not symmetric. With a continuous predictor $x$, for example, $P(Y \le j)$ approaches 0 at a different rate than it approaches 1. Complementary log-log expression is shown in Eq. \ref{eq:cloglog}.
 		\begin{equation}
 		\footnotesize
 		log[-log[1 - P(Y \le j)]] = \alpha_j + \beta'x,\quad j = 1, ..., c - 1
@@ -93,64 +90,121 @@
 	
 	Both datasets have been artificially equalised using data augmentation techniques \cite{van2001art}\cite{krizhevsky2012imagenet} based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. In the case of Diabetic Retinopathy Detection, the epoch size has been fixed to $100000$ images per epoch. For the Adience dataset, epoch size is the number of images in the training set.
 	
-	The model is evaluated with Quadratic Weighted Kappa metric \cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class.
+	The model is evaluated with Quadratic Weighted Kappa metric (QWK) \cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class.
 	
 	\subsection{Parameters}
 	Three different parameters have been considered: learning rate, batch size and link function for the final output layer.
 	
 	\begin{itemize}
-		\item \textit{Learning rate}. Learning rate is one of the most critical hyper-parameters to tune for training deep neural networks. Optimal learning rate can vary depending on the dataset and the CNN architecture. Within this work, we have considered three different values for this parameter: $10^-2$, $10^-3$ and $10^-4$.
+		\item \textit{Learning rate}. Learning rate is one of the most critical hyper-parameters to tune for training deep neural networks. Optimal learning rate can vary depending on the dataset and the CNN architecture. Previous works have presented some techniques that adjust this parameter in order to achieve better performance \cite{smith2017cyclical}\cite{senior2013empirical}. Within this work, we have considered three different values for this parameter: $10^{-2}$, $10^{-3}$ and $10^{-4}$.
 		\item \textit{Batch size}. Batch size is also an important parameter as it controls the number of weight updates that are made on every epoch. It can affect the training time and the model performance. In this paper, we have tried three separate batch sizes: $5$, $10$ and $15$.
 		\item \textit{Link function}. Different link functions have been used for the POM at the last layer output: logit, probit and complementary log-log.
 	\end{itemize}
 	
 	\section{Results}
-	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments done training the model with each combination of parameters.
+	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments done training the model with each combination of parameters. Every parameter combination has been run five times. These tables show the average quadratic weighted kappa across these five executions for validation and test values.
 	
 	\subsection{Diabetic Retinopathy}
-	... \ref{table:DRresults}
+	Detailed results for the Diabetic Retinopathy dataset are presented in Table \ref{table:DRresults}.
 	
 	\begin{table}[H]
 		\footnotesize
 		\centering
 		\begin{tabular}{ccc|cc}
-			BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline
-			$5$ & $10^{-02}$ & poml & $0.44888$ & $0.5009$\\
-			$5$ & $10^{-02}$ & pomp & $0.46724$ & $0.49614$\\
-			$5$ & $10^{-02}$ & cloglog & $0.42854$ & $0.50006$\\
-			$5$ & $10^{-03}$ & poml & $0.56496$ & $0.5198$\\
-			$5$ & $10^{-03}$ & pomp & $0.57084$ & $0.51114$\\
-			$5$ & $10^{-03}$ & cloglog & $0.54796$ & $0.50808$\\
-			$5$ & $10^{-04}$ & poml & $0.52884$ & $0.57954$\\
-			$5$ & $10^{-04}$ & pomp & $0.53802$ & $0.5772$\\
-			$5$ & $10^{-04}$ & cloglog & $0.53824$ & $0.57636$\\
-			$10$ & $10^{-02}$ & poml & $0.5497$ & $0.48474$\\
-			$10$ & $10^{-02}$ & pomp & $0.52124$ & $0.5092$\\
-			$10$ & $10^{-02}$ & cloglog & $0.4276$ & $0.52524$\\
-			$10$ & $10^{-03}$ & poml & $0.58036$ & $0.54692$\\
-			$10$ & $10^{-03}$ & pomp & $0.56536$ & $0.52716$\\
-			$10$ & $10^{-03}$ & cloglog & $0.5883$ & $0.53076$\\
-			$10$ & $10^{-04}$ & poml & $0.53158$ & $0.59238$\\
-			$10$ & $10^{-04}$ & pomp & $0.5456$ & $0.59372$\\
-			$10$ & $10^{-04}$ & cloglog & $0.53928$ & $0.59242$\\
-			$15$ & $10^{-02}$ & poml & $0.55828$ & $0.50664$\\
-			$15$ & $10^{-02}$ & pomp & $0.54112$ & $0.50426$\\
-			$15$ & $10^{-02}$ & cloglog & $0.56676$ & $0.4991$\\
-			$15$ & $10^{-03}$ & poml & $0.55748$ & $0.57388$\\
-			$15$ & $10^{-03}$ & pomp & $0.58182$ & $0.5573$\\
-			$15$ & $10^{-03}$ & cloglog & $0.5634$ & $0.55906$\\
-			$15$ & $10^{-04}$ & poml & $0.54686$ & $0.5994$\\
-			$15$ & $10^{-04}$ & pomp & $0.53258$ & $0.60264$\\
-			$15$ & $10^{-04}$ & cloglog & $0.539$ & $0.6005$
+			BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline\addlinespace[0.05cm]
+			$5$ & $10^{-2}$ & Logit & $0.44888$ & $0.4163$\\
+			& & Probit & $0.46724$ & $0.45972$\\
+			& & c log-log & $0.42854$ & $0.41448$\\
+			& $10^{-3}$ & Logit & $0.56496$ & $0.55356$\\
+			& & Probit & $0.57084$ & $0.56392$\\
+			& & c log-log & $0.54796$ & $0.53436$\\
+			& $10^{-4}$ & Logit & $0.52884$ & $0.52032$\\
+			& & Probit & $0.53802$ & $0.52302$\\
+			& & c log-log & $0.53824$ & $0.51974$\\
+			$10$ & $10^{-2}$ & Logit & $0.5497$ & $0.53142$\\
+			& & Probit & $0.52124$ & $0.50806$\\
+			& & c log-log & $0.4276$ & $0.4227$\\
+			& $10^{-3}$ & Logit & $0.58036$ & $0.57686$\\
+			& & Probit & $0.56536$ & $0.5581$\\
+			& & c log-log & $\textbf{0.5883}$ & $\textbf{0.5815}$\\
+			& $10^{-4}$ & Logit & $0.53158$ & $0.5385$\\
+			& & Probit & $0.5456$ & $0.54082$\\
+			& & c log-log & $0.53928$ & $0.53742$\\
+			$15$ & $10^{-2}$ & Logit & $0.55828$ & $0.55076$\\
+			& & Probit & $0.54112$ & $0.5343$\\
+			& & c log-log & $0.56676$ & $0.56428$\\
+			& $10^{-3}$ & Logit & $0.55748$ & $0.55106$\\
+			& & Probit & $0.58182$ & $0.57894$\\
+			& & c log-log & $0.5634$ & $0.55938$\\
+			& $10^{-4}$ & Logit & $0.54686$ & $0.54342$\\
+			& & Probit & $0.53258$ & $0.53278$\\
+			& & c log-log & $0.539$ & $0.53828$
 		\end{tabular}
-		\caption{Diabetic Retinopathy results.}
+		\caption{Diabetic Retinopathy results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
 		\label{table:DRresults}
 	\end{table}
 	
 	\subsection{Adience}
 	...
 	
-
+	\begin{table}[H]
+		\footnotesize
+		\centering
+		\begin{tabular}{ccc|cc}
+			BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline\addlinespace[0.05cm]
+			$5$ & $10^{-2}$ & Logit & $-$ & $-$\\
+			& & Probit & $-$ & $-$\\
+			& & c log-log & $-$ & $-$\\
+			& $10^{-3}$ & Logit & $-$ & $-$\\
+			& & Probit & $-$ & $-$\\
+			& & c log-log & $-$ & $-$\\
+			& $10^{-4}$ & Logit & $-$ & $-$\\
+			& & Probit & $-$ & $-$\\
+			& & c log-log & $-$ & $-$\\
+			$10$ & $10^{-2}$ & Logit & $-$ & $-$\\
+			& & Probit & $-$ & $-$\\
+			& & c log-log & $-$ & $-$\\
+			& $10^{-3}$ & Logit & $-$ & $-$\\
+			& & Probit & $-$ & $-$\\
+			& & c log-log & $-$ & $-$\\
+			& $10^{-4}$ & Logit & $-$ & $-$\\
+			& & Probit & $-$ & $-$\\
+			& & c log-log & $-$ & $-$\\
+			$15$ & $10^{-2}$ & Logit & $-$ & $-$\\
+			& & Probit & $-$ & $-$\\
+			& & c log-log & $-$ & $-$\\
+			& $10^{-3}$ & Logit & $-$ & $-$\\
+			& & Probit & $-$ & $-$\\
+			& & c log-log & $-$ & $-$\\
+			& $10^{-4}$ & Logit & $-$ & $-$\\
+			& & Probit & $-$ & $-$\\
+			& & c log-log & $-$ & $-$
+		\end{tabular}
+		\caption{Adience results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
+		\label{table:Adienceresults}
+	\end{table}
+	
+	\subsection{Statistical analysis}
+	The significance and relative importance of the parameters concerning the results obtained, as well as suitable values for each, were obtained using ANalysis Of the VAriance (ANOVA)
+	
+	The ANalysis Of the VAriance (ANOVA) \cite{miller1997beyond} is one of the most widely used statistical techniques. ANOVA is essentially a method of analysing the variance to which a response is subject into its various components, corresponding to the sources of variation which can be identified.
+	
+	ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the link function, which can be logit, probit and complementary log-log, the learning rate for the Adam optimisation algorithm ($10^{-2}$, $10^{-3}$ and $10^{-4}$) and the batch size (5, 10 and 15).
+	
+	Following the setup of the previous study, we performed an ANOVA III analysis and multiple comparison tests. The tests show that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
+	
+	We denote by $W_{i,j,k}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the i-th level, the second at the j-th level and the third at k-th level. We assume that the two factors do not act independently and therefore there exists an interaction between them. In this case, the observations fit Eq. \ref{eq:anova3}.
+	
+	\begin{equation}
+	\begin{aligned}
+	\footnotesize
+	W_{i,j,k} = & \mu + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k}
+	\label{eq:anova3}
+	\end{aligned}
+	\end{equation}
+	
+	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor ($10^{-4}$, $10^{-3}$, $10^{-2}$) and $B_k$ is the effect associated with the \textit{k-th} level of the size batch factor (5, 10, 15). The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k}$ is the influence on the result of everything that could not be assigned or of random factors. $W_{i,j,k}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
+	
 	\printbibliography
 	
 	\end{multicols}

@@ -183,6 +183,33 @@ class Net:
 
 		return model
 
+	def InceptionResNetV2(self):
+		model = tf.keras.Sequential()
+		inception = tf.keras.applications.inception_resnet_v2.InceptionResNetV2(include_top=False, input_shape=(self.size, self.size, self.num_channels), classes=self.num_classes)
+
+		model.add(inception)
+		model.add(tf.keras.layers.Flatten())
+
+		if self.dropout > 0:
+			model.add(tf.keras.layers.Dropout(rate=self.dropout))
+
+		if self.final_activation == 'poml':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'logit'))
+		elif self.final_activation == 'pomp':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'probit'))
+		elif self.final_activation == 'pomclog':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'cloglog'))
+		else:
+			model.add(tf.keras.layers.Dense(self.num_classes))
+			if self.prob_layer == 'geometric':
+				model.add(GeometricLayer())
+			model.add(tf.keras.layers.Activation(self.final_activation))
+
+		return model
+
 	def testing(self):
 		model = tf.keras.Sequential([
 			tf.keras.layers.Conv2D(32, 3, strides=(1, 1),

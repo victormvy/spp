@@ -16,58 +16,6 @@
   {}
 \endgroup
 
-\entry{smith2017cyclical}{inproceedings}{}
-  \name{author}{1}{}{%
-    {{}%
-     {Smith}{S.}%
-     {Leslie~N}{L.~N.}%
-     {}{}%
-     {}{}}%
-  }
-  \list{organization}{1}{%
-    {IEEE}%
-  }
-  \strng{namehash}{SLN1}
-  \strng{fullhash}{SLN1}
-  \field{booktitle}{Applications of Computer Vision (WACV), 2017 IEEE Winter
-  Conference on}
-  \field{pages}{464\bibrangedash 472}
-  \field{title}{Cyclical learning rates for training neural networks}
-  \field{year}{2017}
-\endentry
-
-\entry{senior2013empirical}{inproceedings}{}
-  \true{moreauthor}
-  \name{author}{3}{}{%
-    {{}%
-     {Senior}{S.}%
-     {Andrew}{A.}%
-     {}{}%
-     {}{}}%
-    {{}%
-     {Heigold}{H.}%
-     {Georg}{G.}%
-     {}{}%
-     {}{}}%
-    {{}%
-     {Yang}{Y.}%
-     {Ke}{K.}%
-     {}{}%
-     {}{}}%
-  }
-  \list{organization}{1}{%
-    {IEEE}%
-  }
-  \strng{namehash}{SAHGYK+1}
-  \strng{fullhash}{SAHGYK+1}
-  \field{booktitle}{Acoustics, Speech and Signal Processing (ICASSP), 2013 IEEE
-  International Conference on}
-  \field{pages}{6724\bibrangedash 6728}
-  \field{title}{An empirical study of learning rates in deep neural networks
-  for speech recognition}
-  \field{year}{2013}
-\endentry
-
 \entry{de2018weighted}{article}{}
   \name{author}{3}{}{%
     {{}%
@@ -278,6 +226,76 @@
   \field{volume}{34}
   \field{journaltitle}{Expert Systems with Applications}
   \field{year}{2008}
+\endentry
+
+\entry{smith2017cyclical}{inproceedings}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Smith}{S.}%
+     {Leslie~N}{L.~N.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{organization}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{SLN1}
+  \strng{fullhash}{SLN1}
+  \field{booktitle}{Applications of Computer Vision (WACV), 2017 IEEE Winter
+  Conference on}
+  \field{pages}{464\bibrangedash 472}
+  \field{title}{Cyclical learning rates for training neural networks}
+  \field{year}{2017}
+\endentry
+
+\entry{senior2013empirical}{inproceedings}{}
+  \true{moreauthor}
+  \name{author}{3}{}{%
+    {{}%
+     {Senior}{S.}%
+     {Andrew}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Heigold}{H.}%
+     {Georg}{G.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Yang}{Y.}%
+     {Ke}{K.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{organization}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{SAHGYK+1}
+  \strng{fullhash}{SAHGYK+1}
+  \field{booktitle}{Acoustics, Speech and Signal Processing (ICASSP), 2013 IEEE
+  International Conference on}
+  \field{pages}{6724\bibrangedash 6728}
+  \field{title}{An empirical study of learning rates in deep neural networks
+  for speech recognition}
+  \field{year}{2013}
+\endentry
+
+\entry{miller1997beyond}{book}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Miller~Jr}{M.~J.}%
+     {Rupert~G}{R.~G.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{2}{%
+    {Chapman}%
+    {Hall/CRC}%
+  }
+  \strng{namehash}{MJRG1}
+  \strng{fullhash}{MJRG1}
+  \field{title}{Beyond ANOVA: basics of applied statistics}
+  \field{year}{1997}
 \endentry
 
 \lossort

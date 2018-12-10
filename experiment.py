@@ -356,14 +356,7 @@ class Experiment():
 						 self.spp_alpha,
 						 self.dropout)
 
-		if self.net_type == 'vgg19':
-			model = net_object.vgg19()
-		elif self.net_type == 'conv128':
-			model = net_object.conv128()
-		elif self.net_type == 'testing':
-			model = net_object.testing()
-		else:
-			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
+		model = self.get_model(net_object, self.net_type)
 
 		# Create checkpoint dir if not exists
 		if not os.path.isdir(self.checkpoint_dir):
@@ -479,14 +472,7 @@ class Experiment():
 						 self.spp_alpha,
 						 self.dropout)
 
-		if self.net_type == 'vgg19':
-			model = net_object.vgg19()
-		elif self.net_type == 'conv128':
-			model = net_object.conv128()
-		elif self.net_type == 'testing':
-			model = net_object.testing()
-		else:
-			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
+		model = self.get_model(net_object, self.net_type)
 
 		best_model_file = 'best_model.h5'
 
@@ -546,6 +532,20 @@ class Experiment():
 			f.write(str(qwk))
 
 		return qwk
+
+	def get_model(self, net_object, name):
+		if name == 'vgg19':
+			model = net_object.vgg19()
+		elif name == 'conv128':
+			model = net_object.conv128()
+		elif name == 'testing':
+			model = net_object.testing()
+		elif name == 'inceptionresnetv2':
+			model = net_object.InceptionResNetV2()
+		else:
+			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
+
+		return model
 
 	def get_db_path(self, db):
 		"""
