@@ -1,6 +1,7 @@
 import tensorflow as tf
 from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, NNPOM
 from layers import GeometricLayer
+from resnet import inference
 
 
 class Net:
@@ -186,6 +187,9 @@ class Net:
 	def InceptionResNetV2(self):
 		model = tf.keras.Sequential()
 		inception = tf.keras.applications.inception_resnet_v2.InceptionResNetV2(include_top=False, input_shape=(self.size, self.size, self.num_channels), classes=self.num_classes)
+
+		for layer in inception.layers:
+			layer.trainable = False
 
 		model.add(inception)
 		model.add(tf.keras.layers.Flatten())

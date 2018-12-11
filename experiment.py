@@ -23,7 +23,7 @@ class Experiment():
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
 				 prob_layer=None,
-				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both'):
+				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -40,6 +40,7 @@ class Experiment():
 		self._dropout = dropout
 		self._task = task
 		self._finished = False
+		self._workers = workers
 
 		self._best_qwk = -1
 
@@ -257,6 +258,18 @@ class Experiment():
 		del self._finished
 
 	@property
+	def workers(self):
+		return self._workers
+
+	@workers.setter
+	def workers(self, workers):
+		self._workers = workers
+
+	@workers.deleter
+	def workers(self):
+		del self._workers
+
+	@property
 	def best_qwk(self):
 		return self._best_qwk
 
@@ -423,9 +436,9 @@ class Experiment():
 																	append=True),
 									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 									   ],
-							workers=4,
+							workers=self.workers,
 							use_multiprocessing=True,
-							max_queue_size=self.batch_size * 10,
+							max_queue_size=self.batch_size * 3,
 							class_weight=class_weight
 							)
 
@@ -580,7 +593,8 @@ class Experiment():
 			'lr': self.lr,
 			'momentum': self.momentum,
 			'dropout': self.dropout,
-			'task': self.task
+			'task': self.task,
+			'workers' : self.workers
 		}
 
 	def set_config(self, config):
@@ -603,6 +617,7 @@ class Experiment():
 		self.momentum = 'momentum' in config and config['momentum'] or 0
 		self.dropout = 'dropout' in config and config['dropout'] or 0
 		self.task = 'task' in config and config['task'] or 'both'
+		self.workers = 'workers' in config and config['workers'] or 4
 
 		if 'name' in config:
 			self.name = config['name']

@@ -72,7 +72,7 @@
 		\item \textit{Probit}. Probit link function is the inverse of the standard normal cummulative distribution function (cdf). Its expression is shown in Eq. \ref{eq:probit}.	
 		\begin{equation}
 		\small
-		\Phi^-1[P(Y \le j)] = \alpha_j + \beta'x,\quad j = 1, ..., c - 1
+		\Phi^{-1}[P(Y \le j)] = \alpha_j + \beta'x,\quad j = 1, ..., c - 1
 		\label{eq:probit}
 		\end{equation}
 		\item \textit{Complementary log-log}. Unlike logit and probit, complementary log-log function is not symmetric. With a continuous predictor $x$, for example, $P(Y \le j)$ approaches 0 at a different rate than it approaches 1. Complementary log-log expression is shown in Eq. \ref{eq:cloglog}.
@@ -152,33 +152,33 @@
 		\centering
 		\begin{tabular}{ccc|cc}
 			BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline\addlinespace[0.05cm]
-			$5$ & $10^{-2}$ & Logit & $-$ & $-$\\
-			& & Probit & $-$ & $-$\\
-			& & c log-log & $-$ & $-$\\
-			& $10^{-3}$ & Logit & $-$ & $-$\\
-			& & Probit & $-$ & $-$\\
-			& & c log-log & $-$ & $-$\\
-			& $10^{-4}$ & Logit & $-$ & $-$\\
-			& & Probit & $-$ & $-$\\
-			& & c log-log & $-$ & $-$\\
-			$10$ & $10^{-2}$ & Logit & $-$ & $-$\\
-			& & Probit & $-$ & $-$\\
-			& & c log-log & $-$ & $-$\\
-			& $10^{-3}$ & Logit & $-$ & $-$\\
-			& & Probit & $-$ & $-$\\
-			& & c log-log & $-$ & $-$\\
-			& $10^{-4}$ & Logit & $-$ & $-$\\
-			& & Probit & $-$ & $-$\\
-			& & c log-log & $-$ & $-$\\
-			$15$ & $10^{-2}$ & Logit & $-$ & $-$\\
-			& & Probit & $-$ & $-$\\
-			& & c log-log & $-$ & $-$\\
-			& $10^{-3}$ & Logit & $-$ & $-$\\
-			& & Probit & $-$ & $-$\\
-			& & c log-log & $-$ & $-$\\
-			& $10^{-4}$ & Logit & $-$ & $-$\\
-			& & Probit & $-$ & $-$\\
-			& & c log-log & $-$ & $-$
+			$5$ & $10^{-2}$ & Logit & $0.72072$ & $0.68408$\\
+			& & Probit & $0.77608$ & $0.72574$\\
+			& & c log-log & $0.7543$ & $0.70742$\\
+			& $10^{-3}$ & Logit & $0.7146$ & $0.67868$\\
+			& & Probit & $0.81906$ & $0.77154$\\
+			& & c log-log & $0.57196$ & $0.55608$\\
+			& $10^{-4}$ & Logit & $0.54432$ & $0.51934$\\
+			& & Probit & $0.5436$ & $0.52422$\\
+			& & c log-log & $0.54802$ & $0.52484$\\
+			$10$ & $10^{-2}$ & Logit & $0.78872$ & $0.72994$\\
+			& & Probit & $0.79332$ & $0.7475$\\
+			& & c log-log & $0.78004$ & $0.7326$\\
+			& $10^{-3}$ & Logit & $0.49686$ & $0.47112$\\
+			& & Probit & $0.59778$ & $0.58476$\\
+			& & c log-log & $0.52016$ & $0.49968$\\
+			& $10^{-4}$ & Logit & $0.60972$ & $0.56814$\\
+			& & Probit & $0.54638$ & $0.52632$\\
+			& & c log-log & $0.75428$ & $0.52094$\\
+			$15$ & $10^{-2}$ & Logit & $0.79104$ & $0.74388$\\
+			& & Probit & $\textbf{0.84254}$ & $\textbf{0.78666}$\\
+			& & c log-log & $0.78802$ & $0.74624$\\
+			& $10^{-3}$ & Logit & $0.56946$ & $0.52978$\\
+			& & Probit & $0.70262$ & $0.65416$\\
+			& & c log-log & $0.49242$ & $0.4732$\\
+			& $10^{-4}$ & Logit & $0.55202$ & $0.52484$\\
+			& & Probit & $0.54288$ & $0.5174$\\
+			& & c log-log & $0.53826$ & $0.52542$
 		\end{tabular}
 		\caption{Adience results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
 		\label{table:Adienceresults}
