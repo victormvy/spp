@@ -348,7 +348,7 @@ class Experiment():
 
 		# Learning rate scheduler callback
 		def learning_rate_scheduler(epoch):
-			return self.lr * np.exp(-0.025 * epoch)
+			return self.lr * np.exp(-0.035 * epoch)
 
 		# Save epoch callback for training process
 		def save_epoch(epoch, logs):

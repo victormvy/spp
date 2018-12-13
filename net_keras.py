@@ -169,12 +169,15 @@ class Net:
 
 		if self.final_activation == 'poml':
 			model.add(tf.keras.layers.Dense(1))
+			model.add(tf.keras.layers.BatchNormalization())
 			model.add(NNPOM(self.num_classes, 'logit'))
 		elif self.final_activation == 'pomp':
 			model.add(tf.keras.layers.Dense(1))
+			model.add(tf.keras.layers.BatchNormalization())
 			model.add(NNPOM(self.num_classes, 'probit'))
 		elif self.final_activation == 'pomclog':
 			model.add(tf.keras.layers.Dense(1))
+			model.add(tf.keras.layers.BatchNormalization())
 			model.add(NNPOM(self.num_classes, 'cloglog'))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
@@ -188,8 +191,8 @@ class Net:
 		model = tf.keras.Sequential()
 		inception = tf.keras.applications.inception_resnet_v2.InceptionResNetV2(include_top=False, input_shape=(self.size, self.size, self.num_channels), classes=self.num_classes)
 
-		for layer in inception.layers:
-			layer.trainable = False
+		# for layer in inception.layers:
+		# 	layer.trainable = False
 
 		model.add(inception)
 		model.add(tf.keras.layers.Flatten())

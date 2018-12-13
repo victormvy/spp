@@ -1,4 +1,5 @@
 import tensorflow as tf
+import math
 
 
 class SPP(tf.keras.layers.Activation):
@@ -218,15 +219,13 @@ class NNPOM(tf.keras.layers.Layer):
 
 	def build(self, input_shape):
 		self.thresholds_b = self.add_weight('b_b_nnpom', shape=(1,),
-											initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
+											initializer=tf.random_uniform_initializer(minval=0, maxval=0.1))
 		self.thresholds_a = self.add_weight('b_a_nnpom', shape=(self.num_classes - 2,),
-											initializer=tf.random_uniform_initializer(minval=-0.5, maxval=0.5))
-		self.thresholds_t = self.add_weight('t_nnpom', shape=(1,), initializer=tf.constant_initializer(1000.0),
-											dtype=tf.float32)
+											initializer=tf.random_uniform_initializer(minval=math.sqrt((1.0 / (self.num_classes - 2))/2), maxval=math.sqrt(1.0 / (self.num_classes - 2))))
 
 	def call(self, x):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)
-		return self._nnpom(x / self.thresholds_t, thresholds / self.thresholds_t)
+		return self._nnpom(x, thresholds)
 
 	def compute_output_shape(self, input_shape):
 		print(input_shape)

@@ -1,5 +1,5 @@
 % !TeX spellcheck = en_UK
-\documentclass[10pt, a4paper, titlepage]{article}
+\documentclass[10pt, a4paper, titlepage, twocolumn]{article}
 
 \input{preambulo.tex}
 
@@ -8,7 +8,7 @@
 \begin{document}
 	\fontfamily{lmr}\selectfont
 	
-	\begin{multicols}{2}
+	%\begin{multicols}{2}
 		
 	\section{Introduction}
 	...
@@ -22,7 +22,7 @@
 	We make use of two ordinal datasets appropriate for deep neural networks:
 	
 	\begin{itemize}
-		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras, illumination conditions and resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works \cite{de2018weighted} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 256 by 256 pixels. Data augmentation techniques are applied to achieve a higher number of samples.
+		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras, illumination conditions and resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works \cite{de2018weighted}\cite{nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 256 by 256 pixels. Data augmentation techniques are applied to achieve a higher number of samples.
 		
 		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work \cite{beckham2017unimodal}, so that the images are 256px in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset is split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
 	\end{itemize}
@@ -30,7 +30,7 @@
 	\subsection{The model}
 	A convolutional neural network (CNN) has been used for both datasets. The architecture of this CNN is presented in the Table \ref{table:CNNArchitecture}.
 	
-	\begin{table}[H]
+	\begin{table}[htbp]
 		\centering
 		\begin{tabular}{|l|c|}
 			\hline
@@ -107,7 +107,7 @@
 	\subsection{Diabetic Retinopathy}
 	Detailed results for the Diabetic Retinopathy dataset are presented in Table \ref{table:DRresults}.
 	
-	\begin{table}[H]
+	\begin{table}[htbp]
 		\footnotesize
 		\centering
 		\begin{tabular}{ccc|cc}
@@ -145,9 +145,9 @@
 	\end{table}
 	
 	\subsection{Adience}
-	...
+	Results for the experiments made with the Adience dataset are shown in Table \ref{table:Adienceresults}.
 	
-	\begin{table}[H]
+	\begin{table}[htbp]
 		\footnotesize
 		\centering
 		\begin{tabular}{ccc|cc}
@@ -193,19 +193,100 @@
 	
 	Following the setup of the previous study, we performed an ANOVA III analysis and multiple comparison tests. The tests show that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
 	
-	We denote by $W_{i,j,k}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the i-th level, the second at the j-th level and the third at k-th level. We assume that the two factors do not act independently and therefore there exists an interaction between them. In this case, the observations fit Eq. \ref{eq:anova3}.
+	We denote by $W_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the i-th level, the second at the j-th level and the third at k-th level. We assume that the two factors do not act independently and therefore there exists an interaction between them. In this case, the observations fit Eq. \ref{eq:anova3}.
 	
 	\begin{equation}
 	\begin{aligned}
 	\footnotesize
-	W_{i,j,k} = & \mu + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k}
+	W_{i,j,k,l} = & \mu + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l}
 	\label{eq:anova3}
 	\end{aligned}
 	\end{equation}
 	
-	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor ($10^{-4}$, $10^{-3}$, $10^{-2}$) and $B_k$ is the effect associated with the \textit{k-th} level of the size batch factor (5, 10, 15). The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k}$ is the influence on the result of everything that could not be assigned or of random factors. $W_{i,j,k}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
+	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor ($10^{-4}$, $10^{-3}$, $10^{-2}$) and $B_k$ is the effect associated with the \textit{k-th} level of the size batch factor (5, 10, 15). The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $W_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
+	
+	We consider some hypotheses testing where the null hypothesis is proposed that each term of the above equation is independent of the levels involved. The hypotheses for the levels the L factor are
+	\[
+		H_0 \equiv L_1 = L_2 = L_3
+	\]
+	\[
+		H_1 \equiv \text{ some } L_i \text{ is different}
+	\]
+	
+	The same hypotheses are made for the other factors. In this way, we test in the null hypothesis that all of the population means are equal against an alternative hypothesis that there is at least one mean that is not equal to the others.
+	
+	The hypothesis associated with the interaction between L and P is
+	\[
+		H_0 \equiv LP_{i,j} = 0 \quad \forall i,j
+	\]
+	\[
+		H_1 \equiv \exists LP_{i,j} \ne 0
+	\]
+	
+	Similar hypotheses can be assumed for the interaction between the other factors.
+	
+	The analysis of variance table containing the sum of squares, degrees of freedom, mean square, test statistics and significance level represents the initial study in a compact form.
+	
+	\begin{table}[htbp]
+		\centering
+		\small
+		\begin{tabular}{l|ccccc}
+			\multicolumn{6}{c}{Response variable WK}\\\hline
+			Source & S.S. & D.F. & M.S. & F-ratio & Sig.\\\hline
+			Model & $37.860$ & $9$ & $4.207$ & $1562.840$ & $.000$\\
+			$L$ factor & $.057$ & $2$ & $.029$ & $10.646$ & $.000$\\
+			$P$ factor & $.121$ & $2$ & $.060$ & $22.468$ & $.000$\\
+			$LP$ factors & $.057$ & $4$ & $.014$ & $5.261$ & $.001$\\
+			Error & $.339$ & $126$ & $.003$ & & \\
+			Total & $38.199$ & $135$ & & & 
+		\end{tabular}
+		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Retinopathy dataset.}
+		\label{table:ANOVARetinopathy}
+	\end{table}
+	
+	The results of the ANOVA III test for the Diabetic Retinopathy dataset are resumed in Table \ref{table:ANOVARetinopathy}. There are significative differences in the means depending on the link function and also depending on the learning rate for $\alpha=0.05$. Moreover, an interaction between the link function and the learning rate can be recognised ($\text{p-value} = 0.001$).
+	
+	As Table \ref{table:ANOVARetinopathy} showed that there exist significative differences between the means, we are now analysing those differences. A post-hoc multiple comparison test has been performed on the average WK obtained. An HSD Tukey's test was made under the null hypothesis that the variance of the error of the dependent variable is the same between groups. The best link function is the complementary log-log, though it doesn't have significative differences with the probit function ($\alpha=0.05$). There are differences between the complementary log-log and the probit function concerning the logit function.
+	
+	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. Significative differences can be observed in the mean values for $\eta = 10^{-3}$ with respect to the other values of the parameter ($\alpha=0.05$). Also, there are differences for $\eta = 10^{-4}$ concerning $\eta = 10^{-2}$.
+	
+	\begin{table}[htbp]
+		\centering
+		\small
+		\begin{tabular}{l|ccccc}
+			\multicolumn{6}{c}{Response variable WK}\\\hline
+			Source & S.S. & D.F. & M.S. & F-ratio & Sig.\\\hline
+			Model & $52.328$ & $15$ & $3.489$ & $1426.170$ & $.000$\\
+			$L$ factor & $.027$ & $2$ & $.014$ & $5.582$ & $.005$\\
+			$P$ factor & $1.031$ & $2$ & $.516$ & $210.809$ & $.000$\\
+			$B$ factor & $.089$ & $2$ & $.045$ & $18.253$ & $.000$\\
+			$LP$ factors & $.183$ & $4$ & $.046$ & $18.695$ & $.000$\\
+			$PB$ factors & $.124$ & $4$ & $.031$ & $12.695$ & $.000$\\
+			Error & $.294$ & $120$ & $.002$ & & \\
+			Total & $52.622$ & $135$ & $3.489$ & & 
+		\end{tabular}
+		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Adience dataset.}
+		\label{table:ANOVAAdience}
+	\end{table}
+	
+	The results of the ANOVA III test for the Adience dataset are shown in Table \ref{table:ANOVAAdience}. The interactions where there are not significative differences have been omitted. First, the factor associated with the link function is analysed. The differences between the means are significative ($\text{p-value} = 0.005$). Secondly, there are significative differences concerning the learning rate factor too ($\text{p-value} = 0.000$). Also, there are differences for the means for the batch size factor. Significative interactions exist between two pairs of factors: link function and learning rate, and learning rate and batch size ($\text{p-value = 0.000}$ for both cases).
+	
+	A post-hoc multiple comparison test has been performed on the average WK obtained for this dataset too. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been done. The results showed that the best link function is the logit one, in this case, with $0.632438$ as mean WK value. However, there are not significative differences between this function and the complementary log-log ($\text{p-value}=0.110$). It has differences with the probit function though ($\text{p-value} = 0.003$). The complementary log-log link reported the best results after the logit function, having a mean WK of $0.611287$. The complementary log-log function doesn't show significative differences with the probit function.
+	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. The test reported significative differences between $\eta=10^{-2}$ (mean value $0.733784$) and the rest of values of this parameter ($\alpha=0.005$), being this one the best value for this factor. The best value after $10^{-2}$ is $10^{-3}$, which have a mean WK value of $0.579889$. Lastly, the best value for the batch size parameter is $10$ (mean value $0.648700$) as it has significative differences with the rest of values. The second best value is $5$ (mean $0.605533$), but it has no significative differences with $15$ ($\text{p-value}= 0.194$).
+	
+	\section{Conclusions}
+	In this section, the conclusions obtained from this work are exposed. The first thing that we have noticed is that the optimal values for the different parameters considered are problem-dependant. 
+	
+	The complementary log-log function has the best average performance across both datasets. It offers the best results in Diabetic Retinopathy dataset and the second best result in Adience dataset. These results provide an opportunity for exploring new generalised link functions.
+	
+	The best value for the learning rate parameter for  Diabetic Retinopathy dataset is $\eta = 10^{-3}$ while this value is the second best option for Adience dataset. It can be considered a good value for this parameter when training the model with new datasets.
+	
+	Both datasets have obtained the best performance with batch size 10.
+	
+	Also, the statistical tests reported that there are interactions between some parameters like the link function and the learning rate, for Diabetic Retinopathy, or those factors in addition to learning rate and batch size, for Adience dataset.
+	
 	
 	\printbibliography
 	
-	\end{multicols}
+	%\end{multicols}
 \end{document}

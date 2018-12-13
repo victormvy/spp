@@ -47,6 +47,30 @@
   \field{year}{2018}
 \endentry
 
+\entry{nebot2016diabetic}{inproceedings}{}
+  \true{moreauthor}
+  \name{author}{1}{}{%
+    {{}%
+     {Nebot}{N.}%
+     {{\`A}}{{\`A}}%
+     {}{}%
+     {}{}}%
+  }
+  \list{organization}{1}{%
+    {IOS press}%
+  }
+  \strng{namehash}{NA+1}
+  \strng{fullhash}{NA+1}
+  \field{booktitle}{Artificial Intelligence Research and Development:
+  Proceedings of the 19th International Conference of the Catalan Association
+  for Artificial Intelligence, Barcelona, Catalonia, Spain, October 19-21,
+  2016}
+  \field{pages}{58}
+  \field{title}{Diabetic retinopathy detection hrough image analysis using deep
+  convolutional neural networks}
+  \field{year}{2016}
+\endentry
+
 \entry{beckham2017unimodal}{article}{}
   \name{author}{2}{}{%
     {{}%
