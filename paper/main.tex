@@ -7,17 +7,28 @@
 
 \begin{document}
 	\fontfamily{lmr}\selectfont
-	
-	%\begin{multicols}{2}
 		
 	\section{Introduction}
-	...
-		
+	\label{sect:introduction}
+	Deep learning \cite{lecun2015deep} combines multiple Machine Learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification or speech recognition. Deep learning discovers complex structures in large datasets by using the backpropagation algorithm to indicate how a machine should change its internal parameters that are used to compute the representation in each layer from the features in the previous layer.
+	
+	The backpropagation algorithm is a stochastic gradient descent algorithm that minimises a predefined loss function. The layer's parameters are updated after backpropagating the loss function gradients through the network. Deep convolutional nets are suited for images, video, speech and audio processing and they have been used extensively in the last years for automatic classification tasks. For the case of images, convolutional layers extract the main features from the pixels of the images and, after that, the fully connected layer classify every sample based on its extracted features. At the output of the convolutional net, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. These outputs are compared against the correct values.
+	
+	Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics}\cite{mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. Weighted Kappa loss was described in previous work \cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalisation, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalisation is proportional to the square of the distance. In this work, we will combine the QWK metric and the QWK loss.
+	
+	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM) will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimisation algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results.
+	
+	The experiments will be run using two different ordinal datasets: Diabetic Retinopathy and Adience.
+	
+	This paper is organised as follows: in Section \ref{sect:relatedwork}, we take a look at previous works related to this paper, in Section \ref{sect:experiments} we describe the model, the experiments and the datasets used, in Section \ref{sect:results} we present the results obtained and the statistical analysis and finally in Section \ref{sect:conclusions} we expose the conclusions of this study.
+	
 	\section{Related work}
-	...
+	\label{sect:relatedwork}
+	J. de la Torre et al. proposed the use of QWK loss function for the optimisation algorithm. They compared this cost function against the traditional log-loss function across three different databases, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces the overfitting and the required training time. Also, they checked the importance of hyper-parameter tuning.
 
 	
 	\section{Experiments}
+	\label{sect:experiments}
 	\subsection{Data}
 	We make use of two ordinal datasets appropriate for deep neural networks:
 	
@@ -30,7 +41,7 @@
 	\subsection{The model}
 	A convolutional neural network (CNN) has been used for both datasets. The architecture of this CNN is presented in the Table \ref{table:CNNArchitecture}.
 	
-	\begin{table}[htbp]
+	\begin{table}[ht]
 		\centering
 		\begin{tabular}{|l|c|}
 			\hline
@@ -60,7 +71,7 @@
 		\label{table:CNNArchitecture}
 	\end{table}
 	
-	Every convolutional layer is followed by an ELU activation layer \cite{clevert2015fast} and a batch normalization \cite{ioffe2015batch}. At the output, a Proportional Odds Model (POM) is used with different link functions \cite{agresti2010analysis}. The logit link function is commonly used within POM. In this paper, we are comparing other link functions like probit or complementary log-log with the logit link. These three types of links are explained below.
+	Every convolutional layer is followed by an ELU activation layer \cite{clevert2015fast} and a batch normalization \cite{ioffe2015batch}. At the output, a Proportional Odds Model is used with different link functions \cite{agresti2010analysis}. The logit link function is commonly used within POM. In this paper, we are comparing other link functions like probit or complementary log-log with the logit link. These three types of links are explained below.
 	
 	\begin{itemize}
 		\item \textit{Logit}. Logit link function is the most widely used function for Proportional Odds Models. These kind of models are also called Cummulative Logit Models. The logit link is shown in Eq. \ref{eq:logit}.
@@ -102,12 +113,13 @@
 	\end{itemize}
 	
 	\section{Results}
+	\label{sect:results}
 	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments done training the model with each combination of parameters. Every parameter combination has been run five times. These tables show the average quadratic weighted kappa across these five executions for validation and test values.
 	
 	\subsection{Diabetic Retinopathy}
 	Detailed results for the Diabetic Retinopathy dataset are presented in Table \ref{table:DRresults}.
 	
-	\begin{table}[htbp]
+	\begin{table}[ht]
 		\footnotesize
 		\centering
 		\begin{tabular}{ccc|cc}
@@ -147,7 +159,7 @@
 	\subsection{Adience}
 	Results for the experiments made with the Adience dataset are shown in Table \ref{table:Adienceresults}.
 	
-	\begin{table}[htbp]
+	\begin{table}[ht]
 		\footnotesize
 		\centering
 		\begin{tabular}{ccc|cc}
@@ -191,7 +203,7 @@
 	
 	ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the link function, which can be logit, probit and complementary log-log, the learning rate for the Adam optimisation algorithm ($10^{-2}$, $10^{-3}$ and $10^{-4}$) and the batch size (5, 10 and 15).
 	
-	Following the setup of the previous study, we performed an ANOVA III analysis and multiple comparison tests. The tests show that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
+	Following the setup of the previous study, we performed an ANOVA III analysis and multiple comparison tests. We assume that five executions are enough to do the statistical tests because of the computational time limitations. The test shows that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
 	
 	We denote by $W_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the i-th level, the second at the j-th level and the third at k-th level. We assume that the two factors do not act independently and therefore there exists an interaction between them. In this case, the observations fit Eq. \ref{eq:anova3}.
 	
@@ -203,7 +215,7 @@
 	\end{aligned}
 	\end{equation}
 	
-	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor ($10^{-4}$, $10^{-3}$, $10^{-2}$) and $B_k$ is the effect associated with the \textit{k-th} level of the size batch factor (5, 10, 15). The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $W_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
+	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor ($10^{-4}$, $10^{-3}$, $10^{-2}$) and $B_k$ is the effect associated with the \textit{k-th} level of the batch size factor (5, 10, 15). The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $W_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
 	
 	We consider some hypotheses testing where the null hypothesis is proposed that each term of the above equation is independent of the levels involved. The hypotheses for the levels the L factor are
 	\[
@@ -227,7 +239,7 @@
 	
 	The analysis of variance table containing the sum of squares, degrees of freedom, mean square, test statistics and significance level represents the initial study in a compact form.
 	
-	\begin{table}[htbp]
+	\begin{table}[ht]
 		\centering
 		\small
 		\begin{tabular}{l|ccccc}
@@ -250,7 +262,7 @@
 	
 	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. Significative differences can be observed in the mean values for $\eta = 10^{-3}$ with respect to the other values of the parameter ($\alpha=0.05$). Also, there are differences for $\eta = 10^{-4}$ concerning $\eta = 10^{-2}$.
 	
-	\begin{table}[htbp]
+	\begin{table}[ht]
 		\centering
 		\small
 		\begin{tabular}{l|ccccc}
@@ -271,10 +283,11 @@
 	
 	The results of the ANOVA III test for the Adience dataset are shown in Table \ref{table:ANOVAAdience}. The interactions where there are not significative differences have been omitted. First, the factor associated with the link function is analysed. The differences between the means are significative ($\text{p-value} = 0.005$). Secondly, there are significative differences concerning the learning rate factor too ($\text{p-value} = 0.000$). Also, there are differences for the means for the batch size factor. Significative interactions exist between two pairs of factors: link function and learning rate, and learning rate and batch size ($\text{p-value = 0.000}$ for both cases).
 	
-	A post-hoc multiple comparison test has been performed on the average WK obtained for this dataset too. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been done. The results showed that the best link function is the logit one, in this case, with $0.632438$ as mean WK value. However, there are not significative differences between this function and the complementary log-log ($\text{p-value}=0.110$). It has differences with the probit function though ($\text{p-value} = 0.003$). The complementary log-log link reported the best results after the logit function, having a mean WK of $0.611287$. The complementary log-log function doesn't show significative differences with the probit function.
+	A post-hoc multiple comparison test has been performed on the average WK obtained for this dataset too. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been done. The results showed that the best link function is the logit one, in this case, with $0.632438$ as mean WK value. However, there are not significative differences between this function and the complementary log-log ($\text{p-value}=0.110$). It has differences with the probit function though ($\text{p-value} = 0.003$). The complementary log-log link reported the best results after the logit function, having a mean WK of $0.611287$. However, it doesn't show significative differences with the probit function.
 	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. The test reported significative differences between $\eta=10^{-2}$ (mean value $0.733784$) and the rest of values of this parameter ($\alpha=0.005$), being this one the best value for this factor. The best value after $10^{-2}$ is $10^{-3}$, which have a mean WK value of $0.579889$. Lastly, the best value for the batch size parameter is $10$ (mean value $0.648700$) as it has significative differences with the rest of values. The second best value is $5$ (mean $0.605533$), but it has no significative differences with $15$ ($\text{p-value}= 0.194$).
 	
 	\section{Conclusions}
+	\label{sect:conclusions}
 	In this section, the conclusions obtained from this work are exposed. The first thing that we have noticed is that the optimal values for the different parameters considered are problem-dependant. 
 	
 	The complementary log-log function has the best average performance across both datasets. It offers the best results in Diabetic Retinopathy dataset and the second best result in Adience dataset. These results provide an opportunity for exploring new generalised link functions.
@@ -287,6 +300,5 @@
 	
 	
 	\printbibliography
-	
-	%\end{multicols}
+
 \end{document}

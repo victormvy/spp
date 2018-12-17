@@ -16,6 +16,130 @@
   {}
 \endgroup
 
+\entry{lecun2015deep}{article}{}
+  \name{author}{3}{}{%
+    {{}%
+     {LeCun}{L.}%
+     {Yann}{Y.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Bengio}{B.}%
+     {Yoshua}{Y.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hinton}{H.}%
+     {Geoffrey}{G.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Nature Publishing Group}%
+  }
+  \strng{namehash}{LYBYHG1}
+  \strng{fullhash}{LYBYHG1}
+  \field{number}{7553}
+  \field{pages}{436}
+  \field{title}{Deep learning}
+  \field{volume}{521}
+  \field{journaltitle}{nature}
+  \field{year}{2015}
+\endentry
+
+\entry{cruz2014metrics}{article}{}
+  \name{author}{4}{}{%
+    {{}%
+     {Cruz-Ram{\'\i}rez}{C.-R.}%
+     {Manuel}{M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Herv{\'a}s-Mart{\'\i}nez}{H.-M.}%
+     {C{\'e}sar}{C.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {S{\'a}nchez-Monedero}{S.-M.}%
+     {Javier}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Guti{\'e}rrez}{G.}%
+     {Pedro~Antonio}{P.~A.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Elsevier}%
+  }
+  \strng{namehash}{CRMHMCSMJ+1}
+  \strng{fullhash}{CRMHMCSMJGPA1}
+  \field{pages}{21\bibrangedash 31}
+  \field{title}{Metrics to guide a multi-objective evolutionary algorithm for
+  ordinal classification}
+  \field{volume}{135}
+  \field{journaltitle}{Neurocomputing}
+  \field{year}{2014}
+\endentry
+
+\entry{mehdiyev2016evaluating}{article}{}
+  \name{author}{4}{}{%
+    {{}%
+     {Mehdiyev}{M.}%
+     {Nijat}{N.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Enke}{E.}%
+     {David}{D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Fettke}{F.}%
+     {Peter}{P.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Loos}{L.}%
+     {Peter}{P.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Elsevier}%
+  }
+  \strng{namehash}{MNEDFP+1}
+  \strng{fullhash}{MNEDFPLP1}
+  \field{pages}{264\bibrangedash 271}
+  \field{title}{Evaluating forecasting methods by considering different
+  accuracy measures}
+  \field{volume}{95}
+  \field{journaltitle}{Procedia Computer Science}
+  \field{year}{2016}
+\endentry
+
+\entry{cohen1960coefficient}{article}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Cohen}{C.}%
+     {Jacob}{J.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Sage Publications Sage CA: Thousand Oaks, CA}%
+  }
+  \strng{namehash}{CJ1}
+  \strng{fullhash}{CJ1}
+  \field{number}{1}
+  \field{pages}{37\bibrangedash 46}
+  \field{title}{A coefficient of agreement for nominal scales}
+  \field{volume}{20}
+  \field{journaltitle}{Educational and psychological measurement}
+  \field{year}{1960}
+\endentry
+
 \entry{de2018weighted}{article}{}
   \name{author}{3}{}{%
     {{}%

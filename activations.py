@@ -228,5 +228,4 @@ class NNPOM(tf.keras.layers.Layer):
 		return self._nnpom(x, thresholds)
 
 	def compute_output_shape(self, input_shape):
-		print(input_shape)
 		return (input_shape[0], 1)
