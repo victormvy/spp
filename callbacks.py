@@ -28,11 +28,12 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 	Computed metrics are: accuracy, loss and QWK.
 	"""
 
-	def __init__(self, num_classes, train_generator=None, val_generator=None, train_batches=None, val_batches=None):
+	def __init__(self, num_classes, train_generator=None, val_generator=None, train_batches=None, val_batches=None, metrics=['loss', 'acc']):
 		self.train_generator = train_generator
 		self.val_generator = val_generator
 		self.train_batches = train_batches
 		self.val_batches = val_batches
+		self.metrics = metrics
 		self.classes = []
 		self.num_classes = num_classes
 		self.cost_matrix = make_cost_matrix(self.num_classes)
@@ -69,18 +70,36 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 		mean_loss /= batch_count
 		qwk = sess.run(quadratic_weighted_kappa_cm(conf_mat, self.num_classes, self.cost_matrix))
 
-		return {'acc' : mean_acc, 'qwk' : qwk, 'loss' : mean_loss, 'conf_mat' : conf_mat}
+		metrics = {}
+
+		if 'acc' in self.metrics:
+			metrics['acc'] = mean_acc
+		if 'loss' in self.metrics:
+			metrics['loss'] = mean_loss
+		if 'qwk' in self.metrics:
+			metrics['qwk'] = qwk
+
+		metrics['conf_mat'] = conf_mat
+
+		return metrics
 
 	def on_epoch_end(self, epoch, logs={}):
 		if self.train_generator and self.train_batches:
 			train_metrics = self._compute_metrics(self.train_generator, self.train_batches, self.classes)
 
-			logs['train_acc'] = train_metrics['acc']
-			logs['val_qwk'] = train_metrics['qwk']
-			logs['val_loss'] = train_metrics['loss']
+			s = '\n'
 
-			print('\ntrain_loss: {} - train_acc: {} - train_qwk: {}'.format(train_metrics['loss'], train_metrics['acc'],
-																			train_metrics['qwk']))
+			if 'acc' in self.metrics:
+				logs['train_acc'] = train_metrics['acc']
+				s += 'train_acc: {} '.format(train_metrics['acc'])
+			if 'qwk' in self.metrics:
+				logs['train_qwk'] = train_metrics['qwk']
+				s += 'train_qwk: {} '.format(train_metrics['qwk'])
+			if 'loss' in self.metrics:
+				logs['train_loss'] = train_metrics['loss']
+				s += 'train_loss: {}'.format(train_metrics['loss'])
+
+			print(s)
 
 			print('TRAIN CONF MATRIX')
 			print(train_metrics['conf_mat'])
@@ -88,11 +107,19 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 		if self.val_generator and self.val_batches:
 			val_metrics = self._compute_metrics(self.val_generator, self.val_batches, self.classes)
 
-			logs['val_acc'] = val_metrics['acc']
-			logs['val_qwk'] = val_metrics['qwk']
-			logs['val_loss'] = val_metrics['loss']
+			s = '\n'
 
-			print('\nval_loss: {} - val_acc: {} - val_qwk: {}'.format(val_metrics['loss'], val_metrics['acc'], val_metrics['qwk']))
+			if 'acc' in self.metrics:
+				logs['val_acc'] = val_metrics['acc']
+				s += 'val_acc: {} '.format(val_metrics['acc'])
+			if 'qwk' in self.metrics:
+				logs['val_qwk'] = val_metrics['qwk']
+				s += 'val_qwk: {} '.format(val_metrics['qwk'])
+			if 'loss' in self.metrics:
+				logs['val_loss'] = val_metrics['loss']
+				s += 'val_loss: {}'.format(val_metrics['loss'])
+
+			print(s)
 
 			print('VALIDATION CONF MATRIX')
 			print(val_metrics['conf_mat'])

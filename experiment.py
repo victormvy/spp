@@ -408,9 +408,6 @@ class Experiment():
 		# Only accuracy for training.
 		# Computing QWK for training properly is too expensive
 		metrics = ['accuracy']
-		# If database is retinopathy, add qwk metric
-		# if self.db == 'retinopathy':
-		# 	metrics.append(quadratic_weighted_kappa(num_classes, cost_matrix))
 
 		# Compile the keras model
 		model.compile(
@@ -428,7 +425,8 @@ class Experiment():
 							steps_per_epoch=steps,
 							callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 									   ComputeMetricsCallback(num_classes, val_generator=val_generator,
-															  val_batches=ds_val.num_batches(self.batch_size)),
+															  val_batches=ds_val.num_batches(self.batch_size),
+															  metrics=['acc', 'loss', 'qwk']),
 									   tf.keras.callbacks.ModelCheckpoint(
 										   os.path.join(self.checkpoint_dir, model_file)),
 									   save_epoch_callback,
@@ -519,24 +517,10 @@ class Experiment():
 		)
 
 		# Get predictions
-		# predictions = model.predict(
-		#	ds_test.x / 255.0
-		# )
 		test_generator.reset()
 		predictions = model.predict_generator(
 			test_generator
 		)
-
-		# conf_mat = confusion_matrix(np.argmax(ds_test.y, axis=1), np.argmax(predictions, axis=1), labels=range(0, num_classes))
-
-		# print(conf_mat)
-		# print(num_classes)
-		# print(cost_matrix)
-
-		# sess = tf.keras.backend.get_session()
-		# qwk = sess.run(quadratic_weighted_kappa_cm(conf_mat, num_classes, cost_matrix))
-
-		# print(qwk)
 
 		# Calculate QWK
 		qwk = np_quadratic_weighted_kappa(np.argmax(ds_test.y, axis=1), np.argmax(predictions, axis=1), 0, num_classes-1)
