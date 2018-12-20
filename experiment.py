@@ -42,7 +42,7 @@ class Experiment():
 		self._finished = False
 		self._workers = workers
 
-		self._best_qwk = -1
+		self._best_metric = -1
 
 	def set_auto_name(self):
 		"""
@@ -270,17 +270,17 @@ class Experiment():
 		del self._workers
 
 	@property
-	def best_qwk(self):
-		return self._best_qwk
+	def best_metric(self):
+		return self._best_metric
 
-	def new_qwk(self, qwk):
+	def new_metric(self, metric):
 		"""
-		Updates best qwk if qwk provided is better than the best qwk stored.
-		:param qwk: new qwk.
-		:return: True if new qwk is better than best qwk or False otherwise.
+		Updates best metric if metric provided is better than the best metric stored.
+		:param metric: new metric.
+		:return: True if new metric is better than best metric or False otherwise.
 		"""
-		if qwk >= self._best_qwk:
-			self._best_qwk = qwk
+		if metric >= self._best_metric:
+			self._best_metric = metric
 			return True
 		return False
 
@@ -352,13 +352,13 @@ class Experiment():
 
 		# Save epoch callback for training process
 		def save_epoch(epoch, logs):
-			# Check whether new qwk is better than best qwk
-			if (self.new_qwk(logs['val_qwk'])):
+			# Check whether new metric is better than best metric
+			if (self.new_metric(logs['val_qwk'])):
 				model.save(os.path.join(self.checkpoint_dir, best_model_file))
 
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'w') as f:
 				f.write(str(epoch + 1))
-				f.write('\n' + str(self.best_qwk))
+				f.write('\n' + str(self.best_metric))
 
 		save_epoch_callback = tf.keras.callbacks.LambdaCallback(
 			on_epoch_end=save_epoch
@@ -390,10 +390,10 @@ class Experiment():
 			print("===== RESTORING SAVED MODEL =====")
 			model.load_weights(os.path.join(self.checkpoint_dir, model_file))
 
-			# Continue from the epoch where we were and load the best qwk
+			# Continue from the epoch where we were and load the best metric
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
-				self.new_qwk(float(f.readline()))
+				self.new_metric(float(f.readline()))
 
 		# Create the cost matrix that will be used to compute qwk
 		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
@@ -453,9 +453,9 @@ class Experiment():
 
 		if os.path.isfile(os.path.join(self.checkpoint_dir, evaluation_file)):
 			with open(os.path.join(self.checkpoint_dir, evaluation_file), 'r') as f:
-				qwk = float(f.readline())
-				print('QWK found in file: {} (Evaluation skipped)'.format(qwk))
-				return qwk
+				metric = float(f.readline())
+				print('Metric found in file: {} (Evaluation skipped)'.format(metric))
+				return metric
 
 		_, _, test_path = self.get_db_path(self.db)
 
@@ -522,13 +522,13 @@ class Experiment():
 			test_generator
 		)
 
-		# Calculate QWK
-		qwk = np_quadratic_weighted_kappa(np.argmax(ds_test.y, axis=1), np.argmax(predictions, axis=1), 0, num_classes-1)
+		# Calculate metric
+		metric = np_quadratic_weighted_kappa(np.argmax(ds_test.y, axis=1), np.argmax(predictions, axis=1), 0, num_classes-1)
 
 		with open(os.path.join(self.checkpoint_dir, evaluation_file), 'w') as f:
-			f.write(str(qwk))
+			f.write(str(metric))
 
-		return qwk
+		return metric
 
 	def get_model(self, net_object, name):
 		if name == 'vgg19':
