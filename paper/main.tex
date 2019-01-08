@@ -16,7 +16,7 @@
 	
 	Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics}\cite{mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. Weighted Kappa loss was described in previous work \cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalisation, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalisation is proportional to the square of the distance. In this work, we will combine the QWK metric and the QWK loss.
 	
-	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM) will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimisation algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results.
+	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM) will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results.
 	
 	The experiments will be run using two different ordinal datasets: Diabetic Retinopathy and Adience.
 	
@@ -24,7 +24,7 @@
 	
 	\section{Related work}
 	\label{sect:relatedwork}
-	J. de la Torre et al. proposed the use of QWK loss function for the optimisation algorithm. They compared this cost function against the traditional log-loss function across three different databases, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces the overfitting and the required training time. Also, they checked the importance of hyper-parameter tuning.
+	J. de la Torre et al. proposed the use of QWK loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function across three different databases, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces the overfitting and the required training time. Also, they checked the importance of hyper-parameter tuning.
 
 	
 	\section{Experiments}
@@ -33,9 +33,9 @@
 	We make use of two ordinal datasets appropriate for deep neural networks:
 	
 	\begin{itemize}
-		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras, illumination conditions and resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works \cite{de2018weighted}\cite{nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 256 by 256 pixels. Data augmentation techniques are applied to achieve a higher number of samples.
+		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras, illumination conditions and resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works \cite{de2018weighted}\cite{nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels. Data augmentation techniques are applied to achieve a higher number of samples.
 		
-		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work \cite{beckham2017unimodal}, so that the images are 256px in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset is split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
+		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work \cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset is split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
 	\end{itemize}
 	
 	\subsection{The model}
@@ -97,11 +97,13 @@
 	\subsection{Procedure}
 	The model is optimized using a batch based first-order optimization algorithm called Adam \cite{kingma2014adam}. We study different initial learning rates in order to find the optimal one for each problem. We apply an exponential decay across training epochs to the initial learning rate.
 	
-	Quadratic Weighted Kappa Loss, that J. de la Torre described in previous work, is considered as loss function for this optimizer as it gives better performance for ordinal classification problems.
+	Quadratic Weighted Kappa Loss is considered as loss function for this optimizer as it gives better performance for ordinal classification problems.
 	
 	Both datasets have been artificially equalised using data augmentation techniques \cite{van2001art}\cite{krizhevsky2012imagenet} based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. In the case of Diabetic Retinopathy Detection, the epoch size has been fixed to $100000$ images per epoch. For the Adience dataset, epoch size is the number of images in the training set.
 	
 	The model is evaluated with Quadratic Weighted Kappa metric (QWK) \cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class.
+	
+	 Experiments were run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of the QWK loss and the Proportional Odds Model. The results of these experiments are analysed in Appendix \ref{app:NominalComparison}.
 	
 	\subsection{Parameters}
 	Three different parameters have been considered: learning rate, batch size and link function for the final output layer.
@@ -156,6 +158,8 @@
 		\label{table:DRresults}
 	\end{table}
 	
+	The best mean WK value was obtained with the complementary log-log link function using a batch size of 10 and a learning rate of $10^{-3}$.
+	
 	\subsection{Adience}
 	Results for the experiments made with the Adience dataset are shown in Table \ref{table:Adienceresults}.
 	
@@ -196,14 +200,20 @@
 		\label{table:Adienceresults}
 	\end{table}
 	
+	The best mean WK value was obtained with the probit link function using a batch size of 15 and a learning rate of $10^{-2}$.
+	
 	\subsection{Statistical analysis}
-	The significance and relative importance of the parameters concerning the results obtained, as well as suitable values for each, were obtained using ANalysis Of the VAriance (ANOVA)
+	In this subsection, a statistical analysis will be performed in order to obtain robust conclusions from the results presented in this section.
 	
-	The ANalysis Of the VAriance (ANOVA) \cite{miller1997beyond} is one of the most widely used statistical techniques. ANOVA is essentially a method of analysing the variance to which a response is subject into its various components, corresponding to the sources of variation which can be identified.
+	The significance and relative importance of the parameters concerning the results obtained, as well as suitable values for each, were obtained using the ANalysis Of the VAriance (ANOVA) test.
 	
-	ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the link function, which can be logit, probit and complementary log-log, the learning rate for the Adam optimisation algorithm ($10^{-2}$, $10^{-3}$ and $10^{-4}$) and the batch size (5, 10 and 15).
+	The ANOVA test \cite{miller1997beyond} is one of the most widely used statistical techniques. ANOVA is essentially a method of analysing the variance to which a response is subject into its various components, corresponding to the sources of variation which can be identified.
 	
-	Following the setup of the previous study, we performed an ANOVA III analysis and multiple comparison tests. We assume that five executions are enough to do the statistical tests because of the computational time limitations. The test shows that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
+	ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the link function, which can be logit, probit and complementary log-log, the learning rate for the Adam optimization algorithm ($10^{-2}$, $10^{-3}$ and $10^{-4}$) and the batch size (5, 10 and 15).
+	
+	Following the setup of the previous study, we performed an ANOVA III analysis and multiple comparison tests. We assume that five executions are enough to do the statistical tests because of the computational time limitations.
+	
+	The test shows that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
 	
 	We denote by $W_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the i-th level, the second at the j-th level and the third at k-th level. We assume that the two factors do not act independently and therefore there exists an interaction between them. In this case, the observations fit Eq. \ref{eq:anova3}.
 	
@@ -217,7 +227,7 @@
 	
 	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor ($10^{-4}$, $10^{-3}$, $10^{-2}$) and $B_k$ is the effect associated with the \textit{k-th} level of the batch size factor (5, 10, 15). The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $W_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
 	
-	We consider some hypotheses testing where the null hypothesis is proposed that each term of the above equation is independent of the levels involved. The hypotheses for the levels the L factor are
+	We consider some hypotheses testing where the null hypothesis is proposed that each term of the above equation is independent of the levels involved. The hypotheses for the levels of the L factor are
 	\[
 		H_0 \equiv L_1 = L_2 = L_3
 	\]
@@ -298,7 +308,63 @@
 	
 	Also, the statistical tests reported that there are interactions between some parameters like the link function and the learning rate, for Diabetic Retinopathy, or those factors in addition to learning rate and batch size, for Adience dataset.
 	
+	The proposed POM model has improved the performance of the deep network regarding Weighted Kappa compared to the model that uses the softmax function. This enhancement is more notable for the Diabetic Retinopathy dataset. Also, it reduces the chance that the model gets stuck when training with some parameter configurations. So, the most significant improvements of these link functions are the WK performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention of the over-fitting and the stagnation.
 	
 	\printbibliography
-
+	
+	\appendix
+	\section{Statistical comparison between nominal and ordinal methods}
+	\label{app:NominalComparison}
+	
+	The same experiments described in section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimiser and the softmax function instead of the Proportional Odds Model for the output of the network.
+	The results for both datasets are shown in Table \ref{table:NominalResults}.
+	
+	\begin{table}[ht]
+		\footnotesize
+		\centering
+		\begin{tabular}{lcc|cc}
+			Dataset & BS & LR & $\kappa_{val}$ & $\kappa_{test}$\\\hline\addlinespace[0.05cm]
+			Retinopathy & $5$ & $10^{-2}$ & $0.2210$ & $0.2050$\\
+			Retinopathy & $5$ & $10^{-3}$ & $0.2807$ & $0.2654$\\
+			Retinopathy & $5$ & $10^{-4}$ & $0.4580$ & $0.4449$\\
+			
+			Retinopathy & $10$ & $10^{-2}$ & $0.2972$ & $0.2997$\\
+			Retinopathy & $10$ & $10^{-3}$ & $0.3972$ & $0.3989$\\
+			Retinopathy & $10$ & $10^{-4}$ & $\textbf{0.4972}$ & $\textbf{0.4967}$\\
+			
+			Retinopathy & $15$ & $10^{-2}$ & $0.3692$ & $0.3676$\\
+			Retinopathy & $15$ & $10^{-3}$ & $0.4107$ & $0.4162$\\
+			Retinopathy & $15$ & $10^{-4}$ & $0.4929$ & $0.4859$\\
+			\hline\addlinespace[0.05cm]
+			Adience & $5$ & $10^{-2}$ & $0.0605$ & $0.0769$\\
+			Adience & $5$ & $10^{-3}$ & $0.7994$ & $0.7313$\\
+			Adience & $5$ & $10^{-4}$ & $0.8009$ & $0.7383$\\
+			
+			Adience & $10$ & $10^{-2}$ & $0.0559$ & $0.0576$\\
+			Adience & $10$ & $10^{-3}$ & $0.8239$ & $0.7436$\\
+			Adience & $10$ & $10^{-4}$ & $0.7938$ & $0.7218$\\
+			
+			Adience & $15$ & $10^{-2}$ & $0.0593$ & $0.0713$\\
+			Adience & $15$ & $10^{-3}$ & $\textbf{0.8309}$ & $\textbf{0.7575}$\\
+			Adience & $15$ & $10^{-4}$ & $0.7867$ & $0.7129$\\
+		\end{tabular}
+		\caption{Adience results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
+		\label{table:NominalResults}
+	\end{table}
+	
+	As we did in Section X, we must analyse the effect of the batch size (with values 5, 10 and 15) and the learning rate ($10^{-2}$, $10^{-3}$ and $10^{-4}$) factors have over the WK metric. So, we make an ANOVA II analysis for each dataset.
+	
+	In the Diabetic Retinopathy dataset, there are significative differences between the mean values of WK depending on the batch size and the initial value of the learning rate. Also, no significative interaction was detected between these factors.
+	
+	After that, a post-hoc Tukey's test shows that the best value for the batch size factor is 15 followed by 10. However, there are no significative differences between them, but there are differences with size 5. Also, the best value for the learning rate is $10^{-4}$ and there are significative differences with the rest of values.
+	
+	A similar study was made for the Adience dataset. There are not significative differences for the mean value of WK w.r.t. the batch size factor. Also, there are no interactions between the batch size and the learning rate. The best results were obtained with $10^{-3}$ for the learning rate followed by $10^{-4}$, without significative differences between them.
+	
+	Finally, the conclusions of this study are exposed below:
+	\begin{itemize}
+		\item There are no interactions between both factors.
+		\item Batch sizes 10 and 15 obtained the best results.
+		\item Learning rate $10^{-4}$ is the best choice for both datasets as it the best for Diabetic Retinopathy, with significative differences, and it is the second for Adience, without significative differences with the best. 
+	\end{itemize}
+	
 \end{document}

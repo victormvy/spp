@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  14 DEC 2018 12:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  8 JAN 2019 10:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1783,31 +1783,32 @@ as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.101 
-      ] [3pdfTeX warning (ext4): destination with the same identifier (name{tab
-le.2}) has been already used, duplicate ignored
+l.102 	B
+        oth datasets have been artificially equalised using data augmentatio...
+] [3pdfTeX warning (ext4): destination with the same identifier (name{table.2})
+ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.203 
+l.207 
       ]
 
-LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 21
+LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 22
 2.
-
-
-Overfull \hbox (0.52312pt too wide) in paragraph at lines 245--255
- [][] 
- []
 
 [4pdfTeX warning (ext4): destination with the same identifier (name{table.3}) h
 as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.260 
-      ]
-Overfull \hbox (1.67622pt too wide) in paragraph at lines 268--280
+l.241 	\[
+         ]
+Overfull \hbox (0.52312pt too wide) in paragraph at lines 255--265
+ [][] 
+ []
+
+
+Overfull \hbox (1.67622pt too wide) in paragraph at lines 278--290
  [][] 
  []
 
@@ -1816,26 +1817,37 @@ as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.292 
+l.298 
       pdfTeX warning (ext4): destination with the same identifier (name{table.5
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.292 
+l.298 
       ]
-Underfull \hbox (badness 4752) in paragraph at lines 303--303
+Underfull \hbox (badness 4752) in paragraph at lines 314--314
 []\OT1/cmr/m/n/10 M. Cruz-Ram^^S^^Prez, C. Herv^^Sas-Mart^^S^^Pnez, J.
  []
 
 [6]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 304.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 304.
+Underfull \hbox (badness 4621) in paragraph at lines 316--316
+[]\OT1/cmr/bx/n/14.4 Statistical com-par-i-son be-
+ []
+
+[7pdfTeX warning (ext4): destination with the same identifier (name{table.6}) h
+as been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.370 \end{document}
+                    ]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 370.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 370.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 304.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 304.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 370.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 370.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 50F13E57B8D934798A8C24BCFA71FB54;653.
+(rerunfilecheck)             Checksum: EF1CDE51A318062FE35BD7E2A88538DD;748.
 
 
 LaTeX Font Warning: Size substitutions with differences
@@ -1844,14 +1856,14 @@ LaTeX Font Warning: Size substitutions with differences
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 304.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 370.
  )
 (\end occurred when \iftrue on line 8 was incomplete) 
 Here is how much of TeX's memory you used:
- 33126 strings out of 493029
- 620010 string characters out of 6136233
+ 33132 strings out of 493029
+ 620090 string characters out of 6136233
  964315 words of memory out of 5000000
- 36051 multiletter control sequences out of 15000+600000
+ 36054 multiletter control sequences out of 15000+600000
  33932 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  64i,13n,73p,10423b,1472s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1882,10 +1894,10 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf/fonts/type1/publ
 ic/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/
 texmf/fonts/type1/public/lm/lmsy10.pfb>
-Output written on main.pdf (6 pages, 300896 bytes).
+Output written on main.pdf (7 pages, 306295 bytes).
 PDF statistics:
- 277 PDF objects out of 1000 (max. 8388607)
- 226 compressed objects within 3 object streams
- 48 named destinations out of 1000 (max. 500000)
- 217 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 292 PDF objects out of 1000 (max. 8388607)
+ 240 compressed objects within 3 object streams
+ 51 named destinations out of 1000 (max. 500000)
+ 225 words of extra memory for PDF output out of 10000 (max. 10000000)
 
