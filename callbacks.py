@@ -68,7 +68,6 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 
 		mean_acc /= batch_count
 		mean_loss /= batch_count
-		qwk = sess.run(quadratic_weighted_kappa_cm(conf_mat, self.num_classes, self.cost_matrix))
 
 		metrics = {}
 
@@ -77,6 +76,7 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 		if 'loss' in self.metrics:
 			metrics['loss'] = mean_loss
 		if 'qwk' in self.metrics:
+			qwk = sess.run(quadratic_weighted_kappa_cm(conf_mat, self.num_classes, self.cost_matrix))
 			metrics['qwk'] = qwk
 
 		metrics['conf_mat'] = conf_mat

@@ -24,8 +24,13 @@
 	
 	\section{Related work}
 	\label{sect:relatedwork}
-	J. de la Torre et al. proposed the use of QWK loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function across three different databases, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces the overfitting and the required training time. Also, they checked the importance of hyper-parameter tuning.
+	J. de la Torre et al. \cite{de2018weighted} proposed the use of QWK loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function across three different databases, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces the overfitting and the required training time. Also, they checked the importance of hyper-parameter tuning.
 
+	Christopher Beckham and Christopher Pal \cite{beckham2017unimodal} proposed a straightforward technique to constrain discrete ordinal probability distributions to be unimodal via the use of the Poisson and binomial probability distributions. They evaluated this approach in the context of deep learning on two large ordinal image datasets, including the Adience dataset used in this paper, and they obtained promising results.
+	
+	The Exponential Linear Unit (ELU), used in this paper, was described in previous work from D.-A. Clevert et al. \cite{clevert2015fast}. They proved that ELUs alleviate the vanishing gradient problem via the identity for positive values. In their experiments, ELUs lead not only to faster learning but also to significantly better generalization performance than ReLUs and LReLUs on networks with more than five layers.
+	
+	Sergey Ioffe and Christian Szegedy \cite{ioffe2015batch} described Batch Normalization and its benefits in previous work. It reduces the internal covariate shift by normalizing layer inputs. Their method draws its strength from making normalization a part of the model architecture and performing the normalization for each training batch. It allows them to use higher learning rates and be less careful about initialization. It also eliminates the need for using regularization techniques like Dropout.
 	
 	\section{Experiments}
 	\label{sect:experiments}
@@ -316,7 +321,7 @@
 	\section{Statistical comparison between nominal and ordinal methods}
 	\label{app:NominalComparison}
 	
-	The same experiments described in section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimiser and the softmax function instead of the Proportional Odds Model for the output of the network.
+	The same experiments described in section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimizer and the softmax function instead of the Proportional Odds Model for the output of the network.
 	The results for both datasets are shown in Table \ref{table:NominalResults}.
 	
 	\begin{table}[ht]

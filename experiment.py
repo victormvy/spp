@@ -23,7 +23,7 @@ class Experiment():
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
 				 prob_layer=None,
-				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4):
+				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4, val_metrics=['loss', 'acc']):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -41,6 +41,7 @@ class Experiment():
 		self._task = task
 		self._finished = False
 		self._workers = workers
+		self._val_metrics = val_metrics
 
 		self._best_metric = -1
 
@@ -270,6 +271,18 @@ class Experiment():
 		del self._workers
 
 	@property
+	def val_metrics(self):
+		return self._val_metrics
+
+	@val_metrics.setter
+	def val_metrics(self, val_metrics):
+		self._val_metrics = val_metrics
+
+	@val_metrics.deleter
+	def val_metrics(self):
+		del self._val_metrics
+
+	@property
 	def best_metric(self):
 		return self._best_metric
 
@@ -426,7 +439,7 @@ class Experiment():
 							callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 									   ComputeMetricsCallback(num_classes, val_generator=val_generator,
 															  val_batches=ds_val.num_batches(self.batch_size),
-															  metrics=['acc', 'loss', 'qwk']),
+															  metrics=self.val_metrics),
 									   tf.keras.callbacks.ModelCheckpoint(
 										   os.path.join(self.checkpoint_dir, model_file)),
 									   save_epoch_callback,
@@ -578,7 +591,8 @@ class Experiment():
 			'momentum': self.momentum,
 			'dropout': self.dropout,
 			'task': self.task,
-			'workers' : self.workers
+			'workers' : self.workers,
+			'val_metrics' : self.val_metrics
 		}
 
 	def set_config(self, config):
@@ -602,6 +616,7 @@ class Experiment():
 		self.dropout = 'dropout' in config and config['dropout'] or 0
 		self.task = 'task' in config and config['task'] or 'both'
 		self.workers = 'workers' in config and config['workers'] or 4
+		self.val_metrics = 'val_metrics' in config and config['val_metrics'] or ['acc', 'loss']
 
 		if 'name' in config:
 			self.name = config['name']
