@@ -10,15 +10,19 @@
 		
 	\section{Introduction}
 	\label{sect:introduction}
-	Deep learning \cite{lecun2015deep} combines multiple Machine Learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification or speech recognition. Deep learning discovers complex structures in large datasets by using the backpropagation algorithm to indicate how a machine should change its internal parameters that are used to compute the representation in each layer from the features in the previous layer.
+	Deep learning, introduced by Yann Lecun \cite{lecun2015deep}, combines multiple Machine Learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification or speech recognition. Deep learning discovers complex structures in large datasets by using the backpropagation algorithm to indicate how a machine should change its internal parameters that are used to compute the representation in each layer from the features in the previous layer.
 	
-	The backpropagation algorithm is a stochastic gradient descent algorithm that minimises a predefined loss function. The layer's parameters are updated after backpropagating the loss function gradients through the network. Deep convolutional nets are suited for images, video, speech and audio processing and they have been used extensively in the last years for automatic classification tasks. For the case of images, convolutional layers extract the main features from the pixels of the images and, after that, the fully connected layer classify every sample based on its extracted features. At the output of the convolutional net, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. These outputs are compared against the correct values.
+	Convolutional neural networks (ConvNets) are designed to process data that comes in the form of multiple arrays. ConvNets are suited for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks \cite{dong2014learning}\cite{sun2013deep}\cite{ronneberger2015u}. On image classification tasks, each colour channel is represented by a 2D array. In this case, convolutional layers extract the main features from the pixels of the images and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the convolutional net, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. These outputs are compared against the correct values.
 	
-	Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics}\cite{mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. Weighted Kappa loss was described in previous work \cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalisation, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalisation is proportional to the square of the distance. In this work, we will combine the QWK metric and the QWK loss.
+	The backpropagation algorithm is a stochastic gradient descent algorithm that minimises a predefined loss function. It has been used in the last years in many works \cite{leonard1990improvement}\cite{yu1995dynamic}\cite{krizhevsky2012imagenet}\cite{de2018weighted} for training swallow and deep neural networks. It updates the layer's parameters after backpropagating the loss function gradients through the network. Learning rate hyper-parameter controls the strength of the changes that are applied to those parameters. Some works have checked the importance of finding the optimal value for this parameter \cite{senior2013empirical} and have tried different approaches to try to improve the training process \cite{smith2017cyclical}.
 	
-	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM) will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results.
+	Batch normalization is another technique that is used for this kind of networks. It reduces the internal covariate shift by normalizing layer inputs. It was presented in 2015 \cite{ioffe2015batch} and gives a critical enhancement to the training phase. Batch size is an important hyper-parameter that should be adjusted as it affects the layer's parameters updates and also the normalization \cite{keskar2016large}\cite{radiuk2017impact}.
 	
-	The experiments will be run using two different ordinal datasets: Diabetic Retinopathy and Adience.
+	Ordinal classification problems are those where labels are ordered. Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics}\cite{mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. Weighted Kappa loss was described in previous work \cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalization, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalization is proportional to the square of the distance. In this work, we will combine the QWK metric and the QWK loss.
+	
+	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM) \cite{agresti2010analysis} will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results. An approximated ANOVA III test will be performed because of the limitations of the computational time required to run a higher number of executions.
+	
+	The experiments will be run using two different ordinal datasets: Diabetic Retinopathy, that contains high-resolution fundus images related with diabetes disease, and Adience, that is formed of human faces images that are assigned an age range.
 	
 	This paper is organised as follows: in Section \ref{sect:relatedwork}, we take a look at previous works related to this paper, in Section \ref{sect:experiments} we describe the model, the experiments and the datasets used, in Section \ref{sect:results} we present the results obtained and the statistical analysis and finally in Section \ref{sect:conclusions} we expose the conclusions of this study.
 	
@@ -108,7 +112,7 @@
 	
 	The model is evaluated with Quadratic Weighted Kappa metric (QWK) \cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class.
 	
-	 Experiments were run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of the QWK loss and the Proportional Odds Model. The results of these experiments are analysed in Appendix \ref{app:NominalComparison}.
+	 Experiments were run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of the QWK loss and the Proportional Odds Model. The results of these experiments are analysed in Section \ref{app:NominalComparison}.
 	
 	\subsection{Parameters}
 	Three different parameters have been considered: learning rate, batch size and link function for the final output layer.
@@ -208,6 +212,7 @@
 	The best mean WK value was obtained with the probit link function using a batch size of 15 and a learning rate of $10^{-2}$.
 	
 	\subsection{Statistical analysis}
+	\label{sect:statisticalanalysis}
 	In this subsection, a statistical analysis will be performed in order to obtain robust conclusions from the results presented in this section.
 	
 	The significance and relative importance of the parameters concerning the results obtained, as well as suitable values for each, were obtained using the ANalysis Of the VAriance (ANOVA) test.
@@ -301,27 +306,10 @@
 	A post-hoc multiple comparison test has been performed on the average WK obtained for this dataset too. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been done. The results showed that the best link function is the logit one, in this case, with $0.632438$ as mean WK value. However, there are not significative differences between this function and the complementary log-log ($\text{p-value}=0.110$). It has differences with the probit function though ($\text{p-value} = 0.003$). The complementary log-log link reported the best results after the logit function, having a mean WK of $0.611287$. However, it doesn't show significative differences with the probit function.
 	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. The test reported significative differences between $\eta=10^{-2}$ (mean value $0.733784$) and the rest of values of this parameter ($\alpha=0.005$), being this one the best value for this factor. The best value after $10^{-2}$ is $10^{-3}$, which have a mean WK value of $0.579889$. Lastly, the best value for the batch size parameter is $10$ (mean value $0.648700$) as it has significative differences with the rest of values. The second best value is $5$ (mean $0.605533$), but it has no significative differences with $15$ ($\text{p-value}= 0.194$).
 	
-	\section{Conclusions}
-	\label{sect:conclusions}
-	In this section, the conclusions obtained from this work are exposed. The first thing that we have noticed is that the optimal values for the different parameters considered are problem-dependant. 
-	
-	The complementary log-log function has the best average performance across both datasets. It offers the best results in Diabetic Retinopathy dataset and the second best result in Adience dataset. These results provide an opportunity for exploring new generalised link functions.
-	
-	The best value for the learning rate parameter for  Diabetic Retinopathy dataset is $\eta = 10^{-3}$ while this value is the second best option for Adience dataset. It can be considered a good value for this parameter when training the model with new datasets.
-	
-	Both datasets have obtained the best performance with batch size 10.
-	
-	Also, the statistical tests reported that there are interactions between some parameters like the link function and the learning rate, for Diabetic Retinopathy, or those factors in addition to learning rate and batch size, for Adience dataset.
-	
-	The proposed POM model has improved the performance of the deep network regarding Weighted Kappa compared to the model that uses the softmax function. This enhancement is more notable for the Diabetic Retinopathy dataset. Also, it reduces the chance that the model gets stuck when training with some parameter configurations. So, the most significant improvements of these link functions are the WK performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention of the over-fitting and the stagnation.
-	
-	\printbibliography
-	
-	\appendix
-	\section{Statistical comparison between nominal and ordinal methods}
+	\subsection{Statistical comparison between nominal and ordinal methods}
 	\label{app:NominalComparison}
 	
-	The same experiments described in section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimizer and the softmax function instead of the Proportional Odds Model for the output of the network.
+	The same experiments described in Section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimizer and the softmax function instead of the Proportional Odds Model for the output of the network.
 	The results for both datasets are shown in Table \ref{table:NominalResults}.
 	
 	\begin{table}[ht]
@@ -353,11 +341,11 @@
 			Adience & $15$ & $10^{-3}$ & $\textbf{0.8309}$ & $\textbf{0.7575}$\\
 			Adience & $15$ & $10^{-4}$ & $0.7867$ & $0.7129$\\
 		\end{tabular}
-		\caption{Adience results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
+		\caption{Nominal method results. BS stands for Batch Size and LR for Learning Rate.}
 		\label{table:NominalResults}
 	\end{table}
 	
-	As we did in Section X, we must analyse the effect of the batch size (with values 5, 10 and 15) and the learning rate ($10^{-2}$, $10^{-3}$ and $10^{-4}$) factors have over the WK metric. So, we make an ANOVA II analysis for each dataset.
+	As we did in Section \ref{sect:statisticalanalysis}, we must analyse the effect of the batch size (with values 5, 10 and 15) and the learning rate ($10^{-2}$, $10^{-3}$ and $10^{-4}$) factors have over the WK metric. So, we make an ANOVA II analysis for each dataset.
 	
 	In the Diabetic Retinopathy dataset, there are significative differences between the mean values of WK depending on the batch size and the initial value of the learning rate. Also, no significative interaction was detected between these factors.
 	
@@ -371,5 +359,22 @@
 		\item Batch sizes 10 and 15 obtained the best results.
 		\item Learning rate $10^{-4}$ is the best choice for both datasets as it the best for Diabetic Retinopathy, with significative differences, and it is the second for Adience, without significative differences with the best. 
 	\end{itemize}
+	
+	\section{Conclusions}
+	\label{sect:conclusions}
+	In this section, the conclusions obtained from this work are exposed. The first thing that we have noticed is that the optimal values for the different parameters considered are problem-dependant. 
+	
+	The complementary log-log function has the best average performance across both datasets. It offers the best results in Diabetic Retinopathy dataset and the second best result in Adience dataset. These results provide an opportunity for exploring new generalised link functions.
+	
+	The best value for the learning rate parameter for  Diabetic Retinopathy dataset is $\eta = 10^{-3}$ while this value is the second best option for Adience dataset. It can be considered a good value for this parameter when training the model with new datasets.
+	
+	Both datasets have obtained the best performance with batch size 10.
+	
+	Also, the statistical tests reported that there are interactions between some parameters like the link function and the learning rate, for Diabetic Retinopathy, or those factors in addition to learning rate and batch size, for Adience dataset.
+	
+	The proposed POM model has improved the performance of the deep network regarding Weighted Kappa compared to the model that uses the softmax function. This enhancement is more notable for the Diabetic Retinopathy dataset. Also, it reduces the chance that the model gets stuck when training with some parameter configurations. So, the most significant improvements of these link functions are the WK performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention of the over-fitting and the stagnation.
+	
+	\printbibliography
+	
 	
 \end{document}

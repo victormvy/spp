@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  8 JAN 2019 13:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  9 JAN 2019 13:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1699,116 +1699,116 @@ LaTeX Font Info:    Try loading font information for OT1+lmr on input line 9.
  (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Underfull \vbox (badness 2591) has occurred while \output is active []
+Underfull \vbox (badness 1297) has occurred while \output is active []
+
+
+Underfull \vbox (badness 3000) has occurred while \output is active []
 
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 41.
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 45.
 
 (/usr/share/texmf/tex/latex/lm/omslmr.fd
 File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 41.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 45.
 
 
 (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 41.
-LaTeX Font Info:    Try loading font information for U+msa on input line 41.
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 45.
+LaTeX Font Info:    Try loading font information for U+msa on input line 45.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 41.
+LaTeX Font Info:    Try loading font information for U+msb on input line 45.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 10000) in paragraph at lines 41--41
+Underfull \hbox (badness 10000) in paragraph at lines 45--45
 [][]\OT1/cmr/m/n/8 https://www.kaggle.com/c/diabetic-retinopathy-
  []
 
+[2]
 
-LaTeX Font Warning: Command \small invalid in math mode on input line 84.
+LaTeX Font Warning: Command \small invalid in math mode on input line 88.
 
-LaTeX Font Info:    Calculating math sizes for size <> on input line 87.
+LaTeX Font Info:    Calculating math sizes for size <> on input line 91.
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <> not available
-(Font)              size <5> substituted on input line 87.
+(Font)              size <5> substituted on input line 91.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <0.7> not available
-(Font)              size <5> substituted on input line 87.
+(Font)              size <5> substituted on input line 91.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <0.5> not available
-(Font)              size <5> substituted on input line 87.
+(Font)              size <5> substituted on input line 91.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <> not available
-(Font)              size <5> substituted on input line 87.
+(Font)              size <5> substituted on input line 91.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <0.7> not available
-(Font)              size <5> substituted on input line 87.
+(Font)              size <5> substituted on input line 91.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <0.5> not available
-(Font)              size <5> substituted on input line 87.
+(Font)              size <5> substituted on input line 91.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <> not available
-(Font)              size <5> substituted on input line 87.
+(Font)              size <5> substituted on input line 91.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <0.7> not available
-(Font)              size <5> substituted on input line 87.
+(Font)              size <5> substituted on input line 91.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <0.5> not available
-(Font)              size <5> substituted on input line 87.
+(Font)              size <5> substituted on input line 91.
 
-[2pdfTeX warning (ext4): destination with the same identifier (name{table.1}) h
+
+LaTeX Font Warning: Command \small invalid in math mode on input line 94.
+
+
+LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 10
+0.
+
+[3pdfTeX warning (ext4): destination with the same identifier (name{table.1}) h
 as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.89 		\begin{equation}
-                       ]
-
-LaTeX Font Warning: Command \small invalid in math mode on input line 90.
-
-
-LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 96
-.
-
-[3]
-
-LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 22
-7.
-
-[4pdfTeX warning (ext4): destination with the same identifier (name{table.2}) h
-as been already used, duplicate ignored
+l.129 
+      ] [4pdfTeX warning (ext4): destination with the same identifier (name{tab
+le.2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.234 
-      pdfTeX warning (ext4): destination with the same identifier (name{table.3
-}) has been already used, duplicate ignored
+l.224 	F
+        ollowing the setup of the previous study, we performed an ANOVA III ...
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.234 
-      ]
-Overfull \hbox (0.52312pt too wide) in paragraph at lines 260--270
- [][] 
- []
+l.224 	F
+        ollowing the setup of the previous study, we performed an ANOVA III ...
+]
+
+LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 23
+2.
 
 
-Overfull \hbox (1.67622pt too wide) in paragraph at lines 283--295
+Overfull \hbox (0.52312pt too wide) in paragraph at lines 265--275
  [][] 
  []
 
@@ -1817,42 +1817,42 @@ as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.300 
-      pdfTeX warning (ext4): destination with the same identifier (name{table.5
+l.284 
+      ]
+Overfull \hbox (1.67622pt too wide) in paragraph at lines 288--300
+ [][] 
+ []
+
+
+Underfull \hbox (badness 6592) in paragraph at lines 309--309
+[]\OT1/cmr/bx/n/12 Statistical com-par-i-son be-tween
+ []
+
+[6pdfTeX warning (ext4): destination with the same identifier (name{table.5}) h
+as been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.353 
+      pdfTeX warning (ext4): destination with the same identifier (name{table.6
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.300 
-      ]
-Underfull \hbox (badness 4752) in paragraph at lines 319--319
+l.353 
+      ] [7]
+Underfull \hbox (badness 4752) in paragraph at lines 378--378
 []\OT1/cmr/m/n/10 M. Cruz-Ram^^S^^Prez, C. Herv^^Sas-Mart^^S^^Pnez, J.
  []
 
-[6]
-Underfull \hbox (badness 4621) in paragraph at lines 321--321
-[]\OT1/cmr/bx/n/14.4 Statistical com-par-i-son be-
- []
-
-
-Underfull \vbox (badness 5771) has occurred while \output is active []
-
- [7pdfTeX warning (ext4): destination with the same identifier (name{table.6}) 
-has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.367 
-      ] [8
-
-]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 375.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 375.
+[8]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 380.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 380.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 375.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 375.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 380.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 380.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: EF1CDE51A318062FE35BD7E2A88538DD;748.
+(rerunfilecheck)             Checksum: AAF795269688FB6B025292E41EB3C6A1;761.
 
 
 LaTeX Font Warning: Size substitutions with differences
@@ -1861,14 +1861,14 @@ LaTeX Font Warning: Size substitutions with differences
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 375.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 380.
  )
 (\end occurred when \iftrue on line 8 was incomplete) 
 Here is how much of TeX's memory you used:
- 33133 strings out of 493029
- 620096 string characters out of 6136233
- 970315 words of memory out of 5000000
- 36054 multiletter control sequences out of 15000+600000
+ 33148 strings out of 493029
+ 620474 string characters out of 6136233
+ 968315 words of memory out of 5000000
+ 36062 multiletter control sequences out of 15000+600000
  33932 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  64i,13n,73p,10423b,1472s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1899,10 +1899,10 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf/fonts/type1/publ
 ic/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/
 texmf/fonts/type1/public/lm/lmsy10.pfb>
-Output written on main.pdf (8 pages, 307629 bytes).
+Output written on main.pdf (8 pages, 312021 bytes).
 PDF statistics:
- 300 PDF objects out of 1000 (max. 8388607)
- 247 compressed objects within 3 object streams
- 52 named destinations out of 1000 (max. 500000)
+ 322 PDF objects out of 1000 (max. 8388607)
+ 269 compressed objects within 3 object streams
+ 59 named destinations out of 1000 (max. 500000)
  225 words of extra memory for PDF output out of 10000 (max. 10000000)
 
