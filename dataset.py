@@ -3,6 +3,8 @@ import numpy as np
 import os
 import math
 import h5py
+from sklearn.model_selection import train_test_split
+import tensorflow as tf
 
 class Dataset():
 	"""
@@ -76,7 +78,13 @@ class Dataset():
 		del self._sample_shape
 
 	def load(self, path):
-		if os.path.isdir(path):
+		if path == 'cifar10train':
+			self._load_cifar10('train')
+		elif path == 'cifar10val':
+			self._load_cifar10('val')
+		elif path == 'cifar10test':
+			self._load_cifar10('test')
+		elif os.path.isdir(path):
 			self._load_from_dir(path)
 		else:
 			self._load_from_h5(path)
@@ -111,6 +119,33 @@ class Dataset():
 
 	def _load_from_h5(self, path):
 		pass
+
+	def _load_cifar10(self, split):
+		(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+
+		self._data = {}
+		self._data['x'] = []
+		self._data['y'] = []
+		self._sample_shape = (32,32,3)
+
+		if split == 'train':
+			self._data['x'] = x_train
+			self._data['y'] = y_train
+		elif split == 'val' or split == 'test':
+			xt, xv, yt, yv = train_test_split(x_test, y_test, test_size=0.2, random_state=1)
+
+			if split == 'val':
+				self._data['x'] = xv
+				self._data['y'] = yv
+			elif split == 'test':
+				self._data['x'] = xt
+				self._data['y'] = yt
+
+		y_onehot = np.zeros((len(self._data['y']), 10))
+		y_onehot[np.arange(len(self._data['y'])), np.array(self._data['y'])] = 1
+		self._data['y'] = list(y_onehot)
+		self.num_classes = 10
+
 
 	def size(self):
 		"""

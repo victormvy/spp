@@ -292,7 +292,7 @@ class Experiment():
 		:param metric: new metric.
 		:return: True if new metric is better than best metric or False otherwise.
 		"""
-		if metric >= self._best_metric:
+		if metric <= self._best_metric:
 			self._best_metric = metric
 			return True
 		return False
@@ -366,7 +366,7 @@ class Experiment():
 		# Save epoch callback for training process
 		def save_epoch(epoch, logs):
 			# Check whether new metric is better than best metric
-			if (self.new_metric(logs['val_qwk'])):
+			if (self.new_metric(logs['val_loss'])):
 				model.save(os.path.join(self.checkpoint_dir, best_model_file))
 
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'w') as f:
@@ -551,7 +551,7 @@ class Experiment():
 		elif name == 'testing':
 			model = net_object.testing()
 		elif name == 'inceptionresnetv2':
-			model = net_object.InceptionResNetV2()
+			model = net_object.inception_resnet_v2_custom()
 		else:
 			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
 
@@ -567,6 +567,8 @@ class Experiment():
 			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
 		elif db.lower() == 'adience':
 			return "../adience/256/train", "../adience/256/val", "../adience/256/test"
+		elif db.lower() == 'cifar10' or db.lower() == 'cifar100':
+			return db.lower() + 'train', db.lower() + 'val', db.lower() + 'test'
 		else:
 			return "", "", ""
 

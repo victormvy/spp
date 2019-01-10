@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  9 JAN 2019 13:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  10 JAN 2019 14:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1707,6 +1707,8 @@ Underfull \vbox (badness 3000) has occurred while \output is active []
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
 LaTeX Font Info:    Try loading font information for OMS+lmr on input line 45.
 
 (/usr/share/texmf/tex/latex/lm/omslmr.fd
@@ -1787,22 +1789,21 @@ as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.129 
-      ] [4pdfTeX warning (ext4): destination with the same identifier (name{tab
-le.2}) has been already used, duplicate ignored
+l.123 		\item \textit
+                     {Link function}. Different link functions have been use...
+] [4pdfTeX warning (ext4): destination with the same identifier (name{table.2})
+ has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.224 	F
-        ollowing the setup of the previous study, we performed an ANOVA III ...
-pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
- been already used, duplicate ignored
+l.221 
+      pdfTeX warning (ext4): destination with the same identifier (name{table.3
+}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.224 	F
-        ollowing the setup of the previous study, we performed an ANOVA III ...
-]
+l.221 
+      ]
 
 LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 23
 2.
@@ -1817,7 +1818,7 @@ as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.284 
+l.282 
       ]
 Overfull \hbox (1.67622pt too wide) in paragraph at lines 288--300
  [][] 
@@ -1833,13 +1834,13 @@ as been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.353 
+l.349 
       pdfTeX warning (ext4): destination with the same identifier (name{table.6
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.353 
+l.349 
       ] [7]
 Underfull \hbox (badness 4752) in paragraph at lines 378--378
 []\OT1/cmr/m/n/10 M. Cruz-Ram^^S^^Prez, C. Herv^^Sas-Mart^^S^^Pnez, J.
@@ -1865,10 +1866,10 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 380.
  )
 (\end occurred when \iftrue on line 8 was incomplete) 
 Here is how much of TeX's memory you used:
- 33148 strings out of 493029
- 620474 string characters out of 6136233
- 968315 words of memory out of 5000000
- 36062 multiletter control sequences out of 15000+600000
+ 33152 strings out of 493029
+ 620588 string characters out of 6136233
+ 961315 words of memory out of 5000000
+ 36064 multiletter control sequences out of 15000+600000
  33932 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  64i,13n,73p,10423b,1472s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1899,10 +1900,10 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf/fonts/type1/publ
 ic/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/
 texmf/fonts/type1/public/lm/lmsy10.pfb>
-Output written on main.pdf (8 pages, 312021 bytes).
+Output written on main.pdf (8 pages, 312517 bytes).
 PDF statistics:
- 322 PDF objects out of 1000 (max. 8388607)
- 269 compressed objects within 3 object streams
- 59 named destinations out of 1000 (max. 500000)
+ 327 PDF objects out of 1000 (max. 8388607)
+ 274 compressed objects within 3 object streams
+ 61 named destinations out of 1000 (max. 500000)
  225 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -3,6 +3,8 @@ from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, Paired
 from layers import GeometricLayer
 from resnet import inference
 
+from inception_resnet_v2 import InceptionResNetV2 as Irvn2
+
 
 class Net:
 	def __init__(self, size, activation, final_activation, prob_layer=None, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
@@ -187,7 +189,7 @@ class Net:
 
 		return model
 
-	def InceptionResNetV2(self):
+	def inception_resnet_v2(self):
 		model = tf.keras.Sequential()
 		inception = tf.keras.applications.inception_resnet_v2.InceptionResNetV2(include_top=False, input_shape=(self.size, self.size, self.num_channels), classes=self.num_classes)
 
@@ -216,6 +218,38 @@ class Net:
 			model.add(tf.keras.layers.Activation(self.final_activation))
 
 		return model
+
+	def inception_resnet_v2_custom(self):
+		model = tf.keras.Sequential()
+		inception = tf.keras.applications.NASNetLarge(include_top=False, input_shape=(self.size, self.size, self.num_channels),
+						  classes=self.num_classes)
+
+		# for layer in inception.layers:
+		# 	layer.trainable = False
+
+		model.add(inception)
+		model.add(tf.keras.layers.Flatten())
+
+		if self.dropout > 0:
+			model.add(tf.keras.layers.Dropout(rate=self.dropout))
+
+		if self.final_activation == 'poml':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'logit'))
+		elif self.final_activation == 'pomp':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'probit'))
+		elif self.final_activation == 'pomclog':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'cloglog'))
+		else:
+			model.add(tf.keras.layers.Dense(self.num_classes))
+			if self.prob_layer == 'geometric':
+				model.add(GeometricLayer())
+			model.add(tf.keras.layers.Activation(self.final_activation))
+
+		return model
+
 
 	def testing(self):
 		model = tf.keras.Sequential([

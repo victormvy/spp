@@ -47,6 +47,431 @@
   \field{year}{2015}
 \endentry
 
+\entry{cirecsan2012multi}{article}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Cire{\c{s}}an}{C.}%
+     {Dan}{D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Meier}{M.}%
+     {Ueli}{U.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Schmidhuber}{S.}%
+     {J{\"u}rgen}{J.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{CDMUSJ1}
+  \strng{fullhash}{CDMUSJ1}
+  \field{title}{Multi-column deep neural networks for image classification}
+  \field{journaltitle}{arXiv preprint arXiv:1202.2745}
+  \field{year}{2012}
+\endentry
+
+\entry{he2016deep}{inproceedings}{}
+  \name{author}{4}{}{%
+    {{}%
+     {He}{H.}%
+     {Kaiming}{K.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Zhang}{Z.}%
+     {Xiangyu}{X.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Ren}{R.}%
+     {Shaoqing}{S.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Sun}{S.}%
+     {Jian}{J.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{HKZXRS+1}
+  \strng{fullhash}{HKZXRSSJ1}
+  \field{booktitle}{Proceedings of the IEEE conference on computer vision and
+  pattern recognition}
+  \field{pages}{770\bibrangedash 778}
+  \field{title}{Deep residual learning for image recognition}
+  \field{year}{2016}
+\endentry
+
+\entry{krizhevsky2012imagenet}{inproceedings}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Krizhevsky}{K.}%
+     {Alex}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Sutskever}{S.}%
+     {Ilya}{I.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hinton}{H.}%
+     {Geoffrey~E}{G.~E.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{KASIHGE1}
+  \strng{fullhash}{KASIHGE1}
+  \field{booktitle}{Advances in neural information processing systems}
+  \field{pages}{1097\bibrangedash 1105}
+  \field{title}{Imagenet classification with deep convolutional neural
+  networks}
+  \field{year}{2012}
+\endentry
+
+\entry{hinton2012deep}{article}{}
+  \true{moreauthor}
+  \name{author}{10}{}{%
+    {{}%
+     {Hinton}{H.}%
+     {Geoffrey}{G.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Deng}{D.}%
+     {Li}{L.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Yu}{Y.}%
+     {Dong}{D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Dahl}{D.}%
+     {George~E}{G.~E.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Mohamed}{M.}%
+     {Abdel-rahman}{A.-r.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Jaitly}{J.}%
+     {Navdeep}{N.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Senior}{S.}%
+     {Andrew}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Vanhoucke}{V.}%
+     {Vincent}{V.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Nguyen}{N.}%
+     {Patrick}{P.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Sainath}{S.}%
+     {Tara~N}{T.~N.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{HGDLYD+1}
+  \strng{fullhash}{HGDLYDDGEMArJNSAVVNPSTN+1}
+  \field{number}{6}
+  \field{pages}{82\bibrangedash 97}
+  \field{title}{Deep neural networks for acoustic modeling in speech
+  recognition: The shared views of four research groups}
+  \field{volume}{29}
+  \field{journaltitle}{IEEE Signal processing magazine}
+  \field{year}{2012}
+\endentry
+
+\entry{mnih2015human}{article}{}
+  \true{moreauthor}
+  \name{author}{10}{}{%
+    {{}%
+     {Mnih}{M.}%
+     {Volodymyr}{V.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Kavukcuoglu}{K.}%
+     {Koray}{K.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Silver}{S.}%
+     {David}{D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Rusu}{R.}%
+     {Andrei~A}{A.~A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Veness}{V.}%
+     {Joel}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Bellemare}{B.}%
+     {Marc~G}{M.~G.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Graves}{G.}%
+     {Alex}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Riedmiller}{R.}%
+     {Martin}{M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Fidjeland}{F.}%
+     {Andreas~K}{A.~K.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Ostrovski}{O.}%
+     {Georg}{G.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Nature Publishing Group}%
+  }
+  \strng{namehash}{MVKKSD+1}
+  \strng{fullhash}{MVKKSDRAAVJBMGGARMFAKOG+1}
+  \field{number}{7540}
+  \field{pages}{529}
+  \field{title}{Human-level control through deep reinforcement learning}
+  \field{volume}{518}
+  \field{journaltitle}{Nature}
+  \field{year}{2015}
+\endentry
+
+\entry{jiang2016speed}{article}{}
+  \name{author}{4}{}{%
+    {{}%
+     {Jiang}{J.}%
+     {Xiaoheng}{X.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Pang}{P.}%
+     {Yanwei}{Y.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Li}{L.}%
+     {Xuelong}{X.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Pan}{P.}%
+     {Jing}{J.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Elsevier}%
+  }
+  \strng{namehash}{JXPYLX+1}
+  \strng{fullhash}{JXPYLXPJ1}
+  \field{pages}{163\bibrangedash 170}
+  \field{title}{Speed up deep neural network based pedestrian detection by
+  sharing features across multi-scale models}
+  \field{volume}{185}
+  \field{journaltitle}{Neurocomputing}
+  \field{year}{2016}
+\endentry
+
+\entry{girshick2014rich}{inproceedings}{}
+  \name{author}{4}{}{%
+    {{}%
+     {Girshick}{G.}%
+     {Ross}{R.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Donahue}{D.}%
+     {Jeff}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Darrell}{D.}%
+     {Trevor}{T.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Malik}{M.}%
+     {Jitendra}{J.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{GRDJDT+1}
+  \strng{fullhash}{GRDJDTMJ1}
+  \field{booktitle}{Proceedings of the IEEE conference on computer vision and
+  pattern recognition}
+  \field{pages}{580\bibrangedash 587}
+  \field{title}{Rich feature hierarchies for accurate object detection and
+  semantic segmentation}
+  \field{year}{2014}
+\endentry
+
+\entry{yu2017iprivacy}{article}{}
+  \name{author}{5}{}{%
+    {{}%
+     {Yu}{Y.}%
+     {Jun}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Zhang}{Z.}%
+     {Baopeng}{B.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Kuang}{K.}%
+     {Zhengzhong}{Z.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Lin}{L.}%
+     {Dan}{D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Fan}{F.}%
+     {Jianping}{J.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{YJZBKZ+1}
+  \strng{fullhash}{YJZBKZLDFJ1}
+  \field{number}{5}
+  \field{pages}{1005\bibrangedash 1016}
+  \field{title}{iPrivacy: image privacy protection by identifying sensitive
+  objects via deep multi-task learning}
+  \field{volume}{12}
+  \field{journaltitle}{IEEE Transactions on Information Forensics and Security}
+  \field{year}{2017}
+\endentry
+
+\entry{hong2015multimodal}{article}{}
+  \name{author}{5}{}{%
+    {{}%
+     {Hong}{H.}%
+     {Chaoqun}{C.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Yu}{Y.}%
+     {Jun}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Wan}{W.}%
+     {Jian}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Tao}{T.}%
+     {Dacheng}{D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Wang}{W.}%
+     {Meng}{M.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{HCYJWJ+1}
+  \strng{fullhash}{HCYJWJTDWM1}
+  \field{number}{12}
+  \field{pages}{5659\bibrangedash 5670}
+  \field{title}{Multimodal deep autoencoder for human pose recovery}
+  \field{volume}{24}
+  \field{journaltitle}{IEEE Transactions on Image Processing}
+  \field{year}{2015}
+\endentry
+
+\entry{long2015fully}{inproceedings}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Long}{L.}%
+     {Jonathan}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Shelhamer}{S.}%
+     {Evan}{E.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Darrell}{D.}%
+     {Trevor}{T.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{LJSEDT1}
+  \strng{fullhash}{LJSEDT1}
+  \field{booktitle}{Proceedings of the IEEE conference on computer vision and
+  pattern recognition}
+  \field{pages}{3431\bibrangedash 3440}
+  \field{title}{Fully convolutional networks for semantic segmentation}
+  \field{year}{2015}
+\endentry
+
+\entry{li2015weakly}{article}{}
+  \name{author}{2}{}{%
+    {{}%
+     {Li}{L.}%
+     {Zechao}{Z.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Tang}{T.}%
+     {Jinhui}{J.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{LZTJ1}
+  \strng{fullhash}{LZTJ1}
+  \field{number}{11}
+  \field{pages}{1989\bibrangedash 1999}
+  \field{title}{Weakly supervised deep metric learning for
+  community-contributed image retrieval}
+  \field{volume}{17}
+  \field{journaltitle}{IEEE Transactions on Multimedia}
+  \field{year}{2015}
+\endentry
+
 \entry{dong2014learning}{inproceedings}{}
   \name{author}{4}{}{%
     {{}%
@@ -197,33 +622,6 @@
   \field{volume}{6}
   \field{journaltitle}{IEEE Transactions on Neural Networks}
   \field{year}{1995}
-\endentry
-
-\entry{krizhevsky2012imagenet}{inproceedings}{}
-  \name{author}{3}{}{%
-    {{}%
-     {Krizhevsky}{K.}%
-     {Alex}{A.}%
-     {}{}%
-     {}{}}%
-    {{}%
-     {Sutskever}{S.}%
-     {Ilya}{I.}%
-     {}{}%
-     {}{}}%
-    {{}%
-     {Hinton}{H.}%
-     {Geoffrey~E}{G.~E.}%
-     {}{}%
-     {}{}}%
-  }
-  \strng{namehash}{KASIHGE1}
-  \strng{fullhash}{KASIHGE1}
-  \field{booktitle}{Advances in neural information processing systems}
-  \field{pages}{1097\bibrangedash 1105}
-  \field{title}{Imagenet classification with deep convolutional neural
-  networks}
-  \field{year}{2012}
 \endentry
 
 \entry{de2018weighted}{article}{}
@@ -520,32 +918,6 @@
   \field{year}{2017}
 \endentry
 
-\entry{clevert2015fast}{article}{}
-  \name{author}{3}{}{%
-    {{}%
-     {Clevert}{C.}%
-     {Djork-Arn{\'e}}{D.-A.}%
-     {}{}%
-     {}{}}%
-    {{}%
-     {Unterthiner}{U.}%
-     {Thomas}{T.}%
-     {}{}%
-     {}{}}%
-    {{}%
-     {Hochreiter}{H.}%
-     {Sepp}{S.}%
-     {}{}%
-     {}{}}%
-  }
-  \strng{namehash}{CDAUTHS1}
-  \strng{fullhash}{CDAUTHS1}
-  \field{title}{Fast and accurate deep network learning by exponential linear
-  units (elus)}
-  \field{journaltitle}{arXiv preprint arXiv:1511.07289}
-  \field{year}{2015}
-\endentry
-
 \entry{bengio1994learning}{article}{}
   \name{author}{3}{}{%
     {{}%
@@ -599,6 +971,54 @@
   \field{pages}{1310\bibrangedash 1318}
   \field{title}{On the difficulty of training recurrent neural networks}
   \field{year}{2013}
+\endentry
+
+\entry{nair2010rectified}{inproceedings}{}
+  \name{author}{2}{}{%
+    {{}%
+     {Nair}{N.}%
+     {Vinod}{V.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hinton}{H.}%
+     {Geoffrey~E}{G.~E.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{NVHGE1}
+  \strng{fullhash}{NVHGE1}
+  \field{booktitle}{Proceedings of the 27th international conference on machine
+  learning (ICML-10)}
+  \field{pages}{807\bibrangedash 814}
+  \field{title}{Rectified linear units improve restricted boltzmann machines}
+  \field{year}{2010}
+\endentry
+
+\entry{clevert2015fast}{article}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Clevert}{C.}%
+     {Djork-Arn{\'e}}{D.-A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Unterthiner}{U.}%
+     {Thomas}{T.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hochreiter}{H.}%
+     {Sepp}{S.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{CDAUTHS1}
+  \strng{fullhash}{CDAUTHS1}
+  \field{title}{Fast and accurate deep network learning by exponential linear
+  units (elus)}
+  \field{journaltitle}{arXiv preprint arXiv:1511.07289}
+  \field{year}{2015}
 \endentry
 
 \entry{nebot2016diabetic}{inproceedings}{}
