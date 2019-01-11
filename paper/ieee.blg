@@ -13,7 +13,7 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
-Reallocated field_info (elt_size=4) to 10282 items from 5000.
+Reallocated field_info (elt_size=4) to 10699 items from 5000.
 Database file #1: ieee-blx.bib
 Database file #2: main.bib
 Repeated entry---line 337 of file main.bib
@@ -23,45 +23,45 @@ I'm skipping whatever remains of this entry
 Biblatex version: 3.3
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
-You've used 38 entries,
+You've used 41 entries,
             6047 wiz_defined-function locations,
-            1339 strings with 15163 characters,
-and the built_in function-call counts, 123796 in all, are:
-= -- 4712
-> -- 4654
-< -- 1064
-+ -- 1628
-- -- 1886
-* -- 10007
-:= -- 7755
+            1358 strings with 15724 characters,
+and the built_in function-call counts, 132580 in all, are:
+= -- 5039
+> -- 4950
+< -- 1129
++ -- 1715
+- -- 1993
+* -- 10670
+:= -- 8279
 add.period$ -- 0
-call.type$ -- 38
-change.case$ -- 532
+call.type$ -- 41
+change.case$ -- 564
 chr.to.int$ -- 34
-cite$ -- 74
-duplicate$ -- 13721
-empty$ -- 12526
-format.name$ -- 3060
-if$ -- 27931
+cite$ -- 80
+duplicate$ -- 14733
+empty$ -- 13488
+format.name$ -- 3261
+if$ -- 29915
 int.to.chr$ -- 0
-int.to.str$ -- 97
+int.to.str$ -- 105
 missing$ -- 0
-newline$ -- 1104
-num.names$ -- 1725
-pop$ -- 12055
+newline$ -- 1180
+num.names$ -- 1854
+pop$ -- 13015
 preamble$ -- 1
-purify$ -- 738
+purify$ -- 782
 quote$ -- 0
-skip$ -- 7232
+skip$ -- 7744
 stack$ -- 0
-substring$ -- 2597
-swap$ -- 4534
-text.length$ -- 946
+substring$ -- 2757
+swap$ -- 4860
+text.length$ -- 1009
 text.prefix$ -- 1
 top$ -- 1
-type$ -- 1432
+type$ -- 1546
 warning$ -- 0
-while$ -- 646
+while$ -- 696
 width$ -- 0
-write$ -- 1065
+write$ -- 1138
 (There was 1 error message)

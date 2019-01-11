@@ -879,6 +879,47 @@
   \field{year}{1960}
 \endentry
 
+\entry{gutierrez2016ordinal}{article}{}
+  \name{author}{5}{}{%
+    {{}%
+     {Gutierrez}{G.}%
+     {Pedro~Antonio}{P.~A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Perez-Ortiz}{P.-O.}%
+     {Maria}{M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Sanchez-Monedero}{S.-M.}%
+     {Javier}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Fernandez-Navarro}{F.-N.}%
+     {Francisco}{F.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hervas-Martinez}{H.-M.}%
+     {Cesar}{C.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{GPAPOMSMJ+1}
+  \strng{fullhash}{GPAPOMSMJFNFHMC1}
+  \field{number}{1}
+  \field{pages}{127\bibrangedash 146}
+  \field{title}{Ordinal regression methods: survey and experimental study}
+  \field{volume}{28}
+  \field{journaltitle}{IEEE Transactions on Knowledge and Data Engineering}
+  \field{year}{2016}
+\endentry
+
 \entry{agresti2010analysis}{book}{}
   \name{author}{1}{}{%
     {{}%
@@ -1019,6 +1060,42 @@
   units (elus)}
   \field{journaltitle}{arXiv preprint arXiv:1511.07289}
   \field{year}{2015}
+\endentry
+
+\entry{mccullagh1980regression}{article}{}
+  \name{author}{1}{}{%
+    {{}%
+     {McCullagh}{M.}%
+     {Peter}{P.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {JSTOR}%
+  }
+  \strng{namehash}{MP1}
+  \strng{fullhash}{MP1}
+  \field{pages}{109\bibrangedash 142}
+  \field{title}{Regression models for ordinal data}
+  \field{journaltitle}{Journal of the royal statistical society. Series B
+  (Methodological)}
+  \field{year}{1980}
+\endentry
+
+\entry{herbrich2000large}{article}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Herbrich}{H.}%
+     {Ralf}{R.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{HR1}
+  \strng{fullhash}{HR1}
+  \field{pages}{115\bibrangedash 132}
+  \field{title}{Large margin rank boundaries for ordinal regression}
+  \field{journaltitle}{Advances in large margin classifiers}
+  \field{year}{2000}
 \endentry
 
 \entry{nebot2016diabetic}{inproceedings}{}

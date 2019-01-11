@@ -113,7 +113,7 @@
 % *** GRAPHICS RELATED PACKAGES ***
 %
 \ifCLASSINFOpdf
-% \usepackage[pdftex]{graphicx}
+\usepackage[pdftex]{graphicx}
 % declare the path(s) where your graphic files are
 % \graphicspath{{../pdf/}{../jpeg/}}
 % and their extensions so you won't have to specify these with
@@ -343,6 +343,10 @@
 
 \usepackage{lmodern}
 
+\usepackage{dsfont}
+\usepackage{amssymb}
+
+
 % *** Do not adjust lengths that control margins, column widths, etc. ***
 % *** Do not use packages that alter fonts (such as pslatex).         ***
 % There should be no need to do such things with IEEEtran.cls V1.6 and later.
@@ -483,7 +487,7 @@
 	
 	Ordinal classification problems are those where labels are ordered, and there are different inter-classes weights for each pair of classes. This kind of problem can be treated as a nominal classification problem, but when you do this, you are the discarding ordinal information. A better approach is to use specific methods that take into account this kind of information to improve the performance of the classification model. One way to use the ordinal information is to evaluate the model using an ordinal metric. Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics, mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. Weighted Kappa loss was described in previous work~\cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalization, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalization is proportional to the square of the distance. In this work, we will combine the QWK metric and the QWK loss.
 	
-	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM)~\cite{agresti2010analysis} will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results. An approximated ANOVA III test will be performed because of the limitations of the computational time required to run a higher number of executions.
+	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM)~\cite{gutierrez2016ordinal, agresti2010analysis} will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results. An approximated ANOVA III test will be performed because of the limitations of the computational time required to run a higher number of executions.
 	
 	The experiments will be run using two different ordinal datasets: Diabetic Retinopathy~\cite{de2018weighted}, that contains high-resolution fundus images related with diabetes disease, and Adience~\cite{beckham2017unimodal}, that is formed of human faces images that are assigned an age range.
 	
@@ -501,18 +505,40 @@
 	
 	Sergey Ioffe and Christian Szegedy~\cite{ioffe2015batch} described Batch Normalization and its benefits in previous work. It reduces the internal covariate shift by normalizing layer inputs. Their method draws its strength from making normalization a part of the model architecture and performing the normalization for each training batch. It allows them to use higher learning rates and be less careful about initialization. It also eliminates the need for using regularization techniques like Dropout.
 	
+	\section{Ordinal problem definition}
+	\label{sect:ordinalproblem}
+	The ordinal problem consists of predicting the label y of an input vector x, where $x \in \mathcal{X} \subseteq \mathds{R}^K$ and $y \in \mathcal{Y}~=~\{\mathcal{C}_1, \mathcal{C}_2, ..., \mathcal{C}_Q\}$, i.e. x is in a K-dimensional input space, and $y$ is in a label space of $Q$ different labels. The objective of the ordinal problem is to find a function $r : \mathcal{X} \rightarrow \mathcal{Y}$ to predict the labels or categories of new patterns, given a training set of $N$ points, $D = \{(x_i, y_i), i = 1, ..., N\}$. A natural label ordering exists for ordinal problems: $\mathcal{C}_1 \prec \mathcal{C}_2 \prec ... \prec \mathcal{C}_Q$. The assumption of order between class labels makes that two different elements of $\mathcal{Y}$ can always be compared by using the relation $\prec$, which is not possible under the nominal classification setting. In regression (where $y \in \mathds{R}$), real values in $\mathds{R}$ can be ordered by the standard $<$ operator, but labels in ordinal regression ($y \in \mathcal{Y}$) do not carry metric information, so the category serves as a qualitative indication of the pattern rather than a quantitative one.
+	
+	\section{Proportional Odds Model}
+	\label{sect:pom}
+	Arising from a statistical background, the Proportional Odds Model (POM) is one of the first models designed explicitly for ordinal regression~\cite{mccullagh1980regression}, dated back to 1980. It is a member of a wider family of models recognised as Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs predict probabilities of groups of contiguous categories, taking the ordinal scale into account. In this way, cumulative probabilities $P(y \prec Cj |x)$ are estimated, which can be directly related to standard probabilities:
+	\[
+		P(y \preceq \mathcal{C}_q | x) = P(y = \mathcal{C}_1 | x) + ... + P(y = \mathcal{C}_q | x),
+	\]
+	\[
+		P(y = \mathcal{C}_q | x) = P(y \preceq \mathcal{C}_q | x) - P(y \preceq \mathcal{C}_{q-1} | x),
+	\]
+	with $q = 2, ..., Q$, and considering that $P(y = \mathcal{C}_1 | x) = P(y \preceq \mathcal{C}_1 | x)$ and $P(y \preceq \mathcal{C}_Q | x) = 1$.
+	
+	The model in inspired by the notion of latent variable, considering a linear transformation $f(x) = w^Tx$ of the input variables as the one-dimensional mapping. The decision rule $r: \mathcal{X} \rightarrow \mathcal{Y}$ is not fitted directly, but stochastic ordering of space $\mathcal{X}$ is satisfied by the following general model form \cite{herbrich2000large}:
+	\[
+		g^{-1}(P(y \preceq \mathcal{C}_q | x)) = b_q - w^Tx, \quad 1, ..., Q-1,
+	\]
+	where $g^{-1} : [0,1] \rightarrow (-\infty, +\infty)$ is a monotonic function often termed as the inverse link function and $b_q$ is the threshold defined for class $\mathcal{C}_q$. Consider the latent variable $y* = f(x)* = w^Tx + \epsilon$, where $\epsilon$ is the random error component. The most common choice for the distribution of $\epsilon$ is the logistic function (which is the default function for POM). Label $\mathcal{C}_q$ is observed if and only if $f(x) \in [b_{q-1}, b_q]$, where the function $f$ and $b = (b_0, b_1, ..., b_{Q-1}, b_Q)$ are to be determined from the data. it is assumed that $b_0 = -\infty$ and $b_Q = +\infty$, so the real line defined by $f(x), x \in \mathcal{X}$, is divided into $Q$ consecutive intervals. Each region corresponds to a category. The constraints $b_1 \le b_2 \le ... \le b_{Q-1}$ ensures that $P(y \preceq \mathcal{C}_q | x)$ increases with $q$ \cite{mccullagh1980regression}.
+	In this work, we use this ordinal model with different link functions, including logit, probit and complementary log-log. These functions will be detailed in Section \ref{sect:model}.
 	\section{Experiments}
 	\label{sect:experiments}
 	\subsection{Data}
 	We make use of two ordinal datasets appropriate for deep neural networks:
 	
 	\begin{itemize}
-		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras, illumination conditions and resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted, nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels. Data augmentation techniques are applied to achieve a higher number of samples.
+		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras,  varying conditions of illumination and different resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted, nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels. Data augmentation techniques are applied to achieve a higher number of samples.
 		
 		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work~\cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset is split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
 	\end{itemize}
 	
 	\subsection{The model}
+	\label{sect:model}
 	A convolutional neural network (CNN) has been used for both datasets. The architecture of this CNN is presented in the Table \ref{table:CNNArchitecture}.
 	
 	\begin{table}[!t]
@@ -545,40 +571,47 @@
 		\end{tabular}	
 	\end{table}
 	
-	Every convolutional layer is followed by an ELU activation layer~\cite{clevert2015fast} and a batch normalization~\cite{ioffe2015batch}. At the output, a Proportional Odds Model is used with different link functions~\cite{agresti2010analysis}. The logit link function is commonly used within POM. In this paper, we are comparing other link functions like probit or complementary log-log with the logit link. These three types of links are explained below.
+	Every convolutional layer is followed by an ELU activation layer~\cite{clevert2015fast} and a batch normalization~\cite{ioffe2015batch}. At the output, a Proportional Odds Model is used with different link functions~\cite{agresti2010analysis}. The logit link function is commonly used within POM. In this paper, we are comparing other link functions like probit or complementary log-log with the logit link. These three types of links are explained below and represented in Figure \ref{fig:linkfunctions}.
 	
 	\begin{itemize}
-		\item \textit{Logit}. Logit link function is the most widely used function for Proportional Odds Models. These kind of models are also called Cummulative Logit Models. The logit link is shown in Eq. \ref{eq:logit}.
+		\item \textit{Logit}. Logit link function is the most widely used function for Proportional Odds Models. The logit link is shown in \ref{eq:logit}.
 		\begin{equation}
-		logit[P(Y_i \le j)] = \alpha_j + \beta'x_i,\quad j = 1, ..., c - 1
+		logit[P(y \preceq \mathcal{C}_q)] = b_q - w^Tx, \quad 1, ..., Q-1
 		\label{eq:logit}
 		\end{equation}
-		\item \textit{Probit}. Probit link function is the inverse of the standard normal cummulative distribution function (cdf). Its expression is shown in Eq. \ref{eq:probit}.	
+		\item \textit{Probit}. Probit link function is the inverse of the standard normal cummulative distribution function (cdf). Its expression is shown in \ref{eq:probit}.	
 		\begin{equation}
-		\Phi^{-1}[P(Y \le j)] = \alpha_j + \beta'x,\quad j = 1, ..., c - 1
+		\Phi^{-1}[P(y \preceq \mathcal{C}_q)] = b_q - w^Tx, \quad 1, ..., Q-1
 		\label{eq:probit}
 		\end{equation}
-		\item \textit{Complementary log-log}. Unlike logit and probit, complementary log-log function is not symmetric. With a continuous predictor $x$, for example, $P(Y \le j)$ approaches 0 at a different rate than it approaches 1. Complementary log-log expression is shown in Eq. \ref{eq:cloglog}.
+		\item \textit{Complementary log-log}. Like the logit and the probit transformation, the complementary log-log transformation takes a response that is restricted to the (0,1) interval and converts it into something in $(-\infty, +\infty)$ interval, but unlike the logit and the probit, the complementary log-log function is not symmetric. With a continuous predictor $x$, for example, $P(Y \le j)$ approaches 0 at a different rate than it approaches 1. Complementary log-log expression is shown in  \ref{eq:cloglog}.
 		\begin{equation}
 		\small
-		log[-log[1 - P(Y \le j)]] = \alpha_j + \beta'x,\quad j = 1, ..., c - 1
+		log[-log[1 - P(y \preceq \mathcal{C}_q)]] = b_q - w^Tx, \quad 1, ..., Q-1
 		\label{eq:cloglog}
 		\end{equation}
 	\end{itemize}
 	
+	\begin{figure}[!t]
+		\centering
+		\includegraphics[width=2.5in]{img/linkfunctions.png}
+		\caption{Representation of link functions.}
+		\label{fig:linkfunctions}
+	\end{figure}
+	
+	When the given data is not symmetric in the [0,1] interval and increase slowly at small to moderate value, but increases sharply near 1, the logit and probit models are inappropriate. However, in this situation, the complementary log-log model might give satisfying results.
+	
 	\subsection{Procedure}
 	The model is optimized using a batch based first-order optimization algorithm called Adam~\cite{kingma2014adam}. We study different initial learning rates in order to find the optimal one for each problem. We apply an exponential decay across training epochs to the initial learning rate.
 	
-	Quadratic Weighted Kappa Loss is considered as loss function for this optimizer as it gives better performance for ordinal classification problems.
-	
 	Both datasets have been artificially equalised using data augmentation techniques~\cite{van2001art, krizhevsky2012imagenet} based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. In the case of Diabetic Retinopathy Detection, the epoch size has been fixed to $100000$ images per epoch. For the Adience dataset, epoch size is the number of images in the training set.
 	
-	The model is evaluated with Quadratic Weighted Kappa metric (QWK)~\cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class.
+	The model is evaluated with Quadratic Weighted Kappa metric (QWK)~\cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class. Quadratic Weighted Kappa Loss is considered as loss function for the optimizer as it gives better performance for ordinal classification problems.
 	
 	Experiments were run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of the QWK loss and the Proportional Odds Model. The results of these experiments are analysed in Section \ref{app:NominalComparison}.
 	
-	\subsection{Parameters}
-	Three different parameters have been considered: learning rate, batch size and link function for the final output layer.
+	\subsection{Factors}
+	Three different factors have been considered: learning rate, batch size and link function for the final output layer.
 	
 	\begin{itemize}
 		\item \textit{Learning rate}. Learning rate is one of the most critical hyper-parameters to tune for training deep neural networks. Optimal learning rate can vary depending on the dataset and the CNN architecture. Previous works have presented some techniques that adjust this parameter in order to achieve better performance~\cite{smith2017cyclical, senior2013empirical}. Within this work, we have considered three different values for this parameter: $10^{-2}$, $10^{-3}$ and $10^{-4}$.
@@ -600,7 +633,7 @@
 		\centering
 		\begin{tabular}{ccc|cc}
 			BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline
-			$5$ & $10^{-2}$ & Logit & $0.44888$ & $0.4163$\\
+			$5$ & $10^{-2}$ & Logit & $0.44888$ & $0.41630$\\
 			& & Probit & $0.46724$ & $0.45972$\\
 			& & c log-log & $0.42854$ & $0.41448$\\
 			& $10^{-3}$ & Logit & $0.56496$ & $0.55356$\\
@@ -609,24 +642,24 @@
 			& $10^{-4}$ & Logit & $0.52884$ & $0.52032$\\
 			& & Probit & $0.53802$ & $0.52302$\\
 			& & c log-log & $0.53824$ & $0.51974$\\
-			$10$ & $10^{-2}$ & Logit & $0.5497$ & $0.53142$\\
+			$10$ & $10^{-2}$ & Logit & $0.54970$ & $0.53142$\\
 			& & Probit & $0.52124$ & $0.50806$\\
-			& & c log-log & $0.4276$ & $0.4227$\\
+			& & c log-log & $0.42760$ & $0.42270$\\
 			& $10^{-3}$ & Logit & $0.58036$ & $0.57686$\\
-			& & Probit & $0.56536$ & $0.5581$\\
-			& & c log-log & $\textbf{0.5883}$ & $\textbf{0.5815}$\\
-			& $10^{-4}$ & Logit & $0.53158$ & $0.5385$\\
-			& & Probit & $0.5456$ & $0.54082$\\
+			& & Probit & $0.56536$ & $0.55810$\\
+			& & c log-log & $\textbf{0.58830}$ & $\textbf{0.58150}$\\
+			& $10^{-4}$ & Logit & $0.53158$ & $0.53850$\\
+			& & Probit & $0.54560$ & $0.54082$\\
 			& & c log-log & $0.53928$ & $0.53742$\\
 			$15$ & $10^{-2}$ & Logit & $0.55828$ & $0.55076$\\
-			& & Probit & $0.54112$ & $0.5343$\\
+			& & Probit & $0.54112$ & $0.53430$\\
 			& & c log-log & $0.56676$ & $0.56428$\\
 			& $10^{-3}$ & Logit & $0.55748$ & $0.55106$\\
 			& & Probit & $0.58182$ & $0.57894$\\
-			& & c log-log & $0.5634$ & $0.55938$\\
+			& & c log-log & $0.56340$ & $0.55938$\\
 			& $10^{-4}$ & Logit & $0.54686$ & $0.54342$\\
 			& & Probit & $0.53258$ & $0.53278$\\
-			& & c log-log & $0.539$ & $0.53828$
+			& & c log-log & $0.53900$ & $0.53828$
 		\end{tabular}
 	\end{table}
 	
@@ -635,7 +668,7 @@
 	\subsection{Adience}
 	Results for the experiments made with the Adience dataset are shown in Table \ref{table:Adienceresults}.
 	
-	\begin{table}[ht]
+	\begin{table}[!t]
 		\caption{Adience results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
 		\label{table:Adienceresults}
 		\footnotesize
@@ -644,16 +677,16 @@
 			BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline
 			$5$ & $10^{-2}$ & Logit & $0.72072$ & $0.68408$\\
 			& & Probit & $0.77608$ & $0.72574$\\
-			& & c log-log & $0.7543$ & $0.70742$\\
-			& $10^{-3}$ & Logit & $0.7146$ & $0.67868$\\
+			& & c log-log & $0.75430$ & $0.70742$\\
+			& $10^{-3}$ & Logit & $0.71460$ & $0.67868$\\
 			& & Probit & $0.81906$ & $0.77154$\\
 			& & c log-log & $0.57196$ & $0.55608$\\
 			& $10^{-4}$ & Logit & $0.54432$ & $0.51934$\\
-			& & Probit & $0.5436$ & $0.52422$\\
+			& & Probit & $0.54360$ & $0.52422$\\
 			& & c log-log & $0.54802$ & $0.52484$\\
 			$10$ & $10^{-2}$ & Logit & $0.78872$ & $0.72994$\\
-			& & Probit & $0.79332$ & $0.7475$\\
-			& & c log-log & $0.78004$ & $0.7326$\\
+			& & Probit & $0.79332$ & $0.74750$\\
+			& & c log-log & $0.78004$ & $0.73260$\\
 			& $10^{-3}$ & Logit & $0.49686$ & $0.47112$\\
 			& & Probit & $0.59778$ & $0.58476$\\
 			& & c log-log & $0.52016$ & $0.49968$\\
@@ -665,9 +698,9 @@
 			& & c log-log & $0.78802$ & $0.74624$\\
 			& $10^{-3}$ & Logit & $0.56946$ & $0.52978$\\
 			& & Probit & $0.70262$ & $0.65416$\\
-			& & c log-log & $0.49242$ & $0.4732$\\
+			& & c log-log & $0.49242$ & $0.47320$\\
 			& $10^{-4}$ & Logit & $0.55202$ & $0.52484$\\
-			& & Probit & $0.54288$ & $0.5174$\\
+			& & Probit & $0.54288$ & $0.51740$\\
 			& & c log-log & $0.53826$ & $0.52542$
 		\end{tabular}
 		
@@ -677,7 +710,7 @@
 	
 	\subsection{Statistical analysis}
 	\label{sect:statisticalanalysis}
-	In this subsection, a statistical analysis will be performed in order to obtain robust conclusions from the results presented in this section.
+	In this subsection, a statistical analysis will be performed in order to obtain conclusions from the results presented in this section.
 	
 	The significance and relative importance of the parameters concerning the results obtained, as well as suitable values for each, were obtained using the ANalysis Of the VAriance (ANOVA) test.
 	
@@ -689,12 +722,12 @@
 	
 	The test shows that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
 	
-	We denote by $W_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the i-th level, the second at the j-th level and the third at k-th level. We assume that the two factors do not act independently and therefore there exists an interaction between them. In this case, the observations fit Eq. \ref{eq:anova3}.
+	We denote by $WK_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the i-th level, the second at the j-th level and the third at k-th level. We assume that the two factors do not act independently and therefore there exists an interaction between them. In this case, the observations fit \ref{eq:anova3}.
 	
 	\begin{equation}
 	\begin{aligned}
 	\footnotesize
-	W_{i,j,k,l} = & \mu + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l}
+	WK_{i,j,k,l} = & \mu + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l}
 	\label{eq:anova3}
 	\end{aligned}
 	\end{equation}
@@ -723,7 +756,7 @@
 	
 	The analysis of variance table containing the sum of squares, degrees of freedom, mean square, test statistics and significance level represents the initial study in a compact form.
 	
-	\begin{table}[ht]
+	\begin{table}[!t]
 		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Retinopathy dataset.}
 		\label{table:ANOVARetinopathy}
 		\centering
@@ -731,11 +764,11 @@
 		\begin{tabular}{l|ccccc}
 			\multicolumn{6}{c}{Response variable WK}\\\hline
 			Source & S.S. & D.F. & M.S. & F-ratio & Sig.\\\hline
-			Model & $37.860$ & $9$ & $4.207$ & $1562.840$ & $.000$\\
-			$L$ factor & $.057$ & $2$ & $.029$ & $10.646$ & $.000$\\
-			$P$ factor & $.121$ & $2$ & $.060$ & $22.468$ & $.000$\\
-			$LP$ factors & $.057$ & $4$ & $.014$ & $5.261$ & $.001$\\
-			Error & $.339$ & $126$ & $.003$ & & \\
+			Model & $37.860$ & $9$ & $4.207$ & $1562.840$ & $0.000$\\
+			$L$ factor & $0.057$ & $2$ & $0.029$ & $10.646$ & $0.000$\\
+			$P$ factor & $0.121$ & $2$ & $0.060$ & $22.468$ & $0.000$\\
+			$LP$ factors & $0.057$ & $4$ & $0.014$ & $5.261$ & $0.001$\\
+			Error & $0.339$ & $126$ & $0.003$ & & \\
 			Total & $38.199$ & $135$ & & & 
 		\end{tabular}
 	\end{table}
@@ -746,7 +779,7 @@
 	
 	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. Significative differences can be observed in the mean values for $\eta = 10^{-3}$ with respect to the other values of the parameter ($\alpha=0.05$). Also, there are differences for $\eta = 10^{-4}$ concerning $\eta = 10^{-2}$.
 	
-	\begin{table}[ht]
+	\begin{table}[!t]
 		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Adience dataset.}
 		\label{table:ANOVAAdience}
 		\centering
@@ -754,13 +787,13 @@
 		\begin{tabular}{l|ccccc}
 			\multicolumn{6}{c}{Response variable WK}\\\hline
 			Source & S.S. & D.F. & M.S. & F-ratio & Sig.\\\hline
-			Model & $52.328$ & $15$ & $3.489$ & $1426.170$ & $.000$\\
-			$L$ factor & $.027$ & $2$ & $.014$ & $5.582$ & $.005$\\
-			$P$ factor & $1.031$ & $2$ & $.516$ & $210.809$ & $.000$\\
-			$B$ factor & $.089$ & $2$ & $.045$ & $18.253$ & $.000$\\
-			$LP$ factors & $.183$ & $4$ & $.046$ & $18.695$ & $.000$\\
-			$PB$ factors & $.124$ & $4$ & $.031$ & $12.695$ & $.000$\\
-			Error & $.294$ & $120$ & $.002$ & & \\
+			Model & $52.328$ & $15$ & $3.489$ & $1426.170$ & $0.000$\\
+			$L$ factor & $0.027$ & $2$ & $0.014$ & $5.582$ & $0.005$\\
+			$P$ factor & $1.031$ & $2$ & $0.516$ & $210.809$ & $0.000$\\
+			$B$ factor & $0.089$ & $2$ & $0.045$ & $18.253$ & $0.000$\\
+			$LP$ factors & $0.183$ & $4$ & $0.046$ & $18.695$ & $0.000$\\
+			$PB$ factors & $0.124$ & $4$ & $0.031$ & $12.695$ & $0.000$\\
+			Error & $0.294$ & $120$ & $0.002$ & & \\
 			Total & $52.622$ & $135$ & $3.489$ & & 
 		\end{tabular}
 	\end{table}
@@ -776,7 +809,7 @@
 	The same experiments described in Section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimizer and the softmax function instead of the Proportional Odds Model for the output of the network.
 	The results for both datasets are shown in Table \ref{table:NominalResults}.
 	
-	\begin{table}[ht]
+	\begin{table}[!t]
 		\caption{Nominal method results. BS stands for Batch Size and LR for Learning Rate.}
 		\label{table:NominalResults}
 		\footnotesize
@@ -784,28 +817,28 @@
 		\begin{tabular}{lcc|cc}
 			Dataset & BS & LR & $\kappa_{val}$ & $\kappa_{test}$\\\hline
 			Retinopathy & $5$ & $10^{-2}$ & $0.2210$ & $0.2050$\\
-			Retinopathy & $5$ & $10^{-3}$ & $0.2807$ & $0.2654$\\
-			Retinopathy & $5$ & $10^{-4}$ & $0.4580$ & $0.4449$\\
+			 & & $10^{-3}$ & $0.2807$ & $0.2654$\\
+			 & & $10^{-4}$ & $0.4580$ & $0.4449$\\
 			
-			Retinopathy & $10$ & $10^{-2}$ & $0.2972$ & $0.2997$\\
-			Retinopathy & $10$ & $10^{-3}$ & $0.3972$ & $0.3989$\\
-			Retinopathy & $10$ & $10^{-4}$ & $\textbf{0.4972}$ & $\textbf{0.4967}$\\
+			 & $10$ & $10^{-2}$ & $0.2972$ & $0.2997$\\
+			 &  & $10^{-3}$ & $0.3972$ & $0.3989$\\
+			 &  & $10^{-4}$ & $\textbf{0.4972}$ & $\textbf{0.4967}$\\
 			
-			Retinopathy & $15$ & $10^{-2}$ & $0.3692$ & $0.3676$\\
-			Retinopathy & $15$ & $10^{-3}$ & $0.4107$ & $0.4162$\\
-			Retinopathy & $15$ & $10^{-4}$ & $0.4929$ & $0.4859$\\
+			 & $15$ & $10^{-2}$ & $0.3692$ & $0.3676$\\
+			 & & $10^{-3}$ & $0.4107$ & $0.4162$\\
+			 & & $10^{-4}$ & $0.4929$ & $0.4859$\\
 			\hline
 			Adience & $5$ & $10^{-2}$ & $0.0605$ & $0.0769$\\
-			Adience & $5$ & $10^{-3}$ & $0.7994$ & $0.7313$\\
-			Adience & $5$ & $10^{-4}$ & $0.8009$ & $0.7383$\\
+			 & & $10^{-3}$ & $0.7994$ & $0.7313$\\
+			 & & $10^{-4}$ & $0.8009$ & $0.7383$\\
 			
-			Adience & $10$ & $10^{-2}$ & $0.0559$ & $0.0576$\\
-			Adience & $10$ & $10^{-3}$ & $0.8239$ & $0.7436$\\
-			Adience & $10$ & $10^{-4}$ & $0.7938$ & $0.7218$\\
+			 & $10$ & $10^{-2}$ & $0.0559$ & $0.0576$\\
+			 & & $10^{-3}$ & $0.8239$ & $0.7436$\\
+			 & & $10^{-4}$ & $0.7938$ & $0.7218$\\
 			
-			Adience & $15$ & $10^{-2}$ & $0.0593$ & $0.0713$\\
-			Adience & $15$ & $10^{-3}$ & $\textbf{0.8309}$ & $\textbf{0.7575}$\\
-			Adience & $15$ & $10^{-4}$ & $0.7867$ & $0.7129$\\
+			 & $15$ & $10^{-2}$ & $0.0593$ & $0.0713$\\
+			 & & $10^{-3}$ & $\textbf{0.8309}$ & $\textbf{0.7575}$\\
+			 & & $10^{-4}$ & $0.7867$ & $0.7129$\\
 		\end{tabular}
 	\end{table}
 	
