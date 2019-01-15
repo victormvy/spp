@@ -1,7 +1,7 @@
 import tensorflow as tf
 from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, NNPOM
 from layers import GeometricLayer
-from resnet import inference
+from resnet import Resnet_2x4
 
 from inception_resnet_v2 import InceptionResNetV2 as Irvn2
 
@@ -221,14 +221,38 @@ class Net:
 
 	def inception_resnet_v2_custom(self):
 		model = tf.keras.Sequential()
-		inception = tf.keras.applications.NASNetLarge(include_top=False, input_shape=(self.size, self.size, self.num_channels),
-						  classes=self.num_classes)
+		inception = Irvn2(include_top=False, input_shape=(self.size, self.size, self.num_channels),
+						  classes=self.num_classes, activation=self.activation)
 
 		# for layer in inception.layers:
 		# 	layer.trainable = False
 
 		model.add(inception)
 		model.add(tf.keras.layers.Flatten())
+
+		if self.dropout > 0:
+			model.add(tf.keras.layers.Dropout(rate=self.dropout))
+
+		if self.final_activation == 'poml':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'logit'))
+		elif self.final_activation == 'pomp':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'probit'))
+		elif self.final_activation == 'pomclog':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'cloglog'))
+		else:
+			model.add(tf.keras.layers.Dense(self.num_classes))
+			if self.prob_layer == 'geometric':
+				model.add(GeometricLayer())
+			model.add(tf.keras.layers.Activation(self.final_activation))
+
+		return model
+
+	def beckham_resnet(self):
+		resnet = Resnet_2x4((self.size, self.size, self.num_channels))
+		model = resnet.get_net()
 
 		if self.dropout > 0:
 			model.add(tf.keras.layers.Dropout(rate=self.dropout))

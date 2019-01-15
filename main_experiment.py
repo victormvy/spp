@@ -25,7 +25,7 @@ def cli():
 @click.option('--rep', '-r', default=1, help=u'Repetitions for this execution.')
 @click.option('--dropout', '-o', default=0.0, help=u'Drop rate.')
 def train(db, net_type, batch_size, epochs, checkpoint_dir, loss, activation, final_activation, prob_layer, spp_alpha, lr, momentum, rep, dropout):
-	config = tf.ConfigProto()
+	config = tf.ConfigProto(allow_soft_placement=False)
 	config.gpu_options.allow_growth = True
 	tf.keras.backend.set_session(tf.Session(config=config))
 	for execution in range(1, rep + 1):

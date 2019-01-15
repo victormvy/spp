@@ -552,6 +552,8 @@ class Experiment():
 			model = net_object.testing()
 		elif name == 'inceptionresnetv2':
 			model = net_object.inception_resnet_v2_custom()
+		elif name == 'beckhamresnet':
+			model = net_object.beckham_resnet()
 		else:
 			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
 
@@ -565,6 +567,8 @@ class Experiment():
 		"""
 		if db.lower() == 'retinopathy':
 			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
+		elif db.lower() == 'retinopathy256':
+			return "../retinopathy/256/train", "../retinopathy/256/val", "../retinopathy/256/test"
 		elif db.lower() == 'adience':
 			return "../adience/256/train", "../adience/256/val", "../adience/256/test"
 		elif db.lower() == 'cifar10' or db.lower() == 'cifar100':

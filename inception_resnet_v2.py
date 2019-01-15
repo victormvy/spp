@@ -175,6 +175,8 @@ def inception_resnet_block(x, scale, block_type, block_idx, activation='relu'):
         x = layers.Activation(activation, name=block_name + '_ac')(x)
     return x
 
+from tensorflow.keras import utils as keras_utils
+from tensorflow.keras import backend, layers, models
 
 def InceptionResNetV2(include_top=True,
                       weights='imagenet',
@@ -226,8 +228,8 @@ def InceptionResNetV2(include_top=True,
         ValueError: in case of invalid argument for `weights`,
             or invalid input shape.
     """
-    global backend, layers, models, keras_utils
-    backend, layers, models, keras_utils = get_submodules_from_kwargs(kwargs)
+    # global backend, layers, models, keras_utils
+    # backend, layers, models, keras_utils = get_submodules_from_kwargs(kwargs)
 
     if not (weights in {'imagenet', None} or os.path.exists(weights)):
         raise ValueError('The `weights` argument should be either '
