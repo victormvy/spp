@@ -14,6 +14,7 @@ from losses import qwk_loss, make_cost_matrix
 from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm
 from dataset import Dataset
 from sklearn.metrics import confusion_matrix
+from math import inf
 
 
 class Experiment():
@@ -43,7 +44,7 @@ class Experiment():
 		self._workers = workers
 		self._val_metrics = val_metrics
 
-		self._best_metric = -1
+		self._best_metric = inf
 
 	def set_auto_name(self):
 		"""
@@ -310,13 +311,13 @@ class Experiment():
 		# Train data generator
 		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
 			rescale=1. / 255,
-			shear_range=0.2,
-			zoom_range=0.2,
-			horizontal_flip=True,
-			vertical_flip=True,
-			brightness_range=(0.5, 1.5),
-			rotation_range=90,
-			fill_mode='nearest'
+			# shear_range=0.2,
+			# zoom_range=0.2,
+			# horizontal_flip=True,
+			# vertical_flip=True,
+			# brightness_range=(0.5, 1.5),
+			# rotation_range=90,
+			# fill_mode='nearest'
 		)
 
 		# Validation data generator
@@ -436,7 +437,8 @@ class Experiment():
 		model.fit_generator(train_generator, epochs=self.epochs,
 							initial_epoch=start_epoch,
 							steps_per_epoch=steps,
-							callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+							callbacks=[#tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+										tf.keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.1, patience=6, mode='min', min_lr=1e-4, verbose=1),
 									   ComputeMetricsCallback(num_classes, val_generator=val_generator,
 															  val_batches=ds_val.num_batches(self.batch_size),
 															  metrics=self.val_metrics),
