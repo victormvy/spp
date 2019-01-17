@@ -287,13 +287,13 @@ class Experiment():
 	def best_metric(self):
 		return self._best_metric
 
-	def new_metric(self, metric):
+	def new_metric(self, metric, maximize=True):
 		"""
 		Updates best metric if metric provided is better than the best metric stored.
 		:param metric: new metric.
 		:return: True if new metric is better than best metric or False otherwise.
 		"""
-		if metric <= self._best_metric:
+		if maximize and metric > self._best_metric or not maximize and metric <= self._best_metric:
 			self._best_metric = metric
 			return True
 		return False
@@ -367,7 +367,7 @@ class Experiment():
 		# Save epoch callback for training process
 		def save_epoch(epoch, logs):
 			# Check whether new metric is better than best metric
-			if (self.new_metric(logs['val_loss'])):
+			if (self.new_metric('val_qwk' in logs and logs['val_qwk'] or logs['val_loss'], 'val_qwk' in logs and True or False)):
 				model.save(os.path.join(self.checkpoint_dir, best_model_file))
 
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'w') as f:
@@ -407,7 +407,7 @@ class Experiment():
 			# Continue from the epoch where we were and load the best metric
 			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
-				self.new_metric(float(f.readline()))
+				self.new_metric(float(f.readline()), 'qwk' in self.val_metrics and True or False)
 
 		# Create the cost matrix that will be used to compute qwk
 		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
