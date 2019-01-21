@@ -254,7 +254,7 @@ class Net:
 		resnet = Resnet_2x4((self.size, self.size, self.num_channels))
 		model = resnet.get_net()
 
-		model.add(tf.keras.layers.Dense(256))
+		# model.add(tf.keras.layers.Dense(256))
 
 		if self.dropout > 0:
 			model.add(tf.keras.layers.Dropout(rate=self.dropout))
