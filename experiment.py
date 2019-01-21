@@ -455,7 +455,7 @@ class Experiment():
 									   tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, self.csv_file),
 																	append=True),
 									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
-									   tf.keras.callbacks.TerminateOnNaN(),
+									   # tf.keras.callbacks.TerminateOnNaN(),
 									   ],
 							workers=self.workers,
 							use_multiprocessing=True,
