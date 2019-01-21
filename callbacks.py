@@ -1,26 +1,8 @@
 import tensorflow as tf
 import numpy as np
 from sklearn.metrics import confusion_matrix, accuracy_score
-from metrics import quadratic_weighted_kappa_cm
+from metrics import quadratic_weighted_kappa_cm, quadratic_weighted_kappa
 from losses import make_cost_matrix
-
-class MomentumScheduler(tf.keras.callbacks.Callback):
-	'''Momentum scheduler.
-	# Arguments
-	schedule: a function that takes an epoch index (integer, indexed from 0) and current momentum as input
-	and returns a new momentum as output (float).
-	'''
-	def __init__(self, schedule):
-		super(MomentumScheduler, self).__init__()
-		self.schedule = schedule
-
-	def on_epoch_begin(self, epoch, logs={}):
-		assert hasattr(self.model.optimizer, 'momentum'), \
-		'Optimizer must have a "momentum" attribute.'
-		mmtm = self.schedule(epoch)
-		assert type(mmtm) == float, 'The output of the "schedule" function should be float.'
-		tf.assign(self.model.optimizer.momentum, mmtm)
-
 
 class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 	"""
@@ -54,6 +36,7 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 
 			prediction = self.model.predict_on_batch(x)
 			loss = self.model.test_on_batch(x, y)[0]
+
 			y = np.argmax(y, axis=1)
 			prediction = np.argmax(prediction, axis=1)
 
@@ -65,6 +48,8 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 			batch_count += 1
 			mean_acc += accuracy_score(y, prediction)
 			mean_loss += loss
+
+
 
 		mean_acc /= batch_count
 		mean_loss /= batch_count

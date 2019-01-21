@@ -9,12 +9,14 @@ import click
 import pickle
 import h5py
 from scipy import io as spio
-from callbacks import MomentumScheduler, ComputeMetricsCallback
+from callbacks import ComputeMetricsCallback
 from losses import qwk_loss, make_cost_matrix
-from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm
+from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm, top_2_accuracy, top_3_accuracy,\
+	minimum_sensitivity, accuracy_off1
 from dataset import Dataset
 from sklearn.metrics import confusion_matrix
 from math import inf
+import gc
 
 
 class Experiment():
@@ -44,7 +46,14 @@ class Experiment():
 		self._workers = workers
 		self._val_metrics = val_metrics
 
-		self._best_metric = inf
+		self._best_metric = 'qwk' in val_metrics and inf or 0
+
+		# Model and results file names
+		self.model_file = 'model.h5'
+		self.best_model_file = 'best_model.h5'
+		self.model_file_extra = 'model.txt'
+		self.csv_file = 'results.csv'
+		self.evaluation_file = 'evaluation.pickle'
 
 	def set_auto_name(self):
 		"""
@@ -291,6 +300,7 @@ class Experiment():
 		"""
 		Updates best metric if metric provided is better than the best metric stored.
 		:param metric: new metric.
+		:param maximize: maximize metric instead of minimizing.
 		:return: True if new metric is better than best metric or False otherwise.
 		"""
 		if maximize and metric > self._best_metric or not maximize and metric <= self._best_metric:
@@ -307,6 +317,9 @@ class Experiment():
 		"""
 
 		print('=== RUNNING {} ==='.format(self.name))
+
+		# Garbage collection
+		gc.collect()
 
 		# Train data generator
 		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
@@ -367,10 +380,10 @@ class Experiment():
 		# Save epoch callback for training process
 		def save_epoch(epoch, logs):
 			# Check whether new metric is better than best metric
-			if (self.new_metric('val_qwk' in logs and logs['val_qwk'] or logs['val_loss'], 'val_qwk' in logs and True or False)):
-				model.save(os.path.join(self.checkpoint_dir, best_model_file))
+			if (self.new_metric(logs['val_loss'])):
+				model.save(os.path.join(self.checkpoint_dir, self.best_model_file))
 
-			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'w') as f:
+			with open(os.path.join(self.checkpoint_dir, self.model_file_extra), 'w') as f:
 				f.write(str(epoch + 1))
 				f.write('\n' + str(self.best_metric))
 
@@ -389,25 +402,19 @@ class Experiment():
 		if not os.path.isdir(self.checkpoint_dir):
 			os.makedirs(self.checkpoint_dir)
 
-		# Model and results file names
-		model_file = 'model.h5'
-		best_model_file = 'best_model.h5'
-		model_file_extra = 'model.txt'
-		csv_file = 'results.csv'
-
 		# Initial epoch. 0 by default
 		start_epoch = 0
 
 		# Check whether a saved model exists
-		if os.path.isfile(os.path.join(self.checkpoint_dir, model_file)) and os.path.isfile(
-				os.path.join(self.checkpoint_dir, model_file_extra)):
+		if os.path.isfile(os.path.join(self.checkpoint_dir, self.model_file)) and os.path.isfile(
+				os.path.join(self.checkpoint_dir, self.model_file_extra)):
 			print("===== RESTORING SAVED MODEL =====")
-			model.load_weights(os.path.join(self.checkpoint_dir, model_file))
+			model.load_weights(os.path.join(self.checkpoint_dir, self.model_file))
 
 			# Continue from the epoch where we were and load the best metric
-			with open(os.path.join(self.checkpoint_dir, model_file_extra), 'r') as f:
+			with open(os.path.join(self.checkpoint_dir, self.model_file_extra), 'r') as f:
 				start_epoch = int(f.readline())
-				self.new_metric(float(f.readline()), 'qwk' in self.val_metrics and True or False)
+				self.new_metric(float(f.readline()))
 
 		# Create the cost matrix that will be used to compute qwk
 		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
@@ -439,23 +446,35 @@ class Experiment():
 							steps_per_epoch=steps,
 							callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 										# tf.keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.1, patience=6, mode='min', min_lr=1e-4, verbose=1),
-									   ComputeMetricsCallback(num_classes, val_generator=val_generator,
-															  val_batches=ds_val.num_batches(self.batch_size),
-															  metrics=self.val_metrics),
+									   # ComputeMetricsCallback(num_classes, val_generator=val_generator,
+										# 					  val_batches=ds_val.num_batches(self.batch_size),
+										# 					  metrics=self.val_metrics),
 									   tf.keras.callbacks.ModelCheckpoint(
-										   os.path.join(self.checkpoint_dir, model_file)),
+										   os.path.join(self.checkpoint_dir, self.model_file)),
 									   save_epoch_callback,
-									   tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, csv_file),
+									   tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, self.csv_file),
 																	append=True),
 									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 									   ],
 							workers=self.workers,
 							use_multiprocessing=True,
 							max_queue_size=self.batch_size * 3,
-							class_weight=class_weight
+							class_weight=class_weight,
+							validation_data=val_generator,
+							validation_steps=ds_val.num_batches(self.batch_size)
 							)
 
 		self.finished = True
+
+		# Free objects
+		del ds_train
+		del ds_val
+		del model
+		del cost_matrix
+		del train_datagen
+		del train_generator
+		del val_datagen
+		del val_generator
 
 	def evaluate(self):
 		"""
@@ -464,86 +483,120 @@ class Experiment():
 		"""
 		print('=== EVALUATING {} ==='.format(self.name))
 
-		evaluation_file = 'evaluation.txt'
+		# Garbage collection
+		gc.collect()
 
-		if os.path.isfile(os.path.join(self.checkpoint_dir, evaluation_file)):
-			with open(os.path.join(self.checkpoint_dir, evaluation_file), 'r') as f:
-				metric = float(f.readline())
-				print('Metric found in file: {} (Evaluation skipped)'.format(metric))
-				return metric
-
-		_, _, test_path = self.get_db_path(self.db)
-
-		# Load test dataset
-		ds_test = Dataset(test_path)
-
-		# Get dataset details
-		num_classes = ds_test.num_classes
-		num_channels = ds_test.num_channels
-		img_size = ds_test.img_size
-
-		# Validation data generator
-		test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
-
-		# Validation generator
-		test_generator = test_datagen.flow(
-			ds_test.x,
-			ds_test.y,
-			batch_size=self.batch_size,
-			shuffle=False
-		)
-
-		# NNet object
-		net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels, num_classes,
-						 self.spp_alpha,
-						 self.dropout)
-
-		model = self.get_model(net_object, self.net_type)
-
-		best_model_file = 'best_model.h5'
+		# if os.path.isfile(os.path.join(self.checkpoint_dir, self.evaluation_file)):
+		# 	with open(os.path.join(self.checkpoint_dir, self.evaluation_file), 'r') as f:
+		# 		metric = float(f.readline())
+		# 		print('Metric found in file: {} (Evaluation skipped)'.format(metric))
+		# 		return metric
 
 		# Check if best model file exists
-		if not os.path.isfile(os.path.join(self.checkpoint_dir, best_model_file)):
+		if not os.path.isfile(os.path.join(self.checkpoint_dir, self.best_model_file)):
 			print('Best model file not found')
 			return
 
-		# Restore weights
-		model.load_weights(os.path.join(self.checkpoint_dir, best_model_file))
+		paths = self.get_db_path(self.db)
 
-		# Create the cost matrix that will be used to compute qwk
-		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
+		all_metrics = {}
 
-		# Cross-entropy loss by default
-		loss = 'categorical_crossentropy'
+		for path, set in zip(paths, ['Train', 'Validation', 'Test']):
+			print('\n=== {} dataset ===\n'.format(set))
+			# Load test dataset
+			ds_test = Dataset(path)
 
-		# Quadratic Weighted Kappa loss
-		if self.loss == 'qwk':
-			loss = qwk_loss(cost_matrix)
+			# Get dataset details
+			num_classes = ds_test.num_classes
+			num_channels = ds_test.num_channels
+			img_size = ds_test.img_size
 
-		# Only accuracy for training.
-		# Computing QWK for training properly is too expensive
-		metrics = ['accuracy']
+			# Validation data generator
+			test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
 
-		# Compile the keras model
-		model.compile(
-			optimizer=tf.keras.optimizers.Adam(lr=self.lr),
-			loss=loss,
-			metrics=metrics
-		)
+			# Test generator
+			test_generator = test_datagen.flow(
+				ds_test.x,
+				ds_test.y,
+				batch_size=self.batch_size,
+				shuffle=False
+			)
 
-		# Get predictions
-		test_generator.reset()
-		predictions = model.predict_generator(
-			test_generator
-		)
+			# NNet object
+			net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels, num_classes,
+							 self.spp_alpha,
+							 self.dropout)
 
+			model = self.get_model(net_object, self.net_type)
+
+
+
+			# Restore weights
+			model.load_weights(os.path.join(self.checkpoint_dir, self.best_model_file))
+
+			# Get predictions
+			test_generator.reset()
+			predictions = model.predict_generator(test_generator, verbose=1)
+
+			metrics = self.compute_metrics(ds_test.y, predictions, num_classes)
+			self.print_metrics(metrics)
+
+			all_metrics[set] = metrics
+
+			# Free objects
+			del ds_test
+			del test_datagen
+			del test_generator
+			del net_object
+			del model
+			del predictions
+			del metrics
+
+		with open(os.path.join(self.checkpoint_dir, self.evaluation_file), 'wb') as f:
+			pickle.dump({'config' : self.get_config(), 'metrics' : all_metrics}, f)
+
+
+
+	def compute_metrics(self, y_true, y_pred, num_classes):
 		# Calculate metric
-		metric = np_quadratic_weighted_kappa(np.argmax(ds_test.y, axis=1), np.argmax(predictions, axis=1), 0, num_classes-1)
+		sess = tf.keras.backend.get_session()
+		qwk = np_quadratic_weighted_kappa(np.argmax(y_true, axis=1), np.argmax(y_pred, axis=1), 0,
+										  num_classes - 1)
+		ms = minimum_sensitivity(y_true, y_pred)
+		mae = sess.run(tf.reduce_mean(tf.keras.losses.mean_absolute_error(y_true, y_pred)))
+		mse = sess.run(tf.reduce_mean(tf.keras.losses.mean_squared_error(y_true, y_pred)))
+		acc = sess.run(tf.reduce_mean(tf.keras.metrics.categorical_accuracy(y_true, y_pred)))
+		top2 = sess.run(top_2_accuracy(y_true, y_pred))
+		top3 = sess.run(top_3_accuracy(y_true, y_pred))
+		off1 = accuracy_off1(y_true, y_pred)
+		conf_mat = confusion_matrix(np.argmax(y_true, axis=1), np.argmax(y_pred, axis=1))
 
-		with open(os.path.join(self.checkpoint_dir, evaluation_file), 'w') as f:
-			f.write(str(metric))
+		metrics = {
+			'QWK' : qwk,
+			'MS' : ms,
+			'MAE': mae,
+			'MSE' : mse,
+			'CCR' : acc,
+			'Top-2' : top2,
+			'Top-3' : top3,
+			'1-off' : off1,
+			'Confusion matrix' : conf_mat
+		}
 
-		return metric
+		return metrics
+
+	def print_metrics(self, metrics):
+		print('Confusion matrix :\n{}'.format(metrics['Confusion matrix']))
+		print('QWK: {:.4f}'.format(metrics['QWK']))
+		print('CCR: {:.4f}'.format(metrics['CCR']))
+		print('Top-2: {:.4f}'.format(metrics['Top-2']))
+		print('Top-3: {:.4f}'.format(metrics['Top-3']))
+		print('1-off: {:.4f}'.format(metrics['1-off']))
+		print('MAE: {:.4f}'.format(metrics['MAE']))
+		print('MSE: {:.4f}'.format(metrics['MSE']))
+		print('MS: {:.4f}'.format(metrics['MS']))
+
+
 
 	def get_model(self, net_object, name):
 		if name == 'vgg19':

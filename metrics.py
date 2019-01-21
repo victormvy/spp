@@ -1,5 +1,6 @@
 import tensorflow as tf
 import numpy as np
+from sklearn.metrics import confusion_matrix
 
 def quadratic_weighted_kappa(num_classes, cost_matrix):
 	"""
@@ -19,24 +20,26 @@ def quadratic_weighted_kappa(num_classes, cost_matrix):
 		y_true = tf.argmax(y_true, 1, output_type=tf.int32)
 		conf_mat = tf.confusion_matrix(y_true, y_pred, num_classes=num_classes, dtype=tf.float32)
 
-		hist_y_pred = tf.reshape(
-			tf.bincount(y_pred, minlength=num_classes, maxlength=num_classes, dtype=tf.float32),
-			shape=[num_classes, 1])
-		hist_y_true = tf.reshape(
-			tf.bincount(y_true, minlength=num_classes, maxlength=num_classes, dtype=tf.float32),
-			shape=[1, num_classes])
+		return quadratic_weighted_kappa_cm(conf_mat, num_classes, cost_matrix)
 
-		num_scored_items = tf.shape(y_pred)[0]
-
-		expected_count = tf.matmul(hist_y_pred, hist_y_true) / tf.cast(num_scored_items, dtype=tf.float32)
-
-		numerator = tf.reduce_sum(cost_matrix * conf_mat)
-		denominator = tf.reduce_sum(cost_matrix * expected_count)
-
-		if denominator == 0:
-			return 0
-
-		return 1.0 - numerator / denominator
+		# hist_y_pred = tf.reshape(
+		# 	tf.bincount(y_pred, minlength=num_classes, maxlength=num_classes, dtype=tf.float32),
+		# 	shape=[num_classes, 1])
+		# hist_y_true = tf.reshape(
+		# 	tf.bincount(y_true, minlength=num_classes, maxlength=num_classes, dtype=tf.float32),
+		# 	shape=[1, num_classes])
+		#
+		# num_scored_items = tf.shape(y_pred)[0]
+		#
+		# expected_count = tf.matmul(hist_y_pred, hist_y_true) / tf.cast(num_scored_items, dtype=tf.float32)
+		#
+		# numerator = tf.reduce_sum(cost_matrix * conf_mat)
+		# denominator = tf.reduce_sum(cost_matrix * expected_count)
+		#
+		# if denominator == 0:
+		# 	return 0
+		#
+		# return 1.0 - numerator / denominator
 
 	return _quadratic_weighted_kappa
 
@@ -68,7 +71,7 @@ def quadratic_weighted_kappa_cm(conf_mat, num_ratings, cost_matrix):
 	return 1.0 - numerator / denominator
 
 
-def confusion_matrix(rater_a, rater_b, min_rating=None, max_rating=None):
+def _confusion_matrix(rater_a, rater_b, min_rating=None, max_rating=None):
 	"""
 	Returns the confusion matrix between rater's ratings
 	"""
@@ -138,7 +141,7 @@ def np_quadratic_weighted_kappa(rater_a, rater_b, min_rating=None, max_rating=No
 		min_rating = min(min(rater_a), min(rater_b))
 	if max_rating is None:
 		max_rating = max(max(rater_a), max(rater_b))
-	conf_mat = confusion_matrix(rater_a, rater_b,
+	conf_mat = _confusion_matrix(rater_a, rater_b,
 								min_rating, max_rating)
 
 	num_ratings = len(conf_mat)
@@ -159,3 +162,41 @@ def np_quadratic_weighted_kappa(rater_a, rater_b, min_rating=None, max_rating=No
 			denominator += d * expected_count / num_scored_items
 
 	return 1.0 - numerator / denominator
+
+
+def top_2_accuracy(y_true, y_pred):
+	return tf.keras.metrics.top_k_categorical_accuracy(y_true, y_pred, k=2)
+
+def top_3_accuracy(y_true, y_pred):
+	return tf.keras.metrics.top_k_categorical_accuracy(y_true, y_pred, k=3)
+
+def _compute_sensitivities(y_true, y_pred):
+	if y_true.shape[1] > 1:
+		y_true = np.argmax(y_true, axis=1)
+	if y_pred.shape[1] > 1:
+		y_pred = np.argmax(y_pred, axis=1)
+
+	conf_mat = confusion_matrix(y_true, y_pred)
+
+	sum = np.sum(conf_mat, axis=1)
+	mask = np.eye(conf_mat.shape[0], conf_mat.shape[1])
+	correct = np.sum(conf_mat * mask, axis=1)
+	sensitivities = correct / sum
+
+	return sensitivities
+
+def minimum_sensitivity(y_true, y_pred):
+	return np.min(_compute_sensitivities(y_true, y_pred))
+
+def accuracy_off1(y_true, y_pred):
+	if y_true.shape[1] > 1:
+		y_true = np.argmax(y_true, axis=1)
+	if y_pred.shape[1] > 1:
+		y_pred = np.argmax(y_pred, axis=1)
+
+	conf_mat = confusion_matrix(y_true, y_pred)
+	n = conf_mat.shape[0]
+	mask = np.eye(n, n) + np.eye(n, n, k=1), + np.eye(n, n, k=-1)
+	correct = mask * conf_mat
+
+	return 1.0 * np.sum(correct) / np.sum(conf_mat)

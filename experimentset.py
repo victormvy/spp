@@ -77,19 +77,14 @@ class ExperimentSet():
 
 		# Add experiments
 		for config in configs:
-			if 'executions' in config and config['executions'] > 1:
-				for execution in range(1, int(config['executions']) + 1):
-					exec_config = config.copy()
-					if 'name' in exec_config:
-						exec_config['name'] += "_{}".format(execution)
-					exec_config['checkpoint_dir'] += "/{}".format(execution)
-					experiment = Experiment()
-					experiment.set_config(exec_config)
-					self.add_experiment(experiment)
-
-			elif not 'executions' in config or ('executions' in config and config['executions'] > 0):
+			executions = 'executions' in config and int(config['executions']) or 1
+			for execution in range(1, executions + 1):
+				exec_config = config.copy()
+				if 'name' in exec_config:
+					exec_config['name'] += "_{}".format(execution)
+				exec_config['checkpoint_dir'] += "/{}".format(execution)
 				experiment = Experiment()
-				experiment.set_config(config)
+				experiment.set_config(exec_config)
 				self.add_experiment(experiment)
 
 	def save_to_file(self, path):
@@ -118,6 +113,7 @@ class ExperimentSet():
 				if not experiment.finished and experiment.task != 'test': # 'train' or 'both'
 					experiment.run()
 				if experiment.task != 'train': # 'test' or 'both'
-					print(experiment.evaluate())
-				# Clear session
-				tf.keras.backend.clear_session()
+					experiment.evaluate()
+			# Clear session
+			tf.keras.backend.clear_session()
+			del experiment
