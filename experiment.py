@@ -46,7 +46,7 @@ class Experiment():
 		self._workers = workers
 		self._val_metrics = val_metrics
 
-		self._best_metric = 'qwk' in val_metrics and inf or 0
+		self._best_metric = None
 
 		# Model and results file names
 		self.model_file = 'model.h5'
@@ -296,14 +296,14 @@ class Experiment():
 	def best_metric(self):
 		return self._best_metric
 
-	def new_metric(self, metric, maximize=True):
+	def new_metric(self, metric, maximize=False):
 		"""
 		Updates best metric if metric provided is better than the best metric stored.
 		:param metric: new metric.
 		:param maximize: maximize metric instead of minimizing.
 		:return: True if new metric is better than best metric or False otherwise.
 		"""
-		if maximize and metric > self._best_metric or not maximize and metric <= self._best_metric:
+		if self._best_metric is None or (maximize and metric > self._best_metric or not maximize and metric <= self._best_metric):
 			self._best_metric = metric
 			return True
 		return False

@@ -39,7 +39,7 @@ def qwk_loss(cost_matrix):
 		a = tf.reshape(tf.matmul(cost_matrix, tf.reshape(sum_prob, shape=[-1, 1])), shape=[-1])
 		b = tf.reshape(n / tf.reduce_sum(n), shape=[-1])
 
-		epsilon = 10e-6
+		epsilon = 10e-9
 
 		denominator = a * b
 		denominator = tf.reduce_sum(denominator) + epsilon
