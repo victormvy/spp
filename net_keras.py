@@ -221,14 +221,15 @@ class Net:
 
 	def inception_resnet_v2_custom(self):
 		model = tf.keras.Sequential()
-		inception = Irvn2(include_top=False, input_shape=(self.size, self.size, self.num_channels),
-						  classes=self.num_classes, activation=self.activation)
+		inception = tf.keras.applications.vgg16.VGG16(include_top=False, input_shape=(self.size, self.size, self.num_channels),
+						  classes=self.num_classes, pooling='avg') # , activation=self.activation
 
 		# for layer in inception.layers:
 		# 	layer.trainable = False
 
 		model.add(inception)
 		model.add(tf.keras.layers.Flatten())
+		model.add(tf.keras.layers.Dense(512))
 
 		if self.dropout > 0:
 			model.add(tf.keras.layers.Dropout(rate=self.dropout))

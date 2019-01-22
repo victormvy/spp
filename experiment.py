@@ -330,7 +330,7 @@ class Experiment():
 			# vertical_flip=True,
 			# brightness_range=(0.5, 1.5),
 			# rotation_range=90,
-			# fill_mode='nearest'
+			# fill_mode='nearest',
 		)
 
 		# Validation data generator
@@ -496,6 +496,11 @@ class Experiment():
 		# Check if best model file exists
 		if not os.path.isfile(os.path.join(self.checkpoint_dir, self.best_model_file)):
 			print('Best model file not found')
+			return
+
+		# Check if model was already evaluated
+		if os.path.isfile(os.path.join(self.checkpoint_dir, self.evaluation_file)):
+			print('Model already evaluated')
 			return
 
 		paths = self.get_db_path(self.db)

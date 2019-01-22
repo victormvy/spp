@@ -5,6 +5,8 @@ import math
 import h5py
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
+import cv2
+from PIL import Image
 
 class Dataset():
 	"""
@@ -126,7 +128,7 @@ class Dataset():
 		self._data = {}
 		self._data['x'] = []
 		self._data['y'] = []
-		self._sample_shape = (32,32,3)
+		self._sample_shape = (48,48,3)
 
 		if split == 'train':
 			self._data['x'] = x_train
@@ -141,10 +143,24 @@ class Dataset():
 				self._data['x'] = xt
 				self._data['y'] = yt
 
-		y_onehot = np.zeros((len(self._data['y']), 10))
-		y_onehot[np.arange(len(self._data['y'])), np.array(self._data['y'])] = 1
+
+		y = np.array(self._data['y']).ravel()
+		y_onehot = np.zeros((y.size, 10))
+		y_onehot[np.arange(y.size), y] = 1
 		self._data['y'] = list(y_onehot)
 		self.num_classes = 10
+
+		# Upscale
+		self._resize_data(48, 48)
+
+
+	def _resize_data(self, width, height):
+		data_resized = np.zeros((self._data['x'].shape[0], width, height, self.num_channels))
+		for i, img in enumerate(self._data['x']):
+			img_resized = cv2.resize(img, dsize=(width, height), interpolation=cv2.INTER_CUBIC)
+			data_resized[i] = img_resized
+
+		self._data['x'] = data_resized
 
 
 	def size(self):
