@@ -221,7 +221,7 @@ class Net:
 
 	def inception_resnet_v2_custom(self):
 		model = tf.keras.Sequential()
-		inception = tf.keras.applications.vgg16.VGG16(include_top=False, input_shape=(self.size, self.size, self.num_channels),
+		inception = Irnv2(include_top=False, input_shape=(self.size, self.size, self.num_channels),
 						  classes=self.num_classes, pooling='avg') # , activation=self.activation
 
 		# for layer in inception.layers:
