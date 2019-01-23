@@ -323,7 +323,7 @@ class Experiment():
 
 		# Train data generator
 		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-			rescale=1. / 255,
+			# rescale=1. / 255,
 			# shear_range=0.2,
 			# zoom_range=0.2,
 			horizontal_flip=True,
@@ -334,7 +334,7 @@ class Experiment():
 		)
 
 		# Validation data generator
-		val_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
+		val_datagen = tf.keras.preprocessing.image.ImageDataGenerator()# rescale=1. / 255)
 
 		# Get database paths
 		train_path, val_path, _ = self.get_db_path(self.db)
@@ -369,9 +369,15 @@ class Experiment():
 
 		# Calculate the number of steps per epoch
 		steps = (len(ds_train.y) * 1) // self.batch_size
+		steps_val = ds_val.num_batches(self.batch_size)
 
 		# Get class weights based on frequency
 		class_weight = ds_train.get_class_weights()
+
+		# Free dataset object
+		del ds_train
+		del ds_val
+		gc.collect()
 
 		# Learning rate scheduler callback
 		def learning_rate_scheduler(epoch):
@@ -432,7 +438,7 @@ class Experiment():
 
 		# Compile the keras model
 		model.compile(
-			optimizer=tf.keras.optimizers.Adam(lr=self.lr),
+			optimizer= tf.keras.optimizers.Adam(lr=self.lr), # tf.keras.optimizers.SGD(self.lr, 0.9),
 			loss=loss,
 			metrics=metrics
 		)
@@ -462,14 +468,12 @@ class Experiment():
 							max_queue_size=self.batch_size * 3,
 							class_weight=class_weight,
 							validation_data=val_generator,
-							validation_steps=ds_val.num_batches(self.batch_size)
+							validation_steps=steps_val
 							)
 
 		self.finished = True
 
 		# Free objects
-		del ds_train
-		del ds_val
 		del model
 		del cost_matrix
 		del train_datagen
@@ -518,7 +522,7 @@ class Experiment():
 			img_size = ds_test.img_size
 
 			# Validation data generator
-			test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
+			test_datagen = tf.keras.preprocessing.image.ImageDataGenerator() #(rescale=1. / 255)
 
 			# Test generator
 			test_generator = test_datagen.flow(
@@ -557,6 +561,7 @@ class Experiment():
 			del model
 			del predictions
 			del metrics
+			gc.collect()
 
 		with open(os.path.join(self.checkpoint_dir, self.evaluation_file), 'wb') as f:
 			pickle.dump({'config' : self.get_config(), 'metrics' : all_metrics}, f)
@@ -631,7 +636,8 @@ class Experiment():
 		elif db.lower() == 'retinopathy256':
 			return "../retinopathy/256/train", "../retinopathy/256/val", "../retinopathy/256/test"
 		elif db.lower() == 'adience':
-			return "../adience/256/train", "../adience/256/val", "../adience/256/test"
+			# return "../adience/256/train", "../adience/256/val", "../adience/256/test"
+			return "../adience/adience_train_256.h5", "../adience/adience_val_256.h5", "../adience/adience_test_256.h5"
 		elif db.lower() == 'cifar10' or db.lower() == 'cifar100':
 			return db.lower() + 'train', db.lower() + 'val', db.lower() + 'test'
 		else:

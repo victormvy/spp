@@ -3,7 +3,7 @@ from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, Paired
 from layers import GeometricLayer
 from resnet import Resnet_2x4
 
-from inception_resnet_v2 import InceptionResNetV2 as Irvn2
+from inception_resnet_v2 import InceptionResNetV2 as Irnv2
 
 
 class Net:
@@ -222,7 +222,7 @@ class Net:
 	def inception_resnet_v2_custom(self):
 		model = tf.keras.Sequential()
 		inception = Irnv2(include_top=False, input_shape=(self.size, self.size, self.num_channels),
-						  classes=self.num_classes, pooling='avg') # , activation=self.activation
+						  classes=self.num_classes, pooling='avg', activation=self.activation)
 
 		# for layer in inception.layers:
 		# 	layer.trainable = False

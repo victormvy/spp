@@ -12,11 +12,11 @@ evaluation_file = 'evaluation.pickle'
 
 def resume_one_metric(metric):
 	t = prettytable.PrettyTable(['Dataset', 'BS', 'LR', 'LF', 'Train ' + metric, 'Mean Tr', 'Validation ' + metric, 'Mean V', 'Test ' + metric, 'Mean Te'])
-	for item in os.listdir(results_path):
+	for item in sorted(os.listdir(results_path)):
 		if os.path.isdir(os.path.join(results_path, item)):
 			train, val, test = '', '', ''
 			train_values, val_values, test_values = np.array([]), np.array([]), np.array([])
-			for item2 in os.listdir(os.path.join(results_path, item)):
+			for item2 in sorted(os.listdir(os.path.join(results_path, item))):
 				p = None
 				if os.path.isdir(os.path.join(results_path, item, item2)) and os.path.isfile(os.path.join(results_path, item, item2, evaluation_file)):
 					with open(os.path.join(results_path, item, item2, evaluation_file), 'rb') as f:
@@ -53,9 +53,9 @@ def resume_one_metric(metric):
 def show_confusion_matrices():
 	t = prettytable.PrettyTable(
 		['Dataset', 'BS', 'LR', 'LF', 'Execution', 'Train CF', 'Validation CF', 'Test CF'], hrules=prettytable.ALL)
-	for item in os.listdir(results_path):
+	for item in sorted(os.listdir(results_path)):
 		if os.path.isdir(os.path.join(results_path, item)):
-			for item2 in os.listdir(os.path.join(results_path, item)):
+			for item2 in sorted(os.listdir(os.path.join(results_path, item))):
 				if os.path.isdir(os.path.join(results_path, item, item2)) and os.path.isfile(
 						os.path.join(results_path, item, item2, evaluation_file)):
 					with open(os.path.join(results_path, item, item2, evaluation_file), 'rb') as f:

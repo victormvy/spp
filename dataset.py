@@ -120,7 +120,27 @@ class Dataset():
 		assert(len(self._data['x']) == len(self._data['y']))
 
 	def _load_from_h5(self, path):
-		pass
+		with h5py.File(path, 'r+') as f:
+			keys = list(f.keys())
+
+			if 'x' in keys and 'y' in keys:
+				x = np.array(f['x'].value)
+				y = np.array(f['y'].value)
+			else:
+				raise Exception('Data not found')
+
+
+		x = np.moveaxis(x, 1, -1)
+		self._sample_shape = x.shape[1:]
+		self._num_classes = np.unique(y).size
+
+		y_onehot = np.zeros((y.size, self.num_classes))
+		y_onehot[np.arange(y.size), y] = 1
+
+		self._data = {}
+		self._data['x'] = list(x)
+		self._data['y'] = list(y_onehot)
+
 
 	def _load_cifar10(self, split):
 		(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
