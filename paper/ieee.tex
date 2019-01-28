@@ -503,31 +503,31 @@
 	
 	Christopher Beckham and Christopher Pal~\cite{beckham2017unimodal} proposed a straightforward technique to constrain discrete ordinal probability distributions to be unimodal via the use of the Poisson and binomial probability distributions. They evaluated this approach in the context of deep learning on two large ordinal image datasets, including the Adience dataset used in this paper, and they obtained promising results.
 	
-	At present, there is a great discussion in terms of finding the best activation function that offers good performance and mitigates the effects of the gradients vanishing problem \cite{bengio1994learning, pascanu2013difficulty}. Rectified Linear Unit (ReLU)~\cite{nair2010rectified} is widely used in most deep learning works, but recently, Clevert et al. proposed the Exponential Linear Unit (ELU)~\cite{clevert2015fast}. They proved that ELUs alleviate the vanishing gradient problem via the identity for positive values. In their experiments, ELUs lead not only to faster learning but also to significantly better generalization performance than ReLUs and LReLUs on networks with more than five layers. That's why we decided to use the ELU function for the experiments described in this paper.
+	At present, there is a great discussion in terms of finding the best activation function that offers good performance and mitigates the effects of the gradients vanishing problem \cite{bengio1994learning, pascanu2013difficulty}. Rectified Linear Unit (ReLU)~\cite{nair2010rectified} is widely used in most deep learning works, but recently, Clevert et al. proposed the Exponential Linear Unit (ELU)~\cite{clevert2015fast}. They proved that ELUs alleviate the vanishing gradient problem via the identity for positive values. In their experiments, ELUs lead not only to faster learning but also to significantly better generalization performance than ReLUs and Leaky ReLU functions (LReLU) on networks with more than five layers. That's why we decided to use the ELU function for the experiments described in this paper.
 	
 	Sergey Ioffe and Christian Szegedy~\cite{ioffe2015batch} described Batch Normalization and its benefits in previous work. It reduces the internal covariate shift by normalizing layer inputs. Their method draws its strength from making normalization a part of the model architecture and performing the normalization for each training batch. It allows them to use higher learning rates and be less careful about initialization. It also eliminates the need for using regularization techniques like Dropout.
 	
 	\section{Ordinal problem definition}
 	\label{sect:ordinalproblem}
-	The ordinal problem consists of predicting the label y of an input vector x, where $x \in \mathcal{X} \subseteq \mathds{R}^K$ and $y \in \mathcal{Y}~=~\{\mathcal{C}_1, \mathcal{C}_2, ..., \mathcal{C}_Q\}$, i.e. x is in a K-dimensional input space, and $y$ is in a label space of $Q$ different labels. The objective of the ordinal problem is to find a function $r : \mathcal{X} \rightarrow \mathcal{Y}$ to predict the labels or categories of new patterns, given a training set of $N$ points, $D = \{(x_i, y_i), i = 1, ..., N\}$. A natural label ordering exists for ordinal problems: $\mathcal{C}_1 \prec \mathcal{C}_2 \prec ... \prec \mathcal{C}_Q$. The assumption of order between class labels makes that two different elements of $\mathcal{Y}$ can always be compared by using the relation $\prec$, which is not possible under the nominal classification setting. In regression (where $y \in \mathds{R}$), real values in $\mathds{R}$ can be ordered by the standard $<$ operator, but labels in ordinal regression ($y \in \mathcal{Y}$) do not carry metric information, so the category serves as a qualitative indication of the pattern rather than a quantitative one.
+	The ordinal problem consists of predicting the label y of an input vector $\mathbf{x}$, where $\mathbf{x} \in \mathcal{X} \subseteq \mathds{R}^K$ and $y \in \mathcal{Y}~=~\{\mathcal{C}_1, \mathcal{C}_2, ..., \mathcal{C}_Q\}$, i.e. $\mathbf{x}$ is in a K-dimensional input space, and $y$ is in a label space of $Q$ different labels. The objective of the ordinal problem is to find a function $r : \mathcal{X} \rightarrow \mathcal{Y}$ to predict the labels or categories of new patterns, given a training set of $N$ points, $D = \{(x_i, y_i), i = 1, ..., N\}$. A natural label ordering exists for ordinal problems: $\mathcal{C}_1 \prec \mathcal{C}_2 \prec ... \prec \mathcal{C}_Q$. The assumption of order between class labels makes that two different elements of $\mathcal{Y}$ can always be compared by using the relation $\prec$, which is not possible under the nominal classification setting. In regression (where $y \in \mathds{R}$), real values in $\mathds{R}$ can be ordered by the standard $<$ operator, but labels in ordinal regression ($y \in \mathcal{Y}$) do not carry metric information, so the category serves as a qualitative indication of the pattern rather than a quantitative one.
 	
 	\section{Proportional Odds Model}
 	\label{sect:pom}
-	Arising from a statistical background, the Proportional Odds Model (POM) is one of the first models designed explicitly for ordinal regression~\cite{mccullagh1980regression}, dated back to 1980. It is a member of a wider family of models recognised as Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs predict probabilities of groups of contiguous categories, taking the ordinal scale into account. In this way, cumulative probabilities $P(y \prec Cj |x)$ are estimated, which can be directly related to standard probabilities:
-	\[
-		P(y \preceq \mathcal{C}_q | x) = P(y = \mathcal{C}_1 | x) + ... + P(y = \mathcal{C}_q | x),
-	\]
-	\[
-		P(y = \mathcal{C}_q | x) = P(y \preceq \mathcal{C}_q | x) - P(y \preceq \mathcal{C}_{q-1} | x),
-	\]
-	with $q = 2, ..., Q$, and considering that $P(y = \mathcal{C}_1 | x) = P(y \preceq \mathcal{C}_1 | x)$ and $P(y \preceq \mathcal{C}_Q | x) = 1$.
+	Arising from a statistical background, the Proportional Odds Model (POM) is one of the first models designed explicitly for ordinal regression~\cite{mccullagh1980regression}, dated back to 1980. It is a member of a wider family of models recognised as Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs predict probabilities of groups of contiguous categories, taking the ordinal scale into account. In this way, cumulative probabilities $P(y \prec Cj |\mathbf{x})$ are estimated, which can be directly related to standard probabilities:
+	\begin{equation}
+		P(y \preceq \mathcal{C}_q | \mathbf{x}) = P(y = \mathcal{C}_1 | \mathbf{x}) + ... + P(y = \mathcal{C}_q | \mathbf{x}),
+	\end{equation}
+	\begin{equation}
+		P(y = \mathcal{C}_q | \mathbf{x}) = P(y \preceq \mathcal{C}_q | \mathbf{x}) - P(y \preceq \mathcal{C}_{q-1} | \mathbf{x}),
+	\end{equation}
+	with $q = 2, ..., Q-1$, and considering that $P(y = \mathcal{C}_1 | \mathbf{x}) = P(y \preceq \mathcal{C}_1 | \mathbf{x})$ and $P(y \preceq \mathcal{C}_Q | \mathbf{x}) = 1$.
 	
-	The model in inspired by the notion of latent variable, considering a linear transformation $f(x) = w^Tx$ of the input variables as the one-dimensional mapping. The decision rule $r: \mathcal{X} \rightarrow \mathcal{Y}$ is not fitted directly, but stochastic ordering of space $\mathcal{X}$ is satisfied by the following general model form \cite{herbrich2000large}:
-	\[
-		g^{-1}(P(y \preceq \mathcal{C}_q | x)) = b_q - w^Tx, \quad 1, ..., Q-1,
-	\]
-	where $g^{-1} : [0,1] \rightarrow (-\infty, +\infty)$ is a monotonic function often termed as the inverse link function and $b_q$ is the threshold defined for class $\mathcal{C}_q$. Consider the latent variable $y* = f(x)* = w^Tx + \epsilon$, where $\epsilon$ is the random error component. The most common choice for the distribution of $\epsilon$ is the logistic function (which is the default function for POM). Label $\mathcal{C}_q$ is observed if and only if $f(x) \in [b_{q-1}, b_q]$, where the function $f$ and $b = (b_0, b_1, ..., b_{Q-1}, b_Q)$ are to be determined from the data. it is assumed that $b_0 = -\infty$ and $b_Q = +\infty$, so the real line defined by $f(x), x \in \mathcal{X}$, is divided into $Q$ consecutive intervals. Each region corresponds to a category. The constraints $b_1 \le b_2 \le ... \le b_{Q-1}$ ensures that $P(y \preceq \mathcal{C}_q | x)$ increases with $q$ \cite{mccullagh1980regression}.
-	In this work, we use this ordinal model with different link functions, including logit, probit and complementary log-log. These functions will be detailed in Section \ref{sect:model}.
+	The model in inspired by the notion of latent variable, considering a linear transformation $f(x) = \mathbf{w^Tx}$ of the input variables as the one-dimensional mapping. The decision rule $r: \mathcal{X} \rightarrow \mathcal{Y}$ is not fitted directly, but stochastic ordering of space $\mathcal{X}$ is satisfied by the following general model form \cite{herbrich2000large}:
+	\begin{equation}
+		g^{-1}(P(y \preceq \mathcal{C}_q | \mathbf{x})) = b_q - \mathbf{w^Tx}, \quad 1, ..., Q-1,
+	\end{equation}
+	where $g^{-1} : [0,1] \rightarrow (-\infty, +\infty)$ is a monotonic function often termed as the inverse link function and $b_q$ is the threshold defined for class $\mathcal{C}_q$. Consider the latent variable $y^* = f(x)^* = \mathbf{w^Tx} + \epsilon$, where $\epsilon$ is the random variable of the error. The most common choice for the probability distribution of $\epsilon$ is the logistic function (which is the default function for POM). Label $\mathcal{C}_q$ is proposed if and only if $f(x) \in [b_{q-1}, b_q]$, where the function $f$ and $\mathbf{b} = (b_0, b_1, ..., b_{Q-1}, b_Q)$ are to be determined from the data. it is assumed that $b_0 = -\infty$ and $b_Q = +\infty$, so the real line defined by $f(x), x \in \mathcal{X}$, is divided into $Q$ consecutive intervals. Each interval corresponds to a category. The constraints $b_1 \le b_2 \le ... \le b_{Q-1}$ ensures that $P(y \preceq \mathcal{C}_q | \mathbf{x})$ increases with $q$ \cite{mccullagh1980regression}.
+	In this work, we use this ordinal model with different link functions for the probability distribution of $\epsilon$, including logit, probit and complementary log-log. These functions will be detailed in Section \ref{sect:model}.
 	\section{Experiments}
 	\label{sect:experiments}
 	\subsection{Data}
@@ -541,58 +541,58 @@
 	
 	\subsection{The model}
 	\label{sect:model}
-	A convolutional neural network (CNN) has been used for both datasets. The architecture of this CNN is presented in the Table \ref{table:CNNArchitecture}.
+	Convolutional Neural Networks (CNN) has been used for both datasets. The different architectures of CNN used in these experiments are presented in tables \ref{table:CNNArchitecture} and \ref{table:ResNetArchitecture}. The architecture for DR is the same that was used in \cite{de2018weighted} and the network for adience is a small Residual Network (ResNet) \cite{he2016deep} that was used in \cite{beckham2017unimodal}. For convolutional layers, ConvWxH@FsS = F filters of size WxH and stride S. For pooling layers, PoolWxHsS = pool size of WxH and stride S.
 	
 	\begin{table}[!t]
-		\caption{Description of the architecture used in the experiments. For convolutional layers, Conv\_N\_WxH, where N is the number of filters, W the filter width and H the filter height. Stride is 1 for every convolutional layer. For max pool layers, MaxPool\_SxS, where S is the pool size.}
+		\caption{Description of the architecture used in the DR experiments.}
 		\label{table:CNNArchitecture}
 		\centering
 		\begin{tabular}{|l|c|}
 			\hline
 			\textbf{Layer} & \textbf{Output shape}\\
 			\hline
-			Conv\_32\_3x3 & 254x254x32\\\hline
-			Conv\_32\_3x3 & 252x252x32\\\hline
-			MaxPool\_2x2 & 126x126x32\\\hline
+			Conv3x3@32s1 & 254x254x32\\\hline
+			Conv3x3@32s1 & 252x252x32\\\hline
+			MaxPool2x2s2 & 126x126x32\\\hline
 			
-			Conv\_64\_3x3 & 124x124x64\\\hline
-			Conv\_64\_3x3 & 122x122x64\\\hline
-			MaxPool\_2x2 & 61x61x64\\\hline
+			Conv3x3@64s1 & 124x124x64\\\hline
+			Conv3x3@64s1 & 122x122x64\\\hline
+			MaxPool2x2s2 & 61x61x64\\\hline
 			
-			Conv\_128\_3x3 & 59x59x128\\\hline
-			Conv\_128\_3x3 & 57x57x128\\\hline
-			MaxPool\_2x2 & 28x28x128\\\hline
+			Conv3x3@128s1 & 59x59x128\\\hline
+			Conv3x3@128s1 & 57x57x128\\\hline
+			MaxPool2x2s2 & 28x28x128\\\hline
 			
-			Conv\_128\_3x3 & 26x26x128\\\hline
-			Conv\_128\_3x3 & 24x24x128\\\hline
-			MaxPool\_2x2 & 12x12x128\\\hline
+			Conv3x3@128s1 & 26x26x128\\\hline
+			Conv3x3@128s1 & 24x24x128\\\hline
+			MaxPool2x2s2 & 12x12x128\\\hline
 			
-			Conv\_128\_4x4 & 9x9x128\\\hline
-			Dense\_1\_output & 1\\
+			Conv4x4@128s1 & 9x9x128\\
 			\hline
 		\end{tabular}	
 	\end{table}
 	
-	Every convolutional layer is followed by an ELU activation layer~\cite{clevert2015fast} and a batch normalization~\cite{ioffe2015batch}. At the output, a Proportional Odds Model is used with different link functions~\cite{agresti2010analysis}. The logit link function is commonly used within POM. In this paper, we are comparing other link functions like probit or complementary log-log with the logit link. These three types of links are explained below and represented in Figure \ref{fig:linkfunctions}.
-	
-	\begin{itemize}
-		\item \textit{Logit}. Logit link function is the most widely used function for Proportional Odds Models. The logit link is shown in \ref{eq:logit}.
-		\begin{equation}
-		logit[P(y \preceq \mathcal{C}_q)] = b_q - w^Tx, \quad 1, ..., Q-1
-		\label{eq:logit}
-		\end{equation}
-		\item \textit{Probit}. Probit link function is the inverse of the standard normal cummulative distribution function (cdf). Its expression is shown in \ref{eq:probit}.	
-		\begin{equation}
-		\Phi^{-1}[P(y \preceq \mathcal{C}_q)] = b_q - w^Tx, \quad 1, ..., Q-1
-		\label{eq:probit}
-		\end{equation}
-		\item \textit{Complementary log-log}. Like the logit and the probit transformation, the complementary log-log transformation takes a response that is restricted to the (0,1) interval and converts it into something in $(-\infty, +\infty)$ interval, but unlike the logit and the probit, the complementary log-log function is not symmetric. With a continuous predictor $x$, for example, $P(Y \le j)$ approaches 0 at a different rate than it approaches 1. Complementary log-log expression is shown in  \ref{eq:cloglog}.
-		\begin{equation}
-		\small
-		log[-log[1 - P(y \preceq \mathcal{C}_q)]] = b_q - w^Tx, \quad 1, ..., Q-1
-		\label{eq:cloglog}
-		\end{equation}
-	\end{itemize}
+	\begin{table}[!t]
+		\caption{Description of the architecture used in the Adience experiments.}
+		\label{table:ResNetArchitecture}
+		\centering
+		\begin{tabular}{|l|c|}
+			\hline
+			\textbf{Layer} & \textbf{Output shape}\\
+			\hline
+			Conv7x7@32s2 & 112x112x32\\\hline
+			MaxPool3x3s2 & 55x55x32\\\hline
+			2 x ResBlock3x3@64s1 & 55x55x32\\\hline
+			1 x ResBlock3x3@128s2 & 28x28x64\\\hline
+			2 x ResBlock3x3@128s1 & 28x28x64\\\hline
+			1 x ResBlock3x3@256s2 & 14x14x128\\\hline
+			2 x ResBlock3x3@256s1 & 14x14x128\\\hline
+			1 x ResBlock3x3@512s2 & 7x7x256\\\hline
+			2 x ResBlock3x3@512s1 & 7x7x256\\\hline
+			AveragePool7x7s2 & 1x1x256\\
+			\hline
+		\end{tabular}	
+	\end{table}
 	
 	\begin{figure}[!t]
 		\centering
@@ -601,7 +601,122 @@
 		\label{fig:linkfunctions}
 	\end{figure}
 	
-	When the given data is not symmetric in the [0,1] interval and increase slowly at small to moderate value, but increases sharply near 1, the logit and probit models are inappropriate. However, in this situation, the complementary log-log model might give satisfying results.
+	Every convolutional layer is followed by an ELU activation layer~\cite{clevert2015fast} and a batch normalization~\cite{ioffe2015batch}. At the output, a Proportional Odds Model is used with different link functions~\cite{agresti2010analysis}. The logit link function is commonly used within POM. In this paper, we are comparing other link functions like probit or complementary log-log with the logit link. These three types of links are explained below and represented in Figure \ref{fig:linkfunctions}. They all follow the same form $P(y \prec \mathcal{C}_q) = \Phi(b_q-\mathbf{w^Tx})$ for a continuous cdf~$\Phi$.
+	
+	\begin{itemize}
+		\item \textit{Logit}. Logit link function is the most widely used function for Proportional Odds Models. The logit link is shown in \ref{eq:logit} and \ref{eq:logit2}.
+		\begin{equation}
+		\begin{aligned}
+		logit[P(y \preceq \mathcal{C}_q)] = log\frac{P(y \preceq \mathcal{C}_q)}{1 - P(y \preceq \mathcal{C}_q)}=& \\ = b_q - \mathbf{w^Tx}, \quad q = 1, ..., Q-1
+		\end{aligned}
+		\label{eq:logit}
+		\end{equation}
+		
+		or the equivalent expression
+		
+		\begin{equation}
+		P(y \preceq \mathcal{C}_q) = \frac{1}{1 + e^{-(b-\mathbf{w^Tx})}}
+		\label{eq:logit2}
+		\end{equation}
+		\item \textit{Probit}. Probit link function is the inverse of the standard normal cummulative distribution function (cdf) $\Phi$. Its expression is shown in \ref{eq:probit} and \ref{eq:probit2}.	
+		\begin{equation}
+		\begin{aligned}
+		&\Phi^{-1}[P(y \preceq \mathcal{C}_q)] = b_q - \mathbf{w^Tx}, &q = 1, ..., Q-1\\
+		&P(y \preceq \mathcal{C}_q) = \Phi(b_q - \mathbf{w^Tx}), &q = 1, ..., Q-1		
+		\end{aligned}
+		\label{eq:probit}
+		\end{equation}
+		
+		or
+		
+		\begin{equation}
+		P(y \preceq \mathcal{C}_q) = \int_{-\infty}^{b_q - \mathbf{w^Tx}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} dx
+		\label{eq:probit2}
+		\end{equation}
+		
+		\item \textit{Complementary log-log}. Like the logit and the probit transformation, the complementary log-log transformation takes a response that is restricted to the (0,1) interval and converts it into something in $(-\infty, +\infty)$ interval. Complementary log-log expression is shown in \ref{eq:cloglog} and \ref{eq:cloglog2}.
+		\begin{equation}
+		\begin{aligned}
+		log[-log[1 - P(y \preceq \mathcal{C}_q)]] =&\\
+		= b_q - \mathbf{w^Tx}, \quad q = 1, ..., Q-1&
+		\end{aligned}
+		\label{eq:cloglog}
+		\end{equation}
+		
+		or
+		
+		\begin{equation}
+		P(y \preceq \mathcal{C}_q) = 1 - e^{-e^{b_q - \mathbf{w^Tx}}}, \quad q = 1, ..., Q-1
+		\label{eq:cloglog2}
+		\end{equation}
+	\end{itemize}
+	
+	Logit and probit links are symmetric, that is
+	
+	\begin{equation}
+	link[P(y \preceq \mathcal{C}_q)] = -link[1 - P(y \preceq \mathcal{C}_q)]
+	\end{equation}
+	
+	This means that the response curve for $P(y \preceq \mathcal{C}_q)$ has a symmetric appearance about the point $P(y \preceq \mathcal{C}_q) = 0.5$, and so $P(y \preceq \mathcal{C}_q)$ has the same rate for approaching 0 than for approaching 1. This symmetric property can be demonstrated as follows:
+	
+	\begin{enumerate}
+		\item If we define $P(y \preceq \mathcal{C}_q) \equiv p$, we have
+			\begin{equation}
+			\begin{aligned}
+			link(p) = logit(p) &= log\left(\frac{p}{1-p}\right) =\\
+			&= log(p) - log(1-p)
+			\end{aligned}
+			\end{equation}
+			
+			while
+			
+			\begin{equation}
+			\begin{aligned}
+			-link(1 - p) &= -logit(1 - p) =\\
+			=- log\left(\frac{1- p}{p}\right) &= - log(1 - p) + log(p)
+			\end{aligned}
+			\end{equation}
+			
+			The symmetry has been proven for logit link.
+			
+		\item If we define 
+		
+		\begin{equation}
+		\begin{aligned}
+		p \equiv P(y \preceq \mathcal{C}_q) &= \Phi(b_q - \mathbf{w^Tx}) =\\
+		&= \int_{-\infty}^{b_q - \mathbf{w^Tx}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} dx
+		\end{aligned}
+		\end{equation}
+		
+		then
+		
+		\begin{equation}
+		probit(p) = \Phi^{-1}(p) = b_q - \mathbf{w^Tx}
+		\end{equation}
+		
+		and
+		
+		\begin{equation}
+		-probit(1-p) = \Phi^{-1}(1-p) = -b_q + \mathbf{w^Tx}
+		\end{equation}
+		
+		where
+		
+		\begin{equation}
+		1 - p = \int_{-\infty}^{-b_q + \mathbf{w^Tx}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} dx
+		\end{equation}
+		
+		and
+		
+		\begin{equation}
+		p = 1 - \int_{-\infty}^{-b_q + \mathbf{w^Tx}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} dx
+		\end{equation}
+
+		the symmetric property for the probit function has been proven.
+	\end{enumerate}
+	
+	
+	Unlike logit and probit, the complementary log-log model is asymmetrical. It is frequently used when the probability of an event is very small or very large. When the given data is not symmetric in the $[0,1]$ interval and increase slowly at small to moderate value but increases sharply near 1, the logit and probit models are inappropriate. However, in this situation, the complementary log-log model might give a satisfying answer.
 	
 	\subsection{Procedure}
 	The model is optimized using a batch based first-order optimization algorithm called Adam~\cite{kingma2014adam}. We study different initial learning rates in order to find the optimal one for each problem. We apply an exponential decay across training epochs to the initial learning rate.

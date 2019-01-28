@@ -120,7 +120,7 @@ class Dataset():
 		assert(len(self._data['x']) == len(self._data['y']))
 
 	def _load_from_h5(self, path):
-		with h5py.File(path, 'r+') as f:
+		with h5py.File(path, 'r') as f:
 			keys = list(f.keys())
 
 			if 'x' in keys and 'y' in keys:
