@@ -17,7 +17,6 @@ def resume_one_metric(metric):
 			train, val, test = '', '', ''
 			train_values, val_values, test_values = np.array([]), np.array([]), np.array([])
 			for item2 in sorted(os.listdir(os.path.join(results_path, item))):
-				p = None
 				if os.path.isdir(os.path.join(results_path, item, item2)) and os.path.isfile(os.path.join(results_path, item, item2, evaluation_file)):
 					with open(os.path.join(results_path, item, item2, evaluation_file), 'rb') as f:
 						p = pickle.load(f)
