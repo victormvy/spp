@@ -116,4 +116,7 @@ class ExperimentSet():
 					experiment.evaluate()
 			# Clear session
 			tf.keras.backend.clear_session()
+
+			# Free memory
 			del experiment
+			gc.collect()
