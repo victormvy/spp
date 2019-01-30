@@ -1,6 +1,7 @@
 import os
 import json
 import tensorflow as tf
+import gc
 from experiment import Experiment
 
 class ExperimentSet():

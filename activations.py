@@ -199,7 +199,7 @@ class NNPOM(tf.keras.layers.Layer):
 		return th
 
 	def _nnpom(self, projected, thresholds):
-		projected = tf.reshape(projected, shape=[-1])
+		projected = tf.reshape(projected, shape=[-1]) / self.tau
 		m = tf.shape(projected)[0]
 		a = tf.reshape(tf.tile(thresholds, [m]), shape=[m, -1])
 		b = tf.transpose(tf.reshape(tf.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
@@ -222,6 +222,9 @@ class NNPOM(tf.keras.layers.Layer):
 											initializer=tf.random_uniform_initializer(minval=0, maxval=0.1))
 		self.thresholds_a = self.add_weight('b_a_nnpom', shape=(self.num_classes - 2,),
 											initializer=tf.random_uniform_initializer(minval=math.sqrt((1.0 / (self.num_classes - 2))/2), maxval=math.sqrt(1.0 / (self.num_classes - 2))))
+
+		self.tau = self.add_weight('tau_nnpom', shape=(1,),
+								   initializer=tf.random_uniform_initializer(minval=1, maxval=10))
 
 	def call(self, x):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)

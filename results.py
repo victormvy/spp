@@ -5,6 +5,8 @@ import pandas as pd
 import pickle
 import os
 import prettytable
+import h5py
+from PIL import Image
 
 results_path = '../results_adience_h5'
 evaluation_file = 'evaluation.pickle'
@@ -159,17 +161,43 @@ def show_latex_table():
 	print(header)
 	print(test)
 
+def create_h5_dataset(path, file):
+	x = []
+	y = []
+	for dir in os.listdir(path):
+		cls = int(dir)
+		for f in os.listdir(os.path.join(path, dir)):
+			full_f = os.path.join(path, dir, f)
+			if os.path.isfile(full_f):
+				data = np.array(Image.open(full_f))
+				x.append(data)
+				y.append(cls)
+
+	x = np.array(x) / 255.0
+	y = np.array(y)
+	print(x.shape)
+	print(y.shape)
+
+	f = h5py.File(file, 'w')
+	f.create_dataset('x', data = x, compression = 'gzip', compression_opts = 9)
+	f.create_dataset('y', data = y, compression = 'gzip', compression_opts = 9)
 
 def option_resume_one_metric():
 	metric = input('Metric name: ')
 	resume_one_metric(metric)
 
 
+def option_create_h5_dataset():
+	path = input('Path: ')
+	file = input('Output file: ')
+	create_h5_dataset(path, file)
+
 def show_menu():
 	print('=====================================')
 	print('1. Resume results for one metric')
 	print('2. Show confusion matrices')
 	print('3. Show latex table')
+	print('4. Create h5 dataset')
 	print('=====================================')
 	option = input(' Choose one option: ')
 
@@ -183,6 +211,8 @@ def select_option(option):
 		show_confusion_matrices()
 	elif option == '3':
 		show_latex_table()
+	elif option == '4':
+		option_create_h5_dataset()
 
 
 if __name__ == '__main__':

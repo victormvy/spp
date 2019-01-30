@@ -130,7 +130,8 @@ class Dataset():
 				raise Exception('Data not found')
 
 
-		x = np.moveaxis(x, 1, -1)
+		if x.shape[1] < x.shape[-1]:
+			x = np.moveaxis(x, 1, -1)
 		self._sample_shape = x.shape[1:]
 		self._num_classes = np.unique(y).size
 
