@@ -173,10 +173,15 @@ def create_h5_dataset(path, file):
 				x.append(data)
 				y.append(cls)
 
-	x = np.array(x) / 255.0
+	x = np.array(x) / float(np.max(x))
 	y = np.array(y)
 	print(x.shape)
 	print(y.shape)
+
+	# Standardize each color channel
+	means = x.mean(axis=(0,1,2))
+	stds = x.std(axis=(0,1,2))
+	x = (x - means) / stds
 
 	f = h5py.File(file, 'w')
 	f.create_dataset('x', data = x, compression = 'gzip', compression_opts = 9)
