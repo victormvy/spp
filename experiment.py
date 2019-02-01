@@ -334,6 +334,21 @@ class Experiment():
 		# Garbage collection
 		gc.collect()
 
+		# Initial epoch. 0 by default
+		start_epoch = 0
+
+		# Load training status
+		if os.path.isfile(os.path.join(self.checkpoint_dir, self.model_file_extra)):
+			# Continue from the epoch where we were and load the best metric
+			with open(os.path.join(self.checkpoint_dir, self.model_file_extra), 'r') as f:
+				start_epoch = int(f.readline())
+				self.new_metric(float(f.readline()))
+
+		if start_epoch >= self.epochs:
+			print("Training already finished. Skipping...")
+			return
+
+
 		# Train data generator
 		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
 			# rescale=1. / 255,
@@ -421,19 +436,10 @@ class Experiment():
 		if not os.path.isdir(self.checkpoint_dir):
 			os.makedirs(self.checkpoint_dir)
 
-		# Initial epoch. 0 by default
-		start_epoch = 0
-
 		# Check whether a saved model exists
-		if os.path.isfile(os.path.join(self.checkpoint_dir, self.model_file)) and os.path.isfile(
-				os.path.join(self.checkpoint_dir, self.model_file_extra)):
+		if os.path.isfile(os.path.join(self.checkpoint_dir, self.model_file)):
 			print("===== RESTORING SAVED MODEL =====")
 			model.load_weights(os.path.join(self.checkpoint_dir, self.model_file))
-
-			# Continue from the epoch where we were and load the best metric
-			with open(os.path.join(self.checkpoint_dir, self.model_file_extra), 'r') as f:
-				start_epoch = int(f.readline())
-				self.new_metric(float(f.readline()))
 
 		# Create the cost matrix that will be used to compute qwk
 		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
