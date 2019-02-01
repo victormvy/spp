@@ -8,11 +8,10 @@ import prettytable
 import h5py
 from PIL import Image
 
-results_path = '../results_adience_h5'
 evaluation_file = 'evaluation.pickle'
 
 
-def resume_one_metric(metric):
+def resume_one_metric(metric, results_path):
 	t = prettytable.PrettyTable(['Dataset', 'BS', 'LR', 'LF', 'Train ' + metric, 'Mean Tr', 'Validation ' + metric, 'Mean V', 'Test ' + metric, 'Mean Te'])
 	for item in sorted(os.listdir(results_path)):
 		if os.path.isdir(os.path.join(results_path, item)):
@@ -79,7 +78,7 @@ def show_confusion_matrices():
 	print(t)
 
 
-def show_latex_table():
+def show_latex_table(results_path):
 	header, train, val, test = '', '', '', ''
 	for item in sorted(os.listdir(results_path)):
 		if os.path.isdir(os.path.join(results_path, item)):
@@ -188,8 +187,13 @@ def create_h5_dataset(path, file):
 	f.create_dataset('y', data = y, compression = 'gzip', compression_opts = 9)
 
 def option_resume_one_metric():
+	results_path = input('Results path: ')
 	metric = input('Metric name: ')
-	resume_one_metric(metric)
+	resume_one_metric(metric, results_path)
+
+def option_latex_table():
+	results_path = input('Results path: ')
+	show_latex_table(results_path)
 
 
 def option_create_h5_dataset():
@@ -215,7 +219,7 @@ def select_option(option):
 	elif option == '2':
 		show_confusion_matrices()
 	elif option == '3':
-		show_latex_table()
+		option_latex_table()
 	elif option == '4':
 		option_create_h5_dataset()
 
