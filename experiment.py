@@ -26,7 +26,7 @@ class Experiment():
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
 				 prob_layer=None,
-				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4, val_metrics=['loss', 'acc']):
+				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4, queue_size=1024, val_metrics=['loss', 'acc']):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -44,6 +44,7 @@ class Experiment():
 		self._task = task
 		self._finished = False
 		self._workers = workers
+		self._queue_size = queue_size
 		self._val_metrics = val_metrics
 
 		self._best_metric = None
@@ -281,6 +282,18 @@ class Experiment():
 		del self._workers
 
 	@property
+	def queue_size(self):
+		return self._workers
+
+	@queue_size.setter
+	def queue_size(self, queue_size):
+		self._queue_size = queue_size
+
+	@queue_size.deleter
+	def queue_size(self):
+		del self._queue_size
+
+	@property
 	def val_metrics(self):
 		return self._val_metrics
 
@@ -465,7 +478,7 @@ class Experiment():
 									   ],
 							workers=self.workers,
 							use_multiprocessing=True,
-							max_queue_size=self.batch_size * 3,
+							max_queue_size=self.queue_size,
 							class_weight=class_weight,
 							validation_data=val_generator,
 							validation_steps=steps_val
@@ -666,6 +679,7 @@ class Experiment():
 			'dropout': self.dropout,
 			'task': self.task,
 			'workers' : self.workers,
+			'queue_size' : self.queue_size,
 			'val_metrics' : self.val_metrics
 		}
 
@@ -690,6 +704,7 @@ class Experiment():
 		self.dropout = 'dropout' in config and config['dropout'] or 0
 		self.task = 'task' in config and config['task'] or 'both'
 		self.workers = 'workers' in config and config['workers'] or 4
+		self.queue_size = 'queue_size' in config and config['queue_size'] or 1024
 		self.val_metrics = 'val_metrics' in config and config['val_metrics'] or ['acc', 'loss']
 
 		if 'name' in config:
