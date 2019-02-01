@@ -487,7 +487,8 @@ class Experiment():
 							max_queue_size=self.queue_size,
 							class_weight=class_weight,
 							validation_data=val_generator,
-							validation_steps=steps_val
+							validation_steps=steps_val,
+							verbose=2
 							)
 
 		self.finished = True
