@@ -32,7 +32,7 @@ def resume_one_metric(metric, results_path):
 							val_values = np.append(val_values, p['metrics']['Validation'][metric])
 							test_values = np.append(test_values, p['metrics']['Test'][metric])
 
-			if p:
+			if 'p' in locals():
 				t.add_row([
 					p['config']['db'],
 					p['config']['batch_size'],
@@ -78,7 +78,7 @@ def show_confusion_matrices():
 	print(t)
 
 
-def show_latex_table(results_path):
+def show_latex_table(results_path, show_std=False):
 	header, train, val, test = '', '', '', ''
 	for item in sorted(os.listdir(results_path)):
 		if os.path.isdir(os.path.join(results_path, item)):
@@ -93,23 +93,23 @@ def show_latex_table(results_path):
 						for metric, value in p['metrics']['Train'].items():
 							if metric != 'Confusion matrix':
 								if metric in metrics['Train']:
-									metrics['Train'][metric] += value / count
+									metrics['Train'][metric].append(value)
 								else:
-									metrics['Train'][metric] = value / count
+									metrics['Train'][metric] = [value]
 
 						for metric, value in p['metrics']['Validation'].items():
 							if metric != 'Confusion matrix':
 								if metric in metrics['Validation']:
-									metrics['Validation'][metric] += value / count
+									metrics['Validation'][metric].append(value)
 								else:
-									metrics['Validation'][metric] = value / count
+									metrics['Validation'][metric] = [value]
 
 						for metric, value in p['metrics']['Test'].items():
 							if metric != 'Confusion matrix':
 								if metric in metrics['Test']:
-									metrics['Test'][metric] += value / count
+									metrics['Test'][metric].append(value)
 								else:
-									metrics['Test'][metric] = value / count
+									metrics['Test'][metric] = [value]
 			
 			if header == '':
 				header = 'Dataset & BS & LR & LF'
@@ -130,21 +130,30 @@ def show_latex_table(results_path):
 			val += t
 			test += t
 
-			for metric, value in metrics['Train'].items():
+			for metric, values in metrics['Train'].items():
 				if metric != 'Confusion matrix':
-					train += ' & ${:.5f}$'.format(round(value, 5))
+					train += ' & ${:.5f}'.format(round(np.mean(values), 5))
+					if show_std:
+						train += ' \pm {:.2f}'.format(round(np.std(values), 2))
+					train += '$'
 
 			train += '\\\\\n'
 
-			for metric, value in metrics['Validation'].items():
+			for metric, values in metrics['Validation'].items():
 				if metric != 'Confusion matrix':
-					val += ' & ${:.5f}$'.format(round(value, 5))
+					val += ' & ${:.5f}'.format(round(np.mean(values), 5))
+					if show_std:
+						val += ' \pm {:.2f}'.format(round(np.std(values), 2))
+					val += '$'
 
 			val += '\\\\\n'
 
-			for metric, value in metrics['Test'].items():
+			for metric, values in metrics['Test'].items():
 				if metric != 'Confusion matrix':
-					test += ' & ${:.5f}$'.format(round(value, 5))
+					test += ' & ${:.5f}'.format(round(np.mean(values), 5))
+					if show_std:
+						test += ' \pm {:.2f}'.format(round(np.std(values), 2))
+					test += '$'
 
 			test += '\\\\\n'
 
@@ -193,7 +202,14 @@ def option_resume_one_metric():
 
 def option_latex_table():
 	results_path = input('Results path: ')
-	show_latex_table(results_path)
+
+	print('=====================')
+	print('1. Mean')
+	print('2. Mean and std')
+	print('=====================')
+	option = input(' Choose one option: ')
+
+	show_latex_table(results_path, option == '2')
 
 
 def option_create_h5_dataset():
