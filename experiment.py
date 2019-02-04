@@ -26,7 +26,8 @@ class Experiment():
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
 				 prob_layer=None,
-				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4, queue_size=1024, val_metrics=['loss', 'acc']):
+				 spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4, queue_size=1024, val_metrics=['loss', 'acc'],
+				 rescale_factor=0, augmentation={}):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -46,6 +47,8 @@ class Experiment():
 		self._workers = workers
 		self._queue_size = queue_size
 		self._val_metrics = val_metrics
+		self._rescale_factor = rescale_factor
+		self._augmentation = augmentation
 
 		self._best_metric = None
 
@@ -306,6 +309,30 @@ class Experiment():
 		del self._val_metrics
 
 	@property
+	def rescale_factor(self):
+		return self._rescale_factor
+
+	@rescale_factor.setter
+	def rescale_factor(self, rescale_factor):
+		self._rescale_factor = rescale_factor
+
+	@rescale_factor.deleter
+	def rescale_factor(self):
+		del self._rescale_factor
+
+	@property
+	def augmentation(self):
+		return self._augmentation
+
+	@augmentation.setter
+	def augmentation(self, augmentation):
+		self._augmentation = augmentation
+
+	@augmentation.deleter
+	def augmentation(self):
+		del self._augmentation
+
+	@property
 	def best_metric(self):
 		return self._best_metric
 
@@ -351,18 +378,20 @@ class Experiment():
 
 		# Train data generator
 		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
-			# rescale=1. / 255,
-			# shear_range=0.2,
-			# zoom_range=0.2,
-			horizontal_flip=True,
-			# vertical_flip=True,
-			# brightness_range=(0.5, 1.5),
-			# rotation_range=90,
-			# fill_mode='nearest',
+			rescale=self.rescale_factor,
+			**self.augmentation
 		)
 
+		# shear_range=0.2,
+		# zoom_range=0.2,
+		# horizontal_flip=True,
+		# vertical_flip=True,
+		# brightness_range=(0.5, 1.5),
+		# rotation_range=90,
+		# fill_mode='nearest',
+
 		# Validation data generator
-		val_datagen = tf.keras.preprocessing.image.ImageDataGenerator()# rescale=1. / 255)
+		val_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor)
 
 		# Get database paths
 		train_path, val_path, _ = self.get_db_path(self.db)
@@ -471,9 +500,6 @@ class Experiment():
 							steps_per_epoch=steps,
 							callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
 										# tf.keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.1, patience=6, mode='min', min_lr=1e-4, verbose=1),
-									   # ComputeMetricsCallback(num_classes, val_generator=val_generator,
-										# 					  val_batches=ds_val.num_batches(self.batch_size),
-										# 					  metrics=self.val_metrics),
 									   tf.keras.callbacks.ModelCheckpoint(
 										   os.path.join(self.checkpoint_dir, self.model_file)),
 									   save_epoch_callback,
@@ -511,12 +537,6 @@ class Experiment():
 		# Garbage collection
 		gc.collect()
 
-		# if os.path.isfile(os.path.join(self.checkpoint_dir, self.evaluation_file)):
-		# 	with open(os.path.join(self.checkpoint_dir, self.evaluation_file), 'r') as f:
-		# 		metric = float(f.readline())
-		# 		print('Metric found in file: {} (Evaluation skipped)'.format(metric))
-		# 		return metric
-
 		# Check if best model file exists
 		if not os.path.isfile(os.path.join(self.checkpoint_dir, self.best_model_file)):
 			print('Best model file not found')
@@ -542,7 +562,7 @@ class Experiment():
 			img_size = ds_test.img_size
 
 			# Validation data generator
-			test_datagen = tf.keras.preprocessing.image.ImageDataGenerator() #(rescale=1. / 255)
+			test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor)
 
 			# Test generator
 			test_generator = test_datagen.flow(
@@ -687,7 +707,9 @@ class Experiment():
 			'task': self.task,
 			'workers' : self.workers,
 			'queue_size' : self.queue_size,
-			'val_metrics' : self.val_metrics
+			'val_metrics' : self.val_metrics,
+			'rescale_factor' : self.rescale_factor,
+			'augmentation' : self.augmentation
 		}
 
 	def set_config(self, config):
@@ -713,6 +735,8 @@ class Experiment():
 		self.workers = 'workers' in config and config['workers'] or 4
 		self.queue_size = 'queue_size' in config and config['queue_size'] or 1024
 		self.val_metrics = 'val_metrics' in config and config['val_metrics'] or ['acc', 'loss']
+		self.rescale_factor = 'rescale_factor' in config and config['rescale_factor'] or 0
+		self.augmentation = 'augmentation' in config and config['augmentation'] or {}
 
 		if 'name' in config:
 			self.name = config['name']
