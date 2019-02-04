@@ -132,19 +132,19 @@ def show_latex_table(results_path):
 
 			for metric, value in metrics['Train'].items():
 				if metric != 'Confusion matrix':
-					train += ' & {:.5f}'.format(round(value, 5))
+					train += ' & ${:.5f}$'.format(round(value, 5))
 
 			train += '\\\\\n'
 
 			for metric, value in metrics['Validation'].items():
 				if metric != 'Confusion matrix':
-					val += ' & {:.5f}'.format(round(value, 5))
+					val += ' & ${:.5f}$'.format(round(value, 5))
 
 			val += '\\\\\n'
 
 			for metric, value in metrics['Test'].items():
 				if metric != 'Confusion matrix':
-					test += ' & {:.5f}'.format(round(value, 5))
+					test += ' & ${:.5f}$'.format(round(value, 5))
 
 			test += '\\\\\n'
 
