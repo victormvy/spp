@@ -88,7 +88,9 @@ def show_latex_table(results_path, show_std=False):
 				if os.path.isdir(os.path.join(results_path, item, item2)) and os.path.isfile(
 						os.path.join(results_path, item, item2, evaluation_file)):
 					with open(os.path.join(results_path, item, item2, evaluation_file), 'rb') as f:
-						p = pickle.load(f)
+						p_aux = pickle.load(f)
+						if p_aux is not None:
+							p = p_aux
 
 						for metric, value in p['metrics']['Train'].items():
 							if metric != 'Confusion matrix':
@@ -110,21 +112,28 @@ def show_latex_table(results_path, show_std=False):
 									metrics['Test'][metric].append(value)
 								else:
 									metrics['Test'][metric] = [value]
-			
+
+			if not 'p' in locals():
+				continue
+
 			if header == '':
-				header = 'Dataset & BS & LR & LF'
+				header = 'Dataset & BS & LF & LR'
 
 				for metric, value in metrics['Train'].items():
 					if metric != 'Confusion matrix':
-						header += ' & {}'.format(metric)
+						header += ' & $\overline{{\\text{{{}}}}}{}$'.format(metric, '_{{(SD)}}' if show_std else '')
 
 				header += '\\\\\\hline'
 
 			t = '{} & {} & {} & {}'.format(
 				p['config']['db'],
 				p['config']['batch_size'],
-				p['config']['lr'],
-				p['config']['final_activation'])
+				p['config']['final_activation'].replace('poml', 'logit')
+												 .replace('pomp', 'probit')
+												 .replace('pomclog', 'c log-log'),
+			'${:.0E}}}$'.format(p['config']['lr']).replace('E-0', '0^{-')
+				.replace('E+0', '0^{+')
+			)
 
 			train += t
 			val += t
@@ -132,27 +141,27 @@ def show_latex_table(results_path, show_std=False):
 
 			for metric, values in metrics['Train'].items():
 				if metric != 'Confusion matrix':
-					train += ' & ${:.5f}'.format(round(np.mean(values), 5))
+					train += ' & ${:.3f}'.format(round(np.mean(values), 3))
 					if show_std:
-						train += ' \pm {:.2f}'.format(round(np.std(values), 2))
+						train += '_{{({:.3f})}}'.format(round(np.std(values), 3))
 					train += '$'
 
 			train += '\\\\\n'
 
 			for metric, values in metrics['Validation'].items():
 				if metric != 'Confusion matrix':
-					val += ' & ${:.5f}'.format(round(np.mean(values), 5))
+					val += ' & ${:.3f}'.format(round(np.mean(values), 3))
 					if show_std:
-						val += ' \pm {:.2f}'.format(round(np.std(values), 2))
+						val += '_{{({:.3f})}}'.format(round(np.std(values), 3))
 					val += '$'
 
 			val += '\\\\\n'
 
 			for metric, values in metrics['Test'].items():
 				if metric != 'Confusion matrix':
-					test += ' & ${:.5f}'.format(round(np.mean(values), 5))
+					test += ' & ${:.3f}'.format(round(np.mean(values), 3))
 					if show_std:
-						test += ' \pm {:.2f}'.format(round(np.std(values), 2))
+						test += '_{{({:.3f})}}'.format(round(np.std(values), 3))
 					test += '$'
 
 			test += '\\\\\n'
