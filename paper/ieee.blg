@@ -13,7 +13,7 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
-Reallocated field_info (elt_size=4) to 10699 items from 5000.
+Reallocated field_info (elt_size=4) to 11116 items from 5000.
 Database file #1: ieee-blx.bib
 Database file #2: main.bib
 Repeated entry---line 337 of file main.bib
@@ -23,45 +23,45 @@ I'm skipping whatever remains of this entry
 Biblatex version: 3.3
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
-You've used 41 entries,
+You've used 44 entries,
             6047 wiz_defined-function locations,
-            1358 strings with 15724 characters,
-and the built_in function-call counts, 132580 in all, are:
-= -- 5039
-> -- 4950
-< -- 1129
-+ -- 1715
-- -- 1993
-* -- 10670
-:= -- 8279
+            1372 strings with 16338 characters,
+and the built_in function-call counts, 142524 in all, are:
+= -- 5378
+> -- 5337
+< -- 1205
++ -- 1845
+- -- 2156
+* -- 11554
+:= -- 8906
 add.period$ -- 0
-call.type$ -- 41
-change.case$ -- 564
+call.type$ -- 44
+change.case$ -- 595
 chr.to.int$ -- 34
-cite$ -- 80
-duplicate$ -- 14733
-empty$ -- 13488
-format.name$ -- 3261
-if$ -- 29915
+cite$ -- 86
+duplicate$ -- 15850
+empty$ -- 14496
+format.name$ -- 3534
+if$ -- 32128
 int.to.chr$ -- 0
-int.to.str$ -- 105
+int.to.str$ -- 113
 missing$ -- 0
-newline$ -- 1180
-num.names$ -- 1854
-pop$ -- 13015
+newline$ -- 1276
+num.names$ -- 1982
+pop$ -- 13995
 preamble$ -- 1
-purify$ -- 782
+purify$ -- 832
 quote$ -- 0
-skip$ -- 7744
+skip$ -- 8313
 stack$ -- 0
-substring$ -- 2757
-swap$ -- 4860
-text.length$ -- 1009
+substring$ -- 2904
+swap$ -- 5233
+text.length$ -- 1088
 text.prefix$ -- 1
 top$ -- 1
-type$ -- 1546
+type$ -- 1660
 warning$ -- 0
-while$ -- 696
+while$ -- 746
 width$ -- 0
-write$ -- 1138
+write$ -- 1231
 (There was 1 error message)

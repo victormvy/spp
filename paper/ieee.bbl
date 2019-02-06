@@ -959,6 +959,106 @@
   \field{year}{2017}
 \endentry
 
+\entry{eidinger2014age}{article}{}
+  \name{author}{3}{}{%
+    {{}%
+     {Eidinger}{E.}%
+     {Eran}{E.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Enbar}{E.}%
+     {Roee}{R.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hassner}{H.}%
+     {Tal}{T.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{EEERHT1}
+  \strng{fullhash}{EEERHT1}
+  \field{number}{12}
+  \field{pages}{2170\bibrangedash 2179}
+  \field{title}{Age and gender estimation of unfiltered faces}
+  \field{volume}{9}
+  \field{journaltitle}{IEEE Transactions on Information Forensics and Security}
+  \field{year}{2014}
+\endentry
+
+\entry{chen2016cascaded}{inproceedings}{}
+  \name{author}{6}{}{%
+    {{}%
+     {Chen}{C.}%
+     {Jun-Cheng}{J.-C.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Kumar}{K.}%
+     {Amit}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Ranjan}{R.}%
+     {Rajeev}{R.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Patel}{P.}%
+     {Vishal~M}{V.~M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Alavi}{A.}%
+     {Azadeh}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Chellappa}{C.}%
+     {Rama}{R.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{organization}{1}{%
+    {IEEE}%
+  }
+  \strng{namehash}{CJCKARR+1}
+  \strng{fullhash}{CJCKARRPVMAACR1}
+  \field{booktitle}{Biometrics Theory, Applications and Systems (BTAS), 2016
+  IEEE 8th International Conference on}
+  \field{pages}{1\bibrangedash 8}
+  \field{title}{A cascaded convolutional neural network for age estimation of
+  unconstrained faces}
+  \field{year}{2016}
+\endentry
+
+\entry{levi2015age}{inproceedings}{}
+  \name{author}{2}{}{%
+    {{}%
+     {Levi}{L.}%
+     {Gil}{G.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hassner}{H.}%
+     {Tal}{T.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{LGHT1}
+  \strng{fullhash}{LGHT1}
+  \field{booktitle}{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition Workshops}
+  \field{pages}{34\bibrangedash 42}
+  \field{title}{Age and gender classification using convolutional neural
+  networks}
+  \field{year}{2015}
+\endentry
+
 \entry{bengio1994learning}{article}{}
   \name{author}{3}{}{%
     {{}%

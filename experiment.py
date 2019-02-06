@@ -671,8 +671,8 @@ class Experiment():
 		:return: train path, validation path, test path.
 		"""
 		if db.lower() == 'retinopathy':
-			# return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
-			return "../retinopathy/retinopathy_128_train.h5", "../retinopathy/retinopathy_128_val.h5", "../retinopathy/retinopathy_128_test.h5"
+			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
+			# return "../retinopathy/retinopathy_128_train.h5", "../retinopathy/retinopathy_128_val.h5", "../retinopathy/retinopathy_128_test.h5"
 		elif db.lower() == 'retinopathy256':
 			return "../retinopathy/256/train", "../retinopathy/256/val", "../retinopathy/256/test"
 		elif db.lower() == 'adience':

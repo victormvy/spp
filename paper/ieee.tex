@@ -487,13 +487,13 @@
 	
 	Batch normalization is another technique that is used for this kind of networks. It reduces the internal covariate shift by normalizing layer inputs. It was presented in 2015~\cite{ioffe2015batch} and gives a critical enhancement to the training phase. Batch size is an important hyper-parameter that should be adjusted as it affects the layer's parameters updates and also the normalization~\cite{keskar2016large}\cite{radiuk2017impact}.
 	
-	Ordinal classification problems are those where labels are ordered, and there are different inter-classes weights for each pair of classes. This kind of problem can be treated as a nominal classification problem, but when you do this, you are the discarding ordinal information. A better approach is to use specific methods that take into account this kind of information to improve the performance of the classification model. One way to use the ordinal information is to evaluate the model using an ordinal metric. Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics, mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. weighted kappa loss was described in previous work~\cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalization, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalization is proportional to the square of the distance. In this work, we will combine the QWK metric and the QWK loss.
+	Ordinal classification problems are those where labels are ordered, and there are different inter-classes weights for each pair of classes. This kind of problem can be treated as a nominal classification problem, but when you do this, you are the discarding ordinal information. A better approach is to use specific methods that take into account this kind of information to improve the performance of the classification model. One way to use the ordinal information is to evaluate the model using an ordinal metric. Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics, mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. Weighted kappa loss was described in previous work~\cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalization, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalization is proportional to the square of the distance. In this work, we will combine the QWK metric and the QWK loss.
 	
 	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM)~\cite{gutierrez2016ordinal, agresti2010analysis} will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results. An approximated ANOVA III test will be performed because of the limitations of the computational time required to run a higher number of executions.
 	
 	The experiments will be run using two different ordinal datasets: Diabetic Retinopathy~\cite{de2018weighted}, that contains high-resolution fundus images related with diabetes disease, and Adience~\cite{beckham2017unimodal}, that is formed of human faces images that are assigned an age range.
 	
-	This paper is organised as follows: in Section~\ref{sect:relatedwork}, we take a look at previous works related to this paper, in Section~\ref{sect:experiments} we describe the model, the experiments and the datasets used, in Section~\ref{sect:results} we present the results obtained and the statistical analysis and finally in Section~\ref{sect:conclusions} we expose the conclusions of this work.
+	This paper is organized as follows: in Section~\ref{sect:relatedwork}, we take a look at previous works related to this paper. Sections~\ref{sect:ordinalproblem} and \ref{sect:pom} present a formal description of an ordinal problem and the Proportional Odds Model. In Section~\ref{sect:experiments} we describe the model, the experiments and the datasets used, in Section~\ref{sect:results} we present the results obtained and the statistical analysis and finally in Section~\ref{sect:conclusions} we expose the conclusions of this work.
 	
 	\section{Related work}
 	\label{sect:relatedwork}
@@ -502,6 +502,8 @@
 	J. de la Torre et al.~\cite{de2018weighted} proposed the use of QWK loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function across three different databases, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces the overfitting and the required training time. Also, they checked the importance of hyper-parameter tuning.
 	
 	Christopher Beckham and Christopher Pal~\cite{beckham2017unimodal} proposed a straightforward technique to constrain discrete ordinal probability distributions to be unimodal via the use of the Poisson and binomial probability distributions. They evaluated this approach in the context of deep learning on two large ordinal image datasets, including the Adience dataset used in this paper, and they obtained promising results.
+	
+	Adience dataset has been used in other works for human age estimation. E. Eidinger \cite{eidinger2014age} presented an approach using support vector machines and neural networks. J.-C. Chen \cite{chen2016cascaded} proposed a coarse-to-fine strategy for deep convolutional networks. G. Levi \cite{levi2015age} presented another convolutional network model for age estimation. 
 	
 	At present, there is a great discussion in terms of finding the best activation function that offers good performance and mitigates the effects of the gradients vanishing problem \cite{bengio1994learning, pascanu2013difficulty}. Rectified Linear Unit (ReLU)~\cite{nair2010rectified} is widely used in most deep learning works, but recently, Clevert et al. proposed the Exponential Linear Unit (ELU)~\cite{clevert2015fast}. They proved that ELUs alleviate the vanishing gradient problem via the identity for positive values. In their experiments, ELUs lead not only to faster learning but also to significantly better generalization performance than ReLUs and Leaky ReLU functions (LReLU) on networks with more than five layers. That's why we decided to use the ELU function for the experiments described in this paper.
 	
@@ -534,7 +536,7 @@
 	We make use of two ordinal datasets appropriate for deep neural networks:
 	
 	\begin{itemize}
-		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras,  varying conditions of illumination and different resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted, nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels. Data augmentation techniques are applied to achieve a higher number of samples.
+		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras,  varying conditions of illumination and different resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted, nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels and rescaled to $[0,1]$ range. Data augmentation techniques are applied to achieve a higher number of samples.
 		
 		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work~\cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset is split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
 	\end{itemize}
@@ -721,9 +723,13 @@
 	\subsection{Procedure}
 	The model is optimized using a batch based first-order optimization algorithm called Adam~\cite{kingma2014adam}. We study different initial learning rates in order to find the optimal one for each problem. We apply an exponential decay across training epochs to the initial learning rate.
 	
-	Both datasets have been artificially equalised using data augmentation techniques~\cite{van2001art, krizhevsky2012imagenet} based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. In the case of Diabetic Retinopathy Detection, the epoch size has been fixed to $100000$ images per epoch. For the Adience dataset, epoch size is the number of images in the training set.
+	Both datasets have been artificially equalized using data augmentation techniques~\cite{van2001art, krizhevsky2012imagenet}. However, different transformations were applied to each one. Diabetic Retinopathy dataset augmentation was based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. Horizontal flipping was the only transformation applied to Adience dataset.
+	
+	In the case of Diabetic Retinopathy Detection, the epoch size has been fixed to $100000$ images per epoch. For the Adience dataset, epoch size is the number of images in the training set.
 	
 	The model is evaluated with Quadratic Weighted Kappa metric (QWK)~\cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class. Quadratic weighted kappa loss is considered as loss function for the optimizer as it gives better performance for ordinal classification problems.
+	
+	Also, other evaluation metrics have been used to ease the comparison with other works: Minimum Sensitivity (MS), Mean Absolute Error (MAE), Mean Squared Error (MSE), Correct Classification Rate (CCR), Top-2 CCR, Top-3 CCR and 1-off accuracy.
 	
 	Experiments were run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of the QWK loss and the Proportional Odds Model. The results of these experiments are analysed in Section \ref{app:NominalComparison}.
 	
@@ -732,98 +738,135 @@
 	
 	\begin{itemize}
 		\item \textit{Learning rate}. Learning rate is one of the most critical hyper-parameters to tune for training deep neural networks. Optimal learning rate can vary depending on the dataset and the CNN architecture. Previous works have presented some techniques that adjust this parameter in order to achieve better performance~\cite{smith2017cyclical, senior2013empirical}. Within this work, we have considered three different values for this parameter: $10^{-2}$, $10^{-3}$ and $10^{-4}$.
-		\item \textit{Batch size}. Batch size is also an important parameter as it controls the number of weight updates that are made on every epoch. It can affect the training time and the model performance. In this paper, we have tried three separate batch sizes: $5$, $10$ and $15$.
+		\item \textit{Batch size}. Batch size is also an important parameter as it controls the number of weight updates that are made on every epoch. It can affect the training time and the model performance. In this paper, we have tried three separate batch sizes for each dataset. For DR dataset, we have used $5$, $10$ and $15$ while, for the Adience dataset, $64$, $128$ and $256$ was used. We took the batch sizes that were used in \cite{de2018weighted} and \cite{beckham2017unimodal} as a reference, and we expanded the range on both sides.
 		\item \textit{Link function}. Different link functions have been used for the POM at the last layer output: logit, probit and complementary log-log.
 	\end{itemize}
 	
 	\section{Results}
 	\label{sect:results}
-	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments done training the model with each combination of parameters. Every parameter combination has been run five times. These tables show the average quadratic weighted kappa across these five executions for validation and test values.
+	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments done training the model with each combination of parameters. Every parameter combination has been run five times. These tables show the mean value and the standard deviation of each metric across these five executions for the test set. These values are exposed using the format $\text{MEAN}_{(SD)}$.
 	
 	\subsection{Diabetic Retinopathy}
 	\label{sect:dr}
 	Detailed results for the Diabetic Retinopathy dataset are presented in Table \ref{table:DRresults}.
 	
-	\begin{table}[!t]
-		\caption{Diabetic Retinopathy results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
+	\begin{table*}[!t]
+		\caption{Diabetic Retinopathy results. BS stands for Batch Size, LF for link function and LR for Learning Rate.}
 		\label{table:DRresults}
 		\footnotesize
 		\centering
-		\begin{tabular}{ccc|cc}
-			BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline
-			$5$ & $10^{-2}$ & Logit & $0.44888$ & $0.41630$\\
-			& & Probit & $0.46724$ & $0.45972$\\
-			& & c log-log & $0.42854$ & $0.41448$\\
-			& $10^{-3}$ & Logit & $0.56496$ & $0.55356$\\
-			& & Probit & $0.57084$ & $0.56392$\\
-			& & c log-log & $0.54796$ & $0.53436$\\
-			& $10^{-4}$ & Logit & $0.52884$ & $0.52032$\\
-			& & Probit & $0.53802$ & $0.52302$\\
-			& & c log-log & $0.53824$ & $0.51974$\\
-			$10$ & $10^{-2}$ & Logit & $0.54970$ & $0.53142$\\
-			& & Probit & $0.52124$ & $0.50806$\\
-			& & c log-log & $0.42760$ & $0.42270$\\
-			& $10^{-3}$ & Logit & $0.58036$ & $0.57686$\\
-			& & Probit & $0.56536$ & $0.55810$\\
-			& & c log-log & $\textbf{0.58830}$ & $\textbf{0.58150}$\\
-			& $10^{-4}$ & Logit & $0.53158$ & $0.53850$\\
-			& & Probit & $0.54560$ & $0.54082$\\
-			& & c log-log & $0.53928$ & $0.53742$\\
-			$15$ & $10^{-2}$ & Logit & $0.55828$ & $0.55076$\\
-			& & Probit & $0.54112$ & $0.53430$\\
-			& & c log-log & $0.56676$ & $0.56428$\\
-			& $10^{-3}$ & Logit & $0.55748$ & $0.55106$\\
-			& & Probit & $0.58182$ & $0.57894$\\
-			& & c log-log & $0.56340$ & $0.55938$\\
-			& $10^{-4}$ & Logit & $0.54686$ & $0.54342$\\
-			& & Probit & $0.53258$ & $0.53278$\\
-			& & c log-log & $0.53900$ & $0.53828$
+		\begin{tabular}{c@{\hskip 0.15cm}c@{\hskip 0.15cm}c|c@{\hskip 0.30cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c}
+			BS & LF & LR & $\overline{\text{QWK}}_{{(SD)}}$ & $\overline{\text{MS}}_{{(SD)}}$ & $\overline{\text{MAE}}_{{(SD)}}$ & $\overline{\text{MSE}}_{{(SD)}}$ & $\overline{\text{CCR}}_{{(SD)}}$ & $\overline{\text{Top-2}}_{{(SD)}}$ & $\overline{\text{Top-3}}_{{(SD)}}$ & $\overline{\text{1-off}}_{{(SD)}}$\\\hline
+			5 & c log-log & $10^{-2}$ & $0.414_{(0.057)}$ & $0.075_{(0.042)}$ & $0.177_{(0.023)}$ & $0.165_{(0.020)}$ & $0.556_{(0.057)}$ & $0.833_{(0.042)}$ & $0.968_{(0.011)}$ & $0.816_{(0.021)}$\\
+			5 & c log-log & $10^{-3}$ & $0.534_{(0.027)}$ & $0.102_{(0.011)}$ & $0.137_{(0.006)}$ & $0.123_{(0.004)}$ & $0.658_{(0.015)}$ & $0.871_{(0.011)}$ & $0.966_{(0.003)}$ & $0.852_{(0.002)}$\\
+			5 & c log-log & $10^{-4}$ & $0.520_{(0.006)}$ & $0.067_{(0.008)}$ & $0.123_{(0.003)}$ & $0.104_{(0.001)}$ & $0.697_{(0.006)}$ & $0.842_{(0.008)}$ & $0.961_{(0.003)}$ & $0.851_{(0.002)}$\\
+			5 & logit & $10^{-2}$ & $0.416_{(0.041)}$ & $0.095_{(0.029)}$ & $0.175_{(0.021)}$ & $0.162_{(0.018)}$ & $0.563_{(0.054)}$ & $0.762_{(0.040)}$ & $0.908_{(0.026)}$ & $0.807_{(0.029)}$\\
+			5 & logit & $10^{-3}$ & $0.554_{(0.013)}$ & $0.093_{(0.009)}$ & $0.137_{(0.003)}$ & $0.123_{(0.003)}$ & $0.660_{(0.008)}$ & $0.802_{(0.005)}$ & $0.936_{(0.004)}$ & $0.853_{(0.005)}$\\
+			5 & logit & $10^{-4}$ & $0.520_{(0.003)}$ & $0.063_{(0.004)}$ & $0.122_{(0.002)}$ & $0.102_{(0.001)}$ & $0.706_{(0.005)}$ & $0.823_{(0.004)}$ & $0.949_{(0.003)}$ & $0.862_{(0.003)}$\\
+			5 & probit & $10^{-2}$ & $0.460_{(0.048)}$ & $0.079_{(0.046)}$ & $0.197_{(0.064)}$ & $0.182_{(0.053)}$ & $0.504_{(0.167)}$ & $0.808_{(0.034)}$ & $0.927_{(0.073)}$ & $0.689_{(0.240)}$\\
+			5 & probit & $10^{-3}$ & $0.564_{(0.018)}$ & $0.099_{(0.013)}$ & $0.147_{(0.018)}$ & $0.132_{(0.014)}$ & $0.636_{(0.045)}$ & $0.822_{(0.040)}$ & $0.939_{(0.020)}$ & $0.840_{(0.015)}$\\
+			5 & probit & $10^{-4}$ & $0.523_{(0.005)}$ & $0.067_{(0.012)}$ & $0.122_{(0.002)}$ & $0.105_{(0.001)}$ & $0.701_{(0.006)}$ & $0.823_{(0.002)}$ & $0.953_{(0.002)}$ & $0.860_{(0.003)}$\\
+			10 & c log-log & $10^{-2}$ & $0.423_{(0.239)}$ & $0.062_{(0.051)}$ & $0.127_{(0.017)}$ & $0.120_{(0.014)}$ & $0.684_{(0.046)}$ & $\mathbf{0.894_{(0.062)}}$ & $\mathbf{0.986_{(0.012)}}$ & $0.832_{(0.020)}$\\
+			10 & c log-log & $10^{-3}$ & $\mathbf{0.582_{(0.016)}}$ & $0.102_{(0.006)}$ & $0.128_{(0.003)}$ & $0.115_{(0.002)}$ & $0.680_{(0.007)}$ & $\mathit{0.880_{(0.004)}}$ & $0.972_{(0.003)}$ & $0.861_{(0.004)}$\\
+			10 & c log-log & $10^{-4}$ & $0.537_{(0.010)}$ & $0.064_{(0.004)}$ & $\mathit{0.116_{(0.001)}}$ & $0.096_{(0.001)}$ & $0.717_{(0.003)}$ & $0.837_{(0.002)}$ & $0.971_{(0.001)}$ & $0.860_{(0.002)}$\\
+			10 & logit & $10^{-2}$ & $0.531_{(0.031)}$ & $0.107_{(0.008)}$ & $0.151_{(0.010)}$ & $0.140_{(0.008)}$ & $0.623_{(0.025)}$ & $0.802_{(0.022)}$ & $0.934_{(0.013)}$ & $0.838_{(0.014)}$\\
+			10 & logit & $10^{-3}$ & $0.579_{(0.009)}$ & $0.096_{(0.012)}$ & $0.127_{(0.005)}$ & $0.113_{(0.004)}$ & $0.686_{(0.013)}$ & $0.817_{(0.006)}$ & $0.954_{(0.005)}$ & $0.861_{(0.002)}$\\
+			10 & logit & $10^{-4}$ & $0.539_{(0.007)}$ & $0.074_{(0.013)}$ & $0.126_{(0.005)}$ & $0.095_{(0.002)}$ & $0.707_{(0.010)}$ & $0.823_{(0.007)}$ & $0.957_{(0.005)}$ & $0.858_{(0.004)}$\\
+			10 & probit & $10^{-2}$ & $0.508_{(0.037)}$ & $0.088_{(0.044)}$ & $0.145_{(0.018)}$ & $0.137_{(0.014)}$ & $0.639_{(0.045)}$ & $0.835_{(0.015)}$ & $0.960_{(0.008)}$ & $0.829_{(0.020)}$\\
+			10 & probit & $10^{-3}$ & $0.558_{(0.034)}$ & $\mathbf{0.111_{(0.005)}}$ & $0.134_{(0.003)}$ & $0.120_{(0.002)}$ & $0.666_{(0.008)}$ & $0.831_{(0.007)}$ & $0.955_{(0.001)}$ & $0.863_{(0.003)}$\\
+			10 & probit & $10^{-4}$ & $0.541_{(0.010)}$ & $0.076_{(0.006)}$ & $0.119_{(0.002)}$ & $0.098_{(0.001)}$ & $0.712_{(0.005)}$ & $0.828_{(0.003)}$ & $0.961_{(0.002)}$ & $0.862_{(0.001)}$\\
+			15 & c log-log & $10^{-2}$ & $0.564_{(0.016)}$ & $0.108_{(0.014)}$ & $0.143_{(0.006)}$ & $0.134_{(0.005)}$ & $0.640_{(0.015)}$ & $0.879_{(0.011)}$ & $0.972_{(0.005)}$ & $0.851_{(0.006)}$\\
+			15 & c log-log & $10^{-3}$ & $0.559_{(0.026)}$ & $\mathit{0.111_{(0.008)}}$ & $0.127_{(0.004)}$ & $0.113_{(0.003)}$ & $0.682_{(0.010)}$ & $0.871_{(0.008)}$ & $\mathit{0.974_{(0.002)}}$ & $\mathbf{0.868_{(0.002)}}$\\
+			15 & c log-log & $10^{-4}$ & $0.538_{(0.009)}$ & $0.054_{(0.003)}$ & $\mathbf{0.115_{(0.002)}}$ & $\mathit{0.093_{(0.001)}}$ & $0.720_{(0.006)}$ & $0.835_{(0.007)}$ & $0.970_{(0.003)}$ & $0.860_{(0.006)}$\\
+			15 & logit & $10^{-2}$ & $0.551_{(0.020)}$ & $0.104_{(0.008)}$ & $0.139_{(0.011)}$ & $0.129_{(0.009)}$ & $0.654_{(0.027)}$ & $0.815_{(0.017)}$ & $0.948_{(0.016)}$ & $0.856_{(0.015)}$\\
+			15 & logit & $10^{-3}$ & $0.551_{(0.010)}$ & $0.106_{(0.016)}$ & $0.129_{(0.008)}$ & $0.114_{(0.005)}$ & $0.680_{(0.019)}$ & $0.818_{(0.008)}$ & $0.952_{(0.007)}$ & $\mathit{0.866_{(0.001)}}$\\
+			15 & logit & $10^{-4}$ & $0.543_{(0.008)}$ & $0.056_{(0.003)}$ & $0.121_{(0.004)}$ & $\mathbf{0.090_{(0.001)}}$ & $\mathbf{0.723_{(0.004)}}$ & $0.833_{(0.004)}$ & $0.964_{(0.003)}$ & $0.862_{(0.004)}$\\
+			15 & probit & $10^{-2}$ & $0.534_{(0.032)}$ & $0.104_{(0.013)}$ & $0.148_{(0.015)}$ & $0.138_{(0.014)}$ & $0.631_{(0.038)}$ & $0.845_{(0.030)}$ & $0.964_{(0.010)}$ & $0.852_{(0.010)}$\\
+			15 & probit & $10^{-3}$ & $\mathit{0.580_{(0.021)}}$ & $0.104_{(0.016)}$ & $0.129_{(0.008)}$ & $0.116_{(0.005)}$ & $0.680_{(0.018)}$ & $0.832_{(0.010)}$ & $0.959_{(0.007)}$ & $0.866_{(0.003)}$\\
+			15 & probit & $10^{-4}$ & $0.533_{(0.004)}$ & $0.065_{(0.005)}$ & $0.117_{(0.002)}$ & $0.094_{(0.001)}$ & $\mathit{0.721_{(0.004)}}$ & $0.832_{(0.002)}$ & $0.964_{(0.001)}$ & $0.863_{(0.001)}$
 		\end{tabular}
-	\end{table}
+	\end{table*}
 	
 	The best mean QWK value was obtained with the complementary log-log link function using a batch size of 10 and a learning rate of $10^{-3}$.
 	
 	\subsection{Adience}
 	\label{sect:adience}
-	Results for the experiments made with the Adience dataset are shown in Table \ref{table:Adienceresults}.
+	Results for the experiments made with the Adience dataset are shown in Table \ref{table:AdienceTest}.
 	
-	\begin{table}[!t]
-		\caption{Adience results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
-		\label{table:Adienceresults}
+	\begin{table*}[!t]
+		\caption{Adience test results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
+		\label{table:AdienceTest}
 		\footnotesize
 		\centering
-		\begin{tabular}{ccc|cc}
-			BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline
-			$5$ & $10^{-2}$ & Logit & $0.72072$ & $0.68408$\\
-			& & Probit & $0.77608$ & $0.72574$\\
-			& & c log-log & $0.75430$ & $0.70742$\\
-			& $10^{-3}$ & Logit & $0.71460$ & $0.67868$\\
-			& & Probit & $0.81906$ & $0.77154$\\
-			& & c log-log & $0.57196$ & $0.55608$\\
-			& $10^{-4}$ & Logit & $0.54432$ & $0.51934$\\
-			& & Probit & $0.54360$ & $0.52422$\\
-			& & c log-log & $0.54802$ & $0.52484$\\
-			$10$ & $10^{-2}$ & Logit & $0.78872$ & $0.72994$\\
-			& & Probit & $0.79332$ & $0.74750$\\
-			& & c log-log & $0.78004$ & $0.73260$\\
-			& $10^{-3}$ & Logit & $0.49686$ & $0.47112$\\
-			& & Probit & $0.59778$ & $0.58476$\\
-			& & c log-log & $0.52016$ & $0.49968$\\
-			& $10^{-4}$ & Logit & $0.60972$ & $0.56814$\\
-			& & Probit & $0.54638$ & $0.52632$\\
-			& & c log-log & $0.75428$ & $0.52094$\\
-			$15$ & $10^{-2}$ & Logit & $0.79104$ & $0.74388$\\
-			& & Probit & $\textbf{0.84254}$ & $\textbf{0.78666}$\\
-			& & c log-log & $0.78802$ & $0.74624$\\
-			& $10^{-3}$ & Logit & $0.56946$ & $0.52978$\\
-			& & Probit & $0.70262$ & $0.65416$\\
-			& & c log-log & $0.49242$ & $0.47320$\\
-			& $10^{-4}$ & Logit & $0.55202$ & $0.52484$\\
-			& & Probit & $0.54288$ & $0.51740$\\
-			& & c log-log & $0.53826$ & $0.52542$
+		\begin{tabular}{c@{\hskip 0.15cm}c@{\hskip 0.15cm}c|c@{\hskip 0.30cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c}
+			BS & LF & LR & $\overline{\text{QWK}}_{{(SD)}}$ & $\overline{\text{MS}}_{{(SD)}}$ & $\overline{\text{MAE}}_{{(SD)}}$ & $\overline{\text{MSE}}_{{(SD)}}$ & $\overline{\text{CCR}}_{{(SD)}}$ & $\overline{\text{Top-2}}_{{(SD)}}$ & $\overline{\text{Top-3}}_{{(SD)}}$ & $\overline{\text{1-off}}_{{(SD)}}$\\\hline
+			64 & c log-log & $10^{-2}$ & $0.808_{(0.025)}$ & $0.086_{(0.041)}$ & $0.147_{(0.008)}$ & $0.129_{(0.007)}$ & $0.415_{(0.031)}$ & $0.677_{(0.024)}$ & $0.798_{(0.036)}$ & $0.804_{(0.015)}$\\
+			64 & c log-log & $10^{-3}$ & $0.873_{(0.006)}$ & $0.144_{(0.057)}$ & $\mathbf{0.124_{(0.003)}}$ & $0.101_{(0.003)}$ & $\mathbf{0.519_{(0.014)}}$ & $\mathit{0.764_{(0.010)}}$ & $0.861_{(0.019)}$ & $0.886_{(0.006)}$\\
+			64 & c log-log & $10^{-4}$ & $0.799_{(0.010)}$ & $0.000_{(0.000)}$ & $0.174_{(0.001)}$ & $0.100_{(0.002)}$ & $0.324_{(0.015)}$ & $0.616_{(0.020)}$ & $0.795_{(0.012)}$ & $0.771_{(0.014)}$\\
+			64 & logit & $10^{-2}$ & $0.778_{(0.019)}$ & $0.074_{(0.041)}$ & $0.159_{(0.006)}$ & $0.137_{(0.007)}$ & $0.366_{(0.025)}$ & $0.636_{(0.015)}$ & $0.785_{(0.010)}$ & $0.775_{(0.015)}$\\
+			64 & logit & $10^{-3}$ & $\mathbf{0.881_{(0.005)}}$ & $\mathit{0.178_{(0.023)}}$ & $\mathit{0.126_{(0.001)}}$ & $0.098_{(0.003)}$ & $\mathit{0.518_{(0.008)}}$ & $\mathbf{0.765_{(0.015)}}$ & $\mathbf{0.902_{(0.005)}}$ & $\mathbf{0.894_{(0.005)}}$\\
+			64 & logit & $10^{-4}$ & $0.784_{(0.011)}$ & $0.000_{(0.000)}$ & $0.180_{(0.001)}$ & $0.108_{(0.004)}$ & $0.318_{(0.026)}$ & $0.621_{(0.034)}$ & $0.772_{(0.024)}$ & $0.731_{(0.030)}$\\
+			64 & probit & $10^{-2}$ & $0.836_{(0.005)}$ & $0.135_{(0.021)}$ & $0.134_{(0.002)}$ & $0.121_{(0.002)}$ & $0.468_{(0.011)}$ & $0.720_{(0.009)}$ & $0.861_{(0.009)}$ & $0.829_{(0.005)}$\\
+			64 & probit & $10^{-3}$ & $\mathit{0.874_{(0.004)}}$ & $0.134_{(0.012)}$ & $0.126_{(0.003)}$ & $0.105_{(0.003)}$ & $0.511_{(0.014)}$ & $0.756_{(0.009)}$ & $\mathit{0.895_{(0.003)}}$ & $\mathit{0.889_{(0.003)}}$\\
+			64 & probit & $10^{-4}$ & $0.805_{(0.004)}$ & $0.000_{(0.000)}$ & $0.170_{(0.001)}$ & $0.100_{(0.002)}$ & $0.360_{(0.011)}$ & $0.653_{(0.011)}$ & $0.809_{(0.009)}$ & $0.790_{(0.009)}$\\
+			128 & c log-log & $10^{-2}$ & $0.832_{(0.013)}$ & $0.123_{(0.031)}$ & $0.135_{(0.004)}$ & $0.117_{(0.002)}$ & $0.463_{(0.013)}$ & $0.705_{(0.019)}$ & $0.813_{(0.025)}$ & $0.832_{(0.006)}$\\
+			128 & c log-log & $10^{-3}$ & $0.873_{(0.006)}$ & $\mathbf{0.185_{(0.029)}}$ & $0.128_{(0.002)}$ & $0.100_{(0.001)}$ & $0.513_{(0.007)}$ & $0.758_{(0.008)}$ & $0.870_{(0.011)}$ & $0.880_{(0.009)}$\\
+			128 & c log-log & $10^{-4}$ & $0.659_{(0.025)}$ & $0.000_{(0.000)}$ & $0.190_{(0.002)}$ & $0.125_{(0.004)}$ & $0.235_{(0.026)}$ & $0.466_{(0.031)}$ & $0.640_{(0.030)}$ & $0.536_{(0.041)}$\\
+			128 & logit & $10^{-2}$ & $0.781_{(0.041)}$ & $0.096_{(0.059)}$ & $0.153_{(0.007)}$ & $0.125_{(0.007)}$ & $0.398_{(0.031)}$ & $0.638_{(0.033)}$ & $0.790_{(0.025)}$ & $0.779_{(0.020)}$\\
+			128 & logit & $10^{-3}$ & $0.865_{(0.005)}$ & $0.127_{(0.026)}$ & $0.134_{(0.001)}$ & $0.099_{(0.003)}$ & $0.497_{(0.009)}$ & $0.754_{(0.008)}$ & $0.882_{(0.009)}$ & $0.874_{(0.008)}$\\
+			128 & logit & $10^{-4}$ & $0.586_{(0.008)}$ & $0.000_{(0.000)}$ & $0.196_{(0.001)}$ & $0.151_{(0.005)}$ & $0.192_{(0.001)}$ & $0.364_{(0.060)}$ & $0.581_{(0.034)}$ & $0.396_{(0.002)}$\\
+			128 & probit & $10^{-2}$ & $0.849_{(0.005)}$ & $0.132_{(0.010)}$ & $0.131_{(0.001)}$ & $0.115_{(0.001)}$ & $0.479_{(0.004)}$ & $0.728_{(0.007)}$ & $0.854_{(0.009)}$ & $0.847_{(0.007)}$\\
+			128 & probit & $10^{-3}$ & $0.866_{(0.002)}$ & $0.124_{(0.043)}$ & $0.130_{(0.002)}$ & $0.100_{(0.003)}$ & $0.505_{(0.006)}$ & $0.750_{(0.010)}$ & $0.882_{(0.004)}$ & $0.873_{(0.006)}$\\
+			128 & probit & $10^{-4}$ & $0.718_{(0.015)}$ & $0.000_{(0.000)}$ & $0.185_{(0.001)}$ & $0.110_{(0.002)}$ & $0.300_{(0.031)}$ & $0.575_{(0.015)}$ & $0.733_{(0.010)}$ & $0.640_{(0.033)}$\\
+			256 & c log-log & $10^{-2}$ & $0.853_{(0.004)}$ & $0.157_{(0.024)}$ & $0.130_{(0.002)}$ & $0.110_{(0.001)}$ & $0.485_{(0.009)}$ & $0.744_{(0.006)}$ & $0.842_{(0.016)}$ & $0.858_{(0.004)}$\\
+			256 & c log-log & $10^{-3}$ & $0.840_{(0.017)}$ & $0.095_{(0.017)}$ & $0.144_{(0.005)}$ & $0.097_{(0.004)}$ & $0.456_{(0.021)}$ & $0.720_{(0.022)}$ & $0.840_{(0.018)}$ & $0.842_{(0.018)}$\\
+			256 & c log-log & $10^{-4}$ & $0.552_{(0.010)}$ & $0.000_{(0.000)}$ & $0.199_{(0.001)}$ & $0.165_{(0.004)}$ & $0.187_{(0.001)}$ & $0.368_{(0.022)}$ & $0.475_{(0.025)}$ & $0.387_{(0.001)}$\\
+			256 & logit & $10^{-2}$ & $0.764_{(0.102)}$ & $0.077_{(0.067)}$ & $0.155_{(0.020)}$ & $0.125_{(0.015)}$ & $0.387_{(0.083)}$ & $0.632_{(0.103)}$ & $0.790_{(0.077)}$ & $0.783_{(0.065)}$\\
+			256 & logit & $10^{-3}$ & $0.851_{(0.008)}$ & $0.100_{(0.030)}$ & $0.147_{(0.003)}$ & $\mathbf{0.094_{(0.002)}}$ & $0.449_{(0.015)}$ & $0.726_{(0.015)}$ & $0.861_{(0.006)}$ & $0.850_{(0.008)}$\\
+			256 & logit & $10^{-4}$ & $0.558_{(0.008)}$ & $0.000_{(0.000)}$ & $0.202_{(0.001)}$ & $0.191_{(0.002)}$ & $0.187_{(0.002)}$ & $0.206_{(0.007)}$ & $0.395_{(0.046)}$ & $0.389_{(0.003)}$\\
+			256 & probit & $10^{-2}$ & $0.858_{(0.005)}$ & $0.164_{(0.033)}$ & $0.130_{(0.002)}$ & $0.112_{(0.002)}$ & $0.486_{(0.007)}$ & $0.741_{(0.008)}$ & $0.867_{(0.008)}$ & $0.862_{(0.005)}$\\
+			256 & probit & $10^{-3}$ & $0.850_{(0.008)}$ & $0.111_{(0.040)}$ & $0.144_{(0.002)}$ & $\mathit{0.095_{(0.001)}}$ & $0.460_{(0.011)}$ & $0.732_{(0.006)}$ & $0.865_{(0.006)}$ & $0.853_{(0.007)}$\\
+			256 & probit & $10^{-4}$ & $0.565_{(0.010)}$ & $0.000_{(0.000)}$ & $0.196_{(0.001)}$ & $0.150_{(0.005)}$ & $0.189_{(0.001)}$ & $0.409_{(0.014)}$ & $0.602_{(0.022)}$ & $0.392_{(0.002)}$
 		\end{tabular}
-		
-	\end{table}
+	\end{table*}
+	
+%	\begin{table}[!t]
+%		\caption{Adience results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
+%		\label{table:Adienceresults}
+%		\footnotesize
+%		\centering
+%		\begin{tabular}{ccc|cc}
+%			BS & LR & LF & $QWK_{val}$ & $QWK_{test}$\\\hline
+%			$5$ & $10^{-2}$ & Logit & $0.72072$ & $0.68408$\\
+%			& & Probit & $0.77608$ & $0.72574$\\
+%			& & c log-log & $0.75430$ & $0.70742$\\
+%			& $10^{-3}$ & Logit & $0.71460$ & $0.67868$\\
+%			& & Probit & $0.81906$ & $0.77154$\\
+%			& & c log-log & $0.57196$ & $0.55608$\\
+%			& $10^{-4}$ & Logit & $0.54432$ & $0.51934$\\
+%			& & Probit & $0.54360$ & $0.52422$\\
+%			& & c log-log & $0.54802$ & $0.52484$\\
+%			$10$ & $10^{-2}$ & Logit & $0.78872$ & $0.72994$\\
+%			& & Probit & $0.79332$ & $0.74750$\\
+%			& & c log-log & $0.78004$ & $0.73260$\\
+%			& $10^{-3}$ & Logit & $0.49686$ & $0.47112$\\
+%			& & Probit & $0.59778$ & $0.58476$\\
+%			& & c log-log & $0.52016$ & $0.49968$\\
+%			& $10^{-4}$ & Logit & $0.60972$ & $0.56814$\\
+%			& & Probit & $0.54638$ & $0.52632$\\
+%			& & c log-log & $0.75428$ & $0.52094$\\
+%			$15$ & $10^{-2}$ & Logit & $0.79104$ & $0.74388$\\
+%			& & Probit & $\textbf{0.84254}$ & $\textbf{0.78666}$\\
+%			& & c log-log & $0.78802$ & $0.74624$\\
+%			& $10^{-3}$ & Logit & $0.56946$ & $0.52978$\\
+%			& & Probit & $0.70262$ & $0.65416$\\
+%			& & c log-log & $0.49242$ & $0.47320$\\
+%			& $10^{-4}$ & Logit & $0.55202$ & $0.52484$\\
+%			& & Probit & $0.54288$ & $0.51740$\\
+%			& & c log-log & $0.53826$ & $0.52542$
+%		\end{tabular}
+%		
+%	\end{table}
 	
 	The best mean QWK value was obtained with the probit link function using a batch size of 15 and a learning rate of $10^{-2}$.
 	
@@ -835,7 +878,7 @@
 	
 	The ANOVA test~\cite{miller1997beyond} is one of the most widely used statistical techniques. ANOVA is essentially a method of analysing the variance to which a response is subject into its various components, corresponding to the sources of variation which can be identified.
 	
-	ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the link function, which can be logit, probit and complementary log-log, the learning rate for the Adam optimization algorithm ($10^{-2}$, $10^{-3}$ and $10^{-4}$) and the batch size (5, 10 and 15).
+	ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the link function, which can be logit, probit and complementary log-log, the learning rate for the Adam optimization algorithm ($10^{-2}$, $10^{-3}$ and $10^{-4}$) and the batch size (5, 10 and 15 for DR and 64, 128 and 256 for Adience).
 	
 	Following the setup of the previous study, we performed an ANOVA III analysis and multiple comparison tests. We assume that five executions are enough to do the statistical tests because of the computational time limitations.
 	
@@ -851,7 +894,7 @@
 	\end{aligned}
 	\end{equation}
 	
-	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor ($10^{-4}$, $10^{-3}$, $10^{-2}$) and $B_k$ is the effect associated with the \textit{k-th} level of the batch size factor (5, 10, 15). The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $W_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
+	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor and $B_k$ is the effect associated with the \textit{k-th} level of the batch size factor. The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $W_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
 	
 	We consider some hypotheses testing where the null hypothesis is proposed that each term of the above equation is independent of the levels involved. The hypotheses for the levels of the L factor are
 	\[
@@ -881,14 +924,14 @@
 		\centering
 		\small
 		\begin{tabular}{l|ccccc}
-			\multicolumn{6}{c}{Response variable QWK}\\\hline
-			Source & S.S. & D.F. & M.S. & F-ratio & Sig.\\\hline
-			Model & $37.860$ & $9$ & $4.207$ & $1562.840$ & $0.000$\\
-			$L$ factor & $0.057$ & $2$ & $0.029$ & $10.646$ & $0.000$\\
-			$P$ factor & $0.121$ & $2$ & $0.060$ & $22.468$ & $0.000$\\
-			$LP$ factors & $0.057$ & $4$ & $0.014$ & $5.261$ & $0.001$\\
-			Error & $0.339$ & $126$ & $0.003$ & & \\
-			Total & $38.199$ & $135$ & & & 
+			           \multicolumn{6}{c}{Response variable QWK}             \\ \hline
+			Source       &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
+			Model        & $37.860$ &  $9$  & $4.207$ & $1562.840$ & $0.000$ \\
+			$L$ factor   & $0.057$  &  $2$  & $0.029$ &  $10.646$  & $0.000$ \\
+			$P$ factor   & $0.121$  &  $2$  & $0.060$ &  $22.468$  & $0.000$ \\
+			$LP$ factors & $0.057$  &  $4$  & $0.014$ &  $5.261$   & $0.001$ \\
+			Error        & $0.339$  & $126$ & $0.003$ &            &  \\ \hline
+			Total        & $38.199$ & $135$ &         &            &
 		\end{tabular}
 	\end{table}
 	
@@ -904,65 +947,70 @@
 		\centering
 		\small
 		\begin{tabular}{l|ccccc}
-			\multicolumn{6}{c}{Response variable QWK}\\\hline
-			Source & S.S. & D.F. & M.S. & F-ratio & Sig.\\\hline
-			Model & $52.328$ & $15$ & $3.489$ & $1426.170$ & $0.000$\\
-			$L$ factor & $0.027$ & $2$ & $0.014$ & $5.582$ & $0.005$\\
-			$P$ factor & $1.031$ & $2$ & $0.516$ & $210.809$ & $0.000$\\
-			$B$ factor & $0.089$ & $2$ & $0.045$ & $18.253$ & $0.000$\\
-			$LP$ factors & $0.183$ & $4$ & $0.046$ & $18.695$ & $0.000$\\
-			$PB$ factors & $0.124$ & $4$ & $0.031$ & $12.695$ & $0.000$\\
-			Error & $0.294$ & $120$ & $0.002$ & & \\
-			Total & $52.622$ & $135$ & $3.489$ & & 
+			            \multicolumn{6}{c}{Response variable QWK}              \\ \hline
+			Source         &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
+			Model          & $84.372$ & $27$  & $3.125$ & $4414.006$ & $0.000$ \\
+			$L$ factor     & $0.156$  &  $2$  & $0.078$ & $110.103$  & $0.000$ \\
+			$P$ factor     & $0.925$  &  $2$  & $0.462$ & $653.163$  & $0.000$ \\
+			$B$ factor     & $0.040$  &  $2$  & $0.020$ &  $28.218$  & $0.000$ \\
+			$LP$ factors   & $0.284$  &  $4$  & $0.071$ & $100.118$  & $0.000$ \\
+			% $LB$ factors & $0.008$  &  $4$  & $0.002$ &  $2.837$   & $0.028$ \\
+			$PB$ factors   & $0.026$  &  $4$  & $0.007$ &  $9.267$   & $0.000$ \\
+			$LPB$ factors  & $0.021$  &  $8$  & $0.003$ &  $3.728$   & $0.001$ \\
+			Error          & $0.076$  & $108$ & $0.001$ &            &  \\ \hline
+			Total          & $84.449$ & $135$ &         &            &
 		\end{tabular}
 	\end{table}
 	
-	The results of the ANOVA III test for the Adience dataset are shown in Table \ref{table:ANOVAAdience}. The interactions where there are not significative differences in QWK means have been omitted. First, the factor associated with the link function is analysed. The differences between the means are significative ($\text{p-value} = 0.005$). Secondly, there are significative differences concerning the learning rate factor too ($\text{p-value} = 0.000$). Also, there are differences for the means of QWK for the batch size factor. Significative interactions exist between two pairs of factors: link function and learning rate, and learning rate and batch size ($\text{p-value = 0.000}$ for both cases).
+	The results of the ANOVA III test for the Adience dataset are shown in Table \ref{table:ANOVAAdience}. The interactions where there are not significative differences in QWK means have been omitted. First, we observe that there exist significative differences in the mean QWK concerning the three factors (p-values $0.000$). Secondly, we found interactions between the following pairs of factors: the link function and the learning rate, the link function and the batch size and, the batch size and the learning rate. Also, there are interactions between all the factors together.
 	
-	A post-hoc multiple comparison test has been performed on the average QWK obtained for this dataset too. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been done. The results showed that the best link function is the logit one, in this case, with $0.60553$ as mean QWK value. However, there are not significative differences between this function and the complementary log-log ($\text{p-value}=0.110$). It has differences with the probit function though ($\text{p-value} = 0.003$). The complementary log-log link reported the best results after the logit function, having a mean QWK of $0.58738$. However, it doesn't show significative differences with the probit function.
-	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. The test reported significative differences between $\eta=10^{-2}$ (mean value $0.73378$) and the rest of values of this parameter ($\alpha=0.005$), being this one the best value for this factor. The best value after $10^{-2}$ is $10^{-3}$, which have a mean QWK value of $0.57989$. Lastly, the best value for the batch size parameter is $5$ (mean value $0.63243$) as it has significative differences with the rest of values. The second best value is $15$ (mean $0.61129$), but it has no significative differences with $10$ ($\text{p-value}= 0.194$).
+	As we did for the DR dataset, a post-hoc multiple comparison test has been performed on the average QWK obtained for this dataset too. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been done. The results showed that the best link function is the logit one, in this case, with $0.8265$ as mean QWK value. Also, there are significative differences between this function and the probit link (p-value $0.000$), that has a mean QWK value of $0.7810$. Both links functions present significative differences concerning the complementary log-log function, that has a mean value of $0.7434$.
 	
-	To sum up, the results showed that the best parameter configuration depends on the problem that is being solved. None of the optimal parameters is the same for Retinopathy and Adience datasets. These results highlight the importance of adjusting the hyper-parameters for each problem that is treated instead of trying to find an optimal configuration for all the datasets.
+	The same methodology was followed for the learning rate and the batch size factors. The test reported significative differences between $\eta=10^{-3}$ (mean value $0.8636$) and the rest of values of this parameter, being this one the best value for this factor. The best value after $10^{-3}$ is $10^{-2}$, which have a mean QWK value of $0.8177$. Both values present significative differences with $\eta=10^{-4}$, that has a mean QWK value of $0.6697$.
+	
+	Lastly, the best value for the batch size parameter is $128$ (mean value $0.8024$) as it has significative differences with the rest of values. The second best value is $256$ (mean $0.7877$), and it has significative differences with $64$, that has a mean value of $0.7609$.
+	
+	However, the interactions between these factors made the configuration that uses a logit link, $\eta=10^{-3}$ and batch size of 64, the best configuration. It obtained a mean QWK value of $0.9396$ for validation and $0.8808$ for test. The same parameters, but using the probit link, achieves the second best results.
+	
+	To sum up, the results showed that the best parameter configuration depends on the problem that is being solved. The optimal value for the batch size and the optimal link function are not the same for Retinopathy and Adience datasets. These results highlight the importance of adjusting the hyper-parameters for each problem that is treated instead of trying to find an optimal configuration for all the datasets. However, the best learning rate for both datasets were $10^{-3}$. It is recommended to use this value for future datasets.
+	The best batch size for DR was 10 while the best value for Adience was 128. Both values are the median value that we have tried.
+	Finally, there are more interactions between the three factors for the Adience dataset than for the Diabetic Retinopathy one. This highlights the importance of making experimental designs associated with each dataset to determine the best value for each factor.
 	
 	\subsection{Statistical comparison between nominal and ordinal methods}
 	\label{app:NominalComparison}
 	
-	The same experiments described in Section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimizer and the softmax function instead of the Proportional Odds Model for the output of the network. The evaluation metric remains the same in order to be able to compare. The results for both datasets are shown in Table \ref{table:NominalResults}. There are some parameter configurations where the training process gets stagnated and a very low QWK is obtained. As we saw in Sections \ref{sect:dr} and \ref{sect:adience}, this problem is not present when using the ordinal method.
+	The same experiments described in Section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimizer and the softmax function instead of the Proportional Odds Model for the output of the network. The evaluation metric remains the same in order to be able to compare. There are some parameter configurations where the training process gets stagnated and a very low QWK is obtained. As we saw in Sections \ref{sect:dr} and \ref{sect:adience}, this problem is not present when using the ordinal method.
 	
-	\begin{table}[!t]
-		\caption{Nominal method results. BS stands for Batch Size and LR for Learning Rate.}
-		\label{table:NominalResults}
-		\footnotesize
-		\centering
-		\begin{tabular}{lcc|cc}
-			Dataset & BS & LR & $\kappa_{val}$ & $\kappa_{test}$\\\hline
-			Retinopathy & $5$ & $10^{-2}$ & $0.2210$ & $0.2050$\\
-			 & & $10^{-3}$ & $0.2807$ & $0.2654$\\
-			 & & $10^{-4}$ & $0.4580$ & $0.4449$\\
-			
-			 & $10$ & $10^{-2}$ & $0.2972$ & $0.2997$\\
-			 &  & $10^{-3}$ & $0.3972$ & $0.3989$\\
-			 &  & $10^{-4}$ & $\textbf{0.4972}$ & $\textbf{0.4967}$\\
-			
-			 & $15$ & $10^{-2}$ & $0.3692$ & $0.3676$\\
-			 & & $10^{-3}$ & $0.4107$ & $0.4162$\\
-			 & & $10^{-4}$ & $0.4929$ & $0.4859$\\
-			\hline
-			Adience & $5$ & $10^{-2}$ & $0.0605$ & $0.0769$\\
-			 & & $10^{-3}$ & $0.7994$ & $0.7313$\\
-			 & & $10^{-4}$ & $0.8009$ & $0.7383$\\
-			
-			 & $10$ & $10^{-2}$ & $0.0559$ & $0.0576$\\
-			 & & $10^{-3}$ & $0.8239$ & $0.7436$\\
-			 & & $10^{-4}$ & $0.7938$ & $0.7218$\\
-			
-			 & $15$ & $10^{-2}$ & $0.0593$ & $0.0713$\\
-			 & & $10^{-3}$ & $\textbf{0.8309}$ & $\textbf{0.7575}$\\
-			 & & $10^{-4}$ & $0.7867$ & $0.7129$\\
-		\end{tabular}
-	\end{table}
+%	\begin{table*}[!t]
+%		\caption{Nominal method results. BS stands for Batch Size and LR for Learning Rate.}
+%		\label{table:NominalResults}
+%		\scriptsize
+%		\centering
+%		\begin{tabular}{ccc|cccccccc}
+%			 Dataset & BS & LR & $\overline{\text{QWK}}_{{(SD)}}$ & $\overline{\text{MS}}_{{(SD)}}$ & $\overline{\text{MAE}}_{{(SD)}}$ & $\overline{\text{MSE}}_{{(SD)}}$ & $\overline{\text{CCR}}_{{(SD)}}$ & $\overline{\text{Top-2}}_{{(SD)}}$ & $\overline{\text{Top-3}}_{{(SD)}}$ & $\overline{\text{1-off}}_{{(SD)}}$\\\hline
+%			 DR & 5 & $10^{-2}$ & $0.205_{(0.060)}$ & $0.032_{(0.035)}$ & $0.269_{(0.009)}$ & $0.138_{(0.011)}$ & $0.527_{(0.035)}$ & $0.827_{(0.028)}$ & $0.952_{(0.006)}$ & $0.673_{(0.064)}$\\
+%			 DR & 5 & $10^{-3}$ & $0.265_{(0.118)}$ & $0.096_{(0.078)}$ & $0.265_{(0.014)}$ & $0.128_{(0.007)}$ & $0.525_{(0.044)}$ & $0.816_{(0.012)}$ & $0.957_{(0.004)}$ & $0.699_{(0.103)}$\\
+%			 DR & 5 & $10^{-4}$ & $0.445_{(0.027)}$ & $0.147_{(0.032)}$ & $0.229_{(0.009)}$ & $0.109_{(0.005)}$ & $0.660_{(0.038)}$ & $0.856_{(0.008)}$ & $0.969_{(0.003)}$ & $0.836_{(0.008)}$\\
+%			 DR & 10 & $10^{-2}$ & $0.300_{(0.050)}$ & $0.093_{(0.056)}$ & $0.260_{(0.007)}$ & $0.125_{(0.004)}$ & $0.569_{(0.027)}$ & $0.819_{(0.017)}$ & $0.949_{(0.007)}$ & $0.717_{(0.054)}$\\
+%			 DR & 10 & $10^{-3}$ & $0.399_{(0.010)}$ & $0.215_{(0.029)}$ & $0.247_{(0.003)}$ & $0.118_{(0.002)}$ & $0.578_{(0.026)}$ & $0.826_{(0.006)}$ & $0.963_{(0.001)}$ & $0.798_{(0.007)}$\\
+%			 DR & 10 & $10^{-4}$ & $0.497_{(0.011)}$ & $0.157_{(0.040)}$ & $0.209_{(0.002)}$ & $0.098_{(0.002)}$ & $0.692_{(0.012)}$ & $0.865_{(0.002)}$ & $0.972_{(0.001)}$ & $0.854_{(0.006)}$\\
+%			 DR & 15 & $10^{-2}$ & $0.368_{(0.062)}$ & $0.133_{(0.048)}$ & $0.244_{(0.011)}$ & $0.116_{(0.005)}$ & $0.616_{(0.032)}$ & $0.836_{(0.022)}$ & $0.958_{(0.010)}$ & $0.775_{(0.044)}$\\
+%			 DR & 15 & $10^{-3}$ & $0.416_{(0.029)}$ & $0.186_{(0.028)}$ & $0.241_{(0.006)}$ & $0.115_{(0.003)}$ & $0.600_{(0.017)}$ & $0.839_{(0.011)}$ & $0.963_{(0.004)}$ & $0.800_{(0.025)}$\\
+%			 DR & 15 & $10^{-4}$ & $0.486_{(0.007)}$ & $0.185_{(0.051)}$ & $0.210_{(0.007)}$ & $0.099_{(0.004)}$ & $0.671_{(0.022)}$ & $0.861_{(0.007)}$ & $0.971_{(0.002)}$ & $0.854_{(0.006)}$\\
+%			 \hline
+%			 Adience & 64 & $10^{-2}$ & $0.779_{(0.013)}$ & $0.100_{(0.072)}$ & $0.152_{(0.007)}$ & $0.089_{(0.003)}$ & $0.447_{(0.021)}$ & $0.712_{(0.014)}$ & $0.838_{(0.013)}$ & $0.795_{(0.019)}$\\
+%			 Adience & 64 & $10^{-3}$ & $0.787_{(0.004)}$ & $0.115_{(0.026)}$ & $0.139_{(0.002)}$ & $0.110_{(0.001)}$ & $0.458_{(0.008)}$ & $0.685_{(0.007)}$ & $0.802_{(0.003)}$ & $0.800_{(0.007)}$\\
+%			 Adience & 64 & $10^{-4}$ & $0.627_{(0.023)}$ & $0.024_{(0.025)}$ & $0.165_{(0.009)}$ & $0.119_{(0.014)}$ & $0.365_{(0.032)}$ & $0.581_{(0.028)}$ & $0.712_{(0.017)}$ & $0.701_{(0.009)}$\\
+%			 Adience & 128 & $10^{-2}$ & $0.762_{(0.013)}$ & $0.124_{(0.033)}$ & $0.141_{(0.002)}$ & $0.116_{(0.001)}$ & $0.443_{(0.007)}$ & $0.685_{(0.009)}$ & $0.812_{(0.007)}$ & $0.790_{(0.009)}$\\
+%			 Adience & 128 & $10^{-3}$ & $0.768_{(0.007)}$ & $0.100_{(0.025)}$ & $0.140_{(0.002)}$ & $0.112_{(0.003)}$ & $0.454_{(0.009)}$ & $0.667_{(0.008)}$ & $0.783_{(0.004)}$ & $0.791_{(0.004)}$\\
+%			 Adience & 128 & $10^{-4}$ & $0.586_{(0.033)}$ & $0.016_{(0.022)}$ & $0.175_{(0.009)}$ & $0.116_{(0.010)}$ & $0.321_{(0.050)}$ & $0.565_{(0.023)}$ & $0.711_{(0.014)}$ & $0.665_{(0.013)}$\\
+%			 Adience & 256 & $10^{-2}$ & $0.759_{(0.007)}$ & $0.113_{(0.036)}$ & $0.141_{(0.001)}$ & $0.113_{(0.002)}$ & $0.447_{(0.006)}$ & $0.691_{(0.009)}$ & $0.815_{(0.006)}$ & $0.793_{(0.004)}$\\
+%			 Adience & 256 & $10^{-3}$ & $0.752_{(0.004)}$ & $0.071_{(0.018)}$ & $0.146_{(0.002)}$ & $0.117_{(0.001)}$ & $0.429_{(0.009)}$ & $0.658_{(0.007)}$ & $0.782_{(0.010)}$ & $0.781_{(0.005)}$\\
+%			 Adience & 256 & $10^{-4}$ & $0.480_{(0.094)}$ & $0.022_{(0.041)}$ & $0.180_{(0.007)}$ & $0.111_{(0.008)}$ & $0.326_{(0.024)}$ & $0.539_{(0.028)}$ & $0.682_{(0.028)}$ & $0.616_{(0.041)}$
+%		\end{tabular}
+%	\end{table*}
 	
-	As we did in Section \ref{sect:statisticalanalysis}, we must analyse the effect of the batch size (with values 5, 10 and 15) and the learning rate ($10^{-2}$, $10^{-3}$ and $10^{-4}$) factors have over the QWK metric. So, we make an ANOVA II analysis for each dataset.
+	As we did in Section \ref{sect:statisticalanalysis}, we must analyse the effect of the batch size (with values 5, 10 and 15 for DR and, 64, 128 and 256 for Adience) and the learning rate ($10^{-2}$, $10^{-3}$ and $10^{-4}$) factors have over the QWK metric. So, we make an ANOVA II analysis for each dataset.
 	
 	In the Diabetic Retinopathy dataset, there are significative differences between the mean values of QWK depending on the batch size and the initial value of the learning rate. Also, no significative interaction was detected between these factors.
 	
@@ -978,26 +1026,36 @@
 	\end{itemize}
 	
 
-	Finally, a comparison of the best QWK for each dataset for ordinal and nominal cases is shown in Table \ref{table:ComparisonNomOrd}. Also, it is compared with previous works. The proposed ordinal model outperforms all the other alternatives. The performance increase of POM over softmax reaches $17.07\%$ for Diabetic Retinopathy and $3.85\%$ for Adience dataset. The enhancement of the ordinal method for Retinopathy dataset is more notable than the rise for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases.
+	Finally, a comparison of the best results for each dataset for ordinal and nominal cases and previous works is shown in tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}. Also, it is compared with previous works. The proposed ordinal model outperforms all the other alternatives. The performance increase of POM over softmax reaches $16.8\%$ for Diabetic Retinopathy and $11.9\%$ for Adience dataset. The enhancement of the ordinal method for Retinopathy dataset is more notable than the rise for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases.
 	
 	\begin{table}[!t]
-		\caption{Comparison between the best QWK results of nominal, ordinal and previous works.}
-		\label{table:ComparisonNomOrd}
-		\footnotesize
+		\caption{Comparison between the best results of nominal, ordinal and previous works for the Diabetic Retinopathy dataset.}
+		\label{table:ComparisonDR}
+		\scriptsize
 		\centering
-		\begin{tabular}{lccc|cc}
-			\multicolumn{6}{c}{Diabetic Retinopathy}\\
-			\hline
-			Method & BS & LR & LF & $\kappa_{val}$ & $\kappa_{test}$\\\hline
-			Ord. proposed & 10 & $10^{-3}$ & c log-log & $0.58830$ & $0.58150$\\
-			Nom. proposed & 10 & $10^{-4}$ & softmax & $0.49720$ & $0.49670$\\
-			Best from \cite{de2018weighted} & 20 & $10^{-4}$ & softmax & $0.53700$ & -\\
-			Best from \cite{nebot2016diabetic} & - & - & softmax & - & $0.55500$\\
-			\hline\hline
-			\multicolumn{6}{c}{Adience}\\
-			\hline
-			Ord. proposed & 15 & $10^{-2}$ & probit & $0.84254$ & $0.78666$\\
-			Nom. proposed & 15 & $10^{-3}$ & softmax & $0.83090$ & $0.75750$\\
+		\def\arraystretch{1.3}
+		\begin{tabular}{l|ccc}
+			Method                                   & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
+			Ordinal proposed                         &    $0.582_{(0.016)}$    &    $0.681_{(0.067)}$    &        $0.748_{(0.071)}$         \\
+			Nominal proposed                         &    $0.498_{(0.011)}$    &    $0.692_{(0.012)}$    &        $0.854_{(0.006)}$         \\ \hline
+			J. Torre et al. \cite{de2018weighted}    &      $0.537_{(\text{-})}$      &            -            &                -                 \\
+			À. Nebot et al. \cite{nebot2016diabetic} &      $0.555_{(\text{-})}$      &            -            &                -
+		\end{tabular}
+	\end{table}
+	
+	\begin{table}[!t]
+		\caption{Comparison between the best results of nominal, ordinal and previous works for the Adience dataset.}
+		\label{table:ComparisonAdience}
+		\scriptsize
+		\centering
+		\def\arraystretch{1.3}
+		\begin{tabular}{l|ccc}
+			Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
+			Ordinal proposed                          &    $0.881_{(0.005)}$    &    $0.519_{(0.013)}$    &        $0.894_{(0.005)}$         \\
+			Nominal proposed                          &    $0.787_{(0.004)}$    &    $0.458_{(0.008)}$    &        $0.800_{(0.007)}$         \\ \hline
+			E. Eidinger et al. \cite{eidinger2014age} &            -            &    $0.451_{(0.026)}$    &        $0.807_{(0.011)}$         \\
+			J.-C. Chen et al. \cite{chen2016cascaded} &            -            &    $0.529_{(0.060)}$    &        $0.885_{(0.022)}$         \\
+			G. Levi et al. \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$
 		\end{tabular}
 	\end{table}
 	
@@ -1007,14 +1065,14 @@
 	
 	The complementary log-log function has the best average performance across both datasets. It offers the best results in Diabetic Retinopathy dataset and the second best result in Adience dataset. These results provide an opportunity for exploring new generalised link functions.
 	
-	The best value for the learning rate parameter for  Diabetic Retinopathy dataset is $\eta = 10^{-3}$ while this value is the second best option for Adience dataset. It can be considered a good value for this parameter when training the model with new datasets.
+	The best value for the learning rate parameter for Diabetic Retinopathy dataset is $\eta = 10^{-3}$ while this value is the second best option for Adience dataset. It can be considered a good value for this parameter when training the model with new datasets.
 	
 	Both datasets have obtained the best performance with batch size 10.
 	
 	Also, the statistical tests reported that there are interactions between some parameters like the link function and the learning rate, for Diabetic Retinopathy, or those factors in addition to learning rate and batch size, for Adience dataset.
 	
 	The proposed POM has improved the performance of the deep network regarding quadratic weighted kappa compared to the model that uses the softmax function. This enhancement is more notable for the Diabetic Retinopathy dataset. Also, it reduces the chance that the model gets stuck when training with some parameter configurations. So, the most significant improvements of these link functions are the QWK performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention of the over-fitting and the stagnation.
-	
+
 	
 	% if have a single appendix:
 	%\appendix[Proof of the Zonklar Equations]
