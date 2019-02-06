@@ -794,7 +794,7 @@
 	Results for the experiments made with the Adience dataset are shown in Table \ref{table:AdienceTest}.
 	
 	\begin{table*}[!t]
-		\caption{Adience test results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
+		\caption{Adience test results. BS stands for Batch Size, LF for link function and LR for Learning Rate.}
 		\label{table:AdienceTest}
 		\footnotesize
 		\centering
@@ -976,57 +976,18 @@
 	The best batch size for DR was 10 while the best value for Adience was 128. Both values are the median value that we have tried.
 	Finally, there are more interactions between the three factors for the Adience dataset than for the Diabetic Retinopathy one. This highlights the importance of making experimental designs associated with each dataset to determine the best value for each factor.
 	
-	\subsection{Statistical comparison between nominal and ordinal methods}
+	\subsection{Comparison with nominal method and previous works}
 	\label{app:NominalComparison}
 	
 	The same experiments described in Section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimizer and the softmax function instead of the Proportional Odds Model for the output of the network. The evaluation metric remains the same in order to be able to compare. There are some parameter configurations where the training process gets stagnated and a very low QWK is obtained. As we saw in Sections \ref{sect:dr} and \ref{sect:adience}, this problem is not present when using the ordinal method.
 	
-%	\begin{table*}[!t]
-%		\caption{Nominal method results. BS stands for Batch Size and LR for Learning Rate.}
-%		\label{table:NominalResults}
-%		\scriptsize
-%		\centering
-%		\begin{tabular}{ccc|cccccccc}
-%			 Dataset & BS & LR & $\overline{\text{QWK}}_{{(SD)}}$ & $\overline{\text{MS}}_{{(SD)}}$ & $\overline{\text{MAE}}_{{(SD)}}$ & $\overline{\text{MSE}}_{{(SD)}}$ & $\overline{\text{CCR}}_{{(SD)}}$ & $\overline{\text{Top-2}}_{{(SD)}}$ & $\overline{\text{Top-3}}_{{(SD)}}$ & $\overline{\text{1-off}}_{{(SD)}}$\\\hline
-%			 DR & 5 & $10^{-2}$ & $0.205_{(0.060)}$ & $0.032_{(0.035)}$ & $0.269_{(0.009)}$ & $0.138_{(0.011)}$ & $0.527_{(0.035)}$ & $0.827_{(0.028)}$ & $0.952_{(0.006)}$ & $0.673_{(0.064)}$\\
-%			 DR & 5 & $10^{-3}$ & $0.265_{(0.118)}$ & $0.096_{(0.078)}$ & $0.265_{(0.014)}$ & $0.128_{(0.007)}$ & $0.525_{(0.044)}$ & $0.816_{(0.012)}$ & $0.957_{(0.004)}$ & $0.699_{(0.103)}$\\
-%			 DR & 5 & $10^{-4}$ & $0.445_{(0.027)}$ & $0.147_{(0.032)}$ & $0.229_{(0.009)}$ & $0.109_{(0.005)}$ & $0.660_{(0.038)}$ & $0.856_{(0.008)}$ & $0.969_{(0.003)}$ & $0.836_{(0.008)}$\\
-%			 DR & 10 & $10^{-2}$ & $0.300_{(0.050)}$ & $0.093_{(0.056)}$ & $0.260_{(0.007)}$ & $0.125_{(0.004)}$ & $0.569_{(0.027)}$ & $0.819_{(0.017)}$ & $0.949_{(0.007)}$ & $0.717_{(0.054)}$\\
-%			 DR & 10 & $10^{-3}$ & $0.399_{(0.010)}$ & $0.215_{(0.029)}$ & $0.247_{(0.003)}$ & $0.118_{(0.002)}$ & $0.578_{(0.026)}$ & $0.826_{(0.006)}$ & $0.963_{(0.001)}$ & $0.798_{(0.007)}$\\
-%			 DR & 10 & $10^{-4}$ & $0.497_{(0.011)}$ & $0.157_{(0.040)}$ & $0.209_{(0.002)}$ & $0.098_{(0.002)}$ & $0.692_{(0.012)}$ & $0.865_{(0.002)}$ & $0.972_{(0.001)}$ & $0.854_{(0.006)}$\\
-%			 DR & 15 & $10^{-2}$ & $0.368_{(0.062)}$ & $0.133_{(0.048)}$ & $0.244_{(0.011)}$ & $0.116_{(0.005)}$ & $0.616_{(0.032)}$ & $0.836_{(0.022)}$ & $0.958_{(0.010)}$ & $0.775_{(0.044)}$\\
-%			 DR & 15 & $10^{-3}$ & $0.416_{(0.029)}$ & $0.186_{(0.028)}$ & $0.241_{(0.006)}$ & $0.115_{(0.003)}$ & $0.600_{(0.017)}$ & $0.839_{(0.011)}$ & $0.963_{(0.004)}$ & $0.800_{(0.025)}$\\
-%			 DR & 15 & $10^{-4}$ & $0.486_{(0.007)}$ & $0.185_{(0.051)}$ & $0.210_{(0.007)}$ & $0.099_{(0.004)}$ & $0.671_{(0.022)}$ & $0.861_{(0.007)}$ & $0.971_{(0.002)}$ & $0.854_{(0.006)}$\\
-%			 \hline
-%			 Adience & 64 & $10^{-2}$ & $0.779_{(0.013)}$ & $0.100_{(0.072)}$ & $0.152_{(0.007)}$ & $0.089_{(0.003)}$ & $0.447_{(0.021)}$ & $0.712_{(0.014)}$ & $0.838_{(0.013)}$ & $0.795_{(0.019)}$\\
-%			 Adience & 64 & $10^{-3}$ & $0.787_{(0.004)}$ & $0.115_{(0.026)}$ & $0.139_{(0.002)}$ & $0.110_{(0.001)}$ & $0.458_{(0.008)}$ & $0.685_{(0.007)}$ & $0.802_{(0.003)}$ & $0.800_{(0.007)}$\\
-%			 Adience & 64 & $10^{-4}$ & $0.627_{(0.023)}$ & $0.024_{(0.025)}$ & $0.165_{(0.009)}$ & $0.119_{(0.014)}$ & $0.365_{(0.032)}$ & $0.581_{(0.028)}$ & $0.712_{(0.017)}$ & $0.701_{(0.009)}$\\
-%			 Adience & 128 & $10^{-2}$ & $0.762_{(0.013)}$ & $0.124_{(0.033)}$ & $0.141_{(0.002)}$ & $0.116_{(0.001)}$ & $0.443_{(0.007)}$ & $0.685_{(0.009)}$ & $0.812_{(0.007)}$ & $0.790_{(0.009)}$\\
-%			 Adience & 128 & $10^{-3}$ & $0.768_{(0.007)}$ & $0.100_{(0.025)}$ & $0.140_{(0.002)}$ & $0.112_{(0.003)}$ & $0.454_{(0.009)}$ & $0.667_{(0.008)}$ & $0.783_{(0.004)}$ & $0.791_{(0.004)}$\\
-%			 Adience & 128 & $10^{-4}$ & $0.586_{(0.033)}$ & $0.016_{(0.022)}$ & $0.175_{(0.009)}$ & $0.116_{(0.010)}$ & $0.321_{(0.050)}$ & $0.565_{(0.023)}$ & $0.711_{(0.014)}$ & $0.665_{(0.013)}$\\
-%			 Adience & 256 & $10^{-2}$ & $0.759_{(0.007)}$ & $0.113_{(0.036)}$ & $0.141_{(0.001)}$ & $0.113_{(0.002)}$ & $0.447_{(0.006)}$ & $0.691_{(0.009)}$ & $0.815_{(0.006)}$ & $0.793_{(0.004)}$\\
-%			 Adience & 256 & $10^{-3}$ & $0.752_{(0.004)}$ & $0.071_{(0.018)}$ & $0.146_{(0.002)}$ & $0.117_{(0.001)}$ & $0.429_{(0.009)}$ & $0.658_{(0.007)}$ & $0.782_{(0.010)}$ & $0.781_{(0.005)}$\\
-%			 Adience & 256 & $10^{-4}$ & $0.480_{(0.094)}$ & $0.022_{(0.041)}$ & $0.180_{(0.007)}$ & $0.111_{(0.008)}$ & $0.326_{(0.024)}$ & $0.539_{(0.028)}$ & $0.682_{(0.028)}$ & $0.616_{(0.041)}$
-%		\end{tabular}
-%	\end{table*}
+	For the Diabetic Retinopathy dataset, the best mean value of QWK was $0.497$ and was obtained when using a batch size of 10 and a learning rate of $10^{-4}$.
 	
-	As we did in Section \ref{sect:statisticalanalysis}, we must analyse the effect of the batch size (with values 5, 10 and 15 for DR and, 64, 128 and 256 for Adience) and the learning rate ($10^{-2}$, $10^{-3}$ and $10^{-4}$) factors have over the QWK metric. So, we make an ANOVA II analysis for each dataset.
-	
-	In the Diabetic Retinopathy dataset, there are significative differences between the mean values of QWK depending on the batch size and the initial value of the learning rate. Also, no significative interaction was detected between these factors.
-	
-	After that, a post-hoc Tukey's test shows that the best value for the batch size factor is 15 followed by 10. However, there are no significative differences between them, but there are differences with size 5. Also, the best value for the learning rate is $10^{-4}$ and there are significative differences with the rest of values.
-	
-	A similar study was made for the Adience dataset. There are not significative differences for the mean value of QWK w.r.t. the batch size factor. Also, there are no interactions between the batch size and the learning rate. The best results were obtained with $10^{-3}$ for the learning rate followed by $10^{-4}$, without significative differences between them.
-	
-	The conclusions obtained from the results are exposed below:
-	\begin{itemize}
-		\item There are no interactions between both factors.
-		\item Batch sizes 10 and 15 obtained the best results.
-		\item Learning rate $10^{-4}$ is the best choice for both datasets as it the best for Diabetic Retinopathy, with significative differences, and it is the second for Adience, without significative differences with the best. 
-	\end{itemize}
-	
+	In the case of Adience dataset, the highest QWK was $0.787$ and was achieved with a batch size of 64 and a learning rate of $10^{-3}$.
 
-	Finally, a comparison of the best results for each dataset for ordinal and nominal cases and previous works is shown in tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}. Also, it is compared with previous works. The proposed ordinal model outperforms all the other alternatives. The performance increase of POM over softmax reaches $16.8\%$ for Diabetic Retinopathy and $11.9\%$ for Adience dataset. The enhancement of the ordinal method for Retinopathy dataset is more notable than the rise for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases.
+	Finally, a comparison of the best results for each dataset for ordinal and nominal cases and previous works is shown in tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}. Also, it is compared with previous works. The proposed ordinal model outperforms all the other alternatives in terms of QWK. The performance increase of POM over softmax reaches $16.8\%$ for Diabetic Retinopathy and $11.9\%$ for Adience dataset. The enhancement of the ordinal method for Retinopathy dataset is more notable than the rise for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases.
+	
+	In the case of DR, the nominal method obtained a higher CCR and 1-off accuracy value because of the important dataset unbalance. It is possible to achieve a high accuracy classifying all the examples in the majority class. However, as we are working with an ordinal problem, it is preferable to achieve a good QWK value rather than a high accuracy. This effect is not seen in the Adience dataset as it less unbalanced.
 	
 	\begin{table}[!t]
 		\caption{Comparison between the best results of nominal, ordinal and previous works for the Diabetic Retinopathy dataset.}
@@ -1063,15 +1024,15 @@
 	\label{sect:conclusions}
 	In this section, the conclusions obtained from this work are exposed. The first thing that we have noticed is that the optimal values for the different parameters considered are problem-dependant. 
 	
-	The complementary log-log function has the best average performance across both datasets. It offers the best results in Diabetic Retinopathy dataset and the second best result in Adience dataset. These results provide an opportunity for exploring new generalised link functions.
+	The complementary log-log function offers the best results in Diabetic Retinopathy dataset while the logit link is the best result for the Adience dataset. These results provide an opportunity for exploring new generalised link functions that can suit any problem.
 	
-	The best value for the learning rate parameter for Diabetic Retinopathy dataset is $\eta = 10^{-3}$ while this value is the second best option for Adience dataset. It can be considered a good value for this parameter when training the model with new datasets.
+	The best value for the learning rate parameter for both datasets is $\eta = 10^{-3}$. It can be considered a good value for this parameter when training the model with new datasets.
 	
-	Both datasets have obtained the best performance with batch size 10.
+	Both datasets have obtained the best performance with the intermedium batch size: 10 for Diabetic Retinopathy and 128 for Adience.
 	
-	Also, the statistical tests reported that there are interactions between some parameters like the link function and the learning rate, for Diabetic Retinopathy, or those factors in addition to learning rate and batch size, for Adience dataset.
+	Also, the statistical tests reported that there are relevant interactions between the three factors that we have take into account. The results highlight the importance of making an experimental design were all of these parameters are adjusted for each problem.
 	
-	The proposed POM has improved the performance of the deep network regarding quadratic weighted kappa compared to the model that uses the softmax function. This enhancement is more notable for the Diabetic Retinopathy dataset. Also, it reduces the chance that the model gets stuck when training with some parameter configurations. So, the most significant improvements of these link functions are the QWK performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention of the over-fitting and the stagnation.
+	The proposed POM has improved the performance of the deep network compared to the model that uses the softmax function and the models proposed in previous works. Also, it reduces the chance that the model gets stuck when training with some parameter configurations. So, the most significant improvements of these link functions are the performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention of the over-fitting and the stagnation.
 
 	
 	% if have a single appendix:

@@ -24,7 +24,7 @@ class Experiment():
 	Class that represents a single experiment that can be run and evaluated.
 	"""
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
-				 checkpoint_dir='checkpoint', loss='crossentropy', activation='relu', final_activation='softmax',
+				 checkpoint_dir='checkpoint', loss='categorical_crossentropy', activation='relu', final_activation='softmax',
 				 prob_layer=None, spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4,
 				 queue_size=1024, val_metrics=['loss', 'acc'], rescale_factor=0, augmentation={}):
 		self._name = name
