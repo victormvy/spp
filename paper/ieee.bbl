@@ -938,6 +938,43 @@
   \field{year}{2010}
 \endentry
 
+\entry{miller1997beyond}{book}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Miller~Jr}{M.~J.}%
+     {Rupert~G}{R.~G.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{2}{%
+    {Chapman}%
+    {Hall/CRC}%
+  }
+  \strng{namehash}{MJRG1}
+  \strng{fullhash}{MJRG1}
+  \field{title}{Beyond ANOVA: basics of applied statistics}
+  \field{year}{1997}
+\endentry
+
+\entry{tukey1949comparing}{article}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Tukey}{T.}%
+     {John~W}{J.~W.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {JSTOR}%
+  }
+  \strng{namehash}{TJW1}
+  \strng{fullhash}{TJW1}
+  \field{pages}{99\bibrangedash 114}
+  \field{title}{Comparing individual means in the analysis of variance}
+  \field{journaltitle}{Biometrics}
+  \field{year}{1949}
+\endentry
+
 \entry{beckham2017unimodal}{article}{}
   \name{author}{2}{}{%
     {{}%
@@ -1290,22 +1327,31 @@
   \field{year}{2008}
 \endentry
 
-\entry{miller1997beyond}{book}{}
-  \name{author}{1}{}{%
+\entry{wang2009mean}{article}{}
+  \name{author}{2}{}{%
     {{}%
-     {Miller~Jr}{M.~J.}%
-     {Rupert~G}{R.~G.}%
+     {Wang}{W.}%
+     {Zhou}{Z.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Bovik}{B.}%
+     {Alan~C}{A.~C.}%
      {}{}%
      {}{}}%
   }
-  \list{publisher}{2}{%
-    {Chapman}%
-    {Hall/CRC}%
+  \list{publisher}{1}{%
+    {IEEE}%
   }
-  \strng{namehash}{MJRG1}
-  \strng{fullhash}{MJRG1}
-  \field{title}{Beyond ANOVA: basics of applied statistics}
-  \field{year}{1997}
+  \strng{namehash}{WZBAC1}
+  \strng{fullhash}{WZBAC1}
+  \field{number}{1}
+  \field{pages}{98\bibrangedash 117}
+  \field{title}{Mean squared error: Love it or leave it? A new look at signal
+  fidelity measures}
+  \field{volume}{26}
+  \field{journaltitle}{IEEE signal processing magazine}
+  \field{year}{2009}
 \endentry
 
 \lossort

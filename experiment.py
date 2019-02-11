@@ -11,7 +11,7 @@ import h5py
 from scipy import io as spio
 from callbacks import ComputeMetricsCallback
 from losses import qwk_loss, make_cost_matrix
-from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm, top_2_accuracy, top_3_accuracy,\
+from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm, top_2_accuracy, top_3_accuracy, \
 	minimum_sensitivity, accuracy_off1
 from dataset import Dataset
 from sklearn.metrics import confusion_matrix
@@ -23,8 +23,10 @@ class Experiment():
 	"""
 	Class that represents a single experiment that can be run and evaluated.
 	"""
+
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
-				 checkpoint_dir='checkpoint', loss='categorical_crossentropy', activation='relu', final_activation='softmax',
+				 checkpoint_dir='checkpoint', loss='categorical_crossentropy', activation='relu',
+				 final_activation='softmax',
 				 prob_layer=None, spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4,
 				 queue_size=1024, val_metrics=['loss', 'acc'], rescale_factor=0, augmentation={}):
 		self._name = name
@@ -342,7 +344,8 @@ class Experiment():
 		:param maximize: maximize metric instead of minimizing.
 		:return: True if new metric is better than best metric or False otherwise.
 		"""
-		if self._best_metric is None or (maximize and metric > self._best_metric or not maximize and metric <= self._best_metric):
+		if self._best_metric is None or (
+				maximize and metric > self._best_metric or not maximize and metric <= self._best_metric):
 			self._best_metric = metric
 			return True
 		return False
@@ -373,7 +376,6 @@ class Experiment():
 		if start_epoch >= self.epochs:
 			print("Training already finished. Skipping...")
 			return
-
 
 		# Train data generator
 		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
@@ -407,6 +409,10 @@ class Experiment():
 		num_classes = ds_train.num_classes
 		num_channels = ds_train.num_channels
 		img_size = ds_train.img_size
+
+		# Fit for zca_whitening, featurewise_center, featurewise_std_normalization
+		if 'zca_whitening' in self.augmentation or 'featurewise_center' in self.augmentation or 'featurewise_std_normalization' in self.augmentation:
+			train_datagen.fit(ds_train.x)
 
 		# Train data generator used for training
 		train_generator = train_datagen.flow(
@@ -485,7 +491,7 @@ class Experiment():
 
 		# Compile the keras model
 		model.compile(
-			optimizer= tf.keras.optimizers.Adam(lr=self.lr), # tf.keras.optimizers.SGD(self.lr, 0.9),
+			optimizer=tf.keras.optimizers.Adam(lr=self.lr),  # tf.keras.optimizers.SGD(self.lr, 0.9),
 			loss=loss,
 			metrics=metrics
 		)
@@ -498,7 +504,7 @@ class Experiment():
 							initial_epoch=start_epoch,
 							steps_per_epoch=steps,
 							callbacks=[tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-										# tf.keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.1, patience=6, mode='min', min_lr=1e-4, verbose=1),
+									   # tf.keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.1, patience=6, mode='min', min_lr=1e-4, verbose=1),
 									   tf.keras.callbacks.ModelCheckpoint(
 										   os.path.join(self.checkpoint_dir, self.model_file)),
 									   save_epoch_callback,
@@ -572,13 +578,12 @@ class Experiment():
 			)
 
 			# NNet object
-			net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels, num_classes,
+			net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels,
+							 num_classes,
 							 self.spp_alpha,
 							 self.dropout)
 
 			model = self.get_model(net_object, self.net_type)
-
-
 
 			# Restore weights
 			model.load_weights(os.path.join(self.checkpoint_dir, self.best_model_file))
@@ -603,9 +608,7 @@ class Experiment():
 			gc.collect()
 
 		with open(os.path.join(self.checkpoint_dir, self.evaluation_file), 'wb') as f:
-			pickle.dump({'config' : self.get_config(), 'metrics' : all_metrics}, f)
-
-
+			pickle.dump({'config': self.get_config(), 'metrics': all_metrics}, f)
 
 	def compute_metrics(self, y_true, y_pred, num_classes):
 		# Calculate metric
@@ -622,15 +625,15 @@ class Experiment():
 		conf_mat = confusion_matrix(np.argmax(y_true, axis=1), np.argmax(y_pred, axis=1))
 
 		metrics = {
-			'QWK' : qwk,
-			'MS' : ms,
+			'QWK': qwk,
+			'MS': ms,
 			'MAE': mae,
-			'MSE' : mse,
-			'CCR' : acc,
-			'Top-2' : top2,
-			'Top-3' : top3,
-			'1-off' : off1,
-			'Confusion matrix' : conf_mat
+			'MSE': mse,
+			'CCR': acc,
+			'Top-2': top2,
+			'Top-3': top3,
+			'1-off': off1,
+			'Confusion matrix': conf_mat
 		}
 
 		return metrics
@@ -645,8 +648,6 @@ class Experiment():
 		print('MAE: {:.4f}'.format(metrics['MAE']))
 		print('MSE: {:.4f}'.format(metrics['MSE']))
 		print('MS: {:.4f}'.format(metrics['MS']))
-
-
 
 	def get_model(self, net_object, name):
 		if name == 'vgg19':
@@ -672,7 +673,7 @@ class Experiment():
 		"""
 		if db.lower() == 'retinopathy':
 			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
-			# return "../retinopathy/retinopathy_128_train.h5", "../retinopathy/retinopathy_128_val.h5", "../retinopathy/retinopathy_128_test.h5"
+		# return "../retinopathy/retinopathy_128_train.h5", "../retinopathy/retinopathy_128_val.h5", "../retinopathy/retinopathy_128_test.h5"
 		elif db.lower() == 'retinopathy256':
 			return "../retinopathy/256/train", "../retinopathy/256/val", "../retinopathy/256/test"
 		elif db.lower() == 'adience':
@@ -704,11 +705,11 @@ class Experiment():
 			'momentum': self.momentum,
 			'dropout': self.dropout,
 			'task': self.task,
-			'workers' : self.workers,
-			'queue_size' : self.queue_size,
-			'val_metrics' : self.val_metrics,
-			'rescale_factor' : self.rescale_factor,
-			'augmentation' : self.augmentation
+			'workers': self.workers,
+			'queue_size': self.queue_size,
+			'val_metrics': self.val_metrics,
+			'rescale_factor': self.rescale_factor,
+			'augmentation': self.augmentation
 		}
 
 	def set_config(self, config):

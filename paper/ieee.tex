@@ -487,9 +487,9 @@
 	
 	Batch normalization is another technique that is used for this kind of networks. It reduces the internal covariate shift by normalizing layer inputs. It was presented in 2015~\cite{ioffe2015batch} and gives a critical enhancement to the training phase. Batch size is an important hyper-parameter that should be adjusted as it affects the layer's parameters updates and also the normalization~\cite{keskar2016large}\cite{radiuk2017impact}.
 	
-	Ordinal classification problems are those where labels are ordered, and there are different inter-classes weights for each pair of classes. This kind of problem can be treated as a nominal classification problem, but when you do this, you are the discarding ordinal information. A better approach is to use specific methods that take into account this kind of information to improve the performance of the classification model. One way to use the ordinal information is to evaluate the model using an ordinal metric. Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics, mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. Weighted kappa loss was described in previous work~\cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalization, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalization is proportional to the square of the distance. In this work, we will combine the QWK metric and the QWK loss.
+	Ordinal classification problems are those where labels are ordered, and there are different inter-classes weights for each pair of classes. This kind of problem can be treated as a nominal classification problem, but when you do this, you are the discarding ordinal information. A better approach is to use specific methods that take into account this kind of information to improve the performance of the classification model. One way to use the ordinal information is to evaluate the model using an ordinal metric. Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics, mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. Weighted kappa loss was described in previous work~\cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalization, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalization is proportional to the square of the distance. In this work, we will use the QWK metric and the QWK loss.
 	
-	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM)~\cite{gutierrez2016ordinal, agresti2010analysis} will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results. An approximated ANOVA III test will be performed because of the limitations of the computational time required to run a higher number of executions.
+	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM)~\cite{gutierrez2016ordinal, agresti2010analysis} will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results. An approximated ANOVA III \cite{miller1997beyond} test followed by a posthoc Tukey's test \cite{tukey1949comparing} will be performed because of the limitations of the computational time required to run a higher number of executions.
 	
 	The experiments will be run using two different ordinal datasets: Diabetic Retinopathy~\cite{de2018weighted}, that contains high-resolution fundus images related with diabetes disease, and Adience~\cite{beckham2017unimodal}, that is formed of human faces images that are assigned an age range.
 	
@@ -515,7 +515,7 @@
 	
 	\section{Proportional Odds Model}
 	\label{sect:pom}
-	Arising from a statistical background, the Proportional Odds Model (POM) is one of the first models designed explicitly for ordinal regression~\cite{mccullagh1980regression}, dated back to 1980. It is a member of a wider family of models recognised as Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs predict probabilities of groups of contiguous categories, taking the ordinal scale into account. In this way, cumulative probabilities $P(y \prec Cj |\mathbf{x})$ are estimated, which can be directly related to standard probabilities:
+	Arising from a statistical background, the Proportional Odds Model (POM) is one of the first models designed explicitly for ordinal regression~\cite{mccullagh1980regression}, dated back to 1980. It is a member of a wider family of models recognised as Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs predict probabilities of groups of contiguous categories, taking the ordinal scale into account. In this way, cumulative probabilities $P(y \prec C_q |\mathbf{x})$ are estimated, which can be directly related to standard probabilities:
 	\begin{equation}
 		P(y \preceq \mathcal{C}_q | \mathbf{x}) = P(y = \mathcal{C}_1 | \mathbf{x}) + ... + P(y = \mathcal{C}_q | \mathbf{x}),
 	\end{equation}
@@ -524,9 +524,9 @@
 	\end{equation}
 	with $q = 2, ..., Q-1$, and considering that $P(y = \mathcal{C}_1 | \mathbf{x}) = P(y \preceq \mathcal{C}_1 | \mathbf{x})$ and $P(y \preceq \mathcal{C}_Q | \mathbf{x}) = 1$.
 	
-	The model in inspired by the notion of latent variable, considering a linear transformation $f(x) = \mathbf{w^Tx}$ of the input variables as the one-dimensional mapping. The decision rule $r: \mathcal{X} \rightarrow \mathcal{Y}$ is not fitted directly, but stochastic ordering of space $\mathcal{X}$ is satisfied by the following general model form \cite{herbrich2000large}:
+	The model is inspired by the notion of latent variable, considering a linear transformation $f(x) = \mathbf{w^Tx}$ of the input variables as the one-dimensional mapping. The decision rule $r: \mathcal{X} \rightarrow \mathcal{Y}$ is not fitted directly, but stochastic ordering of space $\mathcal{X}$ is satisfied by the following general model form \cite{herbrich2000large}:
 	\begin{equation}
-		g^{-1}(P(y \preceq \mathcal{C}_q | \mathbf{x})) = b_q - \mathbf{w^Tx}, \quad 1, ..., Q-1,
+		g^{-1}(P(y \preceq \mathcal{C}_q | \mathbf{x})) = b_q - \mathbf{w^Tx}, \quad q = 1, ..., Q-1,
 	\end{equation}
 	where $g^{-1} : [0,1] \rightarrow (-\infty, +\infty)$ is a monotonic function often termed as the inverse link function and $b_q$ is the threshold defined for class $\mathcal{C}_q$. Consider the latent variable $y^* = f(x)^* = \mathbf{w^Tx} + \epsilon$, where $\epsilon$ is the random variable of the error. The most common choice for the probability distribution of $\epsilon$ is the logistic function (which is the default function for POM). Label $\mathcal{C}_q$ is proposed if and only if $f(x) \in [b_{q-1}, b_q]$, where the function $f$ and $\mathbf{b} = (b_0, b_1, ..., b_{Q-1}, b_Q)$ are to be determined from the data. it is assumed that $b_0 = -\infty$ and $b_Q = +\infty$, so the real line defined by $f(x), x \in \mathcal{X}$, is divided into $Q$ consecutive intervals. Each interval corresponds to a category. The constraints $b_1 \le b_2 \le ... \le b_{Q-1}$ ensures that $P(y \preceq \mathcal{C}_q | \mathbf{x})$ increases with $q$ \cite{mccullagh1980regression}.
 	In this work, we use this ordinal model with different link functions for the probability distribution of $\epsilon$, including logit, probit and complementary log-log. These functions will be detailed in Section \ref{sect:model}.
@@ -536,14 +536,14 @@
 	We make use of two ordinal datasets appropriate for deep neural networks:
 	
 	\begin{itemize}
-		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try and predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras,  varying conditions of illumination and different resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted, nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels and rescaled to $[0,1]$ range. Data augmentation techniques are applied to achieve a higher number of samples.
+		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try to predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras,  varying conditions of illumination and different resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted, nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels and rescaled to $[0,1]$ range. Data augmentation techniques, described in Section \ref{sect:procedure}, are applied to achieve a higher number of samples.
 		
 		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work~\cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset is split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
 	\end{itemize}
 	
 	\subsection{The model}
 	\label{sect:model}
-	Convolutional Neural Networks (CNN) has been used for both datasets. The different architectures of CNN used in these experiments are presented in tables \ref{table:CNNArchitecture} and \ref{table:ResNetArchitecture}. The architecture for DR is the same that was used in \cite{de2018weighted} and the network for adience is a small Residual Network (ResNet) \cite{he2016deep} that was used in \cite{beckham2017unimodal}. For convolutional layers, ConvWxH@FsS = F filters of size WxH and stride S. For pooling layers, PoolWxHsS = pool size of WxH and stride S.
+	Convolutional Neural Networks (CNN) has been used for both datasets. The different architectures of CNN used in these experiments are presented in tables \ref{table:CNNArchitecture} and \ref{table:ResNetArchitecture}. The architecture for DR is the same that was used in \cite{de2018weighted} and the network for Adience is a small Residual Network (ResNet) \cite{he2016deep} that was used in \cite{beckham2017unimodal}. For convolutional layers, ConvWxH@FsS = F filters of size WxH and stride S. For pooling layers, PoolWxHsS = pool size of WxH and stride S.
 	
 	\begin{table}[!t]
 		\caption{Description of the architecture used in the DR experiments.}
@@ -553,20 +553,20 @@
 			\hline
 			\textbf{Layer} & \textbf{Output shape}\\
 			\hline
-			Conv3x3@32s1 & 254x254x32\\\hline
-			Conv3x3@32s1 & 252x252x32\\\hline
+			%Conv3x3@32s1 & 254x254x32\\\hline
+			2 x Conv3x3@32s1 & 252x252x32\\\hline
 			MaxPool2x2s2 & 126x126x32\\\hline
 			
-			Conv3x3@64s1 & 124x124x64\\\hline
-			Conv3x3@64s1 & 122x122x64\\\hline
+			%Conv3x3@64s1 & 124x124x64\\\hline
+			2 x Conv3x3@64s1 & 122x122x64\\\hline
 			MaxPool2x2s2 & 61x61x64\\\hline
 			
-			Conv3x3@128s1 & 59x59x128\\\hline
-			Conv3x3@128s1 & 57x57x128\\\hline
+			%Conv3x3@128s1 & 59x59x128\\\hline
+			2 x Conv3x3@128s1 & 57x57x128\\\hline
 			MaxPool2x2s2 & 28x28x128\\\hline
 			
-			Conv3x3@128s1 & 26x26x128\\\hline
-			Conv3x3@128s1 & 24x24x128\\\hline
+			%Conv3x3@128s1 & 26x26x128\\\hline
+			2 x Conv3x3@128s1 & 24x24x128\\\hline
 			MaxPool2x2s2 & 12x12x128\\\hline
 			
 			Conv4x4@128s1 & 9x9x128\\
@@ -721,15 +721,16 @@
 	Unlike logit and probit, the complementary log-log model is asymmetrical. It is frequently used when the probability of an event is very small or very large. When the given data is not symmetric in the $[0,1]$ interval and increase slowly at small to moderate value but increases sharply near 1, the logit and probit models are inappropriate. However, in this situation, the complementary log-log model might give a satisfying answer.
 	
 	\subsection{Procedure}
+	\label{sect:procedure}
 	The model is optimized using a batch based first-order optimization algorithm called Adam~\cite{kingma2014adam}. We study different initial learning rates in order to find the optimal one for each problem. We apply an exponential decay across training epochs to the initial learning rate.
 	
 	Both datasets have been artificially equalized using data augmentation techniques~\cite{van2001art, krizhevsky2012imagenet}. However, different transformations were applied to each one. Diabetic Retinopathy dataset augmentation was based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. Horizontal flipping was the only transformation applied to Adience dataset.
 	
 	In the case of Diabetic Retinopathy Detection, the epoch size has been fixed to $100000$ images per epoch. For the Adience dataset, epoch size is the number of images in the training set.
 	
-	The model is evaluated with Quadratic Weighted Kappa metric (QWK)~\cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class. Quadratic weighted kappa loss is considered as loss function for the optimizer as it gives better performance for ordinal classification problems.
+	The model is evaluated with Quadratic Weighted Kappa metric (QWK)~\cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class. Quadratic weighted kappa loss is considered as loss function for the optimizer as it gives better performance for ordinal classification problems \cite{de2018weighted}.
 	
-	Also, other evaluation metrics have been used to ease the comparison with other works: Minimum Sensitivity (MS), Mean Absolute Error (MAE), Mean Squared Error (MSE), Correct Classification Rate (CCR), Top-2 CCR, Top-3 CCR and 1-off accuracy.
+	Also, other evaluation metrics have been used to ease the comparison with other works: Minimum Sensitivity (MS) \cite{cruz2014metrics}, Mean Absolute Error (MAE) \cite{cruz2014metrics}, Mean Squared Error (MSE) \cite{wang2009mean}, Correct Classification Rate (CCR), Top-2 CCR \cite{beckham2017unimodal}, Top-3 CCR \cite{beckham2017unimodal} and 1-off accuracy \cite{chen2016cascaded, levi2015age, eidinger2014age}.
 	
 	Experiments were run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of the QWK loss and the Proportional Odds Model. The results of these experiments are analysed in Section \ref{app:NominalComparison}.
 	
@@ -744,11 +745,11 @@
 	
 	\section{Results}
 	\label{sect:results}
-	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments done training the model with each combination of parameters. Every parameter combination has been run five times. These tables show the mean value and the standard deviation of each metric across these five executions for the test set. These values are exposed using the format $\text{MEAN}_{(SD)}$.
+	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments done training the model with each combination of parameters. Every parameter combination has been run five times. These tables show the mean value and the standard deviation (SD) of each metric across these five executions for the test set. These values are exposed using the format $\text{MEAN}_{(SD)}$.
 	
 	\subsection{Diabetic Retinopathy}
 	\label{sect:dr}
-	Detailed results for the Diabetic Retinopathy dataset are presented in Table \ref{table:DRresults}.
+	Detailed results for the Diabetic Retinopathy dataset are presented in Table \ref{table:DRresults}. The best result for each metric is marked in bold and the second best is in italic font.
 	
 	\begin{table*}[!t]
 		\caption{Diabetic Retinopathy results. BS stands for Batch Size, LF for link function and LR for Learning Rate.}
@@ -787,11 +788,11 @@
 		\end{tabular}
 	\end{table*}
 	
-	The best mean QWK value was obtained with the complementary log-log link function using a batch size of 10 and a learning rate of $10^{-3}$.
+	The best mean QWK value was obtained with the complementary log-log link function using a batch size of 10 and a learning rate of $10^{-3}$. However, the best CCR value was obtained with a batch size of 15, the logit link and a learning rate of $10^{-4}$. The optimal configuration depends on the metric we are analysing. In this case, as we are working with an ordinal problem, the most reliable metric is the QWK.
 	
 	\subsection{Adience}
 	\label{sect:adience}
-	Results for the experiments made with the Adience dataset are shown in Table \ref{table:AdienceTest}.
+	Results for the experiments made with the Adience dataset are shown in Table \ref{table:AdienceTest}. The best result for each metric is marked in bold and the second best is in italic font.
 	
 	\begin{table*}[!t]
 		\caption{Adience test results. BS stands for Batch Size, LF for link function and LR for Learning Rate.}
@@ -830,45 +831,7 @@
 		\end{tabular}
 	\end{table*}
 	
-%	\begin{table}[!t]
-%		\caption{Adience results. BS stands for Batch Size, LR for Learning Rate and LF for link function.}
-%		\label{table:Adienceresults}
-%		\footnotesize
-%		\centering
-%		\begin{tabular}{ccc|cc}
-%			BS & LR & LF & $QWK_{val}$ & $QWK_{test}$\\\hline
-%			$5$ & $10^{-2}$ & Logit & $0.72072$ & $0.68408$\\
-%			& & Probit & $0.77608$ & $0.72574$\\
-%			& & c log-log & $0.75430$ & $0.70742$\\
-%			& $10^{-3}$ & Logit & $0.71460$ & $0.67868$\\
-%			& & Probit & $0.81906$ & $0.77154$\\
-%			& & c log-log & $0.57196$ & $0.55608$\\
-%			& $10^{-4}$ & Logit & $0.54432$ & $0.51934$\\
-%			& & Probit & $0.54360$ & $0.52422$\\
-%			& & c log-log & $0.54802$ & $0.52484$\\
-%			$10$ & $10^{-2}$ & Logit & $0.78872$ & $0.72994$\\
-%			& & Probit & $0.79332$ & $0.74750$\\
-%			& & c log-log & $0.78004$ & $0.73260$\\
-%			& $10^{-3}$ & Logit & $0.49686$ & $0.47112$\\
-%			& & Probit & $0.59778$ & $0.58476$\\
-%			& & c log-log & $0.52016$ & $0.49968$\\
-%			& $10^{-4}$ & Logit & $0.60972$ & $0.56814$\\
-%			& & Probit & $0.54638$ & $0.52632$\\
-%			& & c log-log & $0.75428$ & $0.52094$\\
-%			$15$ & $10^{-2}$ & Logit & $0.79104$ & $0.74388$\\
-%			& & Probit & $\textbf{0.84254}$ & $\textbf{0.78666}$\\
-%			& & c log-log & $0.78802$ & $0.74624$\\
-%			& $10^{-3}$ & Logit & $0.56946$ & $0.52978$\\
-%			& & Probit & $0.70262$ & $0.65416$\\
-%			& & c log-log & $0.49242$ & $0.47320$\\
-%			& $10^{-4}$ & Logit & $0.55202$ & $0.52484$\\
-%			& & Probit & $0.54288$ & $0.51740$\\
-%			& & c log-log & $0.53826$ & $0.52542$
-%		\end{tabular}
-%		
-%	\end{table}
-	
-	The best mean QWK value was obtained with the probit link function using a batch size of 15 and a learning rate of $10^{-2}$.
+	The best mean QWK value was obtained with the logit link function using a batch size of 64 and a learning rate of $10^{-4}$. Also, this configuration obtained the best score for Top-2, Top-3 and 1-off accuracy, and the second best for MS, MAE and CCR. In this case, this configuration can be selected as the optimal for this problem.
 	
 	\subsection{Statistical analysis}
 	\label{sect:statisticalanalysis}
@@ -882,7 +845,7 @@
 	
 	Following the setup of the previous study, we performed an ANOVA III analysis and multiple comparison tests. We assume that five executions are enough to do the statistical tests because of the computational time limitations.
 	
-	The test shows that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
+	%The test shows that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
 	
 	We denote by $QWK_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the i-th level, the second at the j-th level and the third at k-th level. We assume that the three factors do not act independently and therefore there exists an interaction between each pair of them and between the three factors. In this case, the observations fit \ref{eq:anova3}.
 	
@@ -894,7 +857,7 @@
 	\end{aligned}
 	\end{equation}
 	
-	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor and $B_k$ is the effect associated with the \textit{k-th} level of the batch size factor. The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $W_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
+	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor and $B_k$ is the effect associated with the \textit{k-th} level of the batch size factor. The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $QWK_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
 	
 	We consider some hypotheses testing where the null hypothesis is proposed that each term of the above equation is independent of the levels involved. The hypotheses for the levels of the L factor are
 	\[
@@ -935,11 +898,11 @@
 		\end{tabular}
 	\end{table}
 	
-	The results of the ANOVA III test for the Diabetic Retinopathy dataset are resumed in Table \ref{table:ANOVARetinopathy}. There are significative differences in the means of QWK depending on the link function and also depending on the learning rate for $\alpha=0.05$. Moreover, an interaction between the link function and the learning rate can be recognised ($\text{p-value} = 0.001$).
+	The results of the ANOVA III test for the Diabetic Retinopathy dataset are resumed in Table \ref{table:ANOVARetinopathy}. There are significative differences in the means of QWK depending on the link function and also depending on the learning rate for $\alpha=0.05$ ($\text{p-value} = 0.000$). Moreover, an interaction between the link function and the learning rate can be recognised ($\text{p-value} = 0.001$). It means that the learning rate and the link functions have a significative impact on the optimization algorithm results.
 	
-	As Table \ref{table:ANOVARetinopathy} showed that there exist significative differences between the means, we are now analysing those differences. A post-hoc multiple comparison test has been performed on the mean QWK obtained. An HSD Tukey's test was made under the null hypothesis that the variance of the error of the dependent variable is the same between groups. The best link function is the complementary log-log, though it doesn't have significative differences with the probit function ($\alpha=0.05$). There are differences between the complementary log-log and the probit function concerning the logit function.
+	As Table \ref{table:ANOVARetinopathy} showed that there exist significative differences between the means, we are now analysing those differences. A post-hoc multiple comparison test has been performed on the mean QWK obtained. An HSD Tukey's test \cite{tukey1949comparing} was made under the null hypothesis that the variance of the error of the dependent variable is the same between groups. The results over the test set show that the best link function is the complementary log-log, though it doesn't have significative differences with the probit function ($\text{p-value} = 0.248$). There are differences between the complementary log-log and the probit function concerning the logit function (p-values $0.000$ and $0.011$).
 	
-	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. Significative differences can be observed in the mean values for $\eta = 10^{-3}$ with respect to the other values of the parameter ($\alpha=0.05$). Also, there are differences for $\eta = 10^{-4}$ concerning $\eta = 10^{-2}$.
+	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. Significative differences can be observed in the mean values for $\eta = 10^{-3}$ with respect to the other values of the parameter (p-values $0.023$ for $10^{-4}$ and $0.000$ for $10^{-2}$). Also, there are differences for $\eta = 10^{-4}$ concerning $\eta = 10^{-2}$ ($\text{p-value} = 0.000$).
 	
 	\begin{table}[!t]
 		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Adience dataset.}
@@ -947,33 +910,33 @@
 		\centering
 		\small
 		\begin{tabular}{l|ccccc}
-			            \multicolumn{6}{c}{Response variable QWK}              \\ \hline
-			Source         &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
-			Model          & $84.372$ & $27$  & $3.125$ & $4414.006$ & $0.000$ \\
-			$L$ factor     & $0.156$  &  $2$  & $0.078$ & $110.103$  & $0.000$ \\
-			$P$ factor     & $0.925$  &  $2$  & $0.462$ & $653.163$  & $0.000$ \\
-			$B$ factor     & $0.040$  &  $2$  & $0.020$ &  $28.218$  & $0.000$ \\
-			$LP$ factors   & $0.284$  &  $4$  & $0.071$ & $100.118$  & $0.000$ \\
-			% $LB$ factors & $0.008$  &  $4$  & $0.002$ &  $2.837$   & $0.028$ \\
-			$PB$ factors   & $0.026$  &  $4$  & $0.007$ &  $9.267$   & $0.000$ \\
-			$LPB$ factors  & $0.021$  &  $8$  & $0.003$ &  $3.728$   & $0.001$ \\
-			Error          & $0.076$  & $108$ & $0.001$ &            &  \\ \hline
-			Total          & $84.449$ & $135$ &         &            &
+			            \multicolumn{6}{c}{Response variable QWK}             \\ \hline
+			Source        &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
+			Model         & $84.372$ & $27$  & $3.125$ & $4414.006$ & $0.000$ \\
+			$L$ factor    & $0.156$  &  $2$  & $0.078$ & $110.103$  & $0.000$ \\
+			$P$ factor    & $0.925$  &  $2$  & $0.462$ & $653.163$  & $0.000$ \\
+			$B$ factor    & $0.040$  &  $2$  & $0.020$ &  $28.218$  & $0.000$ \\
+			$LP$ factors  & $0.284$  &  $4$  & $0.071$ & $100.118$  & $0.000$ \\
+			$LB$ factors  & $0.008$  &  $4$  & $0.002$ &  $2.837$   & $0.028$ \\
+			$PB$ factors  & $0.026$  &  $4$  & $0.007$ &  $9.267$   & $0.000$ \\
+			$LPB$ factors & $0.021$  &  $8$  & $0.003$ &  $3.728$   & $0.001$ \\
+			Error         & $0.076$  & $108$ & $0.001$ &            &  \\ \hline
+			Total         & $84.449$ & $135$ &         &            &
 		\end{tabular}
 	\end{table}
 	
-	The results of the ANOVA III test for the Adience dataset are shown in Table \ref{table:ANOVAAdience}. The interactions where there are not significative differences in QWK means have been omitted. First, we observe that there exist significative differences in the mean QWK concerning the three factors (p-values $0.000$). Secondly, we found interactions between the following pairs of factors: the link function and the learning rate, the link function and the batch size and, the batch size and the learning rate. Also, there are interactions between all the factors together.
+	The results of the ANOVA III test for the Adience dataset are shown in Table \ref{table:ANOVAAdience}. First, we observe that there exist significative differences in the mean QWK concerning the three factors ($\text{p-value} = 0.000$). Secondly, we found interactions between all the pairs of factors and between all the three factors together (p-values $0.000$, $0.000$, $0.000$ and $0.001$). It means that the joint action of two or three factors significatively affects the results obtained by the algorithm.
 	
-	As we did for the DR dataset, a post-hoc multiple comparison test has been performed on the average QWK obtained for this dataset too. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been done. The results showed that the best link function is the logit one, in this case, with $0.8265$ as mean QWK value. Also, there are significative differences between this function and the probit link (p-value $0.000$), that has a mean QWK value of $0.7810$. Both links functions present significative differences concerning the complementary log-log function, that has a mean value of $0.7434$.
+	As we did for the DR dataset, a post-hoc multiple comparison test has been performed on the average QWK obtained for Adience. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been done. The results showed that the best link function is the logit one, in this case, with $0.827$ as mean QWK value. Also, there are significative differences between this function and the probit link ($\text{p-value} = 0.000$), that has a mean QWK value of $0.781$. Both links functions present significative differences concerning the complementary log-log function, that has a mean value of $0.743$.
 	
-	The same methodology was followed for the learning rate and the batch size factors. The test reported significative differences between $\eta=10^{-3}$ (mean value $0.8636$) and the rest of values of this parameter, being this one the best value for this factor. The best value after $10^{-3}$ is $10^{-2}$, which have a mean QWK value of $0.8177$. Both values present significative differences with $\eta=10^{-4}$, that has a mean QWK value of $0.6697$.
+	The same methodology was followed for the learning rate and the batch size factors. The test reported significative differences between $\eta=10^{-3}$ (mean value $0.864$) and the rest of values of this parameter ($\text{p-value} = 0.000$ for both values), being this one the best value for this factor. The best value after $10^{-3}$ is $10^{-2}$, which have a mean QWK value of $0.818$. Both values present significative differences with $\eta=10^{-4}$, that has a mean QWK value of $0.670$ ($\text{p-value = 0.000}$).
 	
-	Lastly, the best value for the batch size parameter is $128$ (mean value $0.8024$) as it has significative differences with the rest of values. The second best value is $256$ (mean $0.7877$), and it has significative differences with $64$, that has a mean value of $0.7609$.
+	Lastly, the best value for the batch size parameter is $128$ (mean value $0.802$) as it has significative differences with the rest of values (p-values $0.026$ and $0.000$). The second best value is $256$ (mean $0.788$), and it has significative differences with $64$ ($\text{p-value} = 0.000$), that has a mean value of $0.761$.
 	
-	However, the interactions between these factors made the configuration that uses a logit link, $\eta=10^{-3}$ and batch size of 64, the best configuration. It obtained a mean QWK value of $0.9396$ for validation and $0.8808$ for test. The same parameters, but using the probit link, achieves the second best results.
+	However, the interactions between these factors made the configuration that uses a logit link, $\eta=10^{-3}$ and batch size of 64, the best configuration. It obtained a mean QWK value of $0.940$ for validation and $0.881$ for test. The same parameters, but using the probit link, achieves the second best result ($0.874$). The standard deviation is very low for both cases.
 	
 	To sum up, the results showed that the best parameter configuration depends on the problem that is being solved. The optimal value for the batch size and the optimal link function are not the same for Retinopathy and Adience datasets. These results highlight the importance of adjusting the hyper-parameters for each problem that is treated instead of trying to find an optimal configuration for all the datasets. However, the best learning rate for both datasets were $10^{-3}$. It is recommended to use this value for future datasets.
-	The best batch size for DR was 10 while the best value for Adience was 128. Both values are the median value that we have tried.
+	The best batch size for DR was 10 while the best value for Adience was 128. Both values are the intermediate value that we have tried.
 	Finally, there are more interactions between the three factors for the Adience dataset than for the Diabetic Retinopathy one. This highlights the importance of making experimental designs associated with each dataset to determine the best value for each factor.
 	
 	\subsection{Comparison with nominal method and previous works}
@@ -985,9 +948,9 @@
 	
 	In the case of Adience dataset, the highest QWK was $0.787$ and was achieved with a batch size of 64 and a learning rate of $10^{-3}$.
 
-	Finally, a comparison of the best results for each dataset for ordinal and nominal cases and previous works is shown in tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}. Also, it is compared with previous works. The proposed ordinal model outperforms all the other alternatives in terms of QWK. The performance increase of POM over softmax reaches $16.8\%$ for Diabetic Retinopathy and $11.9\%$ for Adience dataset. The enhancement of the ordinal method for Retinopathy dataset is more notable than the rise for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases.
+	Finally, a comparison of the best results for each dataset for ordinal and nominal cases and previous works is shown in tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}. Also, it is compared with previous works. The proposed ordinal model outperforms all the other alternatives in terms of QWK. The performance increase of POM over softmax reaches $16.8\%$ for Diabetic Retinopathy and $11.9\%$ for Adience dataset. The enhancement of the ordinal method for Retinopathy dataset is more notable than the rise for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases: it is harder to detect the diabetes disease from a retina image than predicting the age range of a person.
 	
-	In the case of DR, the nominal method obtained a higher CCR and 1-off accuracy value because of the important dataset unbalance. It is possible to achieve a high accuracy classifying all the examples in the majority class. However, as we are working with an ordinal problem, it is preferable to achieve a good QWK value rather than a high accuracy. This effect is not seen in the Adience dataset as it less unbalanced.
+	In the case of DR, the nominal method obtained a higher CCR and 1-off accuracy value because of the important dataset unbalance. It is possible to achieve a high accuracy classifying all the examples in the majority class. However, as we are working with an ordinal problem, it is preferable to achieve a good QWK value rather than a high accuracy. This effect is not seen in the Adience dataset as it is less unbalanced.
 	
 	\begin{table}[!t]
 		\caption{Comparison between the best results of nominal, ordinal and previous works for the Diabetic Retinopathy dataset.}
