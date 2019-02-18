@@ -149,7 +149,7 @@ class Dataset():
 		self._data = {}
 		self._data['x'] = []
 		self._data['y'] = []
-		self._sample_shape = (75,75,3)
+		self._sample_shape = (32,32,3)
 
 		if split == 'train':
 			self._data['x'] = x_train
@@ -172,7 +172,7 @@ class Dataset():
 		self.num_classes = 10
 
 		# Upscale
-		self._resize_data(75, 75)
+		self._resize_data(32, 32)
 
 
 	def _resize_data(self, width, height):

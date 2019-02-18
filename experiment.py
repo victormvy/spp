@@ -345,7 +345,7 @@ class Experiment():
 		:return: True if new metric is better than best metric or False otherwise.
 		"""
 		if self._best_metric is None or (
-				maximize and metric > self._best_metric or not maximize and metric <= self._best_metric):
+						maximize and metric > self._best_metric or not maximize and metric <= self._best_metric):
 			self._best_metric = metric
 			return True
 		return False
@@ -383,6 +383,10 @@ class Experiment():
 			**self.augmentation
 		)
 
+		# Augmentation for validation / test
+		eval_augmentation = {k: v for k, v in self.augmentation.items() if
+							 k == 'featurewise_center' or k == 'featurewise_std_normalization'}
+
 		# shear_range=0.2,
 		# zoom_range=0.2,
 		# horizontal_flip=True,
@@ -392,7 +396,7 @@ class Experiment():
 		# fill_mode='nearest',
 
 		# Validation data generator
-		val_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor)
+		val_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor, **eval_augmentation)
 
 		# Get database paths
 		train_path, val_path, _ = self.get_db_path(self.db)
@@ -413,6 +417,8 @@ class Experiment():
 		# Fit for zca_whitening, featurewise_center, featurewise_std_normalization
 		if 'zca_whitening' in self.augmentation or 'featurewise_center' in self.augmentation or 'featurewise_std_normalization' in self.augmentation:
 			train_datagen.fit(ds_train.x)
+			val_datagen.mean = train_datagen.mean
+			val_datagen.std = train_datagen.std
 
 		# Train data generator used for training
 		train_generator = train_datagen.flow(
@@ -556,8 +562,16 @@ class Experiment():
 
 		all_metrics = {}
 
+		# Augmentation for validation / test
+		eval_augmentation = {k: v for k, v in self.augmentation.items() if
+							 k == 'featurewise_center' or k == 'featurewise_std_normalization'}
+
+		mean = 0
+		std = 0
+
 		for path, set in zip(paths, ['Train', 'Validation', 'Test']):
 			print('\n=== {} dataset ===\n'.format(set))
+
 			# Load test dataset
 			ds_test = Dataset(path)
 
@@ -567,7 +581,19 @@ class Experiment():
 			img_size = ds_test.img_size
 
 			# Validation data generator
-			test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor)
+			test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor,
+																		   **eval_augmentation)
+
+			# Save mean and std of train set
+			if set == 'Train':
+				# Fit for zca_whitening, featurewise_center, featurewise_std_normalization
+				if 'zca_whitening' in self.augmentation or 'featurewise_center' in self.augmentation or 'featurewise_std_normalization' in self.augmentation:
+					test_datagen.fit(ds_test.x)
+					mean = test_datagen.mean
+					std = test_datagen.std
+			else:
+				test_datagen.mean = mean
+				test_datagen.std = std
 
 			# Test generator
 			test_generator = test_datagen.flow(
