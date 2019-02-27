@@ -30,6 +30,12 @@ def qwk_loss(cost_matrix):
 		targets = tf.argmax(true_prob, axis=1)
 		costs = tf.gather(cost_matrix, targets)
 
+		# costs = tf.Print(costs, data=[costs], summarize=100, message='costs')
+
+#		pred_cls = tf.argmax(pred_prob, axis=1)
+
+# 		conf_mat = tf.confusion_matrix(targets, pred_cls)
+
 		numerator = costs * pred_prob
 		numerator = tf.reduce_sum(numerator)
 
@@ -44,6 +50,6 @@ def qwk_loss(cost_matrix):
 		denominator = a * b
 		denominator = tf.reduce_sum(denominator) + epsilon
 
-		return numerator / denominator
+		return numerator / denominator # + tf.cast(tf.reduce_sum(conf_mat) * 0, dtype=tf.float32)
 
 	return _qwk_loss

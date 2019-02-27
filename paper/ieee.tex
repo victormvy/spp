@@ -1,3 +1,4 @@
+% !TeX spellcheck = en_GB
 
 %% bare_jrnl.tex
 %% V1.4b
@@ -104,8 +105,6 @@
 % The latest version can be obtained at:
 % http://www.ctan.org/pkg/cite
 % The documentation is contained in the cite.sty file itself.
-
-
 
 
 
@@ -330,7 +329,6 @@
 % *** PDF, URL AND HYPERLINK PACKAGES ***
 %
 \usepackage{url}
-\usepackage{hyperref}
 % url.sty was written by Donald Arseneau. It provides better support for
 % handling and breaking URLs. url.sty is already installed on most LaTeX
 % systems. The latest version and documentation can be obtained at:
@@ -346,6 +344,13 @@
 \usepackage{dsfont}
 \usepackage{amssymb}
 
+\usepackage{color}
+
+\usepackage{ulem}
+
+\usepackage{array,booktabs}
+
+\usepackage{hyperref}
 
 % *** Do not adjust lengths that control margins, column widths, etc. ***
 % *** Do not use packages that alter fonts (such as pslatex).         ***
@@ -355,7 +360,7 @@
 
 
 % correct bad hyphenation here
-\hyphenation{op-tical net-works semi-conduc-tor}
+\hyphenation{op-tical net-works semi-conduc-tor mi-ni-mi-zes des-cri-bed di-ffe-rent sig-ni-fi-can-ce}
 
 %\addbibresource{main.bib}
 
@@ -381,7 +386,7 @@
 	% was not built to handle multiple paragraphs
 	%
 	
-	\author{Victor-Manuel~Vargas, Pedro-Antonio~Gutiérrez and César~Hervás}
+	\author{Víctor-Manuel~Vargas, Pedro-Antonio~Gutiérrez and César~Hervás}
 	
 	% note the % following the last \IEEEmembership and also \thanks - 
 	% these prevent an unwanted space from occurring between the last author name
@@ -479,43 +484,75 @@
 	% 
 	% Here we have the typical use of a "T" for an initial drop letter
 	% and "HIS" in caps to complete the first word.
-	\IEEEPARstart{D}{eep learning}, introduced by Yann Lecun~\cite{lecun2015deep}, combines multiple Machine Learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{cirecsan2012multi,he2016deep,krizhevsky2012imagenet}, speech recognition~\cite{hinton2012deep}, control problems~\cite{mnih2015human}, object detection~\cite{jiang2016speed,girshick2014rich}, privacy protection~\cite{yu2017iprivacy}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{long2015fully} and image retrieval~\cite{li2015weakly}. Deep learning discovers complex structures in large datasets by using the backpropagation algorithm to indicate how a machine should change its internal parameters that are used to compute the representation in each layer from the features in the previous layer.
+	\textcolor{red}{Habría que restructurar la introducción: 1) deep learning y CNN, pero corto 2) clasificación ordinal, modelos de umbral, POM y funciones de enlace (más bien breve) 3) clasificación ordinal profunda 4) objetivo del paper (un estudio experimental sobre funciones de enlace y otros parámetros en deep learning ordinal). learning rate y batch normalization, si se mete, debería ser más breve}
 	
-	Convolutional Neural Networks (CNN) are designed to process data that comes in the form of multiple arrays. CNNs are suited for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,sun2013deep,ronneberger2015u}. On image classification tasks, each colour channel is represented by a 2D array. In this case, convolutional layers extract the main features from the pixels of the images and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the convolutional net, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. These outputs are compared against the correct values.
+	1) \IEEEPARstart{D}{eep learning}, introduced by Yann Lecun~\cite{lecun2015deep}, combines multiple machine learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{cirecsan2012multi,he2016deep,krizhevsky2012imagenet}, speech recognition~\cite{hinton2012deep}, control problems~\cite{mnih2015human}, object detection~\cite{jiang2016speed,girshick2014rich}, privacy protection~\cite{yu2017iprivacy}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{long2015fully} and image retrieval~\cite{li2015weakly}. \textcolor{blue}{\sout{Deep learning discovers complex structures in large datasets by using the backpropagation algorithm to change the internal parameters of the model and compute better representations in each layer from the features in the previous layer.} Convolutional Neural Networks (CNN) are one of the types of deep networks that are designed to process data that comes in the form of multiple arrays.} CNNs are appropriate for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,sun2013deep,ronneberger2015u}. On image classification tasks, each colour channel is represented by a 2D array. In this case, convolutional layers extract the main features from the pixels of the images and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the CNN, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. These outputs are compared against the correct values.
 	
-	The backpropagation algorithm is a stochastic gradient descent algorithm that minimises a predefined loss function. It has been used in the last years in many works~\cite{leonard1990improvement,yu1995dynamic,krizhevsky2012imagenet,de2018weighted} for training shallow and deep neural networks. It updates the layer's parameters after backpropagating the loss function gradients through the network. Learning rate hyper-parameter controls the strength of the changes that are applied to those parameters. Some works have checked the importance of finding the optimal value for this parameter~\cite{senior2013empirical} and have tried different approaches to try to improve the training process~\cite{smith2017cyclical}.
+	2) Ordinal classification problems are those classification tasks where labels are ordered, and there are different inter-classes importances for each pair of classes. This kind of problem can be treated as a nominal classification problem, but this discards ordinal information. A better approach is to use specific methods that take into account this kind of information to improve the performance of the classification model. \textcolor{blue}{\sout{One way to use the ordinal information is to evaluate the model using an ordinal metric. Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics,mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. An ordinal weighted kappa loss was described in a previous work~\cite{de2018weighted}, which is a differentiable cost function based on the WK metric. This previous work proved that using these functions improves the model performance and reduce the overfitting risk. Different weights can be assigned in an ordinal classification problem. In a linear penalization, the weight is proportional to the distance between the predicted and the real class (in number of categories). In the Quadratic Weighted Kappa (QWK) the penalization is proportional to the square of the distance. In this work, we will use the QWK metric and the QWK loss.} The Proportional Odds Model (POM)~\cite{agresti2010analysis} is an ordinal alternative to the softmax function that was designed for ordinal regression. It belongs to a wider family of models called Cumulative Link Models (CLM). It is inspired in the concept of a latent variable that is projected in an n-dimensional space and a set of thresholds that divides this space into the different ordinal levels. This kind of models uses a link function which can be of different types. The most common link function is the \texttt{logit} one, that is used in POM. However, there are other functions that can be explored. This model will be described in depth in Section \ref{sect:ordinalproblem}.}
 	
-	Batch normalization is another technique that is used for this kind of networks. It reduces the internal covariate shift by normalizing layer inputs. It was presented in 2015~\cite{ioffe2015batch} and gives a critical enhancement to the training phase. Batch size is an important hyper-parameter that should be adjusted as it affects the layer's parameters updates and also the normalization~\cite{keskar2016large}\cite{radiuk2017impact}.
+	\textcolor{blue}{3) Ordinal models can also be applied to deep learning models. In the case of convolutional networks, the model projection used by the threshold model will be obtained from the last layer of the network. When working with a 1-dimensional space, the last layer will have only one neuron, and its value will be used to classify every sample in the corresponding class according to the thresholds. Some previous works have used the POM in traditional neural networks~\cite{gutierrez2016ordinal}, but it has not been applied to convolutional networks yet. Also, there are some link functions that has not been explored.}
 	
-	Ordinal classification problems are those where labels are ordered, and there are different inter-classes weights for each pair of classes. This kind of problem can be treated as a nominal classification problem, but when you do this, you are discarding ordinal information. A better approach is to use specific methods that take into account this kind of information to improve the performance of the classification model. One way to use the ordinal information is to evaluate the model using an ordinal metric. Multiple metrics exist in the literature of machine learning and statistics \cite{cruz2014metrics,mehdiyev2016evaluating}. Kappa index is a well-known statistic coefficient defined by Cohen \cite{cohen1960coefficient} to measure inter-rater agreement on classifying elements into a set of categories. Later, Weighted Kappa (WK) is a modified version of the Kappa statistic calculated to allow assigning different weights to different levels of aggregation between two variables. Weighted kappa loss was described in previous work~\cite{de2018weighted} and is a cost function that is based on the WK metric. These functions are indicated for problems where different inter-classes weights are assigned, and that work proved that using these functions improves the model performance and reduce the overfitting risk. This kind of problems is associated with ordinal data processing. Those weights are predefined and depend on the type of the chosen WK. In a linear penalization, the weight is proportional to the distance between the predicted and the real class. In the Quadratic Weighted Kappa (QWK) the penalization is proportional to the square of the distance. In this work, we will use the QWK metric and the QWK loss.
+	\textcolor{blue}{4) In this paper, an experimental study regarding link functions for Cumulative Link Models will be made. Also, other parameters that can affect the training process and the model performance, like the learning rate of the optimization algorithm and the batch size, and its interaction will be studied. The nominal version of this model will be used as a baseline for comparison. We will contrast the results obtained with statistical analysis to provide more robust conclusions. An approximated ANOVA III \cite{miller1997beyond} test followed by a posthoc Tukey's test \cite{tukey1949comparing} will be performed because of the limitations of the computational time required to run a higher number of executions.}
 	
-	Softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems but not the best when working with ordinal data. In this paper, the Proportional Odds Model (POM)~\cite{gutierrez2016ordinal,agresti2010analysis} will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust results. An approximated ANOVA III \cite{miller1997beyond} test followed by a posthoc Tukey's test \cite{tukey1949comparing} will be performed because of the limitations of the computational time required to run a higher number of executions.
+	The experiments will be run using two different ordinal datasets: Diabetic Retinopathy~\cite{de2018weighted}, which contains high-resolution fundus images related with diabetes disease, and Adience~\cite{beckham2017unimodal}, which includes human faces images associated with an age range.
 	
-	The experiments will be run using two different ordinal datasets: Diabetic Retinopathy~\cite{de2018weighted}, that contains high-resolution fundus images related with diabetes disease, and Adience~\cite{beckham2017unimodal}, that is formed of human faces images that are assigned an age range.
+	This paper is organized as follows: in Section~\ref{sect:relatedwork}, we take a look at previous works related to this paper. Section~\ref{sect:ordinalproblem} present a formal description of an ordinal problem and the Cumulative Link Models. In Section~\ref{sect:experiments}, we describe the model, the experiments and the datasets used, while, in Section~\ref{sect:results}, we present the results obtained and the statistical analysis. Finally, Section~\ref{sect:conclusions} exposes the conclusions of this work.
 	
-	This paper is organized as follows: in Section~\ref{sect:relatedwork}, we take a look at previous works related to this paper. Sections~\ref{sect:ordinalproblem} and \ref{sect:pom} present a formal description of an ordinal problem and the Proportional Odds Model. In Section~\ref{sect:experiments} we describe the model, the experiments and the datasets used, in Section~\ref{sect:results} we present the results obtained and the statistical analysis and finally in Section~\ref{sect:conclusions} we expose the conclusions of this work.
+%	\textcolor{red}{The backpropagation algorithm is a stochastic gradient descent algorithm that minimises a predefined loss function. It has been used in the last years in many works~\cite{leonard1990improvement,yu1995dynamic,krizhevsky2012imagenet,de2018weighted} for training shallow and deep neural networks. It updates the weights of each layer after backpropagating the loss function gradients through the network. The learning rate hyper-parameter controls the strength of the changes that are applied to the weights. Some works have checked the importance of finding the optimal value for this parameter~\cite{senior2013empirical} and have tried different approaches to improve the training process~\cite{smith2017cyclical}.}
+%	
+%	\textcolor{red}{Batch normalization is another technique used for this kind of networks. It reduces the internal covariate shift by normalizing layer inputs. It was presented in 2015~\cite{ioffe2015batch} and gives a critical enhancement during the training phase. Batch size is another important hyper-parameter that should be adjusted as it affects the weight updates and also the normalization~\cite{keskar2016large}\cite{radiuk2017impact}.}
+%	
+%	The softmax function is widely used for the output layer in neural networks for classification tasks. It is a simple and efficient function for multi-class problems, but it is not the best when working with ordinal data. In this paper, the Cumulative Link Model (CLM)~\cite{gutierrez2016ordinal,agresti2010analysis} will be used instead of the softmax function. Different link functions will be explored to compare their performance. Also, the influence of other parameters like the learning rate of the optimization algorithm and the batch size will be studied. We will contrast the results obtained with statistical analysis to provide more robust conclusions. An approximated ANOVA III \cite{miller1997beyond} test followed by a posthoc Tukey's test \cite{tukey1949comparing} will be performed because of the limitations of the computational time required to run a higher number of executions.
 	
-	\section{Related work}
+
+	
+	\section{Related works}
 	\label{sect:relatedwork}
-	There are many works related to the application and development of convolutional neural networks models. Few works treat ordinal classification problems, though.
+	There are many works related to the application and development of CNN models. However, few works are focused on ordinal classification problems.
 	
-	J. de la Torre et al.~\cite{de2018weighted} proposed the use of QWK loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function across three different databases, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces the overfitting and the required training time. Also, they checked the importance of hyper-parameter tuning.
+	J. de la Torre et al.~\cite{de2018weighted} proposed the use of a continuous version of the QWK loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function across three different databases, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces overfitting and training time. Also, they checked the importance of hyper-parameter tuning. First, they defined QWK metric as follows:
+	\begin{equation}
+	\textcolor{blue}{\text{QWK} = 1 - \frac{\sum_{i,j} \omega_{i,j} O_{i,j}}{\sum_{i,j} \omega_{i,j} E_{i,j}},}
+	\end{equation}
+	\textcolor{blue}{where $\omega$ is the penalization matrix, $O$ is the confusion matrix and $E$ is the normalized outer product between the prediction and the true vector.}
 	
-	Christopher Beckham and Christopher Pal~\cite{beckham2017unimodal} proposed a straightforward technique to constrain discrete ordinal probability distributions to be unimodal via the use of the Poisson and binomial probability distributions. They evaluated this approach in the context of deep learning on two large ordinal image datasets, including the Adience dataset used in this paper, and they obtained promising results.
+	\textcolor{blue}{Then, they provided the QWK loss ($\text{QWK}_l$) definition below:}
+	\begin{equation}
+	\textcolor{blue}{\text{QWK}_l = 1 - \frac{\sum_{k=1}^N \sum_{c=1}^C \omega_{t_k, c} P_c(X_k)}{\sum_{i=1}^C \frac{N_i}{N} \sum_{j=1}^C ( \omega_{i,j} \sum_{k=1}^N P_j(X_k) ) },}
+	\end{equation}
+	\textcolor{blue}{where $X_k$ is the input data of the $k$th sample, $N$ is the number of samples, $N_i$ is the number of samples of the $i$th class and $P_c(X_k)$ is the conditional probability that the $k$th sample belongs to class $c$ given that the true class is $t_k$.}
 	
-	Adience dataset has been used in other works for human age estimation. E. Eidinger \cite{eidinger2014age} presented an approach using support vector machines and neural networks. J.-C. Chen \cite{chen2016cascaded} proposed a coarse-to-fine strategy for deep convolutional networks. G. Levi \cite{levi2015age} presented another convolutional network model for age estimation. 
+	\textcolor{blue}{Z. Niu et al. \cite{niu2016ordinal} proposed a learning approach to address ordinal regression problems using convolutional neural networks. They divided the problem into a series of binary classification sub-problems and proposed a multiple output CNN optimization algorithm to collectively resolve these classification sub-problems, taking into account the correlation between them.}
 	
-	At present, there is a great discussion in terms of finding the best activation function that offers good performance and mitigates the effects of the gradients vanishing problem \cite{bengio1994learning,pascanu2013difficulty}. Rectified Linear Unit (ReLU)~\cite{nair2010rectified} is widely used in most deep learning works, but recently, Clevert et al. proposed the Exponential Linear Unit (ELU)~\cite{clevert2015fast}. They proved that ELUs alleviate the vanishing gradient problem via the identity for positive values. In their experiments, ELUs lead not only to faster learning but also to significantly better generalization performance than ReLUs and Leaky ReLU functions (LReLU) on networks with more than five layers. That's why we decided to use the ELU function for the experiments described in this paper.
+	Christopher Beckham and Christopher Pal~\cite{beckham2017unimodal} proposed a straightforward technique to constrain discrete ordinal probability distributions to be unimodal, via the use of the Poisson and binomial probability distributions. They evaluated this approach in the context of deep learning on two large ordinal image datasets, including the Adience dataset used in this paper, obtaining promising results.	\textcolor{blue}{Also, they proposed a simple squared-error reformulation \cite{beckham2016simple} that was sensitive to class ordering.}
 	
-	Sergey Ioffe and Christian Szegedy~\cite{ioffe2015batch} described Batch Normalization and its benefits in previous work. It reduces the internal covariate shift by normalizing layer inputs. Their method draws its strength from making normalization a part of the model architecture and performing the normalization for each training batch. It allows them to use higher learning rates and be less careful about initialization. It also eliminates the need for using regularization techniques like Dropout.
+	Adience dataset has been used in other works for human age estimation. E. Eidinger \cite{eidinger2014age} presented an approach using support vector machines and neural networks. J.-C. Chen \cite{chen2016cascaded} proposed a coarse-to-fine strategy for deep convolutional networks. G. Levi \cite{levi2015age} presented another convolutional network model for age estimation. \textcolor{red}{Estos son ordinales?} \textcolor{blue}{No son ordinales pero los cito aqui porque luego los uso para comparar con ellos ya que son los que he encontrado que utilicen las base de datos Adience para predecir edad.}
 	
-	\section{Ordinal problem definition}
+	\textcolor{blue}{H. Li et al. \cite{li2017deep} applied deep learning techniques for solving the ordinal problem of Alzheimer's diagnosis and detecting the different levels of the disease.}
+	
+	\textcolor{blue}{Y. Liu et al. \cite{liu2017deep} proposed a new approach of which transforms the ordinal regression problem to binary classification problems and use triplets with instances from different categories to train deep neural networks. In this way, high-level features describing the ordinal relationship are extracted automatically.}
+	
+	\textcolor{blue}{A. Rios et al. \cite{rios2017ordinal} presented a CNN model designed to handle ordinal regression tasks on psychiatric notes. They combined an ordinal loss function, a CNN model and conventional feature engineering. Also, they applied a technique called Locally Interpretable Model-agnostic Explanation (LIME) to make the non-linear model more interpretable.}
+	
+	\textcolor{blue}{S. Chen et al. \cite{chen2017using} proposed a deep method termed Ranking-CNN. This method combines multiple binary CNNs that are trained with ordinal age labels. The binary outputs are aggregated for the final age prediction and they achieved a tighter error bound for ranking-based age estimation.}
+	
+	\textcolor{blue}{H. Fu et al. \cite{fu2018deep} applied deep learning techniques to Monocular Depth Estimation. They introduced a spacing-increasing discretization strategy to treat the problem as an ordinal regression problem. They improved the performance when training the network with an ordinary regression loss. Also, they used a multi-scale network structure that avoids unnecessary spatial pooling.}
+	
+	\textcolor{blue}{Y. Liu et al. \cite{liu2018constrained} proposed a constrained optimization formulation for the ordinal regression problem which minimizes de negative loglikelihood for multiple categories constrained by the order relationship between instances.}
+	
+	\textcolor{blue}{A. Pal et al. \cite{pal2018severity} defined a loss function for CNN that is based on the Earth Mover's Distance and takes into account the ordinal class relationships.}
+	
+	\textcolor{blue}{M. ALALI et al. \cite{alali2018multi} proposed a complex CNN architecture for solving Twitter Sentiment Classification as an ordinal problem. They checked that using average pooling preserves significant features that provide more expresiveness to ordinal scale.}
+	
+	\textcolor{blue}{\sout{Currently, there is a great discussion in terms of finding the best activation function, offering good performance and mitigating the effects of the gradient vanishing problem \cite{bengio1994learning,pascanu2013difficulty}. Rectified Linear Unit (ReLU)~\cite{nair2010rectified} is widely used in most deep learning works, but recently, Clevert et al. proposed the Exponential Linear Unit (ELU)~\cite{clevert2015fast}. They proved that ELUs alleviate the vanishing gradient problem via the identity for positive values. In their experiments, ELUs lead not only to faster learning but also to significantly better generalization performance than ReLUs and Leaky ReLU functions (LReLU) on networks with more than five layers. In this way, this paper considers the ELU function for the different experiments.}}
+	
+	\textcolor{blue}{\sout{Sergey Ioffe and Christian Szegedy~\cite{ioffe2015batch} described Batch Normalization and its benefits. It reduces the internal covariate shift by normalizing layer inputs. Their method draws its strength from making normalization a part of the model architecture and performing the normalization for each training batch. It allows them to use higher learning rates and be less careful about initialization. It also eliminates the need for using regularization techniques like Dropout.}}
+	
+	\section{Cumulative Link Models (CLM)}
 	\label{sect:ordinalproblem}
-	The ordinal problem consists of predicting the label y of an input vector $\mathbf{x}$, where $\mathbf{x} \in \mathcal{X} \subseteq \mathds{R}^K$ and $y \in \mathcal{Y}~=~\{\mathcal{C}_1, \mathcal{C}_2, ..., \mathcal{C}_Q\}$, i.e. $\mathbf{x}$ is in a K-dimensional input space, and $y$ is in a label space of $Q$ different labels. The objective of the ordinal problem is to find a function $r : \mathcal{X} \rightarrow \mathcal{Y}$ to predict the labels or categories of new patterns, given a training set of $N$ points, $D = \{(x_i, y_i), i = 1, ..., N\}$. A natural label ordering exists for ordinal problems: $\mathcal{C}_1 \prec \mathcal{C}_2 \prec ... \prec \mathcal{C}_Q$. The assumption of order between class labels makes that two different elements of $\mathcal{Y}$ can always be compared by using the relation $\prec$, which is not possible under the nominal classification setting. In regression (where $y \in \mathds{R}$), real values in $\mathds{R}$ can be ordered by the standard $<$ operator, but labels in ordinal regression ($y \in \mathcal{Y}$) do not carry metric information, so the category serves as a qualitative indication of the pattern rather than a quantitative one.
+	An ordinal classification problem consists of predicting the label $y$ of an input vector $\mathbf{x}$, where $\mathbf{x} \in \mathcal{X} \subseteq \mathds{R}^K$ and $y \in \mathcal{Y}~=~\{\mathcal{C}_1, \mathcal{C}_2, ..., \mathcal{C}_Q\}$, i.e. $\mathbf{x}$ is in a K-dimensional input space, and $y$ is in a label space of $Q$ different labels. The objective of the ordinal problem is to find a function $r : \mathcal{X} \rightarrow \mathcal{Y}$ to predict the labels or categories of new patterns, given a training set of $N$ points, $D = \{(\mathbf{x}_i, y_i), i = 1, ..., N\}$. Labels have a natural ordering in ordinal problems: $\mathcal{C}_1 \prec \mathcal{C}_2 \prec ... \prec \mathcal{C}_Q$. The order between labels makes it possible to compare two different elements of $\mathcal{Y}$ by using the relation $\prec$. This is not possible under the nominal classification setting. In regression (where $y \in \mathds{R}$), real values in $\mathds{R}$ can be ordered by the standard $<$ operator, but labels in ordinal regression ($y \in \mathcal{Y}$) do not carry metric information, so the category serves as a qualitative indication of the pattern rather than a quantitative one.
 	
-	\section{Proportional Odds Model}
-	\label{sect:pom}
-	Arising from a statistical background, the Proportional Odds Model (POM) is one of the first models designed explicitly for ordinal regression~\cite{mccullagh1980regression}, dated back to 1980. It is a member of a wider family of models recognised as Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs predict probabilities of groups of contiguous categories, taking the ordinal scale into account. In this way, cumulative probabilities $P(y \prec C_q |\mathbf{x})$ are estimated, which can be directly related to standard probabilities:
+	The Proportional Odds Model (POM) arises from a statistical background and is one of the first models designed explicitly for ordinal regression~\cite{mccullagh1980regression}. It dated back to 1980 and is a member of a wider family of models recognised as Cumulative Link Models (CLM)~\cite{agresti2010analysis}. CLMs predict probabilities of groups of contiguous categories, taking the ordinal scale into account. In this way, cumulative probabilities $P(y \prec C_q |\mathbf{x})$ are estimated, which can be directly related to standard probabilities:
 	\begin{equation}
 		P(y \preceq \mathcal{C}_q | \mathbf{x}) = P(y = \mathcal{C}_1 | \mathbf{x}) + ... + P(y = \mathcal{C}_q | \mathbf{x}),
 	\end{equation}
@@ -524,52 +561,187 @@
 	\end{equation}
 	with $q = 2, ..., Q-1$, and considering that $P(y = \mathcal{C}_1 | \mathbf{x}) = P(y \preceq \mathcal{C}_1 | \mathbf{x})$ and $P(y \preceq \mathcal{C}_Q | \mathbf{x}) = 1$.
 	
-	The model is inspired by the notion of latent variable, considering a linear transformation $f(x) = \mathbf{w^Tx}$ of the input variables as the one-dimensional mapping. The decision rule $r: \mathcal{X} \rightarrow \mathcal{Y}$ is not fitted directly, but stochastic ordering of space $\mathcal{X}$ is satisfied by the following general model form \cite{herbrich2000large}:
+	\textcolor{blue}{The model is inspired by the notion of a latent variable, where $f(x)$ represents a one-dimensional mapping obtained from the output of the last layer, which has only one neuron.} The decision rule $r: \mathcal{X} \rightarrow \mathcal{Y}$ is not fitted directly, but stochastic ordering of space $\mathcal{X}$ is satisfied by the following general model form \cite{herbrich2000large}:
 	\begin{equation}
-		g^{-1}(P(y \preceq \mathcal{C}_q | \mathbf{x})) = b_q - \mathbf{w^Tx}, \quad q = 1, ..., Q-1,
+		g^{-1}(P(y \preceq \mathcal{C}_q | \mathbf{x})) = b_q - \textcolor{blue}{f(\mathbf{x})}, \quad q = 1, ..., Q-1,
 	\end{equation}
-	where $g^{-1} : [0,1] \rightarrow (-\infty, +\infty)$ is a monotonic function often termed as the inverse link function and $b_q$ is the threshold defined for class $\mathcal{C}_q$. Consider the latent variable $y^* = f(x)^* = \mathbf{w^Tx} + \epsilon$, where $\epsilon$ is the random variable of the error. The most common choice for the probability distribution of $\epsilon$ is the logistic function (which is the default function for POM). Label $\mathcal{C}_q$ is proposed if and only if $f(x) \in [b_{q-1}, b_q]$, where the function $f$ and $\mathbf{b} = (b_0, b_1, ..., b_{Q-1}, b_Q)$ are to be determined from the data. it is assumed that $b_0 = -\infty$ and $b_Q = +\infty$, so the real line defined by $f(x), x \in \mathcal{X}$, is divided into $Q$ consecutive intervals. Each interval corresponds to a category. The constraints $b_1 \le b_2 \le ... \le b_{Q-1}$ ensures that $P(y \preceq \mathcal{C}_q | \mathbf{x})$ increases with $q$ \cite{mccullagh1980regression}.
-	In this work, we use this ordinal model with different link functions for the probability distribution of $\epsilon$, including logit, probit and complementary log-log. These functions will be detailed in Section \ref{sect:model}.
+	where $g^{-1} : [0,1] \rightarrow (-\infty, +\infty)$ is a monotonic function often termed as the inverse link function, and $b_q$ is the threshold defined for class $\mathcal{C}_q$. Consider the latent variable $y^* = f(\mathbf{x})^* = \textcolor{blue}{f(\mathbf{x})} + \epsilon$, where $\epsilon$ is the random variable of the error. The most common choice for the probability distribution of $\epsilon$ is the logistic function (which is the default function for POM). Label $\mathcal{C}_q$ is predicted if and only if $f(\mathbf{x}) \in [b_{q-1}, b_q]$, where the function $f$ and $\mathbf{b} = (b_0, b_1, ..., b_{Q-1}, b_Q)$ are to be determined from the data. It is assumed that $b_0 = -\infty$ and $b_Q = +\infty$, so the real line defined by $f(x), x \in \mathcal{X}$, is divided into $Q$ consecutive intervals. Each interval corresponds to a category. The constraints $b_1 \le b_2 \le ... \le b_{Q-1}$ ensures that $P(y \preceq \mathcal{C}_q | \mathbf{x})$ increases with $q$ \cite{mccullagh1980regression}.
+	\textcolor{blue}{This order is achieved by defining the first threshold and calculating the rest of thresholds from the first in the following form:}
+	
+	\begin{equation}
+	\textcolor{blue}{b_n = b_1 + \sum_{i=1}^{n-1} \alpha_i^2, \quad n = 2, ..., N},
+	\end{equation}
+	\textcolor{blue}{where $b_1$ and $\alpha_i$ are learnable parameters, and $N$ is the number of classes.}
+	
+	In this work, we use this ordinal model with different link functions for the probability distribution of $\epsilon$, including \texttt{logit}, \texttt{probit} and complementary log-log (\texttt{clog-log}).
+	
+	These three types of links are explained below and represented in Figure \ref{fig:linkfunctions}. They all follow the same form $P(y \prec \mathcal{C}_q) = \Phi(b_q - \textcolor{blue}{f(\mathbf{x})})$ for a continuous cdf~$\Phi$.
+			
+	\begin{figure}[!t]
+		\centering
+		\includegraphics[width=3in]{img/linkfunctions.png}
+		\caption{Representation of link functions.}
+		\label{fig:linkfunctions}
+	\end{figure}
+
+	\begin{itemize}
+		\item \texttt{Logit}. \texttt{logit} link function is the function used for the Proportional Odds Model. The \texttt{logit} link is:
+		\begin{equation}
+		\begin{aligned}
+		\text{logit}[P(y \preceq \mathcal{C}_q)] = \log\frac{P(y \preceq \mathcal{C}_q)}{1 - P(y \preceq \mathcal{C}_q)}=& \\ = b_q - \textcolor{blue}{f(\mathbf{x})}, \quad q = 1, ..., Q-1,
+		\end{aligned}
+		\label{eq:logit}
+		\end{equation}		
+		or the equivalent expression:		
+		\begin{equation}
+		P(y \preceq \mathcal{C}_q) = \frac{1}{1 + e^{-(b - \textcolor{blue}{f(\mathbf{x})})}}.
+		\label{eq:logit2}
+		\end{equation}
+		
+		\item \texttt{Probit}. \texttt{probit} link function is the inverse of the standard normal cumulative distribution function (cdf) $\Phi$. Its expression is:
+		\begin{equation}
+		\begin{aligned}
+		&\Phi^{-1}[P(y \preceq \mathcal{C}_q)] = b_q - \textcolor{blue}{f(\mathbf{x})}, &q = 1, ..., Q-1\\
+		&P(y \preceq \mathcal{C}_q) = \Phi(b_q - \textcolor{blue}{f(\mathbf{x})}), &q = 1, ..., Q-1,
+		\end{aligned}
+		\label{eq:probit}
+		\end{equation}		
+		which can also be expressed as:
+		\begin{equation}
+		P(y \preceq \mathcal{C}_q) = \int_{-\infty}^{b_q - \textcolor{blue}{f(\mathbf{x})}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} \mathrm{d}x.
+		\label{eq:probit2}
+		\end{equation}
+		
+		\item \textit{Complementary log-log}. Like the \texttt{logit} and the \texttt{probit} transformation, the complementary log-log transformation takes a response that is restricted to the $(0,1)$ interval and converts it into something in the $(-\infty, +\infty)$ interval. Complementary log-log expression is:
+		\begin{equation}
+		\begin{aligned}
+		\log[-\log[1 - P(y \preceq \mathcal{C}_q)]] =&\\
+		= b_q - \textcolor{blue}{f(\mathbf{x})}, \quad q = 1, ..., Q-1,&
+		\end{aligned}
+		\label{eq:cloglog}
+		\end{equation}
+		that is:
+		\begin{equation}
+		P(y \preceq \mathcal{C}_q) = 1 - e^{-e^{b_q - \textcolor{blue}{f(\mathbf{x})}}}, \quad q = 1, ..., Q-1.
+		\label{eq:cloglog2}
+		\end{equation}
+	\end{itemize}
+	
+	\texttt{Logit} and \texttt{probit} links are symmetric:	
+	\begin{equation}
+	\text{link}[P(y \preceq \mathcal{C}_q)] = -\text{link}[1 - P(y \preceq \mathcal{C}_q)],
+	\end{equation}
+	which means that the response curve for $P(y \preceq \mathcal{C}_q)$ is symmetric around the point $P(y \preceq \mathcal{C}_q) = 0.5$, i.e. $P(y \preceq \mathcal{C}_q)$ has the same rate when approaching 0 than when approaching 1. This symmetric property can be demonstrated as follows:	
+	\begin{enumerate}
+		\item Let $P(y \preceq \mathcal{C}_q) \equiv p$. For the \texttt{logit} function, we have:
+		\begin{equation}
+		\begin{aligned}
+		\text{link}(p) = \text{logit}(p) &= \log\left(\frac{p}{1-p}\right) =\\
+		&= \log(p) - \log(1-p),
+		\end{aligned}
+		\end{equation}			
+		while:			
+		\begin{equation}
+		\begin{aligned}
+		-\text{link}(1 - p) &= -\text{logit}(1 - p) =\\
+		=- \log\left(\frac{1- p}{p}\right) &= - \log(1 - p) + \log(p).
+		\end{aligned}
+		\end{equation}
+		
+		\item For the \texttt{probit}:		
+		\begin{equation}
+		\begin{aligned}
+		p \equiv P(y \preceq \mathcal{C}_q) &= \Phi(b_q - \textcolor{blue}{f(\mathbf{x})}) =\\
+		&= \int_{-\infty}^{b_q - \textcolor{blue}{f(\mathbf{x})}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} \mathrm{d}x,
+		\end{aligned}
+		\end{equation}
+		which leads to:
+		\begin{align}
+		\text{probit}(p) & = \Phi^{-1}(p) = b_q - \textcolor{blue}{f(\mathbf{x})},\\
+		-\text{probit}(1-p) &= \Phi^{-1}(1-p) = -b_q + \textcolor{blue}{f(\mathbf{x})},
+		\end{align}
+		where:		
+		\begin{equation}
+		1 - p = \int_{-\infty}^{-b_q + \textcolor{blue}{f(\mathbf{x})}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} \mathrm{d}x,
+		\end{equation}
+		\begin{equation}
+		p = 1 - \int_{-\infty}^{-b_q + \textcolor{blue}{f(\mathbf{x})}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} \mathrm{d}x.
+		\end{equation}
+	\end{enumerate}
+	
+	
+	Unlike \texttt{logit} and \texttt{probit}, the complementary log-log model is asymmetrical. It is frequently used when the probability of an event is very small or very large. When the given data is not symmetric in the $[0,1]$ interval and increase slowly at small to moderate value but increases sharply near 1, the \texttt{logit} and \texttt{probit} models are inappropriate. However, in this situation, the complementary log-log model might give a satisfying answer.
+	
 	\section{Experiments}
 	\label{sect:experiments}
 	\subsection{Data}
-	We make use of two ordinal datasets appropriate for deep neural networks:
+	In order to evaluate the different models, we make use of two ordinal datasets:
 	
 	\begin{itemize}
-		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try to predict from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras,  varying conditions of illumination and different resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition that was hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted,nebot2016diabetic} and ordinal techniques (such as an ordinal cost function) were applied in order to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels and rescaled to $[0,1]$ range. Data augmentation techniques, described in Section \ref{sect:procedure}, are applied to achieve a higher number of samples.
+		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try to predict the correct category from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras,  varying conditions of illumination and different resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted,nebot2016diabetic}, applying an ordinal QWK cost function in \cite{de2018weighted} to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels and rescaled to $[0,1]$ range. Data augmentation techniques, described in Section \ref{sect:settings}, are applied to achieve a higher number of samples. A few images of this dataset are shown in Figure \ref{fig:DRexamples}.
 		
-		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work~\cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset is split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set.
+		\begin{figure}[!t]
+			\centering
+			\begin{tabular}{cccc}
+			\includegraphics[width=1.6cm]{img/retinopathy/1.jpg} & \includegraphics[width=1.6cm]{img/retinopathy/2.jpg} & \includegraphics[width=1.6cm]{img/retinopathy/3.jpg} & \includegraphics[width=1.6cm]{img/retinopathy/4.jpg}\\
+			\includegraphics[width=1.6cm]{img/retinopathy/5.jpg} & \includegraphics[width=1.6cm]{img/retinopathy/6.jpg} & \includegraphics[width=1.6cm]{img/retinopathy/7.jpg} & \includegraphics[width=1.6cm]{img/retinopathy/8.jpg}
+			\end{tabular}						
+			\caption{Examples of the Diabetic Retinopathy test set.}
+			\label{fig:DRexamples}
+		\end{figure}
+		
+		
+		
+		\item \textit{Adience}\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html}. This dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work~\cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset was split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set. Some images of this dataset are shown in Figure \ref{fig:AdienceExamples}.
+		
+		\begin{figure}[!t]
+			\centering
+			\begin{tabular}{cccc}
+				\includegraphics[width=1.6cm]{img/adience/1.jpg} & \includegraphics[width=1.6cm]{img/adience/2.jpg} & \includegraphics[width=1.6cm]{img/adience/3.jpg} & \includegraphics[width=1.6cm]{img/adience/4.jpg}\\
+				\includegraphics[width=1.6cm]{img/adience/5.jpg} & \includegraphics[width=1.6cm]{img/adience/6.jpg} & \includegraphics[width=1.6cm]{img/adience/7.jpg} & \includegraphics[width=1.6cm]{img/adience/8.jpg}
+			\end{tabular}						
+			\caption{Examples of the Diabetic Retinopathy test set.}
+			\label{fig:AdienceExamples}
+		\end{figure}
 	\end{itemize}
 	
-	\subsection{The model}
+	\subsection{Model}
 	\label{sect:model}
-	Convolutional Neural Networks (CNN) has been used for both datasets. The different architectures of CNN used in these experiments are presented in tables \ref{table:CNNArchitecture} and \ref{table:ResNetArchitecture}. The architecture for DR is the same that was used in \cite{de2018weighted} and the network for Adience is a small Residual Network (ResNet) \cite{he2016deep} that was used in \cite{beckham2017unimodal}. For convolutional layers, ConvWxH@FsS = F filters of size WxH and stride S. For pooling layers, PoolWxHsS = pool size of WxH and stride S.
+	CNNs have been used for both datasets. The different architectures of CNN used in these experiments are presented in tables \ref{table:CNNArchitecture} and \ref{table:ResNetArchitecture}. The architecture for DR is the same that was used in \cite{de2018weighted} and the network for Adience is a small Residual Network (ResNet) \cite{he2016deep} that was used in \cite{beckham2017unimodal}. \textcolor{blue}{The most important parameters for convolutional layers are the number of filters that are used to make the convolution operation, the size of these filters and the stride, which is the number of pixels that the filter is moved for obtaining the next pixel. Pooling layers have got similar parameters: the pool size is the number of pixels that will be involved in the pooling operation, and the stride represents the same concept that in convolutional layers.} For convolutional layers, ConvWxH@FsS~=~F filters of size WxH and stride S. For pooling layers, PoolWxHsS~=~pool size of WxH and stride S.
+	
+	\textcolor{blue}{The Exponential Linear Unit (ELU)~\cite{clevert2015fast} has been used for activation function for all the convolutional and dense layers, instead of the ReLU~\cite{nair2010rectified} function, as it mitigates the effects of the vanishing gradients problem \cite{bengio1994learning,pascanu2013difficulty} via the identity for positive values. Also, ELUs lead to faster training and better generalization performance than ReLU and Leaky ReLU (LReLU)~\cite{maas2013rectifier} functions on networks with more than five layers.}
+	
+	\textcolor{blue}{After every ELU activation function of the convolutional layers, Batch Normalization~\cite{ioffe2015batch} is applied. This method reduces the internal covariate shift by normalizing layer outputs. It allows us to use higher learning rates and be less careful about weights initialization. It also eliminates the need for using regularization techniques like Dropout.}
+	
+	\textcolor{blue}{At the output of the network, the CLM is used. Also, a learnable parameter has been used to rescale the projections used by the Cumulative Link Model to make it more stable and guarantee the convergence in most cases.} 
 	
 	\begin{table}[!t]
 		\caption{Description of the architecture used in the DR experiments.}
 		\label{table:CNNArchitecture}
 		\centering
-		\begin{tabular}{|l|c|}
+		\begin{tabular}{lc}
+			\hline
 			\hline
 			\textbf{Layer} & \textbf{Output shape}\\
 			\hline
 			%Conv3x3@32s1 & 254x254x32\\\hline
-			2 x Conv3x3@32s1 & 252x252x32\\\hline
-			MaxPool2x2s2 & 126x126x32\\\hline
+			2 x Conv3x3@32s1 & 252x252x32\\
+			MaxPool2x2s2 & 126x126x32\\
 			
 			%Conv3x3@64s1 & 124x124x64\\\hline
-			2 x Conv3x3@64s1 & 122x122x64\\\hline
-			MaxPool2x2s2 & 61x61x64\\\hline
+			2 x Conv3x3@64s1 & 122x122x64\\
+			MaxPool2x2s2 & 61x61x64\\
 			
 			%Conv3x3@128s1 & 59x59x128\\\hline
-			2 x Conv3x3@128s1 & 57x57x128\\\hline
-			MaxPool2x2s2 & 28x28x128\\\hline
+			2 x Conv3x3@128s1 & 57x57x128\\
+			MaxPool2x2s2 & 28x28x128\\
 			
 			%Conv3x3@128s1 & 26x26x128\\\hline
-			2 x Conv3x3@128s1 & 24x24x128\\\hline
-			MaxPool2x2s2 & 12x12x128\\\hline
+			2 x Conv3x3@128s1 & 24x24x128\\
+			MaxPool2x2s2 & 12x12x128\\
 			
 			Conv4x4@128s1 & 9x9x128\\
+			\hline
 			\hline
 		\end{tabular}	
 	\end{table}
@@ -578,315 +750,188 @@
 		\caption{Description of the architecture used in the Adience experiments.}
 		\label{table:ResNetArchitecture}
 		\centering
-		\begin{tabular}{|l|c|}
+		\begin{tabular}{lc}
+			\hline
 			\hline
 			\textbf{Layer} & \textbf{Output shape}\\
 			\hline
-			Conv7x7@32s2 & 112x112x32\\\hline
-			MaxPool3x3s2 & 55x55x32\\\hline
-			2 x ResBlock3x3@64s1 & 55x55x32\\\hline
-			1 x ResBlock3x3@128s2 & 28x28x64\\\hline
-			2 x ResBlock3x3@128s1 & 28x28x64\\\hline
-			1 x ResBlock3x3@256s2 & 14x14x128\\\hline
-			2 x ResBlock3x3@256s1 & 14x14x128\\\hline
-			1 x ResBlock3x3@512s2 & 7x7x256\\\hline
-			2 x ResBlock3x3@512s1 & 7x7x256\\\hline
+			Conv7x7@32s2 & 112x112x32\\
+			MaxPool3x3s2 & 55x55x32\\
+			2 x ResBlock3x3@64s1 & 55x55x32\\
+			1 x ResBlock3x3@128s2 & 28x28x64\\
+			2 x ResBlock3x3@128s1 & 28x28x64\\
+			1 x ResBlock3x3@256s2 & 14x14x128\\
+			2 x ResBlock3x3@256s1 & 14x14x128\\
+			1 x ResBlock3x3@512s2 & 7x7x256\\
+			2 x ResBlock3x3@512s1 & 7x7x256\\
 			AveragePool7x7s2 & 1x1x256\\
+			\hline
 			\hline
 		\end{tabular}	
 	\end{table}
 	
-	\begin{figure}[!t]
-		\centering
-		\includegraphics[width=3in]{img/linkfunctions.png}
-		\caption{Representation of link functions.}
-		\label{fig:linkfunctions}
-	\end{figure}
-	
-	Every convolutional layer is followed by an ELU activation layer~\cite{clevert2015fast} and a batch normalization~\cite{ioffe2015batch}. At the output, a Proportional Odds Model is used with different link functions~\cite{agresti2010analysis}. The logit link function is commonly used within POM. In this paper, we are comparing other link functions like probit or complementary log-log with the logit link. These three types of links are explained below and represented in Figure \ref{fig:linkfunctions}. They all follow the same form $P(y \prec \mathcal{C}_q) = \Phi(b_q-\mathbf{w^Tx})$ for a continuous cdf~$\Phi$.
-	
-	\begin{itemize}
-		\item \textit{Logit}. Logit link function is the most widely used function for Proportional Odds Models. The logit link is shown in \ref{eq:logit} and \ref{eq:logit2}.
-		\begin{equation}
-		\begin{aligned}
-		logit[P(y \preceq \mathcal{C}_q)] = log\frac{P(y \preceq \mathcal{C}_q)}{1 - P(y \preceq \mathcal{C}_q)}=& \\ = b_q - \mathbf{w^Tx}, \quad q = 1, ..., Q-1
-		\end{aligned}
-		\label{eq:logit}
-		\end{equation}
-		
-		or the equivalent expression
-		
-		\begin{equation}
-		P(y \preceq \mathcal{C}_q) = \frac{1}{1 + e^{-(b-\mathbf{w^Tx})}}
-		\label{eq:logit2}
-		\end{equation}
-		\item \textit{Probit}. Probit link function is the inverse of the standard normal cummulative distribution function (cdf) $\Phi$. Its expression is shown in \ref{eq:probit} and \ref{eq:probit2}.	
-		\begin{equation}
-		\begin{aligned}
-		&\Phi^{-1}[P(y \preceq \mathcal{C}_q)] = b_q - \mathbf{w^Tx}, &q = 1, ..., Q-1\\
-		&P(y \preceq \mathcal{C}_q) = \Phi(b_q - \mathbf{w^Tx}), &q = 1, ..., Q-1		
-		\end{aligned}
-		\label{eq:probit}
-		\end{equation}
-		
-		or
-		
-		\begin{equation}
-		P(y \preceq \mathcal{C}_q) = \int_{-\infty}^{b_q - \mathbf{w^Tx}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} dx
-		\label{eq:probit2}
-		\end{equation}
-		
-		\item \textit{Complementary log-log}. Like the logit and the probit transformation, the complementary log-log transformation takes a response that is restricted to the (0,1) interval and converts it into something in $(-\infty, +\infty)$ interval. Complementary log-log expression is shown in \ref{eq:cloglog} and \ref{eq:cloglog2}.
-		\begin{equation}
-		\begin{aligned}
-		log[-log[1 - P(y \preceq \mathcal{C}_q)]] =&\\
-		= b_q - \mathbf{w^Tx}, \quad q = 1, ..., Q-1&
-		\end{aligned}
-		\label{eq:cloglog}
-		\end{equation}
-		
-		or
-		
-		\begin{equation}
-		P(y \preceq \mathcal{C}_q) = 1 - e^{-e^{b_q - \mathbf{w^Tx}}}, \quad q = 1, ..., Q-1
-		\label{eq:cloglog2}
-		\end{equation}
-	\end{itemize}
-	
-	Logit and probit links are symmetric, that is
-	
-	\begin{equation}
-	link[P(y \preceq \mathcal{C}_q)] = -link[1 - P(y \preceq \mathcal{C}_q)]
-	\end{equation}
-	
-	This means that the response curve for $P(y \preceq \mathcal{C}_q)$ has a symmetric appearance about the point $P(y \preceq \mathcal{C}_q) = 0.5$, and so $P(y \preceq \mathcal{C}_q)$ has the same rate for approaching 0 than for approaching 1. This symmetric property can be demonstrated as follows:
-	
-	\begin{enumerate}
-		\item If we define $P(y \preceq \mathcal{C}_q) \equiv p$, we have
-			\begin{equation}
-			\begin{aligned}
-			link(p) = logit(p) &= log\left(\frac{p}{1-p}\right) =\\
-			&= log(p) - log(1-p)
-			\end{aligned}
-			\end{equation}
-			
-			while
-			
-			\begin{equation}
-			\begin{aligned}
-			-link(1 - p) &= -logit(1 - p) =\\
-			=- log\left(\frac{1- p}{p}\right) &= - log(1 - p) + log(p)
-			\end{aligned}
-			\end{equation}
-			
-			The symmetry has been proven for logit link.
-			
-		\item If we define 
-		
-		\begin{equation}
-		\begin{aligned}
-		p \equiv P(y \preceq \mathcal{C}_q) &= \Phi(b_q - \mathbf{w^Tx}) =\\
-		&= \int_{-\infty}^{b_q - \mathbf{w^Tx}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} dx
-		\end{aligned}
-		\end{equation}
-		
-		then
-		
-		\begin{equation}
-		probit(p) = \Phi^{-1}(p) = b_q - \mathbf{w^Tx}
-		\end{equation}
-		
-		and
-		
-		\begin{equation}
-		-probit(1-p) = \Phi^{-1}(1-p) = -b_q + \mathbf{w^Tx}
-		\end{equation}
-		
-		where
-		
-		\begin{equation}
-		1 - p = \int_{-\infty}^{-b_q + \mathbf{w^Tx}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} dx
-		\end{equation}
-		
-		and
-		
-		\begin{equation}
-		p = 1 - \int_{-\infty}^{-b_q + \mathbf{w^Tx}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} dx
-		\end{equation}
-
-		the symmetric property for the probit function has been proven.
-	\end{enumerate}
-	
-	
-	Unlike logit and probit, the complementary log-log model is asymmetrical. It is frequently used when the probability of an event is very small or very large. When the given data is not symmetric in the $[0,1]$ interval and increase slowly at small to moderate value but increases sharply near 1, the logit and probit models are inappropriate. However, in this situation, the complementary log-log model might give a satisfying answer.
-	
-	\subsection{Procedure}
-	\label{sect:procedure}
+	\subsection{Experimental design}
+	\label{sect:settings}
 	The model is optimized using a batch based first-order optimization algorithm called Adam~\cite{kingma2014adam}. We study different initial learning rates in order to find the optimal one for each problem. We apply an exponential decay across training epochs to the initial learning rate.
 	
-	Both datasets have been artificially equalized using data augmentation techniques~\cite{van2001art,krizhevsky2012imagenet}. However, different transformations were applied to each one. Diabetic Retinopathy dataset augmentation was based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. Horizontal flipping was the only transformation applied to Adience dataset.
+	Both datasets have been artificially equalized using data augmentation techniques~\cite{van2001art,krizhevsky2012imagenet}. However, different transformations were applied to each one. DR dataset augmentation was based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. Horizontal flipping was the only transformation applied to Adience dataset.
 	
-	In the case of Diabetic Retinopathy Detection, the epoch size has been fixed to $100000$ images per epoch. For the Adience dataset, epoch size is the number of images in the training set.
+	In the case of DR dataset, the epoch size has been fixed to $100000$ images per epoch. For the Adience dataset, epoch size is the number of images in the training set.
 	
-	The model is evaluated with Quadratic Weighted Kappa metric (QWK)~\cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class. Quadratic weighted kappa loss is considered as loss function for the optimizer as it gives better performance for ordinal classification problems \cite{de2018weighted}.
+	The model is evaluated using the Quadratic Weighted Kappa metric (QWK)~\cite{ben2008comparison}. This evaluation measure gives a higher weight to the errors that are further from the correct class.
+	Quadratic weighted kappa loss is considered as loss function for the optimizer as it gives better performance for ordinal classification problems \cite{de2018weighted}.
 	
 	Also, other evaluation metrics have been used to ease the comparison with other works: Minimum Sensitivity (MS) \cite{cruz2014metrics}, Mean Absolute Error (MAE) \cite{cruz2014metrics}, Mean Squared Error (MSE) \cite{wang2009mean}, Correct Classification Rate (CCR), Top-2 CCR \cite{beckham2017unimodal}, Top-3 CCR \cite{beckham2017unimodal} and 1-off accuracy \cite{chen2016cascaded,levi2015age,eidinger2014age}.
 	
-	Experiments were run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of the QWK loss and the Proportional Odds Model. The results of these experiments are analysed in Section \ref{app:NominalComparison}.
+	Experiments were run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of considering the ordinality of the problem (QWK loss and the Cumulative Link Model). The results of these experiments are analysed in Section \ref{sect:NominalComparison}.
 	
 	\subsection{Factors}
 	Three different factors have been considered: learning rate, batch size and link function for the final output layer.
 	
 	\begin{itemize}
-		\item \textit{Learning rate}. Learning rate is one of the most critical hyper-parameters to tune for training deep neural networks. Optimal learning rate can vary depending on the dataset and the CNN architecture. Previous works have presented some techniques that adjust this parameter in order to achieve better performance~\cite{smith2017cyclical,senior2013empirical}. Within this work, we have considered three different values for this parameter: $10^{-2}$, $10^{-3}$ and $10^{-4}$.
-		\item \textit{Batch size}. Batch size is also an important parameter as it controls the number of weight updates that are made on every epoch. It can affect the training time and the model performance. In this paper, we have tried three separate batch sizes for each dataset. For DR dataset, we have used $5$, $10$ and $15$ while, for the Adience dataset, $64$, $128$ and $256$ was used. We took the batch sizes that were used in \cite{de2018weighted} and \cite{beckham2017unimodal} as a reference, and we expanded the range on both sides.
-		\item \textit{Link function}. Different link functions have been used for the POM at the last layer output: logit, probit and complementary log-log.
+		\item \textit{Learning rate} (LR, $\eta$). Learning rate is one of the most critical hyper-parameters to tune for training deep neural networks. Optimal learning rate can vary depending on the dataset and the CNN architecture. Previous works have presented some techniques that adjust this parameter in order to achieve better performance~\cite{smith2017cyclical,senior2013empirical}. Within this work, we have considered three different values for this parameter: $10^{-2}$, $10^{-3}$ and $10^{-4}$.
+		\item \textit{Batch size} (BS). Batch size is also an important parameter as it controls the number of weight updates that are made on every epoch. It can affect the training time and the model performance. In this paper, we have tried three separate batch sizes for each dataset. For DR dataset, we have used $5$, $10$ and $15$ while, for the Adience dataset, $64$, $128$ and $256$ images were used. We took the batch sizes that were used in \cite{de2018weighted} and \cite{beckham2017unimodal} as a reference, and we expanded the range on both sides.
+		\item \textit{Link function} (LF). Different link functions have been used for the CLM at the last layer output: \texttt{logit}, \texttt{probit} and complementary log-log.
 	\end{itemize}
 	
 	\section{Results}
 	\label{sect:results}
-	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments done training the model with each combination of parameters. Every parameter combination has been run five times. These tables show the mean value and the standard deviation (SD) of each metric across these five executions for the test set. These values are exposed using the format $\text{MEAN}_{(SD)}$.
+	In this section, we present the results of the experiments. For each dataset, we show a table with the detailed experiments performed for training the model with each combination of parameters. Every parameter combination has been run five times. These tables show the mean value and the standard deviation (SD) of each metric across these five executions for the test set.
 	
 	\subsection{Diabetic Retinopathy}
 	\label{sect:dr}
-	Detailed results for the Diabetic Retinopathy dataset are presented in Table \ref{table:DRresults}. The best result for each metric is marked in bold and the second best is in italic font.
+	Detailed \textcolor{blue}{test results} for the Diabetic Retinopathy dataset are presented in Table \ref{table:DRresults}. The best result for each metric is marked in bold and the second best is in italic font.
 	
 	\begin{table*}[!t]
-		\caption{Diabetic Retinopathy results. BS stands for Batch Size, LF for link function and LR for Learning Rate.}
+		\caption{Diabetic Retinopathy results. BS stands for Batch Size, LF for link function and LR for Learning Rate. Mean and standard deviation $\text{Mean}_\text{SD}$.}
 		\label{table:DRresults}
 		\footnotesize
 		\centering
-		\begin{tabular}{c@{\hskip 0.15cm}c@{\hskip 0.15cm}c|c@{\hskip 0.30cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c}
+		\begin{tabular}{c@{\hskip 0.15cm}c@{\hskip 0.15cm}c@{\hskip 0.15cm}c@{\hskip 0.30cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c}
+			\hline
+			\hline
 			BS & LF & LR & $\overline{\text{QWK}}_{{(SD)}}$ & $\overline{\text{MS}}_{{(SD)}}$ & $\overline{\text{MAE}}_{{(SD)}}$ & $\overline{\text{MSE}}_{{(SD)}}$ & $\overline{\text{CCR}}_{{(SD)}}$ & $\overline{\text{Top-2}}_{{(SD)}}$ & $\overline{\text{Top-3}}_{{(SD)}}$ & $\overline{\text{1-off}}_{{(SD)}}$\\\hline
-			5 & c log-log & $10^{-2}$ & $0.414_{(0.057)}$ & $0.075_{(0.042)}$ & $0.177_{(0.023)}$ & $0.165_{(0.020)}$ & $0.556_{(0.057)}$ & $0.833_{(0.042)}$ & $0.968_{(0.011)}$ & $0.816_{(0.021)}$\\
-			5 & c log-log & $10^{-3}$ & $0.534_{(0.027)}$ & $0.102_{(0.011)}$ & $0.137_{(0.006)}$ & $0.123_{(0.004)}$ & $0.658_{(0.015)}$ & $0.871_{(0.011)}$ & $0.966_{(0.003)}$ & $0.852_{(0.002)}$\\
-			5 & c log-log & $10^{-4}$ & $0.520_{(0.006)}$ & $0.067_{(0.008)}$ & $0.123_{(0.003)}$ & $0.104_{(0.001)}$ & $0.697_{(0.006)}$ & $0.842_{(0.008)}$ & $0.961_{(0.003)}$ & $0.851_{(0.002)}$\\
-			5 & logit & $10^{-2}$ & $0.416_{(0.041)}$ & $0.095_{(0.029)}$ & $0.175_{(0.021)}$ & $0.162_{(0.018)}$ & $0.563_{(0.054)}$ & $0.762_{(0.040)}$ & $0.908_{(0.026)}$ & $0.807_{(0.029)}$\\
-			5 & logit & $10^{-3}$ & $0.554_{(0.013)}$ & $0.093_{(0.009)}$ & $0.137_{(0.003)}$ & $0.123_{(0.003)}$ & $0.660_{(0.008)}$ & $0.802_{(0.005)}$ & $0.936_{(0.004)}$ & $0.853_{(0.005)}$\\
-			5 & logit & $10^{-4}$ & $0.520_{(0.003)}$ & $0.063_{(0.004)}$ & $0.122_{(0.002)}$ & $0.102_{(0.001)}$ & $0.706_{(0.005)}$ & $0.823_{(0.004)}$ & $0.949_{(0.003)}$ & $0.862_{(0.003)}$\\
-			5 & probit & $10^{-2}$ & $0.460_{(0.048)}$ & $0.079_{(0.046)}$ & $0.197_{(0.064)}$ & $0.182_{(0.053)}$ & $0.504_{(0.167)}$ & $0.808_{(0.034)}$ & $0.927_{(0.073)}$ & $0.689_{(0.240)}$\\
-			5 & probit & $10^{-3}$ & $0.564_{(0.018)}$ & $0.099_{(0.013)}$ & $0.147_{(0.018)}$ & $0.132_{(0.014)}$ & $0.636_{(0.045)}$ & $0.822_{(0.040)}$ & $0.939_{(0.020)}$ & $0.840_{(0.015)}$\\
-			5 & probit & $10^{-4}$ & $0.523_{(0.005)}$ & $0.067_{(0.012)}$ & $0.122_{(0.002)}$ & $0.105_{(0.001)}$ & $0.701_{(0.006)}$ & $0.823_{(0.002)}$ & $0.953_{(0.002)}$ & $0.860_{(0.003)}$\\
-			10 & c log-log & $10^{-2}$ & $0.423_{(0.239)}$ & $0.062_{(0.051)}$ & $0.127_{(0.017)}$ & $0.120_{(0.014)}$ & $0.684_{(0.046)}$ & $\mathbf{0.894_{(0.062)}}$ & $\mathbf{0.986_{(0.012)}}$ & $0.832_{(0.020)}$\\
-			10 & c log-log & $10^{-3}$ & $\mathbf{0.582_{(0.016)}}$ & $0.102_{(0.006)}$ & $0.128_{(0.003)}$ & $0.115_{(0.002)}$ & $0.680_{(0.007)}$ & $\mathit{0.880_{(0.004)}}$ & $0.972_{(0.003)}$ & $0.861_{(0.004)}$\\
-			10 & c log-log & $10^{-4}$ & $0.537_{(0.010)}$ & $0.064_{(0.004)}$ & $\mathit{0.116_{(0.001)}}$ & $0.096_{(0.001)}$ & $0.717_{(0.003)}$ & $0.837_{(0.002)}$ & $0.971_{(0.001)}$ & $0.860_{(0.002)}$\\
-			10 & logit & $10^{-2}$ & $0.531_{(0.031)}$ & $0.107_{(0.008)}$ & $0.151_{(0.010)}$ & $0.140_{(0.008)}$ & $0.623_{(0.025)}$ & $0.802_{(0.022)}$ & $0.934_{(0.013)}$ & $0.838_{(0.014)}$\\
-			10 & logit & $10^{-3}$ & $0.579_{(0.009)}$ & $0.096_{(0.012)}$ & $0.127_{(0.005)}$ & $0.113_{(0.004)}$ & $0.686_{(0.013)}$ & $0.817_{(0.006)}$ & $0.954_{(0.005)}$ & $0.861_{(0.002)}$\\
-			10 & logit & $10^{-4}$ & $0.539_{(0.007)}$ & $0.074_{(0.013)}$ & $0.126_{(0.005)}$ & $0.095_{(0.002)}$ & $0.707_{(0.010)}$ & $0.823_{(0.007)}$ & $0.957_{(0.005)}$ & $0.858_{(0.004)}$\\
-			10 & probit & $10^{-2}$ & $0.508_{(0.037)}$ & $0.088_{(0.044)}$ & $0.145_{(0.018)}$ & $0.137_{(0.014)}$ & $0.639_{(0.045)}$ & $0.835_{(0.015)}$ & $0.960_{(0.008)}$ & $0.829_{(0.020)}$\\
-			10 & probit & $10^{-3}$ & $0.558_{(0.034)}$ & $\mathbf{0.111_{(0.005)}}$ & $0.134_{(0.003)}$ & $0.120_{(0.002)}$ & $0.666_{(0.008)}$ & $0.831_{(0.007)}$ & $0.955_{(0.001)}$ & $0.863_{(0.003)}$\\
-			10 & probit & $10^{-4}$ & $0.541_{(0.010)}$ & $0.076_{(0.006)}$ & $0.119_{(0.002)}$ & $0.098_{(0.001)}$ & $0.712_{(0.005)}$ & $0.828_{(0.003)}$ & $0.961_{(0.002)}$ & $0.862_{(0.001)}$\\
-			15 & c log-log & $10^{-2}$ & $0.564_{(0.016)}$ & $0.108_{(0.014)}$ & $0.143_{(0.006)}$ & $0.134_{(0.005)}$ & $0.640_{(0.015)}$ & $0.879_{(0.011)}$ & $0.972_{(0.005)}$ & $0.851_{(0.006)}$\\
-			15 & c log-log & $10^{-3}$ & $0.559_{(0.026)}$ & $\mathit{0.111_{(0.008)}}$ & $0.127_{(0.004)}$ & $0.113_{(0.003)}$ & $0.682_{(0.010)}$ & $0.871_{(0.008)}$ & $\mathit{0.974_{(0.002)}}$ & $\mathbf{0.868_{(0.002)}}$\\
-			15 & c log-log & $10^{-4}$ & $0.538_{(0.009)}$ & $0.054_{(0.003)}$ & $\mathbf{0.115_{(0.002)}}$ & $\mathit{0.093_{(0.001)}}$ & $0.720_{(0.006)}$ & $0.835_{(0.007)}$ & $0.970_{(0.003)}$ & $0.860_{(0.006)}$\\
-			15 & logit & $10^{-2}$ & $0.551_{(0.020)}$ & $0.104_{(0.008)}$ & $0.139_{(0.011)}$ & $0.129_{(0.009)}$ & $0.654_{(0.027)}$ & $0.815_{(0.017)}$ & $0.948_{(0.016)}$ & $0.856_{(0.015)}$\\
-			15 & logit & $10^{-3}$ & $0.551_{(0.010)}$ & $0.106_{(0.016)}$ & $0.129_{(0.008)}$ & $0.114_{(0.005)}$ & $0.680_{(0.019)}$ & $0.818_{(0.008)}$ & $0.952_{(0.007)}$ & $\mathit{0.866_{(0.001)}}$\\
-			15 & logit & $10^{-4}$ & $0.543_{(0.008)}$ & $0.056_{(0.003)}$ & $0.121_{(0.004)}$ & $\mathbf{0.090_{(0.001)}}$ & $\mathbf{0.723_{(0.004)}}$ & $0.833_{(0.004)}$ & $0.964_{(0.003)}$ & $0.862_{(0.004)}$\\
-			15 & probit & $10^{-2}$ & $0.534_{(0.032)}$ & $0.104_{(0.013)}$ & $0.148_{(0.015)}$ & $0.138_{(0.014)}$ & $0.631_{(0.038)}$ & $0.845_{(0.030)}$ & $0.964_{(0.010)}$ & $0.852_{(0.010)}$\\
-			15 & probit & $10^{-3}$ & $\mathit{0.580_{(0.021)}}$ & $0.104_{(0.016)}$ & $0.129_{(0.008)}$ & $0.116_{(0.005)}$ & $0.680_{(0.018)}$ & $0.832_{(0.010)}$ & $0.959_{(0.007)}$ & $0.866_{(0.003)}$\\
-			15 & probit & $10^{-4}$ & $0.533_{(0.004)}$ & $0.065_{(0.005)}$ & $0.117_{(0.002)}$ & $0.094_{(0.001)}$ & $\mathit{0.721_{(0.004)}}$ & $0.832_{(0.002)}$ & $0.964_{(0.001)}$ & $0.863_{(0.001)}$
+			5 & \texttt{clog-log} & $10^{-2}$ & $0.414_{(0.057)}$ & $0.075_{(0.042)}$ & $0.177_{(0.023)}$ & $0.165_{(0.020)}$ & $0.556_{(0.057)}$ & $0.833_{(0.042)}$ & $0.968_{(0.011)}$ & $0.816_{(0.021)}$\\
+			5 & \texttt{clog-log} & $10^{-3}$ & $0.534_{(0.027)}$ & $0.102_{(0.011)}$ & $0.137_{(0.006)}$ & $0.123_{(0.004)}$ & $0.658_{(0.015)}$ & $0.871_{(0.011)}$ & $0.966_{(0.003)}$ & $0.852_{(0.002)}$\\
+			5 & \texttt{clog-log} & $10^{-4}$ & $0.520_{(0.006)}$ & $0.067_{(0.008)}$ & $0.123_{(0.003)}$ & $0.104_{(0.001)}$ & $0.697_{(0.006)}$ & $0.842_{(0.008)}$ & $0.961_{(0.003)}$ & $0.851_{(0.002)}$\\
+			5 & \texttt{logit} & $10^{-2}$ & $0.416_{(0.041)}$ & $0.095_{(0.029)}$ & $0.175_{(0.021)}$ & $0.162_{(0.018)}$ & $0.563_{(0.054)}$ & $0.762_{(0.040)}$ & $0.908_{(0.026)}$ & $0.807_{(0.029)}$\\
+			5 & \texttt{logit} & $10^{-3}$ & $0.554_{(0.013)}$ & $0.093_{(0.009)}$ & $0.137_{(0.003)}$ & $0.123_{(0.003)}$ & $0.660_{(0.008)}$ & $0.802_{(0.005)}$ & $0.936_{(0.004)}$ & $0.853_{(0.005)}$\\
+			5 & \texttt{logit} & $10^{-4}$ & $0.520_{(0.003)}$ & $0.063_{(0.004)}$ & $0.122_{(0.002)}$ & $0.102_{(0.001)}$ & $0.706_{(0.005)}$ & $0.823_{(0.004)}$ & $0.949_{(0.003)}$ & $0.862_{(0.003)}$\\
+			5 & \texttt{probit} & $10^{-2}$ & $0.460_{(0.048)}$ & $0.079_{(0.046)}$ & $0.197_{(0.064)}$ & $0.182_{(0.053)}$ & $0.504_{(0.167)}$ & $0.808_{(0.034)}$ & $0.927_{(0.073)}$ & $0.689_{(0.240)}$\\
+			5 & \texttt{probit} & $10^{-3}$ & $0.564_{(0.018)}$ & $0.099_{(0.013)}$ & $0.147_{(0.018)}$ & $0.132_{(0.014)}$ & $0.636_{(0.045)}$ & $0.822_{(0.040)}$ & $0.939_{(0.020)}$ & $0.840_{(0.015)}$\\
+			5 & \texttt{probit} & $10^{-4}$ & $0.523_{(0.005)}$ & $0.067_{(0.012)}$ & $0.122_{(0.002)}$ & $0.105_{(0.001)}$ & $0.701_{(0.006)}$ & $0.823_{(0.002)}$ & $0.953_{(0.002)}$ & $0.860_{(0.003)}$\\
+			10 & \texttt{clog-log} & $10^{-2}$ & $0.423_{(0.239)}$ & $0.062_{(0.051)}$ & $0.127_{(0.017)}$ & $0.120_{(0.014)}$ & $0.684_{(0.046)}$ & $\mathbf{0.894_{(0.062)}}$ & $\mathbf{0.986_{(0.012)}}$ & $0.832_{(0.020)}$\\
+			10 & \texttt{clog-log} & $10^{-3}$ & $\mathbf{0.582_{(0.016)}}$ & $0.102_{(0.006)}$ & $0.128_{(0.003)}$ & $0.115_{(0.002)}$ & $0.680_{(0.007)}$ & $\mathit{0.880_{(0.004)}}$ & $0.972_{(0.003)}$ & $0.861_{(0.004)}$\\
+			10 & \texttt{clog-log} & $10^{-4}$ & $0.537_{(0.010)}$ & $0.064_{(0.004)}$ & $\mathit{0.116_{(0.001)}}$ & $0.096_{(0.001)}$ & $0.717_{(0.003)}$ & $0.837_{(0.002)}$ & $0.971_{(0.001)}$ & $0.860_{(0.002)}$\\
+			10 & \texttt{logit} & $10^{-2}$ & $0.531_{(0.031)}$ & $0.107_{(0.008)}$ & $0.151_{(0.010)}$ & $0.140_{(0.008)}$ & $0.623_{(0.025)}$ & $0.802_{(0.022)}$ & $0.934_{(0.013)}$ & $0.838_{(0.014)}$\\
+			10 & \texttt{logit} & $10^{-3}$ & $0.579_{(0.009)}$ & $0.096_{(0.012)}$ & $0.127_{(0.005)}$ & $0.113_{(0.004)}$ & $0.686_{(0.013)}$ & $0.817_{(0.006)}$ & $0.954_{(0.005)}$ & $0.861_{(0.002)}$\\
+			10 & \texttt{logit} & $10^{-4}$ & $0.539_{(0.007)}$ & $0.074_{(0.013)}$ & $0.126_{(0.005)}$ & $0.095_{(0.002)}$ & $0.707_{(0.010)}$ & $0.823_{(0.007)}$ & $0.957_{(0.005)}$ & $0.858_{(0.004)}$\\
+			10 & \texttt{probit} & $10^{-2}$ & $0.508_{(0.037)}$ & $0.088_{(0.044)}$ & $0.145_{(0.018)}$ & $0.137_{(0.014)}$ & $0.639_{(0.045)}$ & $0.835_{(0.015)}$ & $0.960_{(0.008)}$ & $0.829_{(0.020)}$\\
+			10 & \texttt{probit} & $10^{-3}$ & $0.558_{(0.034)}$ & $\mathbf{0.111_{(0.005)}}$ & $0.134_{(0.003)}$ & $0.120_{(0.002)}$ & $0.666_{(0.008)}$ & $0.831_{(0.007)}$ & $0.955_{(0.001)}$ & $0.863_{(0.003)}$\\
+			10 & \texttt{probit} & $10^{-4}$ & $0.541_{(0.010)}$ & $0.076_{(0.006)}$ & $0.119_{(0.002)}$ & $0.098_{(0.001)}$ & $0.712_{(0.005)}$ & $0.828_{(0.003)}$ & $0.961_{(0.002)}$ & $0.862_{(0.001)}$\\
+			15 & \texttt{clog-log} & $10^{-2}$ & $0.564_{(0.016)}$ & $0.108_{(0.014)}$ & $0.143_{(0.006)}$ & $0.134_{(0.005)}$ & $0.640_{(0.015)}$ & $0.879_{(0.011)}$ & $0.972_{(0.005)}$ & $0.851_{(0.006)}$\\
+			15 & \texttt{clog-log}g & $10^{-3}$ & $0.559_{(0.026)}$ & $\mathit{0.111_{(0.008)}}$ & $0.127_{(0.004)}$ & $0.113_{(0.003)}$ & $0.682_{(0.010)}$ & $0.871_{(0.008)}$ & $\mathit{0.974_{(0.002)}}$ & $\mathbf{0.868_{(0.002)}}$\\
+			15 & \texttt{clog-log} & $10^{-4}$ & $0.538_{(0.009)}$ & $0.054_{(0.003)}$ & $\mathbf{0.115_{(0.002)}}$ & $\mathit{0.093_{(0.001)}}$ & $0.720_{(0.006)}$ & $0.835_{(0.007)}$ & $0.970_{(0.003)}$ & $0.860_{(0.006)}$\\
+			15 & \texttt{logit} & $10^{-2}$ & $0.551_{(0.020)}$ & $0.104_{(0.008)}$ & $0.139_{(0.011)}$ & $0.129_{(0.009)}$ & $0.654_{(0.027)}$ & $0.815_{(0.017)}$ & $0.948_{(0.016)}$ & $0.856_{(0.015)}$\\
+			15 & \texttt{logit} & $10^{-3}$ & $0.551_{(0.010)}$ & $0.106_{(0.016)}$ & $0.129_{(0.008)}$ & $0.114_{(0.005)}$ & $0.680_{(0.019)}$ & $0.818_{(0.008)}$ & $0.952_{(0.007)}$ & $\mathit{0.866_{(0.001)}}$\\
+			15 & \texttt{logit} & $10^{-4}$ & $0.543_{(0.008)}$ & $0.056_{(0.003)}$ & $0.121_{(0.004)}$ & $\mathbf{0.090_{(0.001)}}$ & $\mathbf{0.723_{(0.004)}}$ & $0.833_{(0.004)}$ & $0.964_{(0.003)}$ & $0.862_{(0.004)}$\\
+			15 & \texttt{probit} & $10^{-2}$ & $0.534_{(0.032)}$ & $0.104_{(0.013)}$ & $0.148_{(0.015)}$ & $0.138_{(0.014)}$ & $0.631_{(0.038)}$ & $0.845_{(0.030)}$ & $0.964_{(0.010)}$ & $0.852_{(0.010)}$\\
+			15 & \texttt{probit} & $10^{-3}$ & $\mathit{0.580_{(0.021)}}$ & $0.104_{(0.016)}$ & $0.129_{(0.008)}$ & $0.116_{(0.005)}$ & $0.680_{(0.018)}$ & $0.832_{(0.010)}$ & $0.959_{(0.007)}$ & $0.866_{(0.003)}$\\
+			15 & \texttt{probit} & $10^{-4}$ & $0.533_{(0.004)}$ & $0.065_{(0.005)}$ & $0.117_{(0.002)}$ & $0.094_{(0.001)}$ & $\mathit{0.721_{(0.004)}}$ & $0.832_{(0.002)}$ & $0.964_{(0.001)}$ & $0.863_{(0.001)}$\\
+			\hline
+			\hline
 		\end{tabular}
 	\end{table*}
 	
-	The best mean QWK value was obtained with the complementary log-log link function using a batch size of 10 and a learning rate of $10^{-3}$. However, the best CCR value was obtained with a batch size of 15, the logit link and a learning rate of $10^{-4}$. The optimal configuration depends on the metric we are analysing. In this case, as we are working with an ordinal problem, the most reliable metric is the QWK.
+	The best mean QWK value was obtained with the complementary log-log link function using a batch size of 10 and a learning rate of $10^{-3}$. However, the best CCR value was obtained with a batch size of 15, the \texttt{logit} link and a learning rate of $10^{-4}$. The optimal configuration depends on the metric we are analysing. In this case, as we are working with an ordinal problem, the most reliable metric is the QWK. \textcolor{red}{No se entonces si tiene sentido poner el resto de métricas???} \textcolor{blue}{Están puestas para comparar con artículos que no dan el QWK.}
 	
 	\subsection{Adience}
 	\label{sect:adience}
-	Results for the experiments made with the Adience dataset are shown in Table \ref{table:AdienceTest}. The best result for each metric is marked in bold and the second best is in italic font.
+	\textcolor{blue}{Test results} for the experiments made with the Adience dataset are shown in Table \ref{table:AdienceTest}. The best result for each metric is marked in bold and the second best is in italic font.
 	
 	\begin{table*}[!t]
-		\caption{Adience test results. BS stands for Batch Size, LF for link function and LR for Learning Rate.}
+		\caption{Adience test results. BS stands for Batch Size, LF for link function and LR for Learning Rate. Mean and standard deviation $\text{Mean}_\text{SD}$.}
 		\label{table:AdienceTest}
 		\footnotesize
 		\centering
-		\begin{tabular}{c@{\hskip 0.15cm}c@{\hskip 0.15cm}c|c@{\hskip 0.30cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c}
+		\begin{tabular}{c@{\hskip 0.15cm}c@{\hskip 0.15cm}c@{\hskip 0.15cm}c@{\hskip 0.30cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c@{\hskip 0.20cm}c}
+			\hline
+			\hline
 			BS & LF & LR & $\overline{\text{QWK}}_{{(SD)}}$ & $\overline{\text{MS}}_{{(SD)}}$ & $\overline{\text{MAE}}_{{(SD)}}$ & $\overline{\text{MSE}}_{{(SD)}}$ & $\overline{\text{CCR}}_{{(SD)}}$ & $\overline{\text{Top-2}}_{{(SD)}}$ & $\overline{\text{Top-3}}_{{(SD)}}$ & $\overline{\text{1-off}}_{{(SD)}}$\\\hline
-			64 & c log-log & $10^{-2}$ & $0.808_{(0.025)}$ & $0.086_{(0.041)}$ & $0.147_{(0.008)}$ & $0.129_{(0.007)}$ & $0.415_{(0.031)}$ & $0.677_{(0.024)}$ & $0.798_{(0.036)}$ & $0.804_{(0.015)}$\\
-			64 & c log-log & $10^{-3}$ & $0.873_{(0.006)}$ & $0.144_{(0.057)}$ & $\mathbf{0.124_{(0.003)}}$ & $0.101_{(0.003)}$ & $\mathbf{0.519_{(0.014)}}$ & $\mathit{0.764_{(0.010)}}$ & $0.861_{(0.019)}$ & $0.886_{(0.006)}$\\
-			64 & c log-log & $10^{-4}$ & $0.799_{(0.010)}$ & $0.000_{(0.000)}$ & $0.174_{(0.001)}$ & $0.100_{(0.002)}$ & $0.324_{(0.015)}$ & $0.616_{(0.020)}$ & $0.795_{(0.012)}$ & $0.771_{(0.014)}$\\
-			64 & logit & $10^{-2}$ & $0.778_{(0.019)}$ & $0.074_{(0.041)}$ & $0.159_{(0.006)}$ & $0.137_{(0.007)}$ & $0.366_{(0.025)}$ & $0.636_{(0.015)}$ & $0.785_{(0.010)}$ & $0.775_{(0.015)}$\\
-			64 & logit & $10^{-3}$ & $\mathbf{0.881_{(0.005)}}$ & $\mathit{0.178_{(0.023)}}$ & $\mathit{0.126_{(0.001)}}$ & $0.098_{(0.003)}$ & $\mathit{0.518_{(0.008)}}$ & $\mathbf{0.765_{(0.015)}}$ & $\mathbf{0.902_{(0.005)}}$ & $\mathbf{0.894_{(0.005)}}$\\
-			64 & logit & $10^{-4}$ & $0.784_{(0.011)}$ & $0.000_{(0.000)}$ & $0.180_{(0.001)}$ & $0.108_{(0.004)}$ & $0.318_{(0.026)}$ & $0.621_{(0.034)}$ & $0.772_{(0.024)}$ & $0.731_{(0.030)}$\\
-			64 & probit & $10^{-2}$ & $0.836_{(0.005)}$ & $0.135_{(0.021)}$ & $0.134_{(0.002)}$ & $0.121_{(0.002)}$ & $0.468_{(0.011)}$ & $0.720_{(0.009)}$ & $0.861_{(0.009)}$ & $0.829_{(0.005)}$\\
-			64 & probit & $10^{-3}$ & $\mathit{0.874_{(0.004)}}$ & $0.134_{(0.012)}$ & $0.126_{(0.003)}$ & $0.105_{(0.003)}$ & $0.511_{(0.014)}$ & $0.756_{(0.009)}$ & $\mathit{0.895_{(0.003)}}$ & $\mathit{0.889_{(0.003)}}$\\
-			64 & probit & $10^{-4}$ & $0.805_{(0.004)}$ & $0.000_{(0.000)}$ & $0.170_{(0.001)}$ & $0.100_{(0.002)}$ & $0.360_{(0.011)}$ & $0.653_{(0.011)}$ & $0.809_{(0.009)}$ & $0.790_{(0.009)}$\\
-			128 & c log-log & $10^{-2}$ & $0.832_{(0.013)}$ & $0.123_{(0.031)}$ & $0.135_{(0.004)}$ & $0.117_{(0.002)}$ & $0.463_{(0.013)}$ & $0.705_{(0.019)}$ & $0.813_{(0.025)}$ & $0.832_{(0.006)}$\\
-			128 & c log-log & $10^{-3}$ & $0.873_{(0.006)}$ & $\mathbf{0.185_{(0.029)}}$ & $0.128_{(0.002)}$ & $0.100_{(0.001)}$ & $0.513_{(0.007)}$ & $0.758_{(0.008)}$ & $0.870_{(0.011)}$ & $0.880_{(0.009)}$\\
-			128 & c log-log & $10^{-4}$ & $0.659_{(0.025)}$ & $0.000_{(0.000)}$ & $0.190_{(0.002)}$ & $0.125_{(0.004)}$ & $0.235_{(0.026)}$ & $0.466_{(0.031)}$ & $0.640_{(0.030)}$ & $0.536_{(0.041)}$\\
-			128 & logit & $10^{-2}$ & $0.781_{(0.041)}$ & $0.096_{(0.059)}$ & $0.153_{(0.007)}$ & $0.125_{(0.007)}$ & $0.398_{(0.031)}$ & $0.638_{(0.033)}$ & $0.790_{(0.025)}$ & $0.779_{(0.020)}$\\
-			128 & logit & $10^{-3}$ & $0.865_{(0.005)}$ & $0.127_{(0.026)}$ & $0.134_{(0.001)}$ & $0.099_{(0.003)}$ & $0.497_{(0.009)}$ & $0.754_{(0.008)}$ & $0.882_{(0.009)}$ & $0.874_{(0.008)}$\\
-			128 & logit & $10^{-4}$ & $0.586_{(0.008)}$ & $0.000_{(0.000)}$ & $0.196_{(0.001)}$ & $0.151_{(0.005)}$ & $0.192_{(0.001)}$ & $0.364_{(0.060)}$ & $0.581_{(0.034)}$ & $0.396_{(0.002)}$\\
-			128 & probit & $10^{-2}$ & $0.849_{(0.005)}$ & $0.132_{(0.010)}$ & $0.131_{(0.001)}$ & $0.115_{(0.001)}$ & $0.479_{(0.004)}$ & $0.728_{(0.007)}$ & $0.854_{(0.009)}$ & $0.847_{(0.007)}$\\
-			128 & probit & $10^{-3}$ & $0.866_{(0.002)}$ & $0.124_{(0.043)}$ & $0.130_{(0.002)}$ & $0.100_{(0.003)}$ & $0.505_{(0.006)}$ & $0.750_{(0.010)}$ & $0.882_{(0.004)}$ & $0.873_{(0.006)}$\\
-			128 & probit & $10^{-4}$ & $0.718_{(0.015)}$ & $0.000_{(0.000)}$ & $0.185_{(0.001)}$ & $0.110_{(0.002)}$ & $0.300_{(0.031)}$ & $0.575_{(0.015)}$ & $0.733_{(0.010)}$ & $0.640_{(0.033)}$\\
-			256 & c log-log & $10^{-2}$ & $0.853_{(0.004)}$ & $0.157_{(0.024)}$ & $0.130_{(0.002)}$ & $0.110_{(0.001)}$ & $0.485_{(0.009)}$ & $0.744_{(0.006)}$ & $0.842_{(0.016)}$ & $0.858_{(0.004)}$\\
-			256 & c log-log & $10^{-3}$ & $0.840_{(0.017)}$ & $0.095_{(0.017)}$ & $0.144_{(0.005)}$ & $0.097_{(0.004)}$ & $0.456_{(0.021)}$ & $0.720_{(0.022)}$ & $0.840_{(0.018)}$ & $0.842_{(0.018)}$\\
-			256 & c log-log & $10^{-4}$ & $0.552_{(0.010)}$ & $0.000_{(0.000)}$ & $0.199_{(0.001)}$ & $0.165_{(0.004)}$ & $0.187_{(0.001)}$ & $0.368_{(0.022)}$ & $0.475_{(0.025)}$ & $0.387_{(0.001)}$\\
-			256 & logit & $10^{-2}$ & $0.764_{(0.102)}$ & $0.077_{(0.067)}$ & $0.155_{(0.020)}$ & $0.125_{(0.015)}$ & $0.387_{(0.083)}$ & $0.632_{(0.103)}$ & $0.790_{(0.077)}$ & $0.783_{(0.065)}$\\
-			256 & logit & $10^{-3}$ & $0.851_{(0.008)}$ & $0.100_{(0.030)}$ & $0.147_{(0.003)}$ & $\mathbf{0.094_{(0.002)}}$ & $0.449_{(0.015)}$ & $0.726_{(0.015)}$ & $0.861_{(0.006)}$ & $0.850_{(0.008)}$\\
-			256 & logit & $10^{-4}$ & $0.558_{(0.008)}$ & $0.000_{(0.000)}$ & $0.202_{(0.001)}$ & $0.191_{(0.002)}$ & $0.187_{(0.002)}$ & $0.206_{(0.007)}$ & $0.395_{(0.046)}$ & $0.389_{(0.003)}$\\
-			256 & probit & $10^{-2}$ & $0.858_{(0.005)}$ & $0.164_{(0.033)}$ & $0.130_{(0.002)}$ & $0.112_{(0.002)}$ & $0.486_{(0.007)}$ & $0.741_{(0.008)}$ & $0.867_{(0.008)}$ & $0.862_{(0.005)}$\\
-			256 & probit & $10^{-3}$ & $0.850_{(0.008)}$ & $0.111_{(0.040)}$ & $0.144_{(0.002)}$ & $\mathit{0.095_{(0.001)}}$ & $0.460_{(0.011)}$ & $0.732_{(0.006)}$ & $0.865_{(0.006)}$ & $0.853_{(0.007)}$\\
-			256 & probit & $10^{-4}$ & $0.565_{(0.010)}$ & $0.000_{(0.000)}$ & $0.196_{(0.001)}$ & $0.150_{(0.005)}$ & $0.189_{(0.001)}$ & $0.409_{(0.014)}$ & $0.602_{(0.022)}$ & $0.392_{(0.002)}$
+			64 & \texttt{clog-log} & $10^{-2}$ & $0.808_{(0.025)}$ & $0.086_{(0.041)}$ & $0.147_{(0.008)}$ & $0.129_{(0.007)}$ & $0.415_{(0.031)}$ & $0.677_{(0.024)}$ & $0.798_{(0.036)}$ & $0.804_{(0.015)}$\\
+			64 & \texttt{clog-log} & $10^{-3}$ & $0.873_{(0.006)}$ & $0.144_{(0.057)}$ & $\mathbf{0.124_{(0.003)}}$ & $0.101_{(0.003)}$ & $\mathbf{0.519_{(0.014)}}$ & $\mathit{0.764_{(0.010)}}$ & $0.861_{(0.019)}$ & $0.886_{(0.006)}$\\
+			64 & \texttt{clog-log} & $10^{-4}$ & $0.799_{(0.010)}$ & $0.000_{(0.000)}$ & $0.174_{(0.001)}$ & $0.100_{(0.002)}$ & $0.324_{(0.015)}$ & $0.616_{(0.020)}$ & $0.795_{(0.012)}$ & $0.771_{(0.014)}$\\
+			64 & \texttt{logit} & $10^{-2}$ & $0.778_{(0.019)}$ & $0.074_{(0.041)}$ & $0.159_{(0.006)}$ & $0.137_{(0.007)}$ & $0.366_{(0.025)}$ & $0.636_{(0.015)}$ & $0.785_{(0.010)}$ & $0.775_{(0.015)}$\\
+			64 & \texttt{logit} & $10^{-3}$ & $\mathbf{0.881_{(0.005)}}$ & $\mathit{0.178_{(0.023)}}$ & $\mathit{0.126_{(0.001)}}$ & $0.098_{(0.003)}$ & $\mathit{0.518_{(0.008)}}$ & $\mathbf{0.765_{(0.015)}}$ & $\mathbf{0.902_{(0.005)}}$ & $\mathbf{0.894_{(0.005)}}$\\
+			64 & \texttt{logit} & $10^{-4}$ & $0.784_{(0.011)}$ & $0.000_{(0.000)}$ & $0.180_{(0.001)}$ & $0.108_{(0.004)}$ & $0.318_{(0.026)}$ & $0.621_{(0.034)}$ & $0.772_{(0.024)}$ & $0.731_{(0.030)}$\\
+			64 & \texttt{probit} & $10^{-2}$ & $0.836_{(0.005)}$ & $0.135_{(0.021)}$ & $0.134_{(0.002)}$ & $0.121_{(0.002)}$ & $0.468_{(0.011)}$ & $0.720_{(0.009)}$ & $0.861_{(0.009)}$ & $0.829_{(0.005)}$\\
+			64 & \texttt{probit} & $10^{-3}$ & $\mathit{0.874_{(0.004)}}$ & $0.134_{(0.012)}$ & $0.126_{(0.003)}$ & $0.105_{(0.003)}$ & $0.511_{(0.014)}$ & $0.756_{(0.009)}$ & $\mathit{0.895_{(0.003)}}$ & $\mathit{0.889_{(0.003)}}$\\
+			64 & \texttt{probit} & $10^{-4}$ & $0.805_{(0.004)}$ & $0.000_{(0.000)}$ & $0.170_{(0.001)}$ & $0.100_{(0.002)}$ & $0.360_{(0.011)}$ & $0.653_{(0.011)}$ & $0.809_{(0.009)}$ & $0.790_{(0.009)}$\\
+			128 & \texttt{clog-log} & $10^{-2}$ & $0.832_{(0.013)}$ & $0.123_{(0.031)}$ & $0.135_{(0.004)}$ & $0.117_{(0.002)}$ & $0.463_{(0.013)}$ & $0.705_{(0.019)}$ & $0.813_{(0.025)}$ & $0.832_{(0.006)}$\\
+			128 & \texttt{clog-log} & $10^{-3}$ & $0.873_{(0.006)}$ & $\mathbf{0.185_{(0.029)}}$ & $0.128_{(0.002)}$ & $0.100_{(0.001)}$ & $0.513_{(0.007)}$ & $0.758_{(0.008)}$ & $0.870_{(0.011)}$ & $0.880_{(0.009)}$\\
+			128 & \texttt{clog-log} & $10^{-4}$ & $0.659_{(0.025)}$ & $0.000_{(0.000)}$ & $0.190_{(0.002)}$ & $0.125_{(0.004)}$ & $0.235_{(0.026)}$ & $0.466_{(0.031)}$ & $0.640_{(0.030)}$ & $0.536_{(0.041)}$\\
+			128 & \texttt{logit} & $10^{-2}$ & $0.781_{(0.041)}$ & $0.096_{(0.059)}$ & $0.153_{(0.007)}$ & $0.125_{(0.007)}$ & $0.398_{(0.031)}$ & $0.638_{(0.033)}$ & $0.790_{(0.025)}$ & $0.779_{(0.020)}$\\
+			128 & \texttt{logit} & $10^{-3}$ & $0.865_{(0.005)}$ & $0.127_{(0.026)}$ & $0.134_{(0.001)}$ & $0.099_{(0.003)}$ & $0.497_{(0.009)}$ & $0.754_{(0.008)}$ & $0.882_{(0.009)}$ & $0.874_{(0.008)}$\\
+			128 & \texttt{logit} & $10^{-4}$ & $0.586_{(0.008)}$ & $0.000_{(0.000)}$ & $0.196_{(0.001)}$ & $0.151_{(0.005)}$ & $0.192_{(0.001)}$ & $0.364_{(0.060)}$ & $0.581_{(0.034)}$ & $0.396_{(0.002)}$\\
+			128 & \texttt{probit} & $10^{-2}$ & $0.849_{(0.005)}$ & $0.132_{(0.010)}$ & $0.131_{(0.001)}$ & $0.115_{(0.001)}$ & $0.479_{(0.004)}$ & $0.728_{(0.007)}$ & $0.854_{(0.009)}$ & $0.847_{(0.007)}$\\
+			128 & \texttt{probit} & $10^{-3}$ & $0.866_{(0.002)}$ & $0.124_{(0.043)}$ & $0.130_{(0.002)}$ & $0.100_{(0.003)}$ & $0.505_{(0.006)}$ & $0.750_{(0.010)}$ & $0.882_{(0.004)}$ & $0.873_{(0.006)}$\\
+			128 & \texttt{probit} & $10^{-4}$ & $0.718_{(0.015)}$ & $0.000_{(0.000)}$ & $0.185_{(0.001)}$ & $0.110_{(0.002)}$ & $0.300_{(0.031)}$ & $0.575_{(0.015)}$ & $0.733_{(0.010)}$ & $0.640_{(0.033)}$\\
+			256 & \texttt{clog-log} & $10^{-2}$ & $0.853_{(0.004)}$ & $0.157_{(0.024)}$ & $0.130_{(0.002)}$ & $0.110_{(0.001)}$ & $0.485_{(0.009)}$ & $0.744_{(0.006)}$ & $0.842_{(0.016)}$ & $0.858_{(0.004)}$\\
+			256 & \texttt{clog-log} & $10^{-3}$ & $0.840_{(0.017)}$ & $0.095_{(0.017)}$ & $0.144_{(0.005)}$ & $0.097_{(0.004)}$ & $0.456_{(0.021)}$ & $0.720_{(0.022)}$ & $0.840_{(0.018)}$ & $0.842_{(0.018)}$\\
+			256 & \texttt{clog-log} & $10^{-4}$ & $0.552_{(0.010)}$ & $0.000_{(0.000)}$ & $0.199_{(0.001)}$ & $0.165_{(0.004)}$ & $0.187_{(0.001)}$ & $0.368_{(0.022)}$ & $0.475_{(0.025)}$ & $0.387_{(0.001)}$\\
+			256 & \texttt{logit} & $10^{-2}$ & $0.764_{(0.102)}$ & $0.077_{(0.067)}$ & $0.155_{(0.020)}$ & $0.125_{(0.015)}$ & $0.387_{(0.083)}$ & $0.632_{(0.103)}$ & $0.790_{(0.077)}$ & $0.783_{(0.065)}$\\
+			256 & \texttt{logit} & $10^{-3}$ & $0.851_{(0.008)}$ & $0.100_{(0.030)}$ & $0.147_{(0.003)}$ & $\mathbf{0.094_{(0.002)}}$ & $0.449_{(0.015)}$ & $0.726_{(0.015)}$ & $0.861_{(0.006)}$ & $0.850_{(0.008)}$\\
+			256 & \texttt{logit} & $10^{-4}$ & $0.558_{(0.008)}$ & $0.000_{(0.000)}$ & $0.202_{(0.001)}$ & $0.191_{(0.002)}$ & $0.187_{(0.002)}$ & $0.206_{(0.007)}$ & $0.395_{(0.046)}$ & $0.389_{(0.003)}$\\
+			256 & \texttt{probit} & $10^{-2}$ & $0.858_{(0.005)}$ & $0.164_{(0.033)}$ & $0.130_{(0.002)}$ & $0.112_{(0.002)}$ & $0.486_{(0.007)}$ & $0.741_{(0.008)}$ & $0.867_{(0.008)}$ & $0.862_{(0.005)}$\\
+			256 & \texttt{probit} & $10^{-3}$ & $0.850_{(0.008)}$ & $0.111_{(0.040)}$ & $0.144_{(0.002)}$ & $\mathit{0.095_{(0.001)}}$ & $0.460_{(0.011)}$ & $0.732_{(0.006)}$ & $0.865_{(0.006)}$ & $0.853_{(0.007)}$\\
+			256 & \texttt{probit} & $10^{-4}$ & $0.565_{(0.010)}$ & $0.000_{(0.000)}$ & $0.196_{(0.001)}$ & $0.150_{(0.005)}$ & $0.189_{(0.001)}$ & $0.409_{(0.014)}$ & $0.602_{(0.022)}$ & $0.392_{(0.002)}$\\
+			\hline
+			\hline
 		\end{tabular}
 	\end{table*}
 	
-	The best mean QWK value was obtained with the logit link function using a batch size of 64 and a learning rate of $10^{-4}$. Also, this configuration obtained the best score for Top-2, Top-3 and 1-off accuracy, and the second best for MS, MAE and CCR. In this case, this configuration can be selected as the optimal for this problem.
+	The best mean QWK value was obtained with the \texttt{logit} link function using a batch size of 64 and a learning rate of $10^{-4}$. Also, this configuration obtained the best score for Top-2, Top-3 and 1-off accuracy, and the second best for MS, MAE and CCR. In this case, this configuration can be selected as the optimal for this problem.
 	
 	\subsection{Statistical analysis}
 	\label{sect:statisticalanalysis}
-	In this subsection, a statistical analysis will be performed in order to obtain conclusions from the results presented in this section.
+	In this subsection, a statistical analysis will be performed in order to obtain conclusions from the result,
 	
-	The significance and relative importance of the parameters concerning the results obtained, as well as suitable values for each, were obtained using the ANalysis Of the VAriance (ANOVA) test.
+	The significance and relative importance of the parameters concerning the results obtained, as well as suitable values for each of them, were obtained using an ANalysis Of the VAriance (ANOVA).
 	
 	The ANOVA test~\cite{miller1997beyond} is one of the most widely used statistical techniques. ANOVA is essentially a method of analysing the variance to which a response is subject into its various components, corresponding to the sources of variation which can be identified.
 	
-	ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the link function, which can be logit, probit and complementary log-log, the learning rate for the Adam optimization algorithm ($10^{-2}$, $10^{-3}$ and $10^{-4}$) and the batch size (5, 10 and 15 for DR and 64, 128 and 256 for Adience).
+	ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the link function\textcolor{blue}{\sout{, which can be \texttt{logit}, \texttt{probit} and complementary log-log,}} the learning rate for the Adam optimization algorithm \textcolor{blue}{\sout{($10^{-2}$, $10^{-3}$ and $10^{-4}$)}}, and the batch size \textcolor{blue}{\sout{(5, 10 and 15 for DR and 64, 128 and 256 for Adience)}}. \textcolor{red}{Esto está repitiendo mucho}
 	
 	Following the setup of the previous study, we performed an ANOVA III analysis and multiple comparison tests. We assume that five executions are enough to do the statistical tests because of the computational time limitations.
 	
 	%The test shows that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
 	
-	We denote by $QWK_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the i-th level, the second at the j-th level and the third at k-th level. We assume that the three factors do not act independently and therefore there exists an interaction between each pair of them and between the three factors. In this case, the observations fit \ref{eq:anova3}.
-	
+	We denote by $QWK_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the $i$-th level, the second at the $j$-th level and the third at the $k$-th level. We assume that the three factors do not act independently and therefore there exists an interaction between each pair of them and between the three factors. In this case, the observations fit:
 	\begin{equation}
 	\begin{aligned}
 	\footnotesize
-	QWK_{i,j,k,l} = & \mu + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l}
+	QWK_{i,j,k,l} = & \mu + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l},
 	\label{eq:anova3}
 	\end{aligned}
 	\end{equation}
+	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (\texttt{logit}, \texttt{probit}, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the learning rate factor and $B_k$ is the effect associated with the \textit{k-th} level of the batch size factor. The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $QWK_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
 	
-	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the link factor (logit, probit, complementary log-log); $P_j$ is the effect associated with the \textit{j-th} level of the parameter factor and $B_k$ is the effect associated with the \textit{k-th} level of the batch size factor. The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the result of everything that could not be assigned or of random factors. $QWK_{i,j,k,l}$ is the quadratic weighted kappa measure, the response variable used to perform the statistical analysis.
-	
-	We consider some hypotheses testing where the null hypothesis is proposed that each term of the above equation is independent of the levels involved. The hypotheses for the levels of the L factor are
-	\[
-	H_0 \equiv L_1 = L_2 = L_3
-	\]
-	\[
-	H_1 \equiv \text{ some } L_i \text{ is different}
-	\]
+	We consider some hypotheses testing where the null hypothesis is proposed that each term of the above equation is independent of the levels involved. The hypotheses for the levels of the L factor are $H_0 \equiv L_1 = L_2 = L_3,$ and $H_1 \equiv \text{ some } L_i \text{ is different}$.
 	
 	The same hypotheses are made for the other factors. In this way, we test in the null hypothesis that all of the population means are equal against an alternative hypothesis that there is at least one mean that is not equal to the others.
 	
-	The hypothesis associated with the interaction between L and P is
-	\[
-	H_0 \equiv LP_{i,j} = 0 \quad \forall i,j
-	\]
-	\[
-	H_1 \equiv \exists LP_{i,j} \ne 0
-	\]
+	The hypothesis associated with the interaction between $L$ and $P$ is $H_0 \equiv LP_{i,j} = 0, \forall i,j$, and $H_1 \equiv \exists LP_{i,j} \ne 0$. Similar hypotheses can be assumed for the interaction between the other factors.
 	
-	Similar hypotheses can be assumed for the interaction between the other factors.
-	
-	The analysis of variance table containing the sum of squares, degrees of freedom, mean square, test statistics and significance level represent the initial study in a compact form, where non-significative factors and interactions have been removed ($\text{p-value} > 0.05$). These factors and interactions take part of the error component now.
-	
+	The analysis of variance table represents the initial study in a compact form, containing the sum of squares, degrees of freedom, mean square, test statistics and significance level, where non-significative factors and interactions have been removed ($\text{p-value} > 0.05$). These factors and interactions take part of the error component now. In this way, the results of the ANOVA III test for the Diabetic Retinopathy dataset are summarised in Table  \ref{table:ANOVARetinopathy}. There are significant differences in average QWK depending on the link function and also depending on the learning rate for $\alpha=0.05$ ($\text{p-value} = 0.000$). Moreover, an interaction between the link function and the learning rate can be recognised ($\text{p-value} = 0.001$). It means that the learning rate and the link functions have a significant impact on the optimization algorithm results.
+		
 	\begin{table}[!t]
 		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Retinopathy dataset.}
 		\label{table:ANOVARetinopathy}
 		\centering
 		\small
-		\begin{tabular}{l|ccccc}
+		\begin{tabular}{lccccc}
+			\hline
+			\hline
 			           \multicolumn{6}{c}{Response variable QWK}             \\ \hline
 			Source       &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
 			Model        & $37.860$ &  $9$  & $4.207$ & $1562.840$ & $0.000$ \\
@@ -894,22 +939,47 @@
 			$P$ factor   & $0.121$  &  $2$  & $0.060$ &  $22.468$  & $0.000$ \\
 			$LP$ factors & $0.057$  &  $4$  & $0.014$ &  $5.261$   & $0.001$ \\
 			Error        & $0.339$  & $126$ & $0.003$ &            &  \\ \hline
-			Total        & $38.199$ & $135$ &         &            &
+			Total        & $38.199$ & $135$ &         &            & \\
+			\hline
+			\hline
 		\end{tabular}
 	\end{table}
 	
-	The results of the ANOVA III test for the Diabetic Retinopathy dataset are resumed in Table \ref{table:ANOVARetinopathy}. There are significative differences in the means of QWK depending on the link function and also depending on the learning rate for $\alpha=0.05$ ($\text{p-value} = 0.000$). Moreover, an interaction between the link function and the learning rate can be recognised ($\text{p-value} = 0.001$). It means that the learning rate and the link functions have a significative impact on the optimization algorithm results.
+	Given that there exist significant differences between the means, we analyse now those differences. A post-hoc multiple comparison test has been performed on the mean QWK obtained. An HSD Tukey's test \cite{tukey1949comparing} was made under the null hypothesis that the variance of the error of the dependent variable is the same between the groups. \textcolor{blue}{The results of this test over the test set are shown in Table \ref{table:TukeyDR}. They show that the best link function is the complementary log-log but the \texttt{probit} link performance is close to it. Also, the best value for the learning rate parameter is $10^{-3}$. The batch size is not relevant for this dataset with the values considered.}
 	
-	As Table \ref{table:ANOVARetinopathy} showed that there exist significative differences between the means, we are now analysing those differences. A post-hoc multiple comparison test has been performed on the mean QWK obtained. An HSD Tukey's test \cite{tukey1949comparing} was made under the null hypothesis that the variance of the error of the dependent variable is the same between groups. The results over the test set show that the best link function is the complementary log-log, though it doesn't have significative differences with the probit function ($\text{p-value} = 0.248$). There are differences between the complementary log-log and the probit function concerning the logit function (p-values $0.000$ and $0.011$).
+%	The results over the test set show that the best link function is the complementary log-log, though it does not present significant differences with respect to the probit function ($\text{p-value} = 0.248$). There are differences between the complementary log-log and the probit function with respect to the logit function (p-values $0.000$ and $0.011$, respectively). A similar methodology has been applied to the different values of the learning rate. Significant differences can be observed in the mean values for $\eta = 10^{-3}$ with respect to the other values of the parameter (p-values $0.023$ for $10^{-4}$ and $0.000$ for $10^{-2}$). Also, there are differences for $\eta = 10^{-4}$ concerning $\eta = 10^{-2}$ ($\text{p-value} = 0.000$).
+
 	
-	The results have been obtained following a similar methodology with the different values of the learning parameter including the HSD Tukey's test and the learning parameter ranking. Significative differences can be observed in the mean values for $\eta = 10^{-3}$ with respect to the other values of the parameter (p-values $0.023$ for $10^{-4}$ and $0.000$ for $10^{-2}$). Also, there are differences for $\eta = 10^{-4}$ concerning $\eta = 10^{-2}$ ($\text{p-value} = 0.000$).
+	\begin{table}[!t]
+		\caption{Tukey's test results for the Diabetic Retinopathy dataset.}
+		\label{table:TukeyDR}
+		\centering
+		\begin{tabular}{cccc}
+			\hline\hline
+			       LF         &        LF         & Mean diff. &  Sig.   \\ \hline
+			 \texttt{logit}   &  \texttt{probit}  &  $-0.002$  & $0.011$ \\
+			                  & \texttt{clog-log} &  $0.012$   & $0.000$ \\
+			 \texttt{probit}  &  \texttt{logit}   &  $0.002$   & $0.011$ \\
+			                  & \texttt{clog-log} &  $0.014$   & $0.248$ \\
+			\texttt{clog-log} &  \texttt{logit}   &  $-0.012$  & $0.000$ \\
+			                  &  \texttt{probit}  &  $-0.014$  & $0.248$ \\ \hline\hline
+			       LR         &        LR         & Mean diff. &  Sig.   \\ \hline
+			    $10^{-2}$     &     $10^{-3}$     &  $-0.073$  & $0.000$ \\
+			                  &     $10^{-4}$     &  $-0.044$  & $0.000$ \\
+			    $10^{-3}$     &     $10^{-2}$     &  $0.073$   & $0.000$ \\
+			                  &     $10^{-4}$     &  $0.029$   & $0.023$ \\
+			    $10^{-4}$     &     $10^{-2}$     &  $0.044$   & $0.000$ \\
+			                  &     $10^{-3}$     &  $-0.029$  & $0.023$ \\ \hline\hline
+		\end{tabular}
+	\end{table}
 	
 	\begin{table}[!t]
 		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Adience dataset.}
 		\label{table:ANOVAAdience}
 		\centering
 		\small
-		\begin{tabular}{l|ccccc}
+		\begin{tabular}{lccccc}
+			\hline\hline
 			            \multicolumn{6}{c}{Response variable QWK}             \\ \hline
 			Source        &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
 			Model         & $84.372$ & $27$  & $3.125$ & $4414.006$ & $0.000$ \\
@@ -921,36 +991,83 @@
 			$PB$ factors  & $0.026$  &  $4$  & $0.007$ &  $9.267$   & $0.000$ \\
 			$LPB$ factors & $0.021$  &  $8$  & $0.003$ &  $3.728$   & $0.001$ \\
 			Error         & $0.076$  & $108$ & $0.001$ &            &  \\ \hline
-			Total         & $84.449$ & $135$ &         &            &
+			Total         & $84.449$ & $135$ &         &            &  \\ \hline\hline
 		\end{tabular}
 	\end{table}
 	
-	The results of the ANOVA III test for the Adience dataset are shown in Table \ref{table:ANOVAAdience}. First, we observe that there exist significative differences in the mean QWK concerning the three factors ($\text{p-value} = 0.000$). Secondly, we found interactions between all the pairs of factors and between all the three factors together (p-values $0.000$, $0.000$, $0.000$ and $0.001$). It means that the joint action of two or three factors significatively affects the results obtained by the algorithm.
+	The results of the ANOVA III test for the Adience dataset are shown in Table \ref{table:ANOVAAdience}. First, we observe that there exist significant differences in average QWK concerning the three factors ($\text{p-value} = 0.000$). Secondly, we found interactions between all the pairs of factors and between all the three factors together (p-values $0.000$, $0.000$, $0.000$ and $0.001$). It means that the joint action of two or three factors significantly affects the results obtained by the algorithm.
 	
-	As we did for the DR dataset, a post-hoc multiple comparison test has been performed on the average QWK obtained for Adience. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been done. The results showed that the best link function is the logit one, in this case, with $0.827$ as mean QWK value. Also, there are significative differences between this function and the probit link ($\text{p-value} = 0.000$), that has a mean QWK value of $0.781$. Both links functions present significative differences concerning the complementary log-log function, that has a mean value of $0.743$.
+	As we did for the DR dataset, a post-hoc multiple comparison test has been performed on the average QWK obtained for Adience. Under the null hypothesis that the variance of the error of the dependent variable is the same between groups, an HSD Tukey's test has been applied. \textcolor{blue}{The results of this test over the test set are shown in Table \ref{table:TukeyAdience}.}
 	
-	The same methodology was followed for the learning rate and the batch size factors. The test reported significative differences between $\eta=10^{-3}$ (mean value $0.864$) and the rest of values of this parameter ($\text{p-value} = 0.000$ for both values), being this one the best value for this factor. The best value after $10^{-3}$ is $10^{-2}$, which have a mean QWK value of $0.818$. Both values present significative differences with $\eta=10^{-4}$, that has a mean QWK value of $0.670$ ($\text{p-value = 0.000}$).
+%	The results showed that the best link function is the logit one, in this case, with $0.827$ as mean QWK value. Also, there are significant differences between this function and the probit link ($\text{p-value} = 0.000$), that has a mean QWK value of $0.781$. Both links functions present significant differences concerning the complementary log-log function, which has a mean value of $0.743$.
 	
-	Lastly, the best value for the batch size parameter is $128$ (mean value $0.802$) as it has significative differences with the rest of values (p-values $0.026$ and $0.000$). The second best value is $256$ (mean $0.788$), and it has significative differences with $64$ ($\text{p-value} = 0.000$), that has a mean value of $0.761$.
+	\begin{table}[!t]
+		\caption{Tukey's test results for the Adience dataset.}
+		\label{table:TukeyAdience}
+		\centering
+%		\begin{tabular}{cccc}
+%			\hline\hline
+%			       LF         & \texttt{logit} & \texttt{probit}  & \texttt{clog-log} \\ \hline
+%			 \texttt{logit}   &    $0.827$     & $\mathbf{0.000}$ & $\mathbf{0.000}$  \\
+%			 \texttt{probit}  &       -        &     $0.781$      & $\mathbf{0.000}$  \\
+%			\texttt{clog-log} &       -        &        -         &      $0.743$      \\ \hline\hline
+%			       LR         &   $10^{-2}$    &    $10^{-3}$     &     $10^{-4}$     \\ \hline
+%			    $10^{-2}$     &    $0.818$     & $\mathbf{0.000}$ & $\mathbf{0.000}$  \\
+%			    $10^{-3}$     &       -        &     $0.864$      & $\mathbf{0.000}$  \\
+%			    $10^{-4}$     &       -        &        -         &      $0.670$      \\ \hline\hline
+%			       BS         &       64       &       128        &        256        \\ \hline
+%			       64         &    $0.761$     & $\mathbf{0.026}$ & $\mathbf{0.000}$  \\
+%			       128        &       -        &     $0.802$      & $\mathbf{0.000}$  \\
+%			       256        &       -        &        -         &      $0.788$      \\ \hline\hline
+%		\end{tabular}
+		\begin{tabular}{cccc}
+			\hline\hline
+			       LF         &        LF         & Mean diff. &  Sig.   \\ \hline
+			 \texttt{logit}   &  \texttt{probit}  &  $0.046$   & $0.000$ \\
+			                  & \texttt{clog-log} &  $0.084$   & $0.000$ \\
+			 \texttt{probit}  &  \texttt{logit}   &  $-0.046$  & $0.000$ \\
+			                  & \texttt{clog-log} &  $0.038$   & $0.000$ \\
+			\texttt{clog-log} &  \texttt{logit}   &  $-0.084$  & $0.000$ \\
+			                  &  \texttt{probit}  &  $-0.038$  & $0.000$ \\ \hline\hline
+			       LR         &        LR         & Mean diff. &  Sig.   \\ \hline
+			    $10^{-2}$     &     $10^{-3}$     &  $-0.046$  & $0.000$ \\
+			                  &     $10^{-4}$     &  $0.148$   & $0.000$ \\
+			    $10^{-3}$     &     $10^{-2}$     &  $0.046$   & $0.000$ \\
+			                  &     $10^{-4}$     &  $0.194$   & $0.000$ \\
+			    $10^{-4}$     &     $10^{-2}$     &  $-0.148$  & $0.000$ \\
+			                  &     $10^{-3}$     &  $-0.194$  & $0.000$ \\ \hline\hline
+			       BS         &        BS         & Mean diff. &  Sig.   \\ \hline
+			       64         &        128        &  $-0.041$  & $0.026$ \\
+			                  &        256        &  $-0.027$  & $0.000$ \\
+			       128        &        64         &  $0.041$   & $0.026$ \\
+			                  &        256        &  $0.014$   & $0.000$ \\
+			       256        &        64         &  $0.027$   & $0.000$ \\
+			                  &        128        &  $-0.014$  & $0.000$ \\ \hline\hline
+		\end{tabular}
+	\end{table}
+		
+%	The same methodology was followed for the learning rate and the batch size factors. The test reported significant differences between $\eta=10^{-3}$ (mean value $0.864$) and the rest of values of this parameter ($\text{p-value} = 0.000$ for both values), being this one the best value for this factor. The second best value is $10^{-2}$, which has a mean QWK value of $0.818$. Both values present significant differences with $\eta=10^{-4}$, which has a mean QWK value of $0.670$ ($\text{p-value = 0.000}$).
+%	
+%	Finally, the best value for the batch size parameter is $128$ (mean value $0.802$) as it shows differences with the rest of values (p-values $0.026$ and $0.000$). The second best value is $256$ (mean value of $0.788$), and it has significant differences with respect to $64$ ($\text{p-value} = 0.000$), with a mean value of $0.761$.
 	
-	However, the interactions between these factors made the configuration that uses a logit link, $\eta=10^{-3}$ and batch size of 64, the best configuration. It obtained a mean QWK value of $0.940$ for validation and $0.881$ for test. The same parameters, but using the probit link, achieves the second best result ($0.874$). The standard deviation is very low for both cases.
+	\textcolor{blue}{The results over the test set show that the best link function is the \texttt{logit} one, the best learning rate is $10^{-3}$ and the best batch size is 128.} However, the interactions between these factors made the configuration that uses a \texttt{logit} link, $\eta=10^{-3}$ and batch size of 64, the best configuration. It obtained a mean QWK value of $0.940$ for validation and $0.881$ for test. The same parameters, but using the \texttt{probit} link, achieves the second best result ($0.874$). The standard deviation is very low for both cases.
 	
-	To sum up, the results showed that the best parameter configuration depends on the problem that is being solved. The optimal value for the batch size and the optimal link function are not the same for Retinopathy and Adience datasets. These results highlight the importance of adjusting the hyper-parameters for each problem that is treated instead of trying to find an optimal configuration for all the datasets. However, the best learning rate for both datasets were $10^{-3}$. It is recommended to use this value for future datasets.
-	The best batch size for DR was 10 while the best value for Adience was 128. Both values are the intermediate value that we have tried.
+	To sum up, the results showed that the best parameter configuration depends on the problem that is being solved. The optimal value for the batch size and the optimal link function are not the same for Retinopathy and Adience datasets. These results highlight the importance of adjusting the hyper-parameters for each problem instead of trying to find an optimal configuration for all the datasets. However, the best learning rate for both datasets were $10^{-3}$. It is recommended to use this value for future datasets.
+	The best batch size for DR was 10 while the best value for Adience was 128 (intermediate values considered).
 	Finally, there are more interactions between the three factors for the Adience dataset than for the Diabetic Retinopathy one. This highlights the importance of making experimental designs associated with each dataset to determine the best value for each factor.
 	
 	\subsection{Comparison with nominal method and previous works}
-	\label{app:NominalComparison}
+	\label{sect:NominalComparison}
 	
-	The same experiments described in Section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimizer and the softmax function instead of the Proportional Odds Model for the output of the network. The evaluation metric remains the same in order to be able to compare. There are some parameter configurations where the training process gets stagnated and a very low QWK is obtained. As we saw in Sections \ref{sect:dr} and \ref{sect:adience}, this problem is not present when using the ordinal method.
+	The same experiments described in Section \ref{sect:experiments} were repeated using the cross-entropy instead of the QWK as loss function for the optimizer and the softmax function instead of the Cumulative Link Model for the output of the network. The evaluation metric remains the same in order to be able to compare. There are some parameter configurations where the training process gets stagnated and a very low QWK is obtained. As we saw in Sections \ref{sect:dr} and \ref{sect:adience}, this problem is not found when using the ordinal method.
 	
 	For the Diabetic Retinopathy dataset, the best mean value of QWK was $0.497$ and was obtained when using a batch size of 10 and a learning rate of $10^{-4}$.
 	
 	In the case of Adience dataset, the highest QWK was $0.787$ and was achieved with a batch size of 64 and a learning rate of $10^{-3}$.
 
-	Finally, a comparison of the best results for each dataset for ordinal and nominal cases and previous works is shown in tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}. Also, it is compared with previous works. The proposed ordinal model outperforms all the other alternatives in terms of QWK. The performance increase of POM over softmax reaches $16.8\%$ for Diabetic Retinopathy and $11.9\%$ for Adience dataset. The enhancement of the ordinal method for Retinopathy dataset is more notable than the rise for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases: it is harder to detect the diabetes disease from a retina image than predicting the age range of a person.
+	Finally, a comparison of the best \textcolor{blue}{test results} for each dataset for ordinal and nominal cases and previous works is shown in tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}. The proposed ordinal model outperforms all the other alternatives in terms of QWK. The performance gain of CLM over the softmax reaches $16.8\%$ for Diabetic Retinopathy and $11.9\%$ for Adience dataset. The improvement of the ordinal method for Retinopathy dataset is higher than for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases.
 	
-	In the case of DR, the nominal method obtained a higher CCR and 1-off accuracy value because of the important dataset unbalance. It is possible to achieve a high accuracy classifying all the examples in the majority class. However, as we are working with an ordinal problem, it is preferable to achieve a good QWK value rather than a high accuracy. This effect is not seen in the Adience dataset as it is less unbalanced.
+%	In the case of DR, the nominal method obtained a higher CCR and 1-off accuracy value because of the important dataset unbalance. It is possible to achieve a high accuracy classifying all the examples in the majority class. However, as we are working with an ordinal problem, it is preferable to achieve a good QWK value rather than a high accuracy. This effect is not seen in the Adience dataset as it is less unbalanced.
 	
 	\begin{table}[!t]
 		\caption{Comparison between the best results of nominal, ordinal and previous works for the Diabetic Retinopathy dataset.}
@@ -958,12 +1075,16 @@
 		\scriptsize
 		\centering
 		\def\arraystretch{1.3}
-		\begin{tabular}{l|ccc}
+		\begin{tabular}{lccc}
+			\hline
+			\hline
 			Method                                   & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
-			Ordinal proposed                         &    $0.582_{(0.016)}$    &    $0.681_{(0.067)}$    &        $0.748_{(0.071)}$         \\
-			Nominal proposed                         &    $0.498_{(0.011)}$    &    $0.692_{(0.012)}$    &        $0.854_{(0.006)}$         \\ \hline
-			J. Torre et al. \cite{de2018weighted}    &      $0.537_{(\text{-})}$      &            -            &                -                 \\
-			À. Nebot et al. \cite{nebot2016diabetic} &      $0.555_{(\text{-})}$      &            -            &                -
+			Ordinal network                          &    $0.582_{(0.016)}$    &    $0.723_{(0.004)}$    &        $0.868_{(0.002)}$         \\
+			Nominal network                          &    $0.498_{(0.011)}$    &    $0.692_{(0.012)}$    &        $0.854_{(0.006)}$         \\
+			J. Torre et al. \cite{de2018weighted}    &  $0.537_{(\text{-})}$   &            -            &                -                 \\
+			À. Nebot et al. \cite{nebot2016diabetic} &  $0.555_{(\text{-})}$   &            -            &                -					\\
+			\hline
+			\hline
 		\end{tabular}
 	\end{table}
 	
@@ -973,29 +1094,33 @@
 		\scriptsize
 		\centering
 		\def\arraystretch{1.3}
-		\begin{tabular}{l|ccc}
+		\begin{tabular}{lccc}
+			\hline
+			\hline
 			Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
-			Ordinal proposed                          &    $0.881_{(0.005)}$    &    $0.519_{(0.013)}$    &        $0.894_{(0.005)}$         \\
-			Nominal proposed                          &    $0.787_{(0.004)}$    &    $0.458_{(0.008)}$    &        $0.800_{(0.007)}$         \\ \hline
+			Ordinal network                           &    $0.881_{(0.005)}$    &    $0.519_{(0.013)}$    &        $0.894_{(0.005)}$         \\
+			Nominal network                           &    $0.787_{(0.004)}$    &    $0.458_{(0.008)}$    &        $0.800_{(0.007)}$         \\
 			E. Eidinger et al. \cite{eidinger2014age} &            -            &    $0.451_{(0.026)}$    &        $0.807_{(0.011)}$         \\
 			J.-C. Chen et al. \cite{chen2016cascaded} &            -            &    $0.529_{(0.060)}$    &        $0.885_{(0.022)}$         \\
-			G. Levi et al. \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$
+			G. Levi et al. \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$		 \\
+			\hline
+			\hline
 		\end{tabular}
 	\end{table}
 	
 	\section{Conclusions}
 	\label{sect:conclusions}
-	In this section, the conclusions obtained from this work are exposed. The first thing that we have noticed is that the optimal values for the different parameters considered are problem-dependant. 
+	The first conclusion obtained from our results is that the optimal values for the different parameters considered are problem-dependant. 
 	
-	The complementary log-log function offers the best results in Diabetic Retinopathy dataset while the logit link is the best result for the Adience dataset. These results provide an opportunity for exploring new generalised link functions that can suit any problem.
+	The complementary log-log function offers the best results in Diabetic Retinopathy dataset while the \texttt{logit} link is the best option for the Adience dataset. These results provide an opportunity for exploring new generalised link functions that could be dynamically adapted to any problem.
 	
 	The best value for the learning rate parameter for both datasets is $\eta = 10^{-3}$. It can be considered a good value for this parameter when training the model with new datasets.
 	
-	Both datasets have obtained the best performance with the intermedium batch size: 10 for Diabetic Retinopathy and 128 for Adience.
+	Both datasets have obtained the best performance with an intermediate batch size: 10 for Diabetic Retinopathy and 128 for Adience.
 	
-	Also, the statistical tests reported that there are relevant interactions between the three factors that we have take into account. The results highlight the importance of making an experimental design were all of these parameters are adjusted for each problem.
+	Also, the statistical tests reported that there are relevant interactions between the three factors that we have take into account. The results highlight the importance of making an experimental design where all of these parameters are adjusted for each problem.
 	
-	The proposed POM has improved the performance of the deep network compared to the model that uses the softmax function and the models proposed in previous works. Also, it reduces the chance that the model gets stuck when training with some parameter configurations. So, the most significant improvements of these link functions are the performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention of the over-fitting and the stagnation.
+	The proposed CLM has improved the performance of the deep network compared to the model that uses the softmax function and the models proposed in previous works. Also, it reduces the chance that the model gets stuck when training with some parameter configurations. So, the most significant improvements of these link functions are the performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention of the over-fitting and the stagnation.
 
 	
 	% if have a single appendix:
