@@ -183,10 +183,10 @@ class NNPOM(tf.keras.layers.Layer):
 	"""
 	Proportional Odds Model activation layer.
 	"""
-	def __init__(self, num_classes, transfer_function, **kwargs):
+	def __init__(self, num_classes, link_function, **kwargs):
 		self.num_classes = num_classes
 		self.dist = tf.distributions.Normal(loc=0., scale=1.)
-		self.transfer_function = transfer_function
+		self.link_function = link_function
 		super(NNPOM, self).__init__(**kwargs)
 
 	def _convert_thresholds(self, b, a):
@@ -205,10 +205,15 @@ class NNPOM(tf.keras.layers.Layer):
 		b = tf.transpose(tf.reshape(tf.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
 		z3 = a - b
 
-		if self.transfer_function == 'probit':
+		if self.link_function == 'probit':
 			a3T = self.dist.cdf(z3)
-		elif self.transfer_function == 'cloglog':
+		elif self.link_function == 'cloglog':
 			a3T = 1 - tf.exp(-tf.exp(z3))
+		elif self.link_function == 'ghf':
+			if self.lmbd == 0:
+				a3T = 1 - tf.exp(-tf.exp(z3))
+			else:
+				a3T = 1 - tf.exp(- tf.pow((self.lmbd * z3 - 1), 1 / self.lmbd) )
 		else:
 			a3T = 1.0 / (1.0 + tf.exp(-z3))
 
@@ -225,6 +230,9 @@ class NNPOM(tf.keras.layers.Layer):
 
 		self.tau = self.add_weight('tau_nnpom', shape=(1,),
 								   initializer=tf.random_uniform_initializer(minval=1, maxval=10))
+
+		if self.link_function == 'ghf':
+			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 
 	def call(self, x):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)

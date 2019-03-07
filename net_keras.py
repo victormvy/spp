@@ -104,6 +104,9 @@ class Net:
 		elif self.final_activation == 'pomclog':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(NNPOM(self.num_classes, 'cloglog'))
+		elif self.final_activation == 'pomghf':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'ghf'))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			model.add(tf.keras.layers.Activation(self.final_activation))
@@ -181,6 +184,9 @@ class Net:
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
 			model.add(NNPOM(self.num_classes, 'cloglog'))
+		elif self.final_activation == 'pomghf':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'ghf'))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':
@@ -211,6 +217,9 @@ class Net:
 		elif self.final_activation == 'pomclog':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(NNPOM(self.num_classes, 'cloglog'))
+		elif self.final_activation == 'pomghf':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'ghf'))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':
@@ -243,6 +252,9 @@ class Net:
 		elif self.final_activation == 'pomclog':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(NNPOM(self.num_classes, 'cloglog'))
+		elif self.final_activation == 'pomghf':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'ghf'))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':
@@ -269,6 +281,9 @@ class Net:
 		elif self.final_activation == 'pomclog':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(NNPOM(self.num_classes, 'cloglog'))
+		elif self.final_activation == 'pomghf':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'ghf'))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':

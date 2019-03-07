@@ -512,15 +512,15 @@
 	
 	J. de la Torre et al.~\cite{de2018weighted} proposed the use of a continuous version of the QWK loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function across three different databases, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces overfitting and training time. Also, they checked the importance of hyper-parameter tuning. First, they defined QWK metric as follows:
 	\begin{equation}
-	\textcolor{blue}{\text{QWK} = 1 - \frac{\sum_{i,j} \omega_{i,j} O_{i,j}}{\sum_{i,j} \omega_{i,j} E_{i,j}},}
+	\textcolor{blue}{\text{QWK} = 1 - \frac{\sum\limits_{i,j} \omega_{i,j} O_{i,j}}{\sum\limits_{i,j} \omega_{i,j} E_{i,j}},}
 	\end{equation}
-	\textcolor{blue}{where $\omega$ is the penalization matrix, $O$ is the confusion matrix and $E$ is the normalized outer product between the prediction and the true vector.}
+	\textcolor{blue}{where $\omega$ is the penalization matrix (in this case, quadratic weights are considered), $O$ is the confusion matrix and $E$ is the normalized outer product between the prediction and the true vector.}
 	
 	\textcolor{blue}{Then, they provided the QWK loss ($\text{QWK}_l$) definition below:}
 	\begin{equation}
-	\textcolor{blue}{\text{QWK}_l = 1 - \frac{\sum_{k=1}^N \sum_{c=1}^C \omega_{t_k, c} P_c(X_k)}{\sum_{i=1}^C \frac{N_i}{N} \sum_{j=1}^C ( \omega_{i,j} \sum_{k=1}^N P_j(X_k) ) },}
+	\textcolor{blue}{\text{QWK}_l = \frac{\sum\limits_{k=1}^N \sum\limits_{q=1}^Q \omega_{t_k, q} P(y = \mathcal{C}_q | \mathbf{x}_k)}{\sum\limits_{i=1}^Q \frac{N_i}{N} \sum\limits_{j=1}^Q ( \omega_{i,j} \sum\limits_{k=1}^N P(y = \mathcal{C}_j | \mathbf{x}_k))},}
 	\end{equation}
-	\textcolor{blue}{where $X_k$ is the input data of the $k$th sample, $N$ is the number of samples, $N_i$ is the number of samples of the $i$th class and $P_c(X_k)$ is the conditional probability that the $k$th sample belongs to class $c$ given that the true class is $t_k$.}
+	\textcolor{blue}{where $\text{QWK}_l \in [0,2]$, $\mathbf{x}_k$ and $t_k$ are the input data and the real class of the $k$-th sample, $Q$ is the number of classes, $N$ is the number of samples, $N_i$ is the number of samples of the $i$th class, $P(y = \mathcal{C}_q | \mathbf{x}_k)$ is the probability that the $k$th sample belongs to class $\mathcal{C}_q$ and $\omega_{i,j}$ are the elements of the penalization matrix. Generally, $\omega_{i,j} = \frac{|i-j|^n}{(C-1)^n}$, where $\omega_{i,j} \in [0,1]$. In this case, the $\text{QWK}_l$ is a function to be minimized while the QWK metric must be maximized.}
 	
 	\textcolor{blue}{Z. Niu et al. \cite{niu2016ordinal} proposed a learning approach to address ordinal regression problems using convolutional neural networks. They divided the problem into a series of binary classification sub-problems and proposed a multiple output CNN optimization algorithm to collectively resolve these classification sub-problems, taking into account the correlation between them.}
 	
@@ -553,19 +553,17 @@
 	An ordinal classification problem consists of predicting the label $y$ of an input vector $\mathbf{x}$, where $\mathbf{x} \in \mathcal{X} \subseteq \mathds{R}^K$ and $y \in \mathcal{Y}~=~\{\mathcal{C}_1, \mathcal{C}_2, ..., \mathcal{C}_Q\}$, i.e. $\mathbf{x}$ is in a K-dimensional input space, and $y$ is in a label space of $Q$ different labels. The objective of the ordinal problem is to find a function $r : \mathcal{X} \rightarrow \mathcal{Y}$ to predict the labels or categories of new patterns, given a training set of $N$ points, $D = \{(\mathbf{x}_i, y_i), i = 1, ..., N\}$. Labels have a natural ordering in ordinal problems: $\mathcal{C}_1 \prec \mathcal{C}_2 \prec ... \prec \mathcal{C}_Q$. The order between labels makes it possible to compare two different elements of $\mathcal{Y}$ by using the relation $\prec$. This is not possible under the nominal classification setting. In regression (where $y \in \mathds{R}$), real values in $\mathds{R}$ can be ordered by the standard $<$ operator, but labels in ordinal regression ($y \in \mathcal{Y}$) do not carry metric information, so the category serves as a qualitative indication of the pattern rather than a quantitative one.
 	
 	The Proportional Odds Model (POM) arises from a statistical background and is one of the first models designed explicitly for ordinal regression~\cite{mccullagh1980regression}. It dated back to 1980 and is a member of a wider family of models recognised as Cumulative Link Models (CLM)~\cite{agresti2010analysis}. CLMs predict probabilities of groups of contiguous categories, taking the ordinal scale into account. In this way, cumulative probabilities $P(y \prec C_q |\mathbf{x})$ are estimated, which can be directly related to standard probabilities:
-	\begin{equation}
-		P(y \preceq \mathcal{C}_q | \mathbf{x}) = P(y = \mathcal{C}_1 | \mathbf{x}) + ... + P(y = \mathcal{C}_q | \mathbf{x}),
-	\end{equation}
-	\begin{equation}
-		P(y = \mathcal{C}_q | \mathbf{x}) = P(y \preceq \mathcal{C}_q | \mathbf{x}) - P(y \preceq \mathcal{C}_{q-1} | \mathbf{x}),
-	\end{equation}
+	\begin{align}
+		P(y \preceq \mathcal{C}_q | \mathbf{x}) &= P(y = \mathcal{C}_1 | \mathbf{x}) + ... + P(y = \mathcal{C}_q | \mathbf{x}),\\
+		P(y = \mathcal{C}_q | \mathbf{x}) &= P(y \preceq \mathcal{C}_q | \mathbf{x}) - P(y \preceq \mathcal{C}_{q-1} | \mathbf{x}),
+	\end{align}
 	with $q = 2, ..., Q-1$, and considering that $P(y = \mathcal{C}_1 | \mathbf{x}) = P(y \preceq \mathcal{C}_1 | \mathbf{x})$ and $P(y \preceq \mathcal{C}_Q | \mathbf{x}) = 1$.
 	
-	\textcolor{blue}{The model is inspired by the notion of a latent variable, where $f(x)$ represents a one-dimensional mapping obtained from the output of the last layer, which has only one neuron.} The decision rule $r: \mathcal{X} \rightarrow \mathcal{Y}$ is not fitted directly, but stochastic ordering of space $\mathcal{X}$ is satisfied by the following general model form \cite{herbrich2000large}:
+	\textcolor{blue}{The model is inspired by the notion of a latent variable, where $f(\textbf{x})$ represents a one-dimensional mapping obtained from the output of the last layer, which has only one neuron.} The decision rule $r: \mathcal{X} \rightarrow \mathcal{Y}$ is not fitted directly, but stochastic ordering of space $\mathcal{X}$ is satisfied by the following general model form \cite{herbrich2000large}:
 	\begin{equation}
 		g^{-1}(P(y \preceq \mathcal{C}_q | \mathbf{x})) = b_q - \textcolor{blue}{f(\mathbf{x})}, \quad q = 1, ..., Q-1,
 	\end{equation}
-	where $g^{-1} : [0,1] \rightarrow (-\infty, +\infty)$ is a monotonic function often termed as the inverse link function, and $b_q$ is the threshold defined for class $\mathcal{C}_q$. Consider the latent variable $y^* = f(\mathbf{x})^* = \textcolor{blue}{f(\mathbf{x})} + \epsilon$, where $\epsilon$ is the random variable of the error. The most common choice for the probability distribution of $\epsilon$ is the logistic function (which is the default function for POM). Label $\mathcal{C}_q$ is predicted if and only if $f(\mathbf{x}) \in [b_{q-1}, b_q]$, where the function $f$ and $\mathbf{b} = (b_0, b_1, ..., b_{Q-1}, b_Q)$ are to be determined from the data. It is assumed that $b_0 = -\infty$ and $b_Q = +\infty$, so the real line defined by $f(x), x \in \mathcal{X}$, is divided into $Q$ consecutive intervals. Each interval corresponds to a category. The constraints $b_1 \le b_2 \le ... \le b_{Q-1}$ ensures that $P(y \preceq \mathcal{C}_q | \mathbf{x})$ increases with $q$ \cite{mccullagh1980regression}.
+	where $g^{-1} : [0,1] \rightarrow (-\infty, +\infty)$ is a monotonic function often termed as the inverse link function, and $b_q$ is the threshold defined for class $\mathcal{C}_q$. Consider the latent variable $y^* = f(\mathbf{x})^* = \textcolor{blue}{f(\mathbf{x})} + \epsilon$, where $\epsilon$ is the random variable of the error. The most common choice for the probability distribution of $\epsilon$ is the logistic function (which is the default function for POM). Label $\mathcal{C}_q$ is predicted if and only if $f(\mathbf{x}) \in [b_{q-1}, b_q]$, where the function $f$ and $\mathbf{b} = (b_0, b_1, ..., b_{Q-1}, b_Q)$ are to be determined from the data. It is assumed that $b_0 = -\infty$ and $b_Q = +\infty$, so the real line defined by $f(\textbf{x}), \textbf{x} \in \mathcal{X}$, is divided into $Q$ consecutive intervals. Each interval corresponds to a category. The constraints $b_1 \le b_2 \le ... \le b_{Q-1}$ ensures that $P(y \preceq \mathcal{C}_q | \mathbf{x})$ increases with $q$ \cite{mccullagh1980regression}.
 	\textcolor{blue}{This order is achieved by defining the first threshold and calculating the rest of thresholds from the first in the following form:}
 	
 	\begin{equation}
@@ -575,7 +573,7 @@
 	
 	In this work, we use this ordinal model with different link functions for the probability distribution of $\epsilon$, including \texttt{logit}, \texttt{probit} and complementary log-log (\texttt{clog-log}).
 	
-	These three types of links are explained below and represented in Figure \ref{fig:linkfunctions}. They all follow the same form $P(y \prec \mathcal{C}_q) = \Phi(b_q - \textcolor{blue}{f(\mathbf{x})})$ for a continuous cdf~$\Phi$.
+	These three types of links are explained below and represented in Figure \ref{fig:linkfunctions}. They all follow the same form $P(y \preceq \mathcal{C}_q | \mathbf{x}) = \Phi(b_q - \textcolor{blue}{f(\mathbf{x})})$ for a continuous cdf~$\Phi$.
 			
 	\begin{figure}[!t]
 		\centering
@@ -588,52 +586,52 @@
 		\item \texttt{Logit}. \texttt{logit} link function is the function used for the Proportional Odds Model. The \texttt{logit} link is:
 		\begin{equation}
 		\begin{aligned}
-		\text{logit}[P(y \preceq \mathcal{C}_q)] = \log\frac{P(y \preceq \mathcal{C}_q)}{1 - P(y \preceq \mathcal{C}_q)}=& \\ = b_q - \textcolor{blue}{f(\mathbf{x})}, \quad q = 1, ..., Q-1,
+		\text{logit}[P(y \preceq \mathcal{C}_q | \mathbf{x})] = \log\frac{P(y \preceq \mathcal{C}_q | \mathbf{x})}{1 - P(y \preceq \mathcal{C}_q | \mathbf{x})}=& \\ = b_q - \textcolor{blue}{f(\mathbf{x})}, \quad q = 1, ..., Q-1,
 		\end{aligned}
 		\label{eq:logit}
 		\end{equation}		
 		or the equivalent expression:		
 		\begin{equation}
-		P(y \preceq \mathcal{C}_q) = \frac{1}{1 + e^{-(b - \textcolor{blue}{f(\mathbf{x})})}}.
+		P(y \preceq \mathcal{C}_q | \mathbf{x}) = \frac{1}{1 + e^{-(b - \textcolor{blue}{f(\mathbf{x})})}}.
 		\label{eq:logit2}
 		\end{equation}
 		
 		\item \texttt{Probit}. \texttt{probit} link function is the inverse of the standard normal cumulative distribution function (cdf) $\Phi$. Its expression is:
 		\begin{equation}
 		\begin{aligned}
-		&\Phi^{-1}[P(y \preceq \mathcal{C}_q)] = b_q - \textcolor{blue}{f(\mathbf{x})}, &q = 1, ..., Q-1\\
-		&P(y \preceq \mathcal{C}_q) = \Phi(b_q - \textcolor{blue}{f(\mathbf{x})}), &q = 1, ..., Q-1,
+		\Phi^{-1}[P(y \preceq \mathcal{C}_q | \mathbf{x})] = b_q - \textcolor{blue}{f(\mathbf{x})}, \quad &q = 1, ..., Q-1,\\
+		P(y \preceq \mathcal{C}_q | \mathbf{x}) = \Phi(b_q - \textcolor{blue}{f(\mathbf{x})}), \quad &q = 1, ..., Q-1,
 		\end{aligned}
 		\label{eq:probit}
 		\end{equation}		
 		which can also be expressed as:
 		\begin{equation}
-		P(y \preceq \mathcal{C}_q) = \int_{-\infty}^{b_q - \textcolor{blue}{f(\mathbf{x})}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} \mathrm{d}x.
+		P(y \preceq \mathcal{C}_q | \mathbf{x}) = \int_{-\infty}^{b_q - \textcolor{blue}{f(\mathbf{x})}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} \mathrm{d}x.
 		\label{eq:probit2}
 		\end{equation}
 		
 		\item \textit{Complementary log-log}. Like the \texttt{logit} and the \texttt{probit} transformation, the complementary log-log transformation takes a response that is restricted to the $(0,1)$ interval and converts it into something in the $(-\infty, +\infty)$ interval. Complementary log-log expression is:
 		\begin{equation}
 		\begin{aligned}
-		\log[-\log[1 - P(y \preceq \mathcal{C}_q)]] =&\\
+		\log[-\log[1 - P(y \preceq \mathcal{C}_q | \mathbf{x})]] =&\\
 		= b_q - \textcolor{blue}{f(\mathbf{x})}, \quad q = 1, ..., Q-1,&
 		\end{aligned}
 		\label{eq:cloglog}
 		\end{equation}
 		that is:
 		\begin{equation}
-		P(y \preceq \mathcal{C}_q) = 1 - e^{-e^{b_q - \textcolor{blue}{f(\mathbf{x})}}}, \quad q = 1, ..., Q-1.
+		P(y \preceq \mathcal{C}_q | \mathbf{x}) = 1 - e^{-e^{b_q - \textcolor{blue}{f(\mathbf{x})}}}, \quad q = 1, ..., Q-1.
 		\label{eq:cloglog2}
 		\end{equation}
 	\end{itemize}
 	
 	\texttt{Logit} and \texttt{probit} links are symmetric:	
 	\begin{equation}
-	\text{link}[P(y \preceq \mathcal{C}_q)] = -\text{link}[1 - P(y \preceq \mathcal{C}_q)],
+	\text{link}[P(y \preceq \mathcal{C}_q | \mathbf{x})] = -\text{link}[1 - P(y \preceq \mathcal{C}_q | \mathbf{x})],
 	\end{equation}
-	which means that the response curve for $P(y \preceq \mathcal{C}_q)$ is symmetric around the point $P(y \preceq \mathcal{C}_q) = 0.5$, i.e. $P(y \preceq \mathcal{C}_q)$ has the same rate when approaching 0 than when approaching 1. This symmetric property can be demonstrated as follows:	
+	which means that the response curve for $P(y \preceq \mathcal{C}_q | \mathbf{x})$ is symmetric around the point $P(y \preceq \mathcal{C}_q | \mathbf{x}) = 0.5$, i.e. $P(y \preceq \mathcal{C}_q | \mathbf{x})$ has the same rate when approaching 0 than when approaching 1. This symmetric property can be demonstrated as follows:	
 	\begin{enumerate}
-		\item Let $P(y \preceq \mathcal{C}_q) \equiv p$. For the \texttt{logit} function, we have:
+		\item Let $P(y \preceq \mathcal{C}_q | \mathbf{x}) \equiv p$. For the \texttt{logit} function, we have:
 		\begin{equation}
 		\begin{aligned}
 		\text{link}(p) = \text{logit}(p) &= \log\left(\frac{p}{1-p}\right) =\\
@@ -651,7 +649,7 @@
 		\item For the \texttt{probit}:		
 		\begin{equation}
 		\begin{aligned}
-		p \equiv P(y \preceq \mathcal{C}_q) &= \Phi(b_q - \textcolor{blue}{f(\mathbf{x})}) =\\
+		p \equiv P(y \preceq \mathcal{C}_q | \mathbf{x}) &= \Phi(b_q - \textcolor{blue}{f(\mathbf{x})}) =\\
 		&= \int_{-\infty}^{b_q - \textcolor{blue}{f(\mathbf{x})}} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}x^2} \mathrm{d}x,
 		\end{aligned}
 		\end{equation}
@@ -669,7 +667,6 @@
 		\end{equation}
 	\end{enumerate}
 	
-	
 	Unlike \texttt{logit} and \texttt{probit}, the complementary log-log model is asymmetrical. It is frequently used when the probability of an event is very small or very large. When the given data is not symmetric in the $[0,1]$ interval and increase slowly at small to moderate value but increases sharply near 1, the \texttt{logit} and \texttt{probit} models are inappropriate. However, in this situation, the complementary log-log model might give a satisfying answer.
 	
 	\section{Experiments}
@@ -678,7 +675,7 @@
 	In order to evaluate the different models, we make use of two ordinal datasets:
 	
 	\begin{itemize}
-		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try to predict the correct category from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The images are taken in variable conditions: by different cameras,  varying conditions of illumination and different resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted,nebot2016diabetic}, applying an ordinal QWK cost function in \cite{de2018weighted} to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels and rescaled to $[0,1]$ range. Data augmentation techniques, described in Section \ref{sect:settings}, are applied to achieve a higher number of samples. A few images of this dataset are shown in Figure \ref{fig:DRexamples}.
+		\item \textit{Diabetic Retinopathy (DR)}\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data}. DR is a dataset consisting of extremely high-resolution fundus image data. The training set consists of $17563$ pairs of images (where a  pair consists of a left and right eye image corresponding to a patient). In this dataset, we try to predict the correct category from five levels of diabetic retinopathy: no DR ($25810$ images), mild DR ($2443$ images), moderate DR ($5292$ images), severe DR ($873$ images), or proliferative DR ($708$ images). The test set contains $26788$ pairs of images. These images are taken in variable conditions: by different cameras,  varying conditions of illumination and different resolutions. These images come from the EyePACS dataset that was used in a Diabetic Retinopathy Detection competition hosted on the Kaggle platform. Also, this dataset was used in later works~\cite{de2018weighted,nebot2016diabetic}, applying an ordinal QWK cost function in \cite{de2018weighted} to achieve better performance. A validation set is set aside, consisting of $10\%$ of the patients in the training set. The images are resized to 128 by 128 pixels and rescaled to $[0,1]$ range. Data augmentation techniques, described in Section \ref{sect:settings}, are applied to achieve a higher number of samples. A few images of this dataset are shown in Figure \ref{fig:DRexamples}.
 		
 		\begin{figure}[!t]
 			\centering
@@ -843,7 +840,7 @@
 		\end{tabular}
 	\end{table*}
 	
-	The best mean QWK value was obtained with the complementary log-log link function using a batch size of 10 and a learning rate of $10^{-3}$. However, the best CCR value was obtained with a batch size of 15, the \texttt{logit} link and a learning rate of $10^{-4}$. The optimal configuration depends on the metric we are analysing. In this case, as we are working with an ordinal problem, the most reliable metric is the QWK. \textcolor{red}{No se entonces si tiene sentido poner el resto de métricas???} \textcolor{blue}{Están puestas para comparar con artículos que no dan el QWK.}
+	The best mean QWK value was obtained with the complementary log-log link function using a batch size of 10 and a learning rate of $10^{-3}$. However, the best CCR value was obtained with a batch size of 15, the \texttt{logit} link and a learning rate of $10^{-4}$. The optimal configuration depends on the metric we are analysing. \textcolor{blue}{In this case, as we are working with an ordinal problem, the most reliable metric is the QWK. However, the rest of the metrics are also included to allow further comparisons with future works.}
 	
 	\subsection{Adience}
 	\label{sect:adience}
@@ -894,7 +891,7 @@
 	
 	\subsection{Statistical analysis}
 	\label{sect:statisticalanalysis}
-	In this subsection, a statistical analysis will be performed in order to obtain conclusions from the result,
+	In this subsection, a statistical analysis will be performed in order to obtain conclusions from the result.
 	
 	The significance and relative importance of the parameters concerning the results obtained, as well as suitable values for each of them, were obtained using an ANalysis Of the VAriance (ANOVA).
 	
@@ -906,11 +903,11 @@
 	
 	%The test shows that there is no batch size whose results are significatively better than the results of all other batch sizes. This does not mean that these differences could not exist for specific numbers of samples per batch. So, in order to determine for each type of function whether a batch size is better than the others, we have performed an ANOVA I analysis - where the only factor is the batch size - and multiple comparison tests.
 	
-	We denote by $QWK_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the $i$-th level, the second at the $j$-th level and the third at the $k$-th level. We assume that the three factors do not act independently and therefore there exists an interaction between each pair of them and between the three factors. In this case, the observations fit:
+	We denote by $\text{QWK}_{i,j,k,l}(i=1, ..., 3; j = 1, ..., 3; k = 1, ..., 3)$ the value observed when the first factor is at the $i$-th level, the second at the $j$-th level and the third at the $k$-th level. We assume that the three factors do not act independently and therefore there exists an interaction between each pair of them and between the three factors. In this case, the observations fit:
 	\begin{equation}
 	\begin{aligned}
 	\footnotesize
-	QWK_{i,j,k,l} = & \mu + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l},
+	\text{QWK}_{i,j,k,l} = \mu & + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l},
 	\label{eq:anova3}
 	\end{aligned}
 	\end{equation}
@@ -1065,7 +1062,7 @@
 	
 	In the case of Adience dataset, the highest QWK was $0.787$ and was achieved with a batch size of 64 and a learning rate of $10^{-3}$.
 
-	Finally, a comparison of the best \textcolor{blue}{test results} for each dataset for ordinal and nominal cases and previous works is shown in tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}. The proposed ordinal model outperforms all the other alternatives in terms of QWK. The performance gain of CLM over the softmax reaches $16.8\%$ for Diabetic Retinopathy and $11.9\%$ for Adience dataset. The improvement of the ordinal method for Retinopathy dataset is higher than for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases.
+	Finally, a comparison of the best results for each dataset for ordinal and nominal cases and previous works is shown in tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}. \textcolor{blue}{All the results are given for the test set, except those from \cite{de2018weighted} (DR dataset), because the authors only provided validation results for $128\times 128$ images (however, validation results are usually better than test results).} The proposed ordinal model outperforms all the other alternatives in terms of QWK. The performance gain of CLM over the softmax reaches $16.8\%$ for Diabetic Retinopathy and $11.9\%$ for Adience dataset. The improvement of the ordinal method for Retinopathy dataset is higher than for Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases.
 	
 %	In the case of DR, the nominal method obtained a higher CCR and 1-off accuracy value because of the important dataset unbalance. It is possible to achieve a high accuracy classifying all the examples in the majority class. However, as we are working with an ordinal problem, it is preferable to achieve a good QWK value rather than a high accuracy. This effect is not seen in the Adience dataset as it is less unbalanced.
 	
@@ -1146,8 +1143,6 @@
 	\ifCLASSOPTIONcaptionsoff
 	\newpage
 	\fi
-	
-	
 	
 	% trigger a \newpage just before the given reference
 	% number - used to balance the columns on the last page

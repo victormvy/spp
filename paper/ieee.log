@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  27 FEB 2019 13:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  7 MAR 2019 09:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -856,133 +856,133 @@ LaTeX Font Info:    Try loading font information for U+dsrom on input line 553.
 (/usr/share/texlive/texmf-dist/tex/latex/doublestroke/Udsrom.fd
 File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
 )
-<img/linkfunctions.png, id=183, 462.528pt x 346.896pt>
+<img/linkfunctions.png, id=182, 462.528pt x 346.896pt>
 File: img/linkfunctions.png Graphic file (type png)
 
 <use img/linkfunctions.png>
-Package pdftex.def Info: img/linkfunctions.png used on input line 582.
+Package pdftex.def Info: img/linkfunctions.png used on input line 580.
 (pdftex.def)             Requested size: 216.81pt x 162.60709pt.
- [3 <./img/linkfunctions.png>]
-Underfull \hbox (badness 1371) in paragraph at lines 601--602
+
+Underfull \hbox (badness 1371) in paragraph at lines 599--600
 \OT1/lmr/m/n/10 stan-dard nor-mal cu-mu-la-tive dis-tri-bu-tion func-tion
  []
 
-
-Underfull \hbox (badness 1845) in paragraph at lines 615--616
+[3]
+Underfull \hbox (badness 1845) in paragraph at lines 613--614
 []\OT1/lmr/m/it/10 Complementary log-log\OT1/lmr/m/n/10 . Like the \OT1/lmtt/m/
 n/10 logit \OT1/lmr/m/n/10 and the
  []
 
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 681.
-<img/retinopathy/1.jpg, id=213, 96.36pt x 96.36pt>
+(Font)              <8> on input line 678.
+<img/retinopathy/1.jpg, id=214, 96.36pt x 96.36pt>
 File: img/retinopathy/1.jpg Graphic file (type jpg)
  <use img/retinopathy/1.jpg>
-Package pdftex.def Info: img/retinopathy/1.jpg used on input line 686.
+Package pdftex.def Info: img/retinopathy/1.jpg used on input line 683.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
 
-<img/retinopathy/2.jpg, id=214, 96.36pt x 96.36pt>
+<img/retinopathy/2.jpg, id=215, 96.36pt x 96.36pt>
 File: img/retinopathy/2.jpg Graphic file (type jpg)
  <use img/retinopathy/2.jpg>
-Package pdftex.def Info: img/retinopathy/2.jpg used on input line 686.
+Package pdftex.def Info: img/retinopathy/2.jpg used on input line 683.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
 
-<img/retinopathy/3.jpg, id=215, 96.36pt x 96.36pt>
+<img/retinopathy/3.jpg, id=216, 96.36pt x 96.36pt>
 File: img/retinopathy/3.jpg Graphic file (type jpg)
  <use img/retinopathy/3.jpg>
-Package pdftex.def Info: img/retinopathy/3.jpg used on input line 686.
+Package pdftex.def Info: img/retinopathy/3.jpg used on input line 683.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
 
-<img/retinopathy/4.jpg, id=216, 96.36pt x 96.36pt>
+<img/retinopathy/4.jpg, id=217, 96.36pt x 96.36pt>
 File: img/retinopathy/4.jpg Graphic file (type jpg)
  <use img/retinopathy/4.jpg>
-Package pdftex.def Info: img/retinopathy/4.jpg used on input line 686.
+Package pdftex.def Info: img/retinopathy/4.jpg used on input line 683.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
 
-<img/retinopathy/5.jpg, id=217, 96.36pt x 96.36pt>
+<img/retinopathy/5.jpg, id=218, 96.36pt x 96.36pt>
 File: img/retinopathy/5.jpg Graphic file (type jpg)
  <use img/retinopathy/5.jpg>
-Package pdftex.def Info: img/retinopathy/5.jpg used on input line 687.
+Package pdftex.def Info: img/retinopathy/5.jpg used on input line 684.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
 
-<img/retinopathy/6.jpg, id=218, 96.36pt x 96.36pt>
+<img/retinopathy/6.jpg, id=219, 96.36pt x 96.36pt>
 File: img/retinopathy/6.jpg Graphic file (type jpg)
  <use img/retinopathy/6.jpg>
-Package pdftex.def Info: img/retinopathy/6.jpg used on input line 687.
+Package pdftex.def Info: img/retinopathy/6.jpg used on input line 684.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
 
-<img/retinopathy/7.jpg, id=219, 96.36pt x 96.36pt>
+<img/retinopathy/7.jpg, id=220, 96.36pt x 96.36pt>
 File: img/retinopathy/7.jpg Graphic file (type jpg)
  <use img/retinopathy/7.jpg>
-Package pdftex.def Info: img/retinopathy/7.jpg used on input line 687.
+Package pdftex.def Info: img/retinopathy/7.jpg used on input line 684.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
 
-<img/retinopathy/8.jpg, id=220, 96.36pt x 96.36pt>
+<img/retinopathy/8.jpg, id=221, 96.36pt x 96.36pt>
 File: img/retinopathy/8.jpg Graphic file (type jpg)
  <use img/retinopathy/8.jpg>
-Package pdftex.def Info: img/retinopathy/8.jpg used on input line 687.
+Package pdftex.def Info: img/retinopathy/8.jpg used on input line 684.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
 
-[4] <img/adience/1.jpg, id=253, 256.96pt x 256.96pt>
+[4 <./img/linkfunctions.png>] <img/adience/1.jpg, id=253, 256.96pt x 256.96pt>
 File: img/adience/1.jpg Graphic file (type jpg)
- <use img/adience/1.jpg>
-Package pdftex.def Info: img/adience/1.jpg used on input line 700.
-(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
 
-<img/adience/2.jpg, id=254, 256.96pt x 256.96pt>
+<use img/adience/1.jpg>
+Package pdftex.def Info: img/adience/1.jpg used on input line 697.
+(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
+ <img/adience/2.jpg, id=254, 256.96pt x 256.96pt>
 File: img/adience/2.jpg Graphic file (type jpg)
- <use img/adience/2.jpg>
-Package pdftex.def Info: img/adience/2.jpg used on input line 700.
-(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
 
-<img/adience/3.jpg, id=255, 256.96pt x 256.96pt>
+<use img/adience/2.jpg>
+Package pdftex.def Info: img/adience/2.jpg used on input line 697.
+(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
+ <img/adience/3.jpg, id=255, 256.96pt x 256.96pt>
 File: img/adience/3.jpg Graphic file (type jpg)
- <use img/adience/3.jpg>
-Package pdftex.def Info: img/adience/3.jpg used on input line 700.
-(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
 
-<img/adience/4.jpg, id=256, 256.96pt x 256.96pt>
+<use img/adience/3.jpg>
+Package pdftex.def Info: img/adience/3.jpg used on input line 697.
+(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
+ <img/adience/4.jpg, id=256, 256.96pt x 256.96pt>
 File: img/adience/4.jpg Graphic file (type jpg)
- <use img/adience/4.jpg>
-Package pdftex.def Info: img/adience/4.jpg used on input line 700.
-(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
 
-<img/adience/5.jpg, id=257, 256.96pt x 256.96pt>
+<use img/adience/4.jpg>
+Package pdftex.def Info: img/adience/4.jpg used on input line 697.
+(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
+ <img/adience/5.jpg, id=257, 256.96pt x 256.96pt>
 File: img/adience/5.jpg Graphic file (type jpg)
- <use img/adience/5.jpg>
-Package pdftex.def Info: img/adience/5.jpg used on input line 701.
-(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
 
-<img/adience/6.jpg, id=258, 256.96pt x 256.96pt>
+<use img/adience/5.jpg>
+Package pdftex.def Info: img/adience/5.jpg used on input line 698.
+(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
+ <img/adience/6.jpg, id=258, 256.96pt x 256.96pt>
 File: img/adience/6.jpg Graphic file (type jpg)
- <use img/adience/6.jpg>
-Package pdftex.def Info: img/adience/6.jpg used on input line 701.
-(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
 
-<img/adience/7.jpg, id=259, 256.96pt x 256.96pt>
+<use img/adience/6.jpg>
+Package pdftex.def Info: img/adience/6.jpg used on input line 698.
+(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
+ <img/adience/7.jpg, id=259, 256.96pt x 256.96pt>
 File: img/adience/7.jpg Graphic file (type jpg)
- <use img/adience/7.jpg>
-Package pdftex.def Info: img/adience/7.jpg used on input line 701.
-(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
 
-<img/adience/8.jpg, id=260, 256.96pt x 256.96pt>
+<use img/adience/7.jpg>
+Package pdftex.def Info: img/adience/7.jpg used on input line 698.
+(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
+ <img/adience/8.jpg, id=260, 256.96pt x 256.96pt>
 File: img/adience/8.jpg Graphic file (type jpg)
- <use img/adience/8.jpg>
-Package pdftex.def Info: img/adience/8.jpg used on input line 701.
-(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
 
-[5 <./img/retinopathy/1.jpg> <./img/retinopathy/2.jpg> <./img/retinopathy/3.jpg
-> <./img/retinopathy/4.jpg> <./img/retinopathy/5.jpg> <./img/retinopathy/6.jpg>
- <./img/retinopathy/7.jpg> <./img/retinopathy/8.jpg> <./img/adience/1.jpg> <./i
-mg/adience/2.jpg> <./img/adience/3.jpg> <./img/adience/4.jpg> <./img/adience/5.
-jpg> <./img/adience/6.jpg> <./img/adience/7.jpg> <./img/adience/8.jpg>]
-Underfull \hbox (badness 1694) in paragraph at lines 803--804
+<use img/adience/8.jpg>
+Package pdftex.def Info: img/adience/8.jpg used on input line 698.
+(pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
+ [5 <./img/retinopathy/1.jpg> <./img/retinopathy/2.jpg> <./img/retinopathy/3.jp
+g> <./img/retinopathy/4.jpg> <./img/retinopathy/5.jpg> <./img/retinopathy/6.jpg
+> <./img/retinopathy/7.jpg> <./img/retinopathy/8.jpg> <./img/adience/1.jpg> <./
+img/adience/2.jpg> <./img/adience/3.jpg> <./img/adience/4.jpg> <./img/adience/5
+.jpg> <./img/adience/6.jpg> <./img/adience/7.jpg> <./img/adience/8.jpg>]
+Underfull \hbox (badness 1694) in paragraph at lines 800--801
 []\OT1/lmr/m/n/10 Detailed []test re-sults[] for the Di-a-betic Retinopa-thy
  []
 
 
-LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 91
-2.
+LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 90
+9.
 
 [6]
 
@@ -1011,27 +1011,27 @@ Underfull \hbox (badness 2689) in paragraph at lines 129--133
  []
 
 [10])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1196.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1191.
  [11
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1196.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1191.
  (./ieee.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1196.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1196.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1191.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1191.
 
 Package rerunfilecheck Info: File `ieee.out' has not changed.
 (rerunfilecheck)             Checksum: 3F553E691CC6882341F407CBCEA1498B;869.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1196.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1191.
  ) 
 Here is how much of TeX's memory you used:
  7796 strings out of 493029
  115907 string characters out of 6136233
- 243440 words of memory out of 5000000
+ 244807 words of memory out of 5000000
  11052 multiletter control sequences out of 15000+600000
  203022 words of font info for 137 fonts, out of 8000000 for 9000
  1148 hyphenation exceptions out of 8191
- 29i,13n,28p,2448b,454s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,13n,28p,2448b,452s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
 c/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/s
 hare/texmf/fonts/enc/dvips/lm/lm-rmtt.enc}{/usr/share/texmf/fonts/enc/dvips/lm/
@@ -1058,10 +1058,10 @@ re/texmf/fonts/type1/public/lm/lmsy5.pfb></usr/share/texmf/fonts/type1/public/l
 m/lmsy6.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf
 /fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10
 .pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb>
-Output written on ieee.pdf (11 pages, 744357 bytes).
+Output written on ieee.pdf (11 pages, 745590 bytes).
 PDF statistics:
- 507 PDF objects out of 1000 (max. 8388607)
- 437 compressed objects within 5 object streams
+ 508 PDF objects out of 1000 (max. 8388607)
+ 438 compressed objects within 5 object streams
  117 named destinations out of 1000 (max. 500000)
  206 words of extra memory for PDF output out of 10000 (max. 10000000)
 
