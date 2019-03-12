@@ -209,11 +209,8 @@ class NNPOM(tf.keras.layers.Layer):
 			a3T = self.dist.cdf(z3)
 		elif self.link_function == 'cloglog':
 			a3T = 1 - tf.exp(-tf.exp(z3))
-		elif self.link_function == 'ghf':
-			if self.lmbd == 0:
-				a3T = 1 - tf.exp(-tf.exp(z3))
-			else:
-				a3T = 1 - tf.exp(- tf.pow((self.lmbd * z3 - 1), 1 / self.lmbd) )
+		elif self.link_function == 'glogit':
+			a3T = 1.0 / tf.pow(1.0 + tf.exp(-self.lmbd * (z3 - self.mu) ), self.alpha)
 		else:
 			a3T = 1.0 / (1.0 + tf.exp(-z3))
 
@@ -231,8 +228,10 @@ class NNPOM(tf.keras.layers.Layer):
 		self.tau = self.add_weight('tau_nnpom', shape=(1,),
 								   initializer=tf.random_uniform_initializer(minval=1, maxval=10))
 
-		if self.link_function == 'ghf':
-			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
+		if self.link_function == 'glogit':
+			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=0, maxval=3))
+			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=0, maxval=3))
+			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=0, maxval=3))
 
 	def call(self, x):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)

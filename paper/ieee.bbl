@@ -101,26 +101,6 @@ O.~Ronneberger, P.~Fischer, and T.~Brox, ``U-net: Convolutional networks for
   image computing and computer-assisted intervention}.\hskip 1em plus 0.5em
   minus 0.4em\relax Springer, 2015, pp. 234--241.
 
-\bibitem{cruz2014metrics}
-M.~Cruz-Ram{\'\i}rez, C.~Herv{\'a}s-Mart{\'\i}nez, J.~S{\'a}nchez-Monedero, and
-  P.~A. Guti{\'e}rrez, ``Metrics to guide a multi-objective evolutionary
-  algorithm for ordinal classification,'' \emph{Neurocomputing}, vol. 135, pp.
-  21--31, 2014.
-
-\bibitem{mehdiyev2016evaluating}
-N.~Mehdiyev, D.~Enke, P.~Fettke, and P.~Loos, ``Evaluating forecasting methods
-  by considering different accuracy measures,'' \emph{Procedia Computer
-  Science}, vol.~95, pp. 264--271, 2016.
-
-\bibitem{cohen1960coefficient}
-J.~Cohen, ``A coefficient of agreement for nominal scales,'' \emph{Educational
-  and psychological measurement}, vol.~20, no.~1, pp. 37--46, 1960.
-
-\bibitem{de2018weighted}
-J.~de~la Torre, D.~Puig, and A.~Valls, ``Weighted kappa loss function for
-  multi-class classification of ordinal data in deep learning,'' \emph{Pattern
-  Recognition Letters}, vol. 105, pp. 144--154, 2018.
-
 \bibitem{agresti2010analysis}
 A.~Agresti, \emph{Analysis of ordinal categorical data}.\hskip 1em plus 0.5em
   minus 0.4em\relax J. Wiley \& Sons, 2010, vol. 656.
@@ -138,6 +118,11 @@ R.~G. Miller~Jr, \emph{Beyond ANOVA: basics of applied statistics}.\hskip 1em
 \bibitem{tukey1949comparing}
 J.~W. Tukey, ``Comparing individual means in the analysis of variance,''
   \emph{Biometrics}, pp. 99--114, 1949.
+
+\bibitem{de2018weighted}
+J.~de~la Torre, D.~Puig, and A.~Valls, ``Weighted kappa loss function for
+  multi-class classification of ordinal data in deep learning,'' \emph{Pattern
+  Recognition Letters}, vol. 105, pp. 144--154, 2018.
 
 \bibitem{beckham2017unimodal}
 C.~Beckham and C.~Pal, ``Unimodal probability distributions for deep ordinal
@@ -214,31 +199,6 @@ M.~ALALI, N.~M. Sharef, H.~Hamdan, M.~A.~A. Murad, and N.~A. Husin,
   and Data Mining}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2018, pp.
   446--454.
 
-\bibitem{bengio1994learning}
-Y.~Bengio, P.~Simard, and P.~Frasconi, ``Learning long-term dependencies with
-  gradient descent is difficult,'' \emph{IEEE transactions on neural networks},
-  vol.~5, no.~2, pp. 157--166, 1994.
-
-\bibitem{pascanu2013difficulty}
-R.~Pascanu, T.~Mikolov, and Y.~Bengio, ``On the difficulty of training
-  recurrent neural networks,'' in \emph{International Conference on Machine
-  Learning}, 2013, pp. 1310--1318.
-
-\bibitem{nair2010rectified}
-V.~Nair and G.~E. Hinton, ``Rectified linear units improve restricted boltzmann
-  machines,'' in \emph{Proceedings of the 27th international conference on
-  machine learning (ICML-10)}, 2010, pp. 807--814.
-
-\bibitem{clevert2015fast}
-D.-A. Clevert, T.~Unterthiner, and S.~Hochreiter, ``Fast and accurate deep
-  network learning by exponential linear units (elus),'' \emph{arXiv preprint
-  arXiv:1511.07289}, 2015.
-
-\bibitem{ioffe2015batch}
-S.~Ioffe and C.~Szegedy, ``Batch normalization: Accelerating deep network
-  training by reducing internal covariate shift,'' \emph{arXiv preprint
-  arXiv:1502.03167}, 2015.
-
 \bibitem{mccullagh1980regression}
 P.~McCullagh, ``Regression models for ordinal data,'' \emph{Journal of the
   royal statistical society. Series B (Methodological)}, pp. 109--142, 1980.
@@ -253,10 +213,35 @@ R.~Herbrich, ``Large margin rank boundaries for ordinal regression,''
   and Development: Proc. of the 19th Int. Conf. of the Catalan Association for
   A.I.}\hskip 1em plus 0.5em minus 0.4em\relax IOS press, 2016, p.~58.
 
+\bibitem{clevert2015fast}
+D.-A. Clevert, T.~Unterthiner, and S.~Hochreiter, ``Fast and accurate deep
+  network learning by exponential linear units (elus),'' \emph{arXiv preprint
+  arXiv:1511.07289}, 2015.
+
+\bibitem{nair2010rectified}
+V.~Nair and G.~E. Hinton, ``Rectified linear units improve restricted boltzmann
+  machines,'' in \emph{Proceedings of the 27th international conference on
+  machine learning (ICML-10)}, 2010, pp. 807--814.
+
+\bibitem{bengio1994learning}
+Y.~Bengio, P.~Simard, and P.~Frasconi, ``Learning long-term dependencies with
+  gradient descent is difficult,'' \emph{IEEE transactions on neural networks},
+  vol.~5, no.~2, pp. 157--166, 1994.
+
+\bibitem{pascanu2013difficulty}
+R.~Pascanu, T.~Mikolov, and Y.~Bengio, ``On the difficulty of training
+  recurrent neural networks,'' in \emph{International Conference on Machine
+  Learning}, 2013, pp. 1310--1318.
+
 \bibitem{maas2013rectifier}
 A.~L. Maas, A.~Y. Hannun, and A.~Y. Ng, ``Rectifier nonlinearities improve
   neural network acoustic models,'' in \emph{Proc. icml}, vol.~30, no.~1, 2013,
   p.~3.
+
+\bibitem{ioffe2015batch}
+S.~Ioffe and C.~Szegedy, ``Batch normalization: Accelerating deep network
+  training by reducing internal covariate shift,'' \emph{arXiv preprint
+  arXiv:1502.03167}, 2015.
 
 \bibitem{kingma2014adam}
 D.~P. Kingma and J.~Ba, ``Adam: A method for stochastic optimization,''
@@ -270,6 +255,12 @@ D.~A. Van~Dyk and X.-L. Meng, ``The art of data augmentation,'' \emph{Journal
 A.~Ben-David, ``Comparison of classification accuracy using cohen’s weighted
   kappa,'' \emph{Expert Systems with Applications}, vol.~34, no.~2, pp.
   825--832, 2008.
+
+\bibitem{cruz2014metrics}
+M.~Cruz-Ram{\'\i}rez, C.~Herv{\'a}s-Mart{\'\i}nez, J.~S{\'a}nchez-Monedero, and
+  P.~A. Guti{\'e}rrez, ``Metrics to guide a multi-objective evolutionary
+  algorithm for ordinal classification,'' \emph{Neurocomputing}, vol. 135, pp.
+  21--31, 2014.
 
 \bibitem{wang2009mean}
 Z.~Wang and A.~C. Bovik, ``Mean squared error: Love it or leave it? a new look
