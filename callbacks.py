@@ -108,3 +108,12 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 
 			print('VALIDATION CONF MATRIX')
 			print(val_metrics['conf_mat'])
+
+
+
+class PrintWeightsCallback(tf.keras.callbacks.Callback):
+	def __init__(self):
+		pass
+
+	def on_epoch_end(self, epoch, logs={}):
+		print(self.model.layers[-1].get_weights())

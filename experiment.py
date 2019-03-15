@@ -9,7 +9,7 @@ import click
 import pickle
 import h5py
 from scipy import io as spio
-from callbacks import ComputeMetricsCallback
+from callbacks import ComputeMetricsCallback, PrintWeightsCallback
 from losses import qwk_loss, make_cost_matrix
 from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm, top_2_accuracy, top_3_accuracy, \
 	minimum_sensitivity, accuracy_off1
@@ -461,6 +461,7 @@ class Experiment():
 				f.write(str(epoch + 1))
 				f.write('\n' + str(self.best_metric))
 
+
 		save_epoch_callback = tf.keras.callbacks.LambdaCallback(
 			on_epoch_end=save_epoch
 		)
@@ -518,6 +519,7 @@ class Experiment():
 																	append=True),
 									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 									   # tf.keras.callbacks.TerminateOnNaN(),
+									   PrintWeightsCallback()
 									   ],
 							workers=self.workers,
 							use_multiprocessing=True,

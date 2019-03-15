@@ -95,21 +95,7 @@ class Net:
 			self.__get_activation(),
 		])
 
-		if self.final_activation == 'poml':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'logit'))
-		elif self.final_activation == 'pomp':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'probit'))
-		elif self.final_activation == 'pomclog':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'cloglog'))
-		elif self.final_activation == 'pomglogit':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'glogit'))
-		else:
-			model.add(tf.keras.layers.Dense(self.num_classes))
-			model.add(tf.keras.layers.Activation(self.final_activation))
+		model = self.__add_activation(model)
 
 		return model
 
@@ -172,26 +158,7 @@ class Net:
 		if self.dropout > 0:
 			model.add(tf.keras.layers.Dropout(rate=self.dropout))
 
-		if self.final_activation == 'poml':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'logit'))
-		elif self.final_activation == 'pomp':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'probit'))
-		elif self.final_activation == 'pomclog':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'cloglog'))
-		elif self.final_activation == 'pomglogit':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'glogit'))
-		else:
-			model.add(tf.keras.layers.Dense(self.num_classes))
-			if self.prob_layer == 'geometric':
-				model.add(GeometricLayer())
-			model.add(tf.keras.layers.Activation(self.final_activation))
+		model = self.__add_activation(model)
 
 		return model
 
@@ -208,23 +175,7 @@ class Net:
 		if self.dropout > 0:
 			model.add(tf.keras.layers.Dropout(rate=self.dropout))
 
-		if self.final_activation == 'poml':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'logit'))
-		elif self.final_activation == 'pomp':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'probit'))
-		elif self.final_activation == 'pomclog':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'cloglog'))
-		elif self.final_activation == 'pomglogit':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'glogit'))
-		else:
-			model.add(tf.keras.layers.Dense(self.num_classes))
-			if self.prob_layer == 'geometric':
-				model.add(GeometricLayer())
-			model.add(tf.keras.layers.Activation(self.final_activation))
+		model = self.__add_activation(model)
 
 		return model
 
@@ -243,23 +194,7 @@ class Net:
 		if self.dropout > 0:
 			model.add(tf.keras.layers.Dropout(rate=self.dropout))
 
-		if self.final_activation == 'poml':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'logit'))
-		elif self.final_activation == 'pomp':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'probit'))
-		elif self.final_activation == 'pomclog':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'cloglog'))
-		elif self.final_activation == 'pomglogit':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'glogit'))
-		else:
-			model.add(tf.keras.layers.Dense(self.num_classes))
-			if self.prob_layer == 'geometric':
-				model.add(GeometricLayer())
-			model.add(tf.keras.layers.Activation(self.final_activation))
+		model = self.__add_activation(model)
 
 		return model
 
@@ -272,23 +207,7 @@ class Net:
 		if self.dropout > 0:
 			model.add(tf.keras.layers.Dropout(rate=self.dropout))
 
-		if self.final_activation == 'poml':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'logit'))
-		elif self.final_activation == 'pomp':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'probit'))
-		elif self.final_activation == 'pomclog':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'cloglog'))
-		elif self.final_activation == 'pomglogit':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'glogit'))
-		else:
-			model.add(tf.keras.layers.Dense(self.num_classes))
-			if self.prob_layer == 'geometric':
-				model.add(GeometricLayer())
-			model.add(tf.keras.layers.Activation(self.final_activation))
+		model = self.__add_activation(model)
 
 		return model
 
@@ -308,20 +227,7 @@ class Net:
 		if self.dropout > 0:
 			model.add(tf.keras.layers.Dropout(rate=self.dropout))
 
-		if self.final_activation == 'poml':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'logit'))
-		elif self.final_activation == 'pomp':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'probit'))
-		elif self.final_activation == 'pomclog':
-			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'cloglog'))
-		else:
-			model.add(tf.keras.layers.Dense(self.num_classes))
-			if self.prob_layer == 'geometric':
-				model.add(GeometricLayer())
-			model.add(tf.keras.layers.Activation(self.final_activation))
+		model = self.__add_activation(model)
 
 		return model
 
@@ -354,3 +260,30 @@ class Net:
 			return SQRTActivation()
 		else:
 			return tf.keras.layers.Activation('relu')
+
+	def __add_activation(self, model):
+		if self.final_activation == 'poml':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(tf.keras.layers.BatchNormalization())
+			model.add(NNPOM(self.num_classes, 'logit'))
+		elif self.final_activation == 'pomp':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(tf.keras.layers.BatchNormalization())
+			model.add(NNPOM(self.num_classes, 'probit'))
+		elif self.final_activation == 'pomclog':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(tf.keras.layers.BatchNormalization())
+			model.add(NNPOM(self.num_classes, 'cloglog'))
+		elif self.final_activation == 'pomglogit':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'glogit'))
+		elif self.final_activation == 'clmgamma':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'lgamma'))
+		else:
+			model.add(tf.keras.layers.Dense(self.num_classes))
+			if self.prob_layer == 'geometric':
+				model.add(GeometricLayer())
+			model.add(tf.keras.layers.Activation(self.final_activation))
+
+		return model

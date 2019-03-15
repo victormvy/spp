@@ -269,13 +269,13 @@ Z.~Wang and A.~C. Bovik, ``Mean squared error: Love it or leave it? a new look
 
 \bibitem{smith2017cyclical}
 L.~N. Smith, ``Cyclical learning rates for training neural networks,'' in
-  \emph{Applications of Computer Vision (WACV), 2017 IEEE Winter Conference
-  on}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2017, pp. 464--472.
+  \emph{IEEE Winter Conference on Applications of Computer Vision
+  (WACV)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2017, pp. 464--472.
 
 \bibitem{senior2013empirical}
 A.~Senior, G.~Heigold, K.~Yang \emph{et~al.}, ``An empirical study of learning
-  rates in deep neural networks for speech recognition,'' in \emph{Acoustics,
-  Speech and Signal Processing (ICASSP), 2013 IEEE International Conference
-  on}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2013, pp. 6724--6728.
+  rates in deep neural networks for speech recognition,'' in \emph{IEEE
+  International Conference on Acoustics, Speech and Signal Processing
+  (ICASSP)}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2013, pp. 6724--6728.
 
 \end{thebibliography}

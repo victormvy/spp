@@ -211,6 +211,9 @@ class NNPOM(tf.keras.layers.Layer):
 			a3T = 1 - tf.exp(-tf.exp(z3))
 		elif self.link_function == 'glogit':
 			a3T = 1.0 / tf.pow(1.0 + tf.exp(-self.lmbd * (z3 - self.mu) ), self.alpha)
+		elif self.link_function == 'lgamma':
+			a3T = tf.cond(self.q < 0, lambda: tf.igammac(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)),
+						  lambda: tf.cond(self.q > 0, lambda: tf.igamma(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)), lambda: self.dist.cdf(z3)))
 		else:
 			a3T = 1.0 / (1.0 + tf.exp(-z3))
 
@@ -229,9 +232,11 @@ class NNPOM(tf.keras.layers.Layer):
 								   initializer=tf.random_uniform_initializer(minval=1, maxval=10))
 
 		if self.link_function == 'glogit':
-			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=0, maxval=3))
-			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=0, maxval=3))
-			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=0, maxval=3))
+			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=1, maxval=1))
+			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=1, maxval=1))
+			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=0, maxval=0))
+		elif self.link_function == 'lgamma':
+			self.q = self.add_weight('q_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 
 	def call(self, x):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)

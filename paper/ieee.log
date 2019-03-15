@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  12 MAR 2019 13:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  14 MAR 2019 12:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -839,10 +839,7 @@ LaTeX Font Info:    Try loading font information for U+dsrom on input line 546.
 
 (/usr/share/texlive/texmf-dist/tex/latex/doublestroke/Udsrom.fd
 File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
-)
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [2]
+) [2]
 <img/linkfunctions.pdf, id=174, 462.52798pt x 346.89601pt>
 File: img/linkfunctions.pdf Graphic file (type pdf)
 
@@ -1022,7 +1019,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1170.
 Here is how much of TeX's memory you used:
  7747 strings out of 493029
  115715 string characters out of 6136233
- 239623 words of memory out of 5000000
+ 239610 words of memory out of 5000000
  10996 multiletter control sequences out of 15000+600000
  203905 words of font info for 142 fonts, out of 8000000 for 9000
  1148 hyphenation exceptions out of 8191
@@ -1054,7 +1051,7 @@ m/lmsy6.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf
 /fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10
 .pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/rsfs/rsfs10.pfb>
-Output written on ieee.pdf (11 pages, 741233 bytes).
+Output written on ieee.pdf (11 pages, 741270 bytes).
 PDF statistics:
  563 PDF objects out of 1000 (max. 8388607)
  446 compressed objects within 5 object streams
