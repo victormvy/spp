@@ -214,6 +214,9 @@ class NNPOM(tf.keras.layers.Layer):
 		elif self.link_function == 'lgamma':
 			a3T = tf.cond(self.q < 0, lambda: tf.igammac(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)),
 						  lambda: tf.cond(self.q > 0, lambda: tf.igamma(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)), lambda: self.dist.cdf(z3)))
+		elif self.link_function == 'gauss':
+			z3 = tf.maximum(z3, 0.000001)
+			a3T = 1.0/2.0 + tf.igamma(1.0 / self.alpha, tf.pow(z3 / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
 		else:
 			a3T = 1.0 / (1.0 + tf.exp(-z3))
 
@@ -237,6 +240,11 @@ class NNPOM(tf.keras.layers.Layer):
 			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=0, maxval=0))
 		elif self.link_function == 'lgamma':
 			self.q = self.add_weight('q_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
+		elif self.link_function == 'gauss':
+			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(2.0))
+			self.alpha = tf.clip_by_value(self.alpha, 0.0001, 4)
+			self.r = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(math.sqrt(2.0)))
+			self.r = tf.clip_by_value(self.r, 0.0001, 4)
 
 	def call(self, x):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)

@@ -280,6 +280,9 @@ class Net:
 		elif self.final_activation == 'clmgamma':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(NNPOM(self.num_classes, 'lgamma'))
+		elif self.final_activation == 'clmgauss':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(NNPOM(self.num_classes, 'gauss'))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':
