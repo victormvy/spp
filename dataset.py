@@ -8,7 +8,8 @@ import tensorflow as tf
 import cv2
 from PIL import Image
 
-class Dataset():
+
+class Dataset:
 	"""
 	Class that represents a dataset that is loaded from a file.
 	"""
@@ -182,6 +183,10 @@ class Dataset():
 			data_resized[i] = img_resized
 
 		self._data['x'] = data_resized
+
+	def _standardize_data(self):
+		x = np.array(self._data['x'])
+		self._data['x'] = list(x / 255.0)
 
 
 	def size(self):

@@ -19,7 +19,7 @@ from math import inf
 import gc
 
 
-class Experiment():
+class Experiment:
 	"""
 	Class that represents a single experiment that can be run and evaluated.
 	"""
@@ -456,6 +456,7 @@ class Experiment():
 			# Check whether new metric is better than best metric
 			if (self.new_metric(logs['val_loss'])):
 				model.save(os.path.join(self.checkpoint_dir, self.best_model_file))
+				print("Best model saved.")
 
 			with open(os.path.join(self.checkpoint_dir, self.model_file_extra), 'w') as f:
 				f.write(str(epoch + 1))
@@ -518,8 +519,9 @@ class Experiment():
 									   tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, self.csv_file),
 																	append=True),
 									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
-									   # tf.keras.callbacks.TerminateOnNaN(),
-									   PrintWeightsCallback()
+									   tf.keras.callbacks.TerminateOnNaN(),
+									   tf.keras.callbacks.EarlyStopping(min_delta=0.001, patience=10, verbose=1),
+									   # PrintWeightsCallback()
 									   ],
 							workers=self.workers,
 							use_multiprocessing=True,
@@ -701,7 +703,7 @@ class Experiment():
 		"""
 		if db.lower() == 'retinopathy':
 			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
-		# return "../retinopathy/retinopathy_128_train.h5", "../retinopathy/retinopathy_128_val.h5", "../retinopathy/retinopathy_128_test.h5"
+			# return "../retinopathy/retinopathy_128_train.h5", "../retinopathy/retinopathy_128_val.h5", "../retinopathy/retinopathy_128_test.h5"
 		elif db.lower() == 'retinopathy256':
 			return "../retinopathy/256/train", "../retinopathy/256/val", "../retinopathy/256/test"
 		elif db.lower() == 'adience':

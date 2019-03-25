@@ -4,7 +4,7 @@ import tensorflow as tf
 import gc
 from experiment import Experiment
 
-class ExperimentSet():
+class ExperimentSet:
 	"""
 	Set of experiments that can be executed sequentially.
 	"""
