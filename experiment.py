@@ -520,7 +520,7 @@ class Experiment:
 																	append=True),
 									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 									   tf.keras.callbacks.TerminateOnNaN(),
-									   tf.keras.callbacks.EarlyStopping(min_delta=0.001, patience=10, verbose=1),
+									   tf.keras.callbacks.EarlyStopping(min_delta=0.001, patience=15, verbose=1),
 									   # PrintWeightsCallback()
 									   ],
 							workers=self.workers,
@@ -532,7 +532,13 @@ class Experiment:
 							verbose=2
 							)
 
+
 		self.finished = True
+
+		# Mark the training as finished in the checkpoint file
+		with open(os.path.join(self.checkpoint_dir, self.model_file_extra), 'w') as f:
+			f.write(str(100))
+			f.write('\n' + str(self.best_metric))
 
 		# Free objects
 		del model
