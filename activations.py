@@ -205,7 +205,7 @@ class NNPOM(tf.keras.layers.Layer):
 		b = tf.transpose(tf.reshape(tf.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
 		z3 = a - b
 
-		# z3 = tf.Print(z3, data=[tf.reduce_min(z3), tf.reduce_max(z3)], message='z3 min max', summarize=100)
+		# z3 = tf.cond(tf.reduce_min(tf.abs(z3)) < 0.01, lambda: tf.Print(z3, data=[tf.reduce_min(tf.abs(z3))], message='z3 abs min', summarize=100), lambda: z3)
 
 		if self.link_function == 'probit':
 			a3T = self.dist.cdf(z3)
@@ -217,7 +217,8 @@ class NNPOM(tf.keras.layers.Layer):
 			a3T = tf.cond(self.q < 0, lambda: tf.igammac(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)),
 						  lambda: tf.cond(self.q > 0, lambda: tf.igamma(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)), lambda: self.dist.cdf(z3)))
 		elif self.link_function == 'gauss':
-			a3T = 1.0 / 2.0 + tf.sign(z3) * tf.igamma(1.0 / self.alpha, tf.pow(tf.abs(z3) / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
+			# a3T = 1.0 / 2.0 + tf.sign(z3) * tf.igamma(1.0 / self.alpha, tf.pow(tf.abs(z3) / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
+			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(- 10 * z3) - 1) * tf.igamma(1.0 / self.alpha, tf.pow(tf.pow(z3, 2) / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
 		else:
 			a3T = 1.0 / (1.0 + tf.exp(-z3))
 
@@ -243,9 +244,9 @@ class NNPOM(tf.keras.layers.Layer):
 			self.q = self.add_weight('q_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 		elif self.link_function == 'gauss':
 			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(2.0))
-			self.alpha = tf.clip_by_value(self.alpha, 1, 3)
+			self.alpha = tf.clip_by_value(self.alpha, 0.001, 3)
 			self.r = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(math.sqrt(2.0)))
-			self.r = tf.clip_by_value(self.r, math.sqrt(1), math.sqrt(3))
+			self.r = tf.clip_by_value(self.r, 0.001, math.sqrt(3))
 
 	def call(self, x):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)
