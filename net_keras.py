@@ -259,13 +259,13 @@ class Net:
 			return EPReLU()
 		elif self.activation == 'sqrt':
 			return SQRTActivation()
-		elif self.activation == 'RReLU':
+		elif self.activation == 'prelu':
 			return RReLu()
-		elif self.activation == 'PELU':
+		elif self.activation == 'pelu':
 			return PELU()
-		elif self.activation == 'SlopedReLU':
+		elif self.activation == 'slopedrelu':
 			return SlopedReLU()
-		elif self.activation == 'PTELU':
+		elif self.activation == 'ptelu':
 			return PTELU()
 		else:
 			return tf.keras.layers.Activation('relu')
