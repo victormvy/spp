@@ -259,7 +259,7 @@ class Net:
 			return EPReLU()
 		elif self.activation == 'sqrt':
 			return SQRTActivation()
-		elif self.activation == 'prelu':
+		elif self.activation == 'rrelu':
 			return RReLu()
 		elif self.activation == 'pelu':
 			return PELU()
