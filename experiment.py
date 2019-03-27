@@ -627,7 +627,7 @@ class Experiment:
 			)
 
 			# NNet object
-			net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels,
+			net_object = Net(img_size, self.activation, self.final_activation, self.use_tau, self.prob_layer, num_channels,
 							 num_classes,
 							 self.spp_alpha,
 							 self.dropout)
