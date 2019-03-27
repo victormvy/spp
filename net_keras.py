@@ -1,5 +1,5 @@
 import tensorflow as tf
-from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, NNPOM
+from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, NNPOM, RReLu, PELU, SlopedReLU, PTELU
 from layers import GeometricLayer
 from resnet import Resnet_2x4
 
@@ -258,6 +258,14 @@ class Net:
 			return EPReLU()
 		elif self.activation == 'sqrt':
 			return SQRTActivation()
+		elif self.activation == 'RReLU':
+			return RReLu()
+		elif self.activation == 'PELU':
+			return PELU()
+		elif self.activation == 'SlopedReLU':
+			return SlopedReLU()
+		elif self.activation == 'PTELU':
+			return PTELU()
 		else:
 			return tf.keras.layers.Activation('relu')
 

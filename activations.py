@@ -6,6 +6,7 @@ class SPP(tf.keras.layers.Activation):
 	"""
 	Parametric softplus activation layer.
 	"""
+
 	def __init__(self, activation, **kwargs):
 		super(SPP, self).__init__(activation, **kwargs)
 		self.__name__ = 'SPP'
@@ -17,6 +18,7 @@ def parametric_softplus(spp_alpha):
 	:param spp_alpha: alpha parameter for softplus function.
 	:return: parametric softplus activation value.
 	"""
+
 	def spp(x):
 		return tf.log(1 + tf.exp(x)) - spp_alpha
 
@@ -174,15 +176,99 @@ class SQRTActivation(tf.keras.layers.Layer):
 
 	def call(self, inputs):
 		pos = tf.sqrt(tf.nn.relu(inputs))
-		neg = - tf.sqrt(tf.nn.relu(-inputs))
+		neg = - tf.sqrt(-tf.nn.relu(-inputs))
 
 		return pos + neg
 
+
+class RReLu(tf.keras.layers.Layer):
+	def __init__(self, **kwargs):
+		super(RReLu, self).__init__(**kwargs)
+
+	def build(self, input_shape):
+		self.alpha = self.add_weight(name='alpha', shape=input_shape, dtype=tf.float32,
+									 initializer=tf.keras.initializers.RandomNormal(stddev=1))
+
+		super(RReLu, self).build(input_shape)
+
+	def call(self, inputs):
+		pos = tf.nn.relu(inputs)
+		neg = self.alpha * tf.nn.relu(-inputs)
+
+		return pos + neg
+
+
+class PELU(tf.keras.layers.Layer):
+	def __init__(self, **kwargs):
+		super(PELU, self).__init__(**kwargs)
+
+	def build(self, input_shape):
+		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=tf.float32,
+									 initializer=tf.random_uniform_initializer(minval=0.01,
+																			   maxval=1,
+																			   dtype=tf.float32))
+		self.alpha = tf.clip_by_value(self.alpha, 0.0001, 10)
+
+		self.beta = self.add_weight(name='beta', shape=(1,), dtype=tf.float32,
+									 initializer=tf.random_uniform_initializer(minval=0.01,
+																			   maxval=1,
+																			   dtype=tf.float32))
+		self.beta = tf.clip_by_value(self.beta, 0.0001, 10)
+
+		super(PELU, self).build(input_shape)
+
+	def call(self, inputs):
+		pos = (self.alpha / self.beta) * tf.nn.relu(inputs)
+		neg = self.alpha * (tf.exp((-tf.nn.relu(-x)) / self.beta) - 1)
+
+		return pos + neg
+
+class SlopedReLU(tf.keras.layers.Layer):
+	def __init__(self, **kwargs):
+		super(SlopedReLU, self).__init__(**kwargs)
+
+	def build(self, input_shape):
+		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=tf.float32,
+									 initializer=tf.random_uniform_initializer(minval=0.01,
+																			   maxval=1,
+																			   dtype=tf.float32))
+		self.alpha = tf.clip_by_value(self.alpha, 0.0001, 10)
+
+		super(SlopedReLU, self).build(input_shape)
+
+	def call(self, inputs):
+		return tf.nn.relu(self.alpha * inputs)
+
+class PTELU(tf.keras.layers.Layer):
+	def __init__(self, **kwargs):
+		super(PTELU, self).__init__(**kwargs)
+
+	def build(self, input_shape):
+		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=tf.float32,
+									 initializer=tf.random_uniform_initializer(minval=0.01,
+																			   maxval=1,
+																			   dtype=tf.float32))
+		self.alpha = tf.clip_by_value(self.alpha, 0.0001, 10)
+
+		self.beta = self.add_weight(name='beta', shape=(1,), dtype=tf.float32,
+									initializer=tf.random_uniform_initializer(minval=0.01,
+																			  maxval=1,
+																			  dtype=tf.float32))
+		self.beta = tf.clip_by_value(self.beta, 0.0001, 10)
+
+		super(PTELU, self).build(input_shape)
+
+	def call(self, inputs):
+		pos = tf.nn.relu(inputs)
+		neg = self.alpha * tf.tanh(self.beta * tf.nn.relu(-inputs))
+
+		return pos + neg
 
 class NNPOM(tf.keras.layers.Layer):
 	"""
 	Proportional Odds Model activation layer.
 	"""
+
 	def __init__(self, num_classes, link_function, **kwargs):
 		self.num_classes = num_classes
 		self.dist = tf.distributions.Normal(loc=0., scale=1.)
@@ -212,13 +298,18 @@ class NNPOM(tf.keras.layers.Layer):
 		elif self.link_function == 'cloglog':
 			a3T = 1 - tf.exp(-tf.exp(z3))
 		elif self.link_function == 'glogit':
-			a3T = 1.0 / tf.pow(1.0 + tf.exp(-self.lmbd * (z3 - self.mu) ), self.alpha)
+			a3T = 1.0 / tf.pow(1.0 + tf.exp(-self.lmbd * (z3 - self.mu)), self.alpha)
 		elif self.link_function == 'lgamma':
 			a3T = tf.cond(self.q < 0, lambda: tf.igammac(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)),
-						  lambda: tf.cond(self.q > 0, lambda: tf.igamma(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)), lambda: self.dist.cdf(z3)))
+						  lambda: tf.cond(self.q > 0, lambda: tf.igamma(tf.pow(self.q, -2),
+																		tf.pow(self.q, -2) * tf.exp(self.q * z3)),
+										  lambda: self.dist.cdf(z3)))
 		elif self.link_function == 'gauss':
 			# a3T = 1.0 / 2.0 + tf.sign(z3) * tf.igamma(1.0 / self.alpha, tf.pow(tf.abs(z3) / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
-			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(- 10 * z3) - 1) * tf.igamma(1.0 / self.alpha, tf.pow(tf.pow(z3, 2) / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
+			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(- 10 * z3) - 1) * tf.igamma(1.0 / self.alpha,
+																		  tf.pow(tf.pow(z3, 2) / self.r,
+																				 self.alpha)) / (
+								  2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
 		else:
 			a3T = 1.0 / (1.0 + tf.exp(-z3))
 
@@ -231,17 +322,23 @@ class NNPOM(tf.keras.layers.Layer):
 		self.thresholds_b = self.add_weight('b_b_nnpom', shape=(1,),
 											initializer=tf.random_uniform_initializer(minval=0, maxval=0.1))
 		self.thresholds_a = self.add_weight('b_a_nnpom', shape=(self.num_classes - 2,),
-											initializer=tf.random_uniform_initializer(minval=math.sqrt((1.0 / (self.num_classes - 2))/2), maxval=math.sqrt(1.0 / (self.num_classes - 2))))
+											initializer=tf.random_uniform_initializer(
+												minval=math.sqrt((1.0 / (self.num_classes - 2)) / 2),
+												maxval=math.sqrt(1.0 / (self.num_classes - 2))))
 
 		self.tau = self.add_weight('tau_nnpom', shape=(1,),
 								   initializer=tf.random_uniform_initializer(minval=1, maxval=10))
 
 		if self.link_function == 'glogit':
-			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=1, maxval=1))
-			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=1, maxval=1))
-			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=0, maxval=0))
+			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,),
+										initializer=tf.random_uniform_initializer(minval=1, maxval=1))
+			self.alpha = self.add_weight('alpha_nnpom', shape=(1,),
+										 initializer=tf.random_uniform_initializer(minval=1, maxval=1))
+			self.mu = self.add_weight('mu_nnpom', shape=(1,),
+									  initializer=tf.random_uniform_initializer(minval=0, maxval=0))
 		elif self.link_function == 'lgamma':
-			self.q = self.add_weight('q_nnpom', shape=(1,), initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
+			self.q = self.add_weight('q_nnpom', shape=(1,),
+									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 		elif self.link_function == 'gauss':
 			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(2.0))
 			self.alpha = tf.clip_by_value(self.alpha, 0.001, 3)
