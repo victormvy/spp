@@ -26,7 +26,7 @@ class Experiment:
 
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='categorical_crossentropy', activation='relu',
-				 final_activation='softmax',
+				 final_activation='softmax', use_tau=True,
 				 prob_layer=None, spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4,
 				 queue_size=1024, val_metrics=['loss', 'acc'], rescale_factor=0, augmentation={}):
 		self._name = name
@@ -37,6 +37,7 @@ class Experiment:
 		self._checkpoint_dir = checkpoint_dir
 		self._loss = loss
 		self._activation = activation
+		self._use_tau = use_tau
 		self._final_activation = final_activation
 		self._prob_layer = prob_layer
 		self._spp_alpha = spp_alpha
@@ -188,6 +189,18 @@ class Experiment:
 	@final_activation.deleter
 	def final_activation(self):
 		del self._final_activation
+
+	@property
+	def use_tau(self):
+		return self._use_tau
+
+	@use_tau.setter
+	def use_tau(self, use_tau):
+		self._use_tau = use_tau
+
+	@use_tau.deleter
+	def use_tau(self):
+		del self._use_tau
 
 	@property
 	def prob_layer(self):
@@ -468,7 +481,7 @@ class Experiment:
 		)
 
 		# NNet object
-		net_object = Net(img_size, self.activation, self.final_activation, self.prob_layer, num_channels, num_classes,
+		net_object = Net(img_size, self.activation, self.final_activation, self.use_tau, self.prob_layer, num_channels, num_classes,
 						 self.spp_alpha,
 						 self.dropout)
 
@@ -735,6 +748,7 @@ class Experiment:
 			'prob_layer': self.prob_layer,
 			'loss': self.loss,
 			'activation': self.activation,
+			'use_tau' : self.use_tau,
 			'final_activation': self.final_activation,
 			'spp_alpha': self.spp_alpha,
 			'lr': self.lr,
@@ -762,6 +776,7 @@ class Experiment:
 		self.loss = 'loss' in config and config['loss'] or 'crossentropy'
 		self.activation = 'activation' in config and config['activation'] or 'relu'
 		self.final_activation = 'final_activation' in config and config['final_activation'] or 'softmax'
+		self.use_tau = config['use_tau'] if 'use_tau' in config and config['use_tau'] else False
 		self.prob_layer = 'prob_layer' in config and config['prob_layer'] or None
 		self.spp_alpha = 'spp_alpha' in config and config['spp_alpha'] or 0
 		self.lr = 'lr' in config and config['lr'] or 0.1

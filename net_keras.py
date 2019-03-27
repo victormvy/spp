@@ -7,10 +7,11 @@ from inception_resnet_v2 import InceptionResNetV2 as Irnv2
 
 
 class Net:
-	def __init__(self, size, activation, final_activation, prob_layer=None, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
+	def __init__(self, size, activation, final_activation, use_tau=True, prob_layer=None, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
 		self.size = size
 		self.activation = activation
 		self.final_activation = final_activation
+		self.use_tau = use_tau
 		self.prob_layer = prob_layer
 		self.num_channels = num_channels
 		self.num_classes = num_classes
@@ -273,24 +274,24 @@ class Net:
 		if self.final_activation == 'poml':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'logit'))
+			model.add(NNPOM(self.num_classes, 'logit', use_tau=self.use_tau))
 		elif self.final_activation == 'pomp':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'probit'))
+			model.add(NNPOM(self.num_classes, 'probit', use_tau=self.use_tau))
 		elif self.final_activation == 'pomclog':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'cloglog'))
+			model.add(NNPOM(self.num_classes, 'cloglog', use_tau=self.use_tau))
 		elif self.final_activation == 'pomglogit':
 			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'glogit'))
+			model.add(NNPOM(self.num_classes, 'glogit', use_tau=self.use_tau))
 		elif self.final_activation == 'clmgamma':
 			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'lgamma'))
+			model.add(NNPOM(self.num_classes, 'lgamma', use_tau=self.use_tau))
 		elif self.final_activation == 'clmgauss':
 			model.add(tf.keras.layers.Dense(1))
-			model.add(NNPOM(self.num_classes, 'gauss'))
+			model.add(NNPOM(self.num_classes, 'gauss', use_tau=self.use_tau))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':

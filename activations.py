@@ -269,10 +269,11 @@ class NNPOM(tf.keras.layers.Layer):
 	Proportional Odds Model activation layer.
 	"""
 
-	def __init__(self, num_classes, link_function, **kwargs):
+	def __init__(self, num_classes, link_function, use_tau, **kwargs):
 		self.num_classes = num_classes
 		self.dist = tf.distributions.Normal(loc=0., scale=1.)
 		self.link_function = link_function
+		self.use_tau = use_tau
 		super(NNPOM, self).__init__(**kwargs)
 
 	def _convert_thresholds(self, b, a):
@@ -285,7 +286,11 @@ class NNPOM(tf.keras.layers.Layer):
 		return th
 
 	def _nnpom(self, projected, thresholds):
-		projected = tf.reshape(projected, shape=[-1]) / self.tau
+		if self.use_tau == 1:
+			projected = tf.reshape(projected, shape=[-1]) / self.tau
+		else:
+			projected = tf.reshape(projected, shape=[-1])
+
 		m = tf.shape(projected)[0]
 		a = tf.reshape(tf.tile(thresholds, [m]), shape=[m, -1])
 		b = tf.transpose(tf.reshape(tf.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
@@ -326,8 +331,10 @@ class NNPOM(tf.keras.layers.Layer):
 												minval=math.sqrt((1.0 / (self.num_classes - 2)) / 2),
 												maxval=math.sqrt(1.0 / (self.num_classes - 2))))
 
-		self.tau = self.add_weight('tau_nnpom', shape=(1,),
-								   initializer=tf.random_uniform_initializer(minval=1, maxval=10))
+		if self.use_tau == 1:
+			print('Using tau')
+			self.tau = self.add_weight('tau_nnpom', shape=(1,),
+									   initializer=tf.random_uniform_initializer(minval=1, maxval=10))
 
 		if self.link_function == 'glogit':
 			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,),
