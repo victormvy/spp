@@ -12,7 +12,7 @@ evaluation_file = 'evaluation.pickle'
 
 
 def resume_one_metric(metric, results_path):
-	t = prettytable.PrettyTable(['Dataset', 'BS', 'LR', 'LF', 'Train ' + metric, 'Mean Tr', 'Validation ' + metric, 'Mean V', 'Test ' + metric, 'Mean Te'])
+	t = prettytable.PrettyTable(['Dataset', 'BS', 'LR', 'LF', 'ACT', 'Train ' + metric, 'Mean Tr', 'Validation ' + metric, 'Mean V', 'Test ' + metric, 'Mean Te'])
 	for item in sorted(os.listdir(results_path)):
 		if os.path.isdir(os.path.join(results_path, item)):
 			train, val, test = '', '', ''
@@ -38,6 +38,7 @@ def resume_one_metric(metric, results_path):
 					p['config']['batch_size'],
 					p['config']['lr'],
 					p['config']['final_activation'],
+					p['config']['activation'],
 					train,
 					train_values.size > 0 and '{:.5} ± {:.5}'.format(round(np.mean(train_values), 5), round(np.std(train_values), 5)) or 0,
 					val,
@@ -50,9 +51,9 @@ def resume_one_metric(metric, results_path):
 	print(t)
 
 
-def show_confusion_matrices():
+def show_confusion_matrices(results_path):
 	t = prettytable.PrettyTable(
-		['Dataset', 'BS', 'LR', 'LF', 'Execution', 'Train CF', 'Validation CF', 'Test CF'], hrules=prettytable.ALL)
+		['Dataset', 'BS', 'LR', 'LF', 'ACT', 'Execution', 'Train CF', 'Validation CF', 'Test CF'], hrules=prettytable.ALL)
 	for item in sorted(os.listdir(results_path)):
 		if os.path.isdir(os.path.join(results_path, item)):
 			for item2 in sorted(os.listdir(os.path.join(results_path, item))):
@@ -69,6 +70,7 @@ def show_confusion_matrices():
 								p['config']['batch_size'],
 								p['config']['lr'],
 								p['config']['final_activation'],
+								p['config']['activation'],
 								item2,
 								p['metrics']['Train']['Confusion matrix'],
 								p['metrics']['Validation']['Confusion matrix'],
@@ -117,7 +119,7 @@ def show_latex_table(results_path, show_std=False):
 				continue
 
 			if header == '':
-				header = 'Dataset & BS & LF & LR'
+				header = 'Dataset & BS & LF & LR & ACT'
 
 				for metric, value in metrics['Train'].items():
 					if metric != 'Confusion matrix':
@@ -131,6 +133,7 @@ def show_latex_table(results_path, show_std=False):
 				p['config']['final_activation'].replace('poml', 'logit')
 												 .replace('pomp', 'probit')
 												 .replace('pomclog', 'c log-log'),
+				p['config']['activation'],
 			'${:.0E}}}$'.format(p['config']['lr']).replace('E-0', '0^{-')
 				.replace('E+0', '0^{+')
 			)
@@ -209,6 +212,10 @@ def option_resume_one_metric():
 	metric = input('Metric name: ')
 	resume_one_metric(metric, results_path)
 
+def option_show_confusion_matrices():
+	results_path = input('Results path: ')
+	show_confusion_matrices(results_path)
+
 def option_latex_table():
 	results_path = input('Results path: ')
 
@@ -242,7 +249,7 @@ def select_option(option):
 	if option == '1':
 		option_resume_one_metric()
 	elif option == '2':
-		show_confusion_matrices()
+		option_show_confusion_matrices()
 	elif option == '3':
 		option_latex_table()
 	elif option == '4':
