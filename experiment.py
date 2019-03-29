@@ -728,6 +728,8 @@ class Experiment:
 		elif db.lower() == 'adience':
 			# return "../adience/256/train", "../adience/256/val", "../adience/256/test"
 			return "../adience/adience_train_256.h5", "../adience/adience_val_256.h5", "../adience/adience_test_256.h5"
+		elif db.lower() == 'cifar10_128':
+			return "../cifar10/cifar10_128_train.h5", "../cifar10/cifar10_128_val.h5", "../cifar10/cifar10_128_test.h5"
 		elif db.lower() == 'cifar10' or db.lower() == 'cifar100':
 			return db.lower() + 'train', db.lower() + 'val', db.lower() + 'test'
 		else:

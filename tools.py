@@ -6,7 +6,9 @@ import pickle
 import os
 import prettytable
 import h5py
+import tensorflow as tf
 from PIL import Image
+from sklearn.model_selection import train_test_split
 
 evaluation_file = 'evaluation.pickle'
 
@@ -207,6 +209,52 @@ def create_h5_dataset(path, file):
 	f.create_dataset('x', data = x, compression = 'gzip', compression_opts = 9)
 	f.create_dataset('y', data = y, compression = 'gzip', compression_opts = 9)
 
+def create_h5_cifar10(file, shape):
+	(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+	train_rs_op = tf.image.resize_images(x_train, shape, method=tf.image.ResizeMethod.BICUBIC)
+	test_rs_op = tf.image.resize_images(x_test, shape, method=tf.image.ResizeMethod.BICUBIC)
+	val_perc = 0.2
+
+	with tf.Session() as sess:
+		print('Resizing images to {}'.format(shape))
+		train_rs, test_rs = sess.run([train_rs_op, test_rs_op])
+
+	print('Splitting {} for validation'.format(val_perc))
+	train_x, val_x, train_y, val_y = train_test_split(train_rs, y_train, test_size=val_perc)
+	test_x, test_y = test_rs, y_test
+
+	train_file = '{}_train.h5'.format(file)
+	val_file = '{}_val.h5'.format(file)
+	test_file = '{}_test.h5'.format(file)
+
+	print('Saving train set to {}...'.format(train_file))
+	with h5py.File(train_file, 'w') as f:
+		f.create_dataset('x', data=train_x, compression='gzip', compression_opts=9)
+		f.create_dataset('y', data=np.ravel(train_y), compression='gzip', compression_opts=9)
+
+	print('Saving validation set to {}...'.format(val_file))
+	with h5py.File(val_file, 'w') as f:
+		f.create_dataset('x', data=val_x, compression='gzip', compression_opts=9)
+		f.create_dataset('y', data=np.ravel(val_y), compression='gzip', compression_opts=9)
+
+	print('Saving test set to {}...'.format(test_file))
+	with h5py.File(test_file, 'w') as f:
+		f.create_dataset('x', data=test_x, compression='gzip', compression_opts=9)
+		f.create_dataset('y', data=np.ravel(test_y), compression='gzip', compression_opts=9)
+
+def display_h5_images(file):
+	with h5py.File(file, 'r') as f:
+		if not 'x' in f:
+			return Exception('Data not found')
+		x = f['x'].value
+		for item in x:
+			img = Image.fromarray(item.astype(np.uint8), 'RGB')
+			img.show()
+			inp = input('Press a key to continue or write q to exit.')
+			if inp == 'q':
+				return
+
+
 def option_resume_one_metric():
 	results_path = input('Results path: ')
 	metric = input('Metric name: ')
@@ -233,12 +281,23 @@ def option_create_h5_dataset():
 	file = input('Output file: ')
 	create_h5_dataset(path, file)
 
+def option_create_h5_cifar10():
+	name = input('Output name (output file: <name>_[train/val/test].h5): ')
+	sz = int(input('Image size: '))
+	create_h5_cifar10(name, (sz,sz))
+
+def option_display_h5_images():
+	file = input('H5 file: ')
+	display_h5_images(file)
+
 def show_menu():
 	print('=====================================')
 	print('1. Resume results for one metric')
 	print('2. Show confusion matrices')
 	print('3. Show latex table')
 	print('4. Create h5 dataset')
+	print('5. Create h5 cifar10')
+	print('6. Display images from h5')
 	print('=====================================')
 	option = input(' Choose one option: ')
 
@@ -254,6 +313,10 @@ def select_option(option):
 		option_latex_table()
 	elif option == '4':
 		option_create_h5_dataset()
+	elif option == '5':
+		option_create_h5_cifar10()
+	elif option == '6':
+		option_display_h5_images()
 
 
 if __name__ == '__main__':

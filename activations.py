@@ -291,6 +291,8 @@ class NNPOM(tf.keras.layers.Layer):
 		else:
 			projected = tf.reshape(projected, shape=[-1])
 
+		# projected = tf.Print(projected, data=[tf.reduce_min(projected), tf.reduce_max(projected), tf.reduce_mean(projected)], message='projected min max mean')
+
 		m = tf.shape(projected)[0]
 		a = tf.reshape(tf.tile(thresholds, [m]), shape=[m, -1])
 		b = tf.transpose(tf.reshape(tf.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
@@ -325,16 +327,17 @@ class NNPOM(tf.keras.layers.Layer):
 
 	def build(self, input_shape):
 		self.thresholds_b = self.add_weight('b_b_nnpom', shape=(1,),
-											initializer=tf.random_uniform_initializer(minval=0, maxval=0.1))
+											initializer=tf.random_uniform_initializer(minval=-1, maxval=-0.5))
 		self.thresholds_a = self.add_weight('b_a_nnpom', shape=(self.num_classes - 2,),
 											initializer=tf.random_uniform_initializer(
-												minval=math.sqrt((1.0 / (self.num_classes - 2)) / 2),
-												maxval=math.sqrt(1.0 / (self.num_classes - 2))))
+												minval=math.sqrt((2.0 / (self.num_classes - 2)) / 2),
+												maxval=math.sqrt(2.0 / (self.num_classes - 2))))
 
 		if self.use_tau == 1:
 			print('Using tau')
 			self.tau = self.add_weight('tau_nnpom', shape=(1,),
 									   initializer=tf.random_uniform_initializer(minval=1, maxval=10))
+			self.tau = tf.clip_by_value(self.tau, 1, 1000)
 
 		if self.link_function == 'glogit':
 			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,),
