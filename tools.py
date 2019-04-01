@@ -42,11 +42,11 @@ def resume_one_metric(metric, results_path):
 					p['config']['final_activation'],
 					p['config']['activation'],
 					train,
-					train_values.size > 0 and '{:.5} ± {:.5}'.format(round(np.mean(train_values), 5), round(np.std(train_values), 5)) or 0,
+					train_values.size > 0 and '{:.5} ± {:.5}'.format(round(np.mean(train_values), 5), round(np.std(train_values, ddof=1), 5)) or 0,
 					val,
-					val_values.size > 0 and '{:.5} ± {:.5}'.format(round(np.mean(val_values), 5), round(np.std(val_values), 5)) or 0,
+					val_values.size > 0 and '{:.5} ± {:.5}'.format(round(np.mean(val_values), 5), round(np.std(val_values, ddof=1), 5)) or 0,
 					test,
-					test_values.size > 0 and '{:.5} ± {:.5}'.format(round(np.mean(test_values), 5), round(np.std(test_values), 5)) or 0
+					test_values.size > 0 and '{:.5} ± {:.5}'.format(round(np.mean(test_values), 5), round(np.std(test_values, ddof=1), 5)) or 0
 				])
 
 
@@ -148,7 +148,7 @@ def show_latex_table(results_path, show_std=False):
 				if metric != 'Confusion matrix':
 					train += ' & ${:.3f}'.format(round(np.mean(values), 3))
 					if show_std:
-						train += '_{{({:.3f})}}'.format(round(np.std(values), 3))
+						train += '_{{({:.3f})}}'.format(round(np.std(values, ddof=1), 3))
 					train += '$'
 
 			train += '\\\\\n'
@@ -157,7 +157,7 @@ def show_latex_table(results_path, show_std=False):
 				if metric != 'Confusion matrix':
 					val += ' & ${:.3f}'.format(round(np.mean(values), 3))
 					if show_std:
-						val += '_{{({:.3f})}}'.format(round(np.std(values), 3))
+						val += '_{{({:.3f})}}'.format(round(np.std(values, ddof=1), 3))
 					val += '$'
 
 			val += '\\\\\n'
@@ -166,7 +166,7 @@ def show_latex_table(results_path, show_std=False):
 				if metric != 'Confusion matrix':
 					test += ' & ${:.3f}'.format(round(np.mean(values), 3))
 					if show_std:
-						test += '_{{({:.3f})}}'.format(round(np.std(values), 3))
+						test += '_{{({:.3f})}}'.format(round(np.std(values, ddof=1), 3))
 					test += '$'
 
 			test += '\\\\\n'
@@ -202,7 +202,7 @@ def create_h5_dataset(path, file):
 
 	# Standardize each color channel
 	means = x.mean(axis=(0,1,2))
-	stds = x.std(axis=(0,1,2))
+	stds = x.std(axis=(0,1,2), ddof=1)
 	x = (x - means) / stds
 
 	f = h5py.File(file, 'w')
@@ -211,8 +211,8 @@ def create_h5_dataset(path, file):
 
 def create_h5_cifar10(file, shape):
 	(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
-	train_rs_op = tf.image.resize_images(x_train, shape, method=tf.image.ResizeMethod.BICUBIC)
-	test_rs_op = tf.image.resize_images(x_test, shape, method=tf.image.ResizeMethod.BICUBIC)
+	train_rs_op = tf.image.resize_images(x_train, shape, method=tf.image.ResizeMethod.BILINEAR)
+	test_rs_op = tf.image.resize_images(x_test, shape, method=tf.image.ResizeMethod.BILINEAR)
 	val_perc = 0.2
 
 	with tf.Session() as sess:

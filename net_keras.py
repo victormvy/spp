@@ -183,7 +183,7 @@ class Net:
 	def inception_resnet_v2_custom(self):
 		model = tf.keras.Sequential()
 		inception = Irnv2(include_top=False, input_shape=(self.size, self.size, self.num_channels),
-						  classes=self.num_classes, pooling='avg', activation=self.activation)
+						  classes=self.num_classes, pooling='avg', activation=self.__get_activation())
 
 		# for layer in inception.layers:
 		# 	layer.trainable = False
@@ -295,6 +295,10 @@ class Net:
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
 			model.add(NNPOM(self.num_classes, 'gauss', use_tau=self.use_tau))
+		elif self.final_activation == 'clmexpgauss':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(tf.keras.layers.BatchNormalization())
+			model.add(NNPOM(self.num_classes, 'expgauss', use_tau=self.use_tau))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':

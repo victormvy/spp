@@ -210,9 +210,9 @@ class PELU(tf.keras.layers.Layer):
 		self.alpha = tf.clip_by_value(self.alpha, 0.0001, 10)
 
 		self.beta = self.add_weight(name='beta', shape=(1,), dtype=tf.float32,
-									 initializer=tf.random_uniform_initializer(minval=0.01,
-																			   maxval=1,
-																			   dtype=tf.float32))
+									initializer=tf.random_uniform_initializer(minval=0.01,
+																			  maxval=1,
+																			  dtype=tf.float32))
 		self.beta = tf.clip_by_value(self.beta, 0.0001, 10)
 
 		super(PELU, self).build(input_shape)
@@ -222,6 +222,7 @@ class PELU(tf.keras.layers.Layer):
 		neg = self.alpha * (tf.exp((-tf.nn.relu(-x)) / self.beta) - 1)
 
 		return pos + neg
+
 
 class SlopedReLU(tf.keras.layers.Layer):
 	def __init__(self, **kwargs):
@@ -238,6 +239,7 @@ class SlopedReLU(tf.keras.layers.Layer):
 
 	def call(self, inputs):
 		return tf.nn.relu(self.alpha * inputs)
+
 
 class PTELU(tf.keras.layers.Layer):
 	def __init__(self, **kwargs):
@@ -263,6 +265,7 @@ class PTELU(tf.keras.layers.Layer):
 		neg = self.alpha * tf.tanh(self.beta * tf.nn.relu(-inputs))
 
 		return pos + neg
+
 
 class NNPOM(tf.keras.layers.Layer):
 	"""
@@ -313,10 +316,16 @@ class NNPOM(tf.keras.layers.Layer):
 										  lambda: self.dist.cdf(z3)))
 		elif self.link_function == 'gauss':
 			# a3T = 1.0 / 2.0 + tf.sign(z3) * tf.igamma(1.0 / self.alpha, tf.pow(tf.abs(z3) / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
-			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(- 10 * z3) - 1) * tf.igamma(1.0 / self.alpha,
-																		  tf.pow(tf.pow(z3, 2) / self.r,
-																				 self.alpha)) / (
+			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(-z3) - 1) * tf.igamma(1.0 / self.alpha,
+																	tf.pow(tf.pow(z3 / self.r, 2),
+																		   self.alpha)) / (
 								  2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
+		elif self.link_function == 'expgauss':
+			u = self.lmbd * (z3 - self.mu)
+			v = self.lmbd * self.sigma
+			dist1 = tf.distributions.Normal(loc=0., scale=v)
+			dist2 = tf.distributions.Normal(loc=v, scale=tf.pow(v, 2))
+			a3T = dist1.cdf(u) - tf.exp(-u + tf.pow(v, 2) / 2 + tf.log(dist2.cdf(u)))
 		else:
 			a3T = 1.0 / (1.0 + tf.exp(-z3))
 
@@ -351,9 +360,14 @@ class NNPOM(tf.keras.layers.Layer):
 									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 		elif self.link_function == 'gauss':
 			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(2.0))
-			self.alpha = tf.clip_by_value(self.alpha, 0.001, 3)
-			self.r = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(math.sqrt(2.0)))
-			self.r = tf.clip_by_value(self.r, 0.001, math.sqrt(3))
+			self.alpha = tf.clip_by_value(self.alpha, 1, 3)
+			self.r = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
+			self.r = tf.clip_by_value(self.r, 1, 1.5)
+		elif self.link_function == 'expgauss':
+			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
+			self.sigma = self.add_weight('sigma_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
+			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
+
 
 	def call(self, x):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)

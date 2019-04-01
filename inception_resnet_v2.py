@@ -86,8 +86,11 @@ def conv2d_bn(x,
                                       scale=False,
                                       name=bn_name)(x)
     if activation is not None:
-        ac_name = None if name is None else name + '_ac'
-        x = layers.Activation(activation, name=ac_name)(x)
+        if type(activation) is str:
+            ac_name = None if name is None else name + '_ac'
+            x = layers.Activation(activation, name=ac_name)(x)
+        else:
+            x = activation(x)
     return x
 
 
@@ -173,6 +176,10 @@ def inception_resnet_block(x, scale, block_type, block_idx, activation='relu'):
                       name=block_name)([x, up])
     if activation is not None:
         x = layers.Activation(activation, name=block_name + '_ac')(x)
+        if type(activation) is str:
+            x = layers.Activation(activation, name=block_name + '_ac')(x)
+        else:
+            x = activation(x)
     return x
 
 from tensorflow.keras import utils as keras_utils
