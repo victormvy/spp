@@ -309,6 +309,8 @@ class NNPOM(tf.keras.layers.Layer):
 			a3T = 1 - tf.exp(-tf.exp(z3))
 		elif self.link_function == 'glogit':
 			a3T = 1.0 / tf.pow(1.0 + tf.exp(-self.lmbd * (z3 - self.mu)), self.alpha)
+		elif self.link_function == 'cauchit':
+			a3T = tf.atan(z3 / math.pi) + 0.5
 		elif self.link_function == 'lgamma':
 			a3T = tf.cond(self.q < 0, lambda: tf.igammac(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)),
 						  lambda: tf.cond(self.q > 0, lambda: tf.igamma(tf.pow(self.q, -2),
@@ -316,8 +318,9 @@ class NNPOM(tf.keras.layers.Layer):
 										  lambda: self.dist.cdf(z3)))
 		elif self.link_function == 'gauss':
 			# a3T = 1.0 / 2.0 + tf.sign(z3) * tf.igamma(1.0 / self.alpha, tf.pow(tf.abs(z3) / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
-			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(-z3) - 1) * tf.igamma(1.0 / self.alpha,
-																	tf.pow(tf.pow(z3 / self.r, 2),
+			# z3 = tf.Print(z3, data=[tf.reduce_max(tf.abs(z3))], message='z3 abs max')
+			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(z3 - self.mu) - 1) * tf.igamma(1.0 / self.alpha,
+																	tf.pow(tf.pow((z3 - self.mu) / self.r, 2),
 																		   self.alpha)) / (
 								  2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
 		elif self.link_function == 'expgauss':
@@ -359,10 +362,11 @@ class NNPOM(tf.keras.layers.Layer):
 			self.q = self.add_weight('q_nnpom', shape=(1,),
 									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 		elif self.link_function == 'gauss':
-			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(2.0))
-			self.alpha = tf.clip_by_value(self.alpha, 1, 3)
+			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(0.5))
+			self.alpha = tf.clip_by_value(self.alpha, 0.5, 1.5)
 			self.r = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
-			self.r = tf.clip_by_value(self.r, 1, 1.5)
+			self.r = tf.clip_by_value(self.r, 0.5, 100)
+			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
 		elif self.link_function == 'expgauss':
 			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
 			self.sigma = self.add_weight('sigma_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))

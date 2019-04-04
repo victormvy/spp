@@ -287,6 +287,10 @@ class Net:
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
 			model.add(NNPOM(self.num_classes, 'glogit', use_tau=self.use_tau))
+		elif self.final_activation == 'clmcauchit':
+			model.add(tf.keras.layers.Dense(1))
+			model.add(tf.keras.layers.BatchNormalization())
+			model.add(NNPOM(self.num_classes, 'cauchit', use_tau=self.use_tau))
 		elif self.final_activation == 'clmgamma':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
