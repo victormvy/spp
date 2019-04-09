@@ -280,7 +280,7 @@ class NNPOM(tf.keras.layers.Layer):
 		super(NNPOM, self).__init__(**kwargs)
 
 	def _convert_thresholds(self, b, a):
-		a = tf.pow(a, 2)
+		# a = tf.pow(a, 2)
 		thresholds_param = tf.concat([b, a], axis=0)
 		th = tf.reduce_sum(
 			tf.matrix_band_part(tf.ones([self.num_classes - 1, self.num_classes - 1]), -1, 0) * tf.reshape(
@@ -339,11 +339,9 @@ class NNPOM(tf.keras.layers.Layer):
 
 	def build(self, input_shape):
 		self.thresholds_b = self.add_weight('b_b_nnpom', shape=(1,),
-											initializer=tf.random_uniform_initializer(minval=-1, maxval=-0.5))
+											initializer=tf.random_uniform_initializer(minval=-12, maxval=-10))
 		self.thresholds_a = self.add_weight('b_a_nnpom', shape=(self.num_classes - 2,),
-											initializer=tf.random_uniform_initializer(
-												minval=math.sqrt((2.0 / (self.num_classes - 2)) / 2),
-												maxval=math.sqrt(2.0 / (self.num_classes - 2))))
+											initializer=tf.constant_initializer(3.0))
 
 		if self.use_tau == 1:
 			print('Using tau')
@@ -362,11 +360,13 @@ class NNPOM(tf.keras.layers.Layer):
 			self.q = self.add_weight('q_nnpom', shape=(1,),
 									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 		elif self.link_function == 'gauss':
-			self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(0.5))
-			self.alpha = tf.clip_by_value(self.alpha, 0.5, 1.5)
+			# self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
+			# self.alpha = tf.clip_by_value(self.alpha, 1.0, 1.3)
+			self.alpha = 0.5
 			self.r = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
-			self.r = tf.clip_by_value(self.r, 0.5, 100)
+			self.r = tf.clip_by_value(self.r, 0.2, 100)
 			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
+			# self.mu = 0.0
 		elif self.link_function == 'expgauss':
 			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
 			self.sigma = self.add_weight('sigma_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))

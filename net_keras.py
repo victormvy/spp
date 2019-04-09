@@ -240,7 +240,7 @@ class Net:
 		elif self.activation == 'prelu':
 			return tf.keras.layers.PReLU()
 		elif self.activation == 'elu':
-			return tf.keras.layers.ELU()
+			return tf.keras.layers.ELU(.8)
 		elif self.activation == 'softplus':
 			return tf.keras.layers.Activation('softplus')
 		elif self.activation == 'spp':

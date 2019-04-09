@@ -35,7 +35,7 @@ for plot in plots:
 				x = np.arange(-5, 5, 0.001)
 				num = numerador(x, a, r, mu)
 				total = 0.5 + (2 * (1/(1+np.exp(-(x-mu)))) - 1) * num / denominador(a)
-				plt.plot(x,num, linestyle='--', c=colors[cid])
+				# plt.plot(x,num, linestyle='--', c=colors[cid])
 				plt.plot(x,total, label='a={},r={},mu={}'.format(a, r, mu), c=colors[cid])
 				# plt.plot(x,logfunc(x, a, r, mu), label='a={},r={},mu={}'.format(a, r, mu), c = colors[cid])
 				cid += 1
