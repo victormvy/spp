@@ -7,8 +7,10 @@ import os
 import prettytable
 import h5py
 import tensorflow as tf
+import cv2
 from PIL import Image
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 evaluation_file = 'evaluation.pickle'
 
@@ -254,6 +256,104 @@ def display_h5_images(file):
 			if inp == 'q':
 				return
 
+def create_retinopathy_h5(train_path, test_path, train_csv, test_csv, val_split, output_path):
+	print('Loading train csv...')
+	train_df = pd.read_csv(train_csv)
+	print('Splitting train into train and validation...')
+	train_df, val_df = train_test_split(train_df, test_size=val_split, random_state=1)
+	print('Loading test csv...')
+	test_df = pd.read_csv(test_csv)
+	extension = '.jpeg'
+	target_shape = (128, 128)
+
+	datasets = {
+		'train': {'name': 'training',
+				  'df': train_df,
+				  'path': train_path,
+				  'output_name': 'retinopathy_128_train.h5'
+				  },
+		'val': {'name': 'validation',
+				  'df': val_df,
+				  'path': train_path,
+				  'output_name': 'retinopathy_128_val.h5'
+				  },
+		'test': {'name': 'testing',
+				  'df': test_df,
+				  'path': test_path,
+				  'output_name': 'retinopathy_128_test.h5'
+				  }
+	}
+
+	for key, ds in datasets.items():
+		print('--- Creating {} dataset ---'.format(ds['name']))
+		x = []
+		y = []
+		for i, (index, row) in enumerate(ds['df'].iterrows()):
+			label = row['level']
+			img = cv2.imread(os.path.join(ds['path'], row['image'] + extension))
+			if not img is None:
+				top, bottom, left, right = find_bbox(img)
+				img = crop_img(img, top, bottom, left, right)
+				img = cv2.resize(img, target_shape, interpolation=cv2.INTER_AREA)
+				# cv2.imwrite(os.path.join(output_path, row['image'] + extension), img)
+				x.append(img)
+				y.append(label)
+
+				print('{}/{} {} loaded (class {})'.format(i, ds['df'].shape[0], row['image'], label))
+
+		x = np.array(x)
+		y = np.array(y)
+
+		print('Standardizing channel pixels...')
+		# Standardize each color channel
+		means = x.mean(axis=(0, 1, 2))
+		stds = x.std(axis=(0, 1, 2), ddof=1)
+		x = (x - means) / stds
+
+		print('Creating file {}...'.format(os.path.join(output_path, ds['output_name'])))
+		with h5py.File(os.path.join(output_path, ds['output_name']), 'w') as f:
+			f.create_dataset('x', data=x, compression='gzip', compression_opts=9)
+			f.create_dataset('y', data=y, compression='gzip', compression_opts=9)
+
+# # # Preprocess functions # # #
+
+def find_bbox(img):
+	top = 0
+	left = 0
+	right = img.shape[1]
+	bottom = img.shape[0]
+
+	# Find left
+	for x in range(0, img.shape[1]):
+		if img[:,x,:].mean() > 4.0:
+			left = x
+			break
+
+	# Find right
+	for x in reversed(range(0, img.shape[1])):
+		if img[:, x, :].mean() > 4.0:
+			right = x
+			break
+
+	# Find top
+	for y in range(0, img.shape[0]):
+		if img[y, :, :].mean() > 4.0:
+			top = y
+			break
+
+	# Find bottom
+	for y in reversed(range(0, img.shape[0])):
+		if img[y, :, :].mean() > 4.0:
+			bottom = y
+			break
+
+	return top, bottom, left, right
+
+def crop_img(img, top, bottom, left, right):
+	return img[top:bottom,left:right]
+
+
+# # # Menu options # # #
 
 def option_resume_one_metric():
 	results_path = input('Results path: ')
@@ -290,6 +390,15 @@ def option_display_h5_images():
 	file = input('H5 file: ')
 	display_h5_images(file)
 
+def option_create_retinopathy_h5():
+	train_path = input('Train path: ')
+	test_path = input('Test path: ')
+	train_csv = input('Train csv file: ')
+	test_csv = input('Test csv file: ')
+	val_split = float(input('Validation split ratio: '))
+	output_path = input('Output path: ')
+	create_retinopathy_h5(train_path, test_path, train_csv, test_csv, val_split, output_path)
+
 def show_menu():
 	print('=====================================')
 	print('1. Resume results for one metric')
@@ -298,6 +407,7 @@ def show_menu():
 	print('4. Create h5 dataset')
 	print('5. Create h5 cifar10')
 	print('6. Display images from h5')
+	print('7. Create retinopathy h5')
 	print('=====================================')
 	option = input(' Choose one option: ')
 
@@ -317,6 +427,8 @@ def select_option(option):
 		option_create_h5_cifar10()
 	elif option == '6':
 		option_display_h5_images()
+	elif option == '7':
+		option_create_retinopathy_h5()
 
 
 if __name__ == '__main__':
