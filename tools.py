@@ -301,6 +301,7 @@ def create_retinopathy_h5(train_path, test_path, train_csv, test_csv, val_split,
 
 				print('{}/{} {} loaded (class {})'.format(i, ds['df'].shape[0], row['image'], label))
 
+
 		x = np.array(x)
 		y = np.array(y)
 
