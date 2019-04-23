@@ -615,8 +615,9 @@ class Experiment:
 					mean = test_datagen.mean
 					std = test_datagen.std
 			else:
-				test_datagen.mean = mean
-				test_datagen.std = std
+				if 'zca_whitening' in self.augmentation or 'featurewise_center' in self.augmentation or 'featurewise_std_normalization' in self.augmentation:
+					test_datagen.mean = mean
+					test_datagen.std = std
 
 			# Test generator
 			test_generator = test_datagen.flow(
