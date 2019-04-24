@@ -280,7 +280,7 @@ class NNPOM(tf.keras.layers.Layer):
 		super(NNPOM, self).__init__(**kwargs)
 
 	def _convert_thresholds(self, b, a):
-		# a = tf.pow(a, 2)
+		a = tf.pow(a, 2)
 		thresholds_param = tf.concat([b, a], axis=0)
 		th = tf.reduce_sum(
 			tf.matrix_band_part(tf.ones([self.num_classes - 1, self.num_classes - 1]), -1, 0) * tf.reshape(
@@ -339,9 +339,11 @@ class NNPOM(tf.keras.layers.Layer):
 
 	def build(self, input_shape):
 		self.thresholds_b = self.add_weight('b_b_nnpom', shape=(1,),
-											initializer=tf.random_uniform_initializer(minval=-12, maxval=-10))
+											initializer=tf.random_uniform_initializer(minval=0, maxval=0.1))
 		self.thresholds_a = self.add_weight('b_a_nnpom', shape=(self.num_classes - 2,),
-											initializer=tf.constant_initializer(3.0))
+											initializer=tf.random_uniform_initializer(
+												minval=math.sqrt((1.0 / (self.num_classes - 2)) / 2),
+												maxval=math.sqrt(1.0 / (self.num_classes - 2))))
 
 		if self.use_tau == 1:
 			print('Using tau')

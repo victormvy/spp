@@ -184,9 +184,17 @@ class Dataset:
 
 		self._data['x'] = data_resized
 
-	def _standardize_data(self):
+	def standardize_data(self, mean=None, std=None):
 		x = np.array(self._data['x'])
-		self._data['x'] = list(x / 255.0)
+		if mean is None:
+			mean = x.mean()
+
+		if std is None:
+			std = x.std()
+
+		self._data['x'] = list((x - mean) / std)
+
+		return mean, std
 
 
 	def size(self):

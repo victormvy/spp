@@ -420,7 +420,9 @@ class Experiment:
 
 		# Load datasets
 		ds_train = Dataset(train_path)
+		ds_train.standardize_data()
 		ds_val = Dataset(val_path)
+		ds_val.standardize_data()
 
 		# Get dataset details
 		num_classes = ds_train.num_classes
@@ -597,6 +599,7 @@ class Experiment:
 
 			# Load test dataset
 			ds_test = Dataset(path)
+			ds_test.standardize_data()
 
 			# Get dataset details
 			num_classes = ds_test.num_classes
