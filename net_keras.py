@@ -154,6 +154,8 @@ class Net:
 
 			tf.keras.layers.Flatten(),
 
+			tf.keras.layers.Dense(96),
+
 		])
 
 		if self.dropout > 0:

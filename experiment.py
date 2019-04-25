@@ -420,9 +420,9 @@ class Experiment:
 
 		# Load datasets
 		ds_train = Dataset(train_path)
-		ds_train.standardize_data()
+		# ds_train.standardize_data()
 		ds_val = Dataset(val_path)
-		ds_val.standardize_data()
+		# ds_val.standardize_data()
 
 		# Get dataset details
 		num_classes = ds_train.num_classes
@@ -535,7 +535,7 @@ class Experiment:
 																	append=True),
 									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 									   tf.keras.callbacks.TerminateOnNaN(),
-									   tf.keras.callbacks.EarlyStopping(min_delta=0.0005, patience=30, verbose=1),
+									   # tf.keras.callbacks.EarlyStopping(min_delta=0.0005, patience=30, verbose=1),
 									   PrintWeightsCallback()
 									   ],
 							workers=self.workers,
@@ -599,7 +599,7 @@ class Experiment:
 
 			# Load test dataset
 			ds_test = Dataset(path)
-			ds_test.standardize_data()
+			# ds_test.standardize_data()
 
 			# Get dataset details
 			num_classes = ds_test.num_classes
