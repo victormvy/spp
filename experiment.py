@@ -447,7 +447,7 @@ class Experiment:
 			ds_val.x,
 			ds_val.y,
 			batch_size=self.batch_size,
-			shuffle=False
+			shuffle=True
 		)
 
 		# Calculate the number of steps per epoch
