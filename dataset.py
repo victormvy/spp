@@ -7,17 +7,21 @@ from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import cv2
 from PIL import Image
+from sklearn.utils.class_weight import compute_class_weight
 
 
 class Dataset:
 	"""
 	Class that represents a dataset that is loaded from a file.
 	"""
-	def __init__(self, path=""):
+	def __init__(self, path="", portion=1.0):
 		self._data = {'x' : [], 'y' : []}
 		self._num_classes = 0
+		self._portion = portion
+
 		if path != "":
 			self.load(path)
+
 		super(Dataset, self).__init__()
 
 	@property
@@ -80,6 +84,18 @@ class Dataset:
 	def sample_shape(self):
 		del self._sample_shape
 
+	@property
+	def portion(self):
+		return self._portion
+
+	@portion.setter
+	def portion(self, portion):
+		self._portion = portion
+
+	@portion.deleter
+	def portion(self):
+		del self._portion
+
 	def load(self, path):
 		if path == 'cifar10train':
 			self._load_cifar10('train')
@@ -105,7 +121,12 @@ class Dataset:
 		self._num_classes = len(os.listdir(path))
 		self._sample_shape = None
 		for cls in os.listdir(path):
-			for f in os.listdir(os.path.join(path, cls)):
+			flist = os.listdir(os.path.join(path, cls))
+			for i, f in enumerate(flist):
+				# Take just a portion of the data
+				if i > len(flist) * self.portion:
+					break
+
 				file_path = os.path.join(os.path.join(path, cls), f)
 				if os.path.isfile(file_path):
 					im = imageio.imread(file_path)
@@ -222,6 +243,9 @@ class Dataset:
 		# No weights if no data
 		if not self._data or not self._data['y']:
 			return {}
+
+		# y_label = np.argmax(self._data['y'], axis=1)
+		# return compute_class_weight('balanced', np.unique(y_label), y_label)
 
 		counts = {}
 		total_count = 0
