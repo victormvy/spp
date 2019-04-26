@@ -244,8 +244,8 @@ class Dataset:
 		if not self._data or not self._data['y']:
 			return {}
 
-		# y_label = np.argmax(self._data['y'], axis=1)
-		# return compute_class_weight('balanced', np.unique(y_label), y_label)
+		y_label = np.argmax(self._data['y'], axis=1)
+		return compute_class_weight('balanced', np.unique(y_label), y_label)
 
 		counts = {}
 		total_count = 0

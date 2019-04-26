@@ -11,6 +11,7 @@ import cv2
 from PIL import Image
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from shutil import copyfile
 
 evaluation_file = 'evaluation.pickle'
 
@@ -316,6 +317,29 @@ def create_retinopathy_h5(train_path, test_path, train_csv, test_csv, val_split,
 			f.create_dataset('x', data=x, compression='gzip', compression_opts=9)
 			f.create_dataset('y', data=y, compression='gzip', compression_opts=9)
 
+def split_train_val(trainval_path, output_path, val_split):
+
+	if os.path.isdir(output_path):
+		print("Output path already exists")
+		return
+	else:
+		os.makedirs(output_path)
+
+	for lbl in os.listdir(trainval_path):
+		l = np.array(os.listdir(os.path.join(trainval_path, lbl)))
+		train, val = train_test_split(l, test_size=val_split)
+
+		os.makedirs(os.path.join(output_path, 'train', lbl))
+		os.makedirs(os.path.join(output_path, 'val', lbl))
+
+		for f in train:
+			copyfile(os.path.join(trainval_path, lbl, f), os.path.join(output_path, 'train', lbl, f))
+
+		for f in val:
+			copyfile(os.path.join(trainval_path, lbl, f), os.path.join(output_path, 'val', lbl, f))
+
+
+
 # # # Preprocess functions # # #
 
 def find_bbox(img):
@@ -400,6 +424,12 @@ def option_create_retinopathy_h5():
 	output_path = input('Output path: ')
 	create_retinopathy_h5(train_path, test_path, train_csv, test_csv, val_split, output_path)
 
+def option_split_train_val():
+	trainval_path = input('Trainval directory: ')
+	output_path = input('Output path: ')
+	val_split = float(input('Split percentage [0,1]: '))
+	split_train_val(trainval_path, output_path, val_split)
+
 def show_menu():
 	print('=====================================')
 	print('1. Resume results for one metric')
@@ -409,6 +439,7 @@ def show_menu():
 	print('5. Create h5 cifar10')
 	print('6. Display images from h5')
 	print('7. Create retinopathy h5')
+	print('8. Split train and val')
 	print('=====================================')
 	option = input(' Choose one option: ')
 
@@ -430,6 +461,8 @@ def select_option(option):
 		option_display_h5_images()
 	elif option == '7':
 		option_create_retinopathy_h5()
+	elif option == '8':
+		option_split_train_val()
 
 
 if __name__ == '__main__':

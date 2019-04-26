@@ -15,7 +15,7 @@ from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm, to
 	minimum_sensitivity, accuracy_off1
 from dataset import Dataset
 from sklearn.metrics import confusion_matrix
-from math import inf
+import math
 import gc
 
 
@@ -464,7 +464,18 @@ class Experiment:
 
 		# Learning rate scheduler callback
 		def learning_rate_scheduler(epoch):
-			return self.lr * np.exp(-0.025 * epoch)
+			lr = self.lr * np.exp(-0.01 * epoch)
+
+			# stepsize = 10
+			# low = 1e-4
+			# high = 1e-2
+			# cycle = math.floor(1 + epoch /(2 * stepsize))
+			# x = abs(epoch / stepsize - 2 * cycle + 1)
+			# lr = low + (high - low) * max(0, 1-x)
+
+			print("New LR: {}".format(lr))
+
+			return lr
 
 		# Save epoch callback for training process
 		def save_epoch(epoch, logs):
@@ -727,6 +738,16 @@ class Experiment:
 		if db.lower() == 'retinopathy':
 			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
 			# return "../retinopathy/h5/retinopathy_128_train.h5", "../retinopathy/h5/retinopathy_128_val.h5", "../retinopathy/h5/retinopathy_128_test.h5"
+		elif db.lower() == 'retinopathy1':
+			return "../retinopathy/128/split1/train", "../retinopathy/128/split1/val", "../retinopathy/128/test"
+		elif db.lower() == 'retinopathy2':
+			return "../retinopathy/128/split2/train", "../retinopathy/128/split2/val", "../retinopathy/128/test"
+		elif db.lower() == 'retinopathy3':
+			return "../retinopathy/128/split3/train", "../retinopathy/128/split3/val", "../retinopathy/128/test"
+		elif db.lower() == 'retinopathy4':
+			return "../retinopathy/128/split4/train", "../retinopathy/128/split4/val", "../retinopathy/128/test"
+		elif db.lower() == 'retinopathy5':
+			return "../retinopathy/128/split5/train", "../retinopathy/128/split5/val", "../retinopathy/128/test"
 		elif db.lower() == 'retinopathytoy':
 			return "../retinopathy/h5/retinopathytoy_128_train.h5", "../retinopathy/h5/retinopathytoy_128_val.h5", "../retinopathy/h5/retinopathytoy_128_test.h5"
 		elif db.lower() == 'retinopathy256':
