@@ -11,7 +11,7 @@ import cv2
 from PIL import Image
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from shutil import copyfile
+from shutil import copy
 
 evaluation_file = 'evaluation.pickle'
 
@@ -333,10 +333,10 @@ def split_train_val(trainval_path, output_path, val_split):
 		os.makedirs(os.path.join(output_path, 'val', lbl))
 
 		for f in train:
-			copyfile(os.path.join(trainval_path, lbl, f), os.path.join(output_path, 'train', lbl, f))
+			copy(os.path.join(trainval_path, lbl, f), os.path.join(output_path, 'train', lbl, f))
 
 		for f in val:
-			copyfile(os.path.join(trainval_path, lbl, f), os.path.join(output_path, 'val', lbl, f))
+			copy(os.path.join(trainval_path, lbl, f), os.path.join(output_path, 'val', lbl, f))
 
 
 
