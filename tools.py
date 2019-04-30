@@ -271,17 +271,20 @@ def create_retinopathy_h5(train_path, test_path, train_csv, test_csv, val_split,
 		'train': {'name': 'training',
 				  'df': train_df,
 				  'path': train_path,
-				  'output_name': 'retinopathy_128_train.h5'
+				  'output_name': 'retinopathy_128_train.h5',
+				  'output_dir' : 'train'
 				  },
 		'val': {'name': 'validation',
 				  'df': val_df,
 				  'path': train_path,
-				  'output_name': 'retinopathy_128_val.h5'
+				  'output_name': 'retinopathy_128_val.h5',
+				  'output_dir' : 'val'
 				  },
 		'test': {'name': 'testing',
 				  'df': test_df,
 				  'path': test_path,
-				  'output_name': 'retinopathy_128_test.h5'
+				  'output_name': 'retinopathy_128_test.h5',
+				  'output_dir' : 'test'
 				  }
 	}
 
@@ -289,14 +292,31 @@ def create_retinopathy_h5(train_path, test_path, train_csv, test_csv, val_split,
 		print('--- Creating {} dataset ---'.format(ds['name']))
 		x = []
 		y = []
+
+		# Create dir
+		os.makedirs(os.path.join(output_path, ds['output_dir']))
+
 		for i, (index, row) in enumerate(ds['df'].iterrows()):
 			label = row['level']
-			img = cv2.imread(os.path.join(ds['path'], row['image'] + extension))
+
+			if not os.path.isdir(os.path.join(output_path, ds['output_dir'], str(label))):
+				os.makedirs(os.path.join(output_path, ds['output_dir'], str(label)))
+
+			# Avoid corrupt images
+			try:
+				f = open(os.path.join(ds['path'], row['image'] + extension), 'rb')
+				file_bytes = np.asarray(bytearray(f.read()), dtype=np.uint8)
+				img = cv2.imdecode(file_bytes, 1)
+			except:
+				continue
+
+			# img = cv2.imread(os.path.join(ds['path'], row['image'] + extension))
+
 			if not img is None:
 				top, bottom, left, right = find_bbox(img)
 				img = crop_img(img, top, bottom, left, right)
 				img = cv2.resize(img, target_shape, interpolation=cv2.INTER_AREA)
-				# cv2.imwrite(os.path.join(output_path, row['image'] + extension), img)
+				cv2.imwrite(os.path.join(output_path, ds['output_dir'], str(label), row['image'] + extension), img)
 				x.append(img)
 				y.append(label)
 

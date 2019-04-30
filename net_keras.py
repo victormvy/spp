@@ -202,7 +202,7 @@ class Net:
 		return model
 
 	def beckham_resnet(self):
-		resnet = Resnet_2x4((self.size, self.size, self.num_channels))
+		resnet = Resnet_2x4((self.size, self.size, self.num_channels), activation=self.activation)
 		model = resnet.get_net()
 
 		# model.add(tf.keras.layers.Dense(256))
