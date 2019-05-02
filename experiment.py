@@ -563,7 +563,7 @@ class Experiment:
 
 		# Mark the training as finished in the checkpoint file
 		with open(os.path.join(self.checkpoint_dir, self.model_file_extra), 'w') as f:
-			f.write(str(100))
+			f.write(str(self.epochs))
 			f.write('\n' + str(self.best_metric))
 
 		# Free objects
