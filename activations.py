@@ -272,10 +272,11 @@ class NNPOM(tf.keras.layers.Layer):
 	Proportional Odds Model activation layer.
 	"""
 
-	def __init__(self, num_classes, link_function, use_tau, **kwargs):
+	def __init__(self, num_classes, link_function, p, use_tau, **kwargs):
 		self.num_classes = num_classes
 		self.dist = tf.distributions.Normal(loc=0., scale=1.)
 		self.link_function = link_function
+		self.p = p
 		self.use_tau = use_tau
 		super(NNPOM, self).__init__(**kwargs)
 
@@ -319,10 +320,10 @@ class NNPOM(tf.keras.layers.Layer):
 		elif self.link_function == 'gauss':
 			# a3T = 1.0 / 2.0 + tf.sign(z3) * tf.igamma(1.0 / self.alpha, tf.pow(tf.abs(z3) / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
 			# z3 = tf.Print(z3, data=[tf.reduce_max(tf.abs(z3))], message='z3 abs max')
-			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(z3 - self.mu) - 1) * tf.igamma(1.0 / self.alpha,
-																	tf.pow(tf.pow((z3 - self.mu) / self.r, 2),
-																		   self.alpha)) / (
-								  2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
+			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(z3 - self.p['mu']) - 1) * tf.igamma(1.0 / self.p['alpha'],
+																	tf.pow(tf.pow((z3 - self.p['mu']) / self.p['r'], 2),
+																		   self.p['alpha'])) / (
+								  2 * tf.exp(tf.lgamma(1.0 / self.p['alpha'])))
 		elif self.link_function == 'expgauss':
 			u = self.lmbd * (z3 - self.mu)
 			v = self.lmbd * self.sigma
@@ -362,13 +363,26 @@ class NNPOM(tf.keras.layers.Layer):
 			self.q = self.add_weight('q_nnpom', shape=(1,),
 									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 		elif self.link_function == 'gauss':
-			# self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
-			# self.alpha = tf.clip_by_value(self.alpha, 1.0, 1.3)
-			self.alpha = 0.5
-			self.r = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
-			self.r = tf.clip_by_value(self.r, 0.2, 100)
-			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
+			print(self.p)
+			if not 'alpha' in self.p:
+				self.p['alpha'] = 0.5
+
+			if not 'r' in self.p:
+				self.p['r'] = 0.3
+
+			if not 'mu' in self.p:
+				self.p['mu'] = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
+
+			# self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(0.3))
+			# self.alpha = tf.clip_by_value(self.alpha, 0.2, 0.6)
+			# self.alpha = 0.5
+			# self.r = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
+			# self.r = tf.clip_by_value(self.r, 0.2, 100)
+			# self.r = 0.3
+			# self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
 			# self.mu = 0.0
+
+			print(self.p)
 		elif self.link_function == 'expgauss':
 			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
 			self.sigma = self.add_weight('sigma_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))

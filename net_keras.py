@@ -7,10 +7,11 @@ from inception_resnet_v2 import InceptionResNetV2 as Irnv2
 
 
 class Net:
-	def __init__(self, size, activation, final_activation, use_tau=True, prob_layer=None, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
+	def __init__(self, size, activation, final_activation, f_a_params={}, use_tau=True, prob_layer=None, num_channels=3, num_classes=5, spp_alpha=0.2, dropout=0):
 		self.size = size
 		self.activation = activation
 		self.final_activation = final_activation
+		self.f_a_params = f_a_params
 		self.use_tau = use_tau
 		self.prob_layer = prob_layer
 		self.num_channels = num_channels
@@ -276,35 +277,35 @@ class Net:
 		if self.final_activation == 'poml':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'logit', use_tau=self.use_tau))
+			model.add(NNPOM(self.num_classes, 'logit', self.f_a_params, use_tau=self.use_tau))
 		elif self.final_activation == 'pomp':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'probit', use_tau=self.use_tau))
+			model.add(NNPOM(self.num_classes, 'probit', self.f_a_params, use_tau=self.use_tau))
 		elif self.final_activation == 'pomclog':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'cloglog', use_tau=self.use_tau))
+			model.add(NNPOM(self.num_classes, 'cloglog', self.f_a_params, use_tau=self.use_tau))
 		elif self.final_activation == 'pomglogit':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'glogit', use_tau=self.use_tau))
+			model.add(NNPOM(self.num_classes, 'glogit', self.f_a_params, use_tau=self.use_tau))
 		elif self.final_activation == 'clmcauchit':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'cauchit', use_tau=self.use_tau))
+			model.add(NNPOM(self.num_classes, 'cauchit', self.f_a_params, use_tau=self.use_tau))
 		elif self.final_activation == 'clmgamma':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'lgamma', use_tau=self.use_tau))
+			model.add(NNPOM(self.num_classes, 'lgamma', self.f_a_params, use_tau=self.use_tau))
 		elif self.final_activation == 'clmgauss':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'gauss', use_tau=self.use_tau))
+			model.add(NNPOM(self.num_classes, 'gauss', self.f_a_params, use_tau=self.use_tau))
 		elif self.final_activation == 'clmexpgauss':
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
-			model.add(NNPOM(self.num_classes, 'expgauss', use_tau=self.use_tau))
+			model.add(NNPOM(self.num_classes, 'expgauss', self.f_a_params, use_tau=self.use_tau))
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':

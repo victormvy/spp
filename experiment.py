@@ -26,7 +26,7 @@ class Experiment:
 
 	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='categorical_crossentropy', activation='relu',
-				 final_activation='softmax', use_tau=True,
+				 final_activation='softmax', f_a_params = {}, use_tau=True,
 				 prob_layer=None, spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4,
 				 queue_size=1024, val_metrics=['loss', 'acc'], rescale_factor=0, augmentation={}):
 		self._name = name
@@ -39,6 +39,7 @@ class Experiment:
 		self._activation = activation
 		self._use_tau = use_tau
 		self._final_activation = final_activation
+		self._f_a_params = f_a_params
 		self._prob_layer = prob_layer
 		self._spp_alpha = spp_alpha
 		self._lr = lr
@@ -189,6 +190,18 @@ class Experiment:
 	@final_activation.deleter
 	def final_activation(self):
 		del self._final_activation
+
+	@property
+	def f_a_params(self):
+		return self._f_a_params
+
+	@f_a_params.setter
+	def f_a_params(self, f_a_params):
+		self._f_a_params = f_a_params
+
+	@f_a_params.deleter
+	def f_a_params(self):
+		del self._f_a_params
 
 	@property
 	def use_tau(self):
@@ -494,7 +507,7 @@ class Experiment:
 		)
 
 		# NNet object
-		net_object = Net(img_size, self.activation, self.final_activation, self.use_tau, self.prob_layer, num_channels, num_classes,
+		net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau, self.prob_layer, num_channels, num_classes,
 						 self.spp_alpha,
 						 self.dropout)
 
@@ -642,7 +655,7 @@ class Experiment:
 			)
 
 			# NNet object
-			net_object = Net(img_size, self.activation, self.final_activation, self.use_tau, self.prob_layer, num_channels,
+			net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau, self.prob_layer, num_channels,
 							 num_classes,
 							 self.spp_alpha,
 							 self.dropout)
@@ -781,6 +794,7 @@ class Experiment:
 			'activation': self.activation,
 			'use_tau' : self.use_tau,
 			'final_activation': self.final_activation,
+			'f_a_params': self.f_a_params,
 			'spp_alpha': self.spp_alpha,
 			'lr': self.lr,
 			'momentum': self.momentum,
@@ -807,6 +821,7 @@ class Experiment:
 		self.loss = 'loss' in config and config['loss'] or 'crossentropy'
 		self.activation = 'activation' in config and config['activation'] or 'relu'
 		self.final_activation = 'final_activation' in config and config['final_activation'] or 'softmax'
+		self.f_a_params = config['f_a_params'] if 'f_a_params' in config else {}
 		self.use_tau = config['use_tau'] if 'use_tau' in config and config['use_tau'] else False
 		self.prob_layer = 'prob_layer' in config and config['prob_layer'] or None
 		self.spp_alpha = 'spp_alpha' in config and config['spp_alpha'] or 0
