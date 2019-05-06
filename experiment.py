@@ -559,7 +559,7 @@ class Experiment:
 																	append=True),
 									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 									   tf.keras.callbacks.TerminateOnNaN(),
-									   # tf.keras.callbacks.EarlyStopping(min_delta=0.0005, patience=30, verbose=1),
+									   tf.keras.callbacks.EarlyStopping(min_delta=0.0005, patience=40, verbose=1),
 									   PrintWeightsCallback()
 									   ],
 							workers=self.workers,
