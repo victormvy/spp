@@ -276,7 +276,7 @@ class NNPOM(tf.keras.layers.Layer):
 		self.num_classes = num_classes
 		self.dist = tf.distributions.Normal(loc=0., scale=1.)
 		self.link_function = link_function
-		self.p = p
+		self.p = p.copy()
 		self.use_tau = use_tau
 		super(NNPOM, self).__init__(**kwargs)
 
