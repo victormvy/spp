@@ -363,12 +363,12 @@ class NNPOM(tf.keras.layers.Layer):
 			self.q = self.add_weight('q_nnpom', shape=(1,),
 									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 		elif self.link_function == 'gauss':
-			print(self.p)
 			if not 'alpha' in self.p:
 				self.p['alpha'] = 0.5
 
 			if not 'r' in self.p:
-				self.p['r'] = 0.3
+				self.p['r'] = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
+				self.p['r'] = tf.clip_by_value(self.p['r'], 0.05, 100)
 
 			if not 'mu' in self.p:
 				self.p['mu'] = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
@@ -381,8 +381,6 @@ class NNPOM(tf.keras.layers.Layer):
 			# self.r = 0.3
 			# self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
 			# self.mu = 0.0
-
-			print(self.p)
 		elif self.link_function == 'expgauss':
 			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
 			self.sigma = self.add_weight('sigma_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
