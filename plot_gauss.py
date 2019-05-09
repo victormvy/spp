@@ -14,8 +14,8 @@ def logfunc(x, a, r, mu):
 	return np.log(np.exp(x) - 1) + np.log(np.exp(x) + 1) + np.log(numerador(x, a, r, mu)) - np.log(2) - np.log(gamma(1.0/a))
  
 plots = [
-	{'alphas': np.round(np.arange(0.5,1.5,0.2), 2), 'rs':[1.0], 'mus':[0.0]},
-	{'alphas': [1.0], 'rs': np.round(np.arange(0.2,1.7,0.2), 2), 'mus':[0.0]},
+	{'alphas': np.round(np.arange(0.1,1.5,0.2), 2), 'rs':[1.0], 'mus':[0.0]},
+	{'alphas': [0.5], 'rs': np.round(np.arange(0.1,1.5,0.2), 2), 'mus':[0.0]},
 ]
 
 
@@ -24,7 +24,7 @@ for plot in plots:
 	rs = plot['rs']
 	mus = plot['mus']
 
-	colors = ['r','g','b','y','k','b','c','m']
+	colors = ['r','g','b','y','k','c','m']
 	for i in range(len(colors), len(alphas) * len(rs) * len(mus)):
 		colors.append((random.random(), random.random(), random.random()))
 

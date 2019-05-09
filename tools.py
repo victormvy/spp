@@ -17,8 +17,9 @@ evaluation_file = 'evaluation.pickle'
 
 
 def resume_one_metric(metric, results_path):
-	t = prettytable.PrettyTable(['Dataset', 'BS', 'LR', 'LF', 'ACT', 'Train ' + metric, 'Mean Tr', 'Validation ' + metric, 'Mean V', 'Test ' + metric, 'Mean Te'])
-	for item in sorted(os.listdir(results_path)):
+	t = prettytable.PrettyTable(['#','Dataset', 'BS', 'LR', 'LF', 'ACT', 'Train ' + metric, 'Mean Tr', 'Validation ' + metric, 'Mean V', 'Test ' + metric, 'Mean Te'])
+	t2 = prettytable.PrettyTable(['#', 'Name'])
+	for i, item in enumerate(sorted(os.listdir(results_path))):
 		if os.path.isdir(os.path.join(results_path, item)):
 			train, val, test = '', '', ''
 			train_values, val_values, test_values = np.array([]), np.array([]), np.array([])
@@ -39,6 +40,7 @@ def resume_one_metric(metric, results_path):
 
 			if 'p' in locals():
 				t.add_row([
+					i,
 					p['config']['db'],
 					p['config']['batch_size'],
 					p['config']['lr'],
@@ -52,7 +54,10 @@ def resume_one_metric(metric, results_path):
 					test_values.size > 0 and '{:.5} ± {:.5}'.format(round(np.mean(test_values), 5), round(np.std(test_values, ddof=min(1, len(test_values)-1)), 5)) or 0
 				])
 
+				t2.add_row([i, item])
 
+
+	print(t2)
 	print(t)
 
 

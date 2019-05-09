@@ -364,7 +364,8 @@ class NNPOM(tf.keras.layers.Layer):
 									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
 		elif self.link_function == 'gauss':
 			if not 'alpha' in self.p:
-				self.p['alpha'] = 0.5
+				self.p['alpha'] = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(0.5))
+				self.p['alpha'] = tf.clip_by_value(self.p['alpha'], 0.1, 1.0)
 
 			if not 'r' in self.p:
 				self.p['r'] = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
