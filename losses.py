@@ -29,7 +29,7 @@ def qwk_loss(cost_matrix):
 	def _qwk_loss(true_prob, pred_prob):
 		targets = tf.argmax(true_prob, axis=1)
 		costs = tf.gather(cost_matrix, targets)
-		# targets = tf.Print(targets, data=[targets], summarize=100, message='targets')
+
 
 		# costs = tf.Print(costs, data=[costs], summarize=100, message='costs')
 
