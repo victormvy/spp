@@ -1,4 +1,4 @@
-import tensorflow as tf
+import keras
 import numpy as np
 import resnet
 from net_keras import Net
@@ -17,7 +17,7 @@ from dataset import Dataset
 from sklearn.metrics import confusion_matrix
 import math
 import gc
-
+from keras import backend as K
 
 class Experiment:
 	"""
@@ -404,7 +404,7 @@ class Experiment:
 			return
 
 		# Train data generator
-		train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
+		train_datagen = keras.preprocessing.image.ImageDataGenerator(
 			rescale=self.rescale_factor,
 			**self.augmentation
 		)
@@ -422,7 +422,7 @@ class Experiment:
 		# fill_mode='nearest',
 
 		# Validation data generator
-		val_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor, **eval_augmentation)
+		val_datagen = keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor, **eval_augmentation)
 
 		# Get database paths
 		train_path, val_path, _ = self.get_db_path(self.db)
@@ -502,7 +502,7 @@ class Experiment:
 				f.write('\n' + str(self.best_metric))
 
 
-		save_epoch_callback = tf.keras.callbacks.LambdaCallback(
+		save_epoch_callback = keras.callbacks.LambdaCallback(
 			on_epoch_end=save_epoch
 		)
 
@@ -523,7 +523,7 @@ class Experiment:
 			model.load_weights(os.path.join(self.checkpoint_dir, self.model_file))
 
 		# Create the cost matrix that will be used to compute qwk
-		cost_matrix = tf.constant(make_cost_matrix(num_classes), dtype=tf.float32)
+		cost_matrix = K.constant(make_cost_matrix(num_classes), dtype=K.floatx())
 
 		# Cross-entropy loss by default
 		loss = 'categorical_crossentropy'
@@ -538,7 +538,7 @@ class Experiment:
 
 		# Compile the keras model
 		model.compile(
-			optimizer=tf.keras.optimizers.Adam(lr=self.lr),  # tf.keras.optimizers.SGD(self.lr, 0.9),
+			optimizer=keras.optimizers.Adam(lr=self.lr),  # keras.optimizers.SGD(self.lr, 0.9),
 			loss=loss,
 			metrics=metrics
 		)
@@ -550,16 +550,16 @@ class Experiment:
 		model.fit_generator(train_generator, epochs=self.epochs,
 							initial_epoch=start_epoch,
 							steps_per_epoch=steps,
-							callbacks=[#tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-									   tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, mode='min', min_lr=1e-4, verbose=1),
-									   tf.keras.callbacks.ModelCheckpoint(
+							callbacks=[#keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
+									   keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, mode='min', min_lr=1e-4, verbose=1),
+									   keras.callbacks.ModelCheckpoint(
 										   os.path.join(self.checkpoint_dir, self.model_file)),
 									   save_epoch_callback,
-									   tf.keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, self.csv_file),
+									   keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, self.csv_file),
 																	append=True),
-									   tf.keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
-									   tf.keras.callbacks.TerminateOnNaN(),
-									   tf.keras.callbacks.EarlyStopping(min_delta=0.0005, patience=40, verbose=1),
+									   keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
+									   keras.callbacks.TerminateOnNaN(),
+									   keras.callbacks.EarlyStopping(min_delta=0.0005, patience=40, verbose=1),
 									   PrintWeightsCallback()
 									   ],
 							workers=self.workers,
@@ -631,7 +631,7 @@ class Experiment:
 			img_size = ds_test.img_size
 
 			# Validation data generator
-			test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor,
+			test_datagen = keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor,
 																		   **eval_augmentation)
 
 			# Save mean and std of train set
@@ -689,13 +689,13 @@ class Experiment:
 
 	def compute_metrics(self, y_true, y_pred, num_classes):
 		# Calculate metric
-		sess = tf.keras.backend.get_session()
+		sess = keras.backend.get_session()
 		qwk = np_quadratic_weighted_kappa(np.argmax(y_true, axis=1), np.argmax(y_pred, axis=1), 0,
 										  num_classes - 1)
 		ms = minimum_sensitivity(y_true, y_pred)
-		mae = sess.run(tf.reduce_mean(tf.keras.losses.mean_absolute_error(y_true, y_pred)))
-		mse = sess.run(tf.reduce_mean(tf.keras.losses.mean_squared_error(y_true, y_pred)))
-		acc = sess.run(tf.reduce_mean(tf.keras.metrics.categorical_accuracy(y_true, y_pred)))
+		mae = sess.run(K.mean(keras.losses.mean_absolute_error(y_true, y_pred)))
+		mse = sess.run(K.mean(keras.losses.mean_squared_error(y_true, y_pred)))
+		acc = sess.run(K.mean(keras.metrics.categorical_accuracy(y_true, y_pred)))
 		top2 = sess.run(top_2_accuracy(y_true, y_pred))
 		top3 = sess.run(top_3_accuracy(y_true, y_pred))
 		off1 = accuracy_off1(y_true, y_pred)

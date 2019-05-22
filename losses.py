@@ -1,6 +1,6 @@
-import tensorflow as tf
+import keras
 import numpy as np
-
+from keras import backend as K
 
 def make_cost_matrix(num_ratings):
 	"""
@@ -27,30 +27,30 @@ def qwk_loss(cost_matrix):
 	:return: QWK loss value.
 	"""
 	def _qwk_loss(true_prob, pred_prob):
-		targets = tf.argmax(true_prob, axis=1)
-		costs = tf.gather(cost_matrix, targets)
+		targets = K.argmax(true_prob, axis=1)
+		costs = K.gather(cost_matrix, targets)
 
 
-		# costs = tf.Print(costs, data=[costs], summarize=100, message='costs')
+		# costs = K.Print(costs, data=[costs], summarize=100, message='costs')
 
-#		pred_cls = tf.argmax(pred_prob, axis=1)
+#		pred_cls = K.argmax(pred_prob, axis=1)
 
-# 		conf_mat = tf.confusion_matrix(targets, pred_cls)
+# 		conf_mat = K.confusion_matrix(targets, pred_cls)
 
 		numerator = costs * pred_prob
-		numerator = tf.reduce_sum(numerator)
+		numerator = K.sum(numerator)
 
-		sum_prob = tf.reduce_sum(pred_prob, axis=0)
-		n = tf.reduce_sum(true_prob, axis=0)
+		sum_prob = K.sum(pred_prob, axis=0)
+		n = K.sum(true_prob, axis=0)
 
-		a = tf.reshape(tf.matmul(cost_matrix, tf.reshape(sum_prob, shape=[-1, 1])), shape=[-1])
-		b = tf.reshape(n / tf.reduce_sum(n), shape=[-1])
+		a = K.reshape(K.dot(cost_matrix, K.reshape(sum_prob, shape=[-1, 1])), shape=[-1])
+		b = K.reshape(n / K.sum(n), shape=[-1])
 
 		epsilon = 10e-9
 
 		denominator = a * b
-		denominator = tf.reduce_sum(denominator) + epsilon
+		denominator = K.sum(denominator) + epsilon
 
-		return numerator / denominator # + tf.cast(tf.reduce_sum(conf_mat) * 0, dtype=tf.float32)
+		return numerator / denominator # + K.cast(K.sum(conf_mat) * 0, dtype=K.floatx())
 
 	return _qwk_loss

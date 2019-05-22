@@ -2,6 +2,7 @@ import click
 from experiment import Experiment
 from experimentset import ExperimentSet
 import tensorflow as tf
+from keras import backend as K
 
 @click.group()
 def cli():
@@ -25,9 +26,9 @@ def cli():
 # @click.option('--rep', '-r', default=1, help=u'Repetitions for this execution.')
 # @click.option('--dropout', '-o', default=0.0, help=u'Drop rate.')
 # def train(db, net_type, batch_size, epochs, checkpoint_dir, loss, activation, final_activation, prob_layer, spp_alpha, lr, momentum, rep, dropout):
-# 	config = tf.ConfigProto()
+# 	config = K.ConfigProto()
 # 	config.gpu_options.allow_growth = True
-# 	tf.keras.backend.set_session(tf.Session(config=config))
+# 	K.keras.backend.set_session(K.Session(config=config))
 # 	for execution in range(1, rep + 1):
 # 		experiment = Experiment('', db, net_type, batch_size, epochs, checkpoint_dir, loss, activation, final_activation, prob_layer, spp_alpha, lr, momentum, dropout)
 # 		experiment.set_auto_name()
@@ -40,7 +41,7 @@ def cli():
 def experiment(file, gpu):
 	config = tf.ConfigProto(allow_soft_placement=True)
 	config.gpu_options.allow_growth = True
-	tf.keras.backend.set_session(tf.Session(config=config))
+	K.set_session(tf.Session(config=config))
 	experimentSet = ExperimentSet()
 	experimentSet.load_from_file(file)
 	experimentSet.run_all(gpu_number=gpu)

@@ -6,12 +6,13 @@ import pickle
 import os
 import prettytable
 import h5py
-import tensorflow as tf
+import keras
 import cv2
 from PIL import Image
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from shutil import copy
+from keras import backend as K
 
 evaluation_file = 'evaluation.pickle'
 
@@ -218,12 +219,12 @@ def create_h5_dataset(path, file):
 	f.create_dataset('y', data = y, compression = 'gzip', compression_opts = 9)
 
 def create_h5_cifar10(file, shape):
-	(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
-	train_rs_op = tf.image.resize_images(x_train, shape, method=tf.image.ResizeMethod.BILINEAR)
-	test_rs_op = tf.image.resize_images(x_test, shape, method=tf.image.ResizeMethod.BILINEAR)
+	(x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+	train_rs_op = K.image.resize_images(x_train, shape, method=K.image.ResizeMethod.BILINEAR)
+	test_rs_op = K.image.resize_images(x_test, shape, method=K.image.ResizeMethod.BILINEAR)
 	val_perc = 0.2
 
-	with tf.Session() as sess:
+	with K.Session() as sess:
 		print('Resizing images to {}'.format(shape))
 		train_rs, test_rs = sess.run([train_rs_op, test_rs_op])
 

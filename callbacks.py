@@ -1,10 +1,10 @@
-import tensorflow as tf
+import keras
 import numpy as np
 from sklearn.metrics import confusion_matrix, accuracy_score
 from metrics import quadratic_weighted_kappa_cm, quadratic_weighted_kappa
 from losses import make_cost_matrix
 
-class ComputeMetricsCallback(tf.keras.callbacks.Callback):
+class ComputeMetricsCallback(keras.callbacks.Callback):
 	"""
 	Callback that computes train and/or validation metrics for a batch.
 	Computed metrics are: accuracy, loss and QWK.
@@ -24,7 +24,7 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 			self.classes.append(i)
 
 	def _compute_metrics(self, generator, num_batches, classes):
-		sess = tf.keras.backend.get_session()
+		sess = keras.backend.get_session()
 		conf_mat = None
 		mean_acc = 0
 		mean_loss = 0
@@ -111,7 +111,7 @@ class ComputeMetricsCallback(tf.keras.callbacks.Callback):
 
 
 
-class PrintWeightsCallback(tf.keras.callbacks.Callback):
+class PrintWeightsCallback(keras.callbacks.Callback):
 	def __init__(self):
 		pass
 

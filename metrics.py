@@ -1,5 +1,7 @@
 import tensorflow as tf
+import keras
 import numpy as np
+from keras import backend as K
 from sklearn.metrics import confusion_matrix
 
 def quadratic_weighted_kappa(num_classes, cost_matrix):
@@ -16,25 +18,25 @@ def quadratic_weighted_kappa(num_classes, cost_matrix):
 		:param y_pred: predicted labels.
 		:return: qwk value.
 		"""
-		y_pred = tf.argmax(y_pred, 1, output_type=tf.int32)
-		y_true = tf.argmax(y_true, 1, output_type=tf.int32)
-		conf_mat = tf.confusion_matrix(y_true, y_pred, num_classes=num_classes, dtype=tf.float32)
+		y_pred = K.argmax(y_pred, 1, output_type=K.int32)
+		y_true = K.argmax(y_true, 1, output_type=K.int32)
+		conf_mat = K.confusion_matrix(y_true, y_pred, num_classes=num_classes, dtype=K.floatx())
 
 		return quadratic_weighted_kappa_cm(conf_mat, num_classes, cost_matrix)
 
-		# hist_y_pred = tf.reshape(
-		# 	tf.bincount(y_pred, minlength=num_classes, maxlength=num_classes, dtype=tf.float32),
+		# hist_y_pred = K.reshape(
+		# 	K.bincount(y_pred, minlength=num_classes, maxlength=num_classes, dtype=K.floatx()),
 		# 	shape=[num_classes, 1])
-		# hist_y_true = tf.reshape(
-		# 	tf.bincount(y_true, minlength=num_classes, maxlength=num_classes, dtype=tf.float32),
+		# hist_y_true = K.reshape(
+		# 	K.bincount(y_true, minlength=num_classes, maxlength=num_classes, dtype=K.floatx()),
 		# 	shape=[1, num_classes])
 		#
-		# num_scored_items = tf.shape(y_pred)[0]
+		# num_scored_items = K.shape(y_pred)[0]
 		#
-		# expected_count = tf.matmul(hist_y_pred, hist_y_true) / tf.cast(num_scored_items, dtype=tf.float32)
+		# expected_count = K.matmul(hist_y_pred, hist_y_true) / K.cast(num_scored_items, dtype=K.floatx())
 		#
-		# numerator = tf.reduce_sum(cost_matrix * conf_mat)
-		# denominator = tf.reduce_sum(cost_matrix * expected_count)
+		# numerator = K.reduce_sum(cost_matrix * conf_mat)
+		# denominator = K.reduce_sum(cost_matrix * expected_count)
 		#
 		# if denominator == 0:
 		# 	return 0
@@ -54,19 +56,19 @@ def quadratic_weighted_kappa_cm(conf_mat, num_ratings, cost_matrix):
 	:param cost_matrix: cost_matrix.
 	:return: QWK value.
 	"""
-	conf_mat = tf.cast(conf_mat, dtype=tf.float32)
+	conf_mat = K.cast(conf_mat, dtype=K.floatx())
 
-	hist_rater_a = tf.cast(tf.reshape(tf.reduce_sum(conf_mat, axis=1), shape=[num_ratings, 1]),
-						   dtype=tf.float32)  # Sum every row
-	hist_rater_b = tf.cast(tf.reshape(tf.reduce_sum(conf_mat, axis=0), shape=[1, num_ratings]),
-						   dtype=tf.float32)  # Sum every column
+	hist_rater_a = K.cast(K.reshape(K.reduce_sum(conf_mat, axis=1), shape=[num_ratings, 1]),
+						   dtype=K.floatx())  # Sum every row
+	hist_rater_b = K.cast(K.reshape(K.reduce_sum(conf_mat, axis=0), shape=[1, num_ratings]),
+						   dtype=K.floatx())  # Sum every column
 
-	num_scored_items = tf.reduce_sum(conf_mat)  # Sum all the elements
+	num_scored_items = K.reduce_sum(conf_mat)  # Sum all the elements
 
-	expected_count = tf.matmul(hist_rater_a, hist_rater_b) / tf.cast(num_scored_items, dtype=tf.float32)
+	expected_count = K.matmul(hist_rater_a, hist_rater_b) / K.cast(num_scored_items, dtype=K.floatx())
 
-	numerator = tf.reduce_sum(cost_matrix * conf_mat)
-	denominator = tf.reduce_sum(cost_matrix * expected_count)
+	numerator = K.reduce_sum(cost_matrix * conf_mat)
+	denominator = K.reduce_sum(cost_matrix * expected_count)
 
 	return 1.0 - numerator / denominator
 
@@ -165,10 +167,10 @@ def np_quadratic_weighted_kappa(rater_a, rater_b, min_rating=None, max_rating=No
 
 
 def top_2_accuracy(y_true, y_pred):
-	return tf.keras.metrics.top_k_categorical_accuracy(y_true, y_pred, k=2)
+	return keras.metrics.top_k_categorical_accuracy(y_true, y_pred, k=2)
 
 def top_3_accuracy(y_true, y_pred):
-	return tf.keras.metrics.top_k_categorical_accuracy(y_true, y_pred, k=3)
+	return keras.metrics.top_k_categorical_accuracy(y_true, y_pred, k=3)
 
 def _compute_sensitivities(y_true, y_pred):
 	if y_true.shape[1] > 1:

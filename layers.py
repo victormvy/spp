@@ -1,6 +1,7 @@
-import tensorflow as tf
+import keras
+from keras import backend as K
 
-class GeometricLayer(tf.keras.layers.Layer):
+class GeometricLayer(keras.layers.Layer):
 	def __init__(self, **kwargs):
 		super(GeometricLayer, self).__init__(**kwargs)
 
@@ -10,4 +11,4 @@ class GeometricLayer(tf.keras.layers.Layer):
 		super(GeometricLayer, self).build(input_shape)
 
 	def call(self, inputs):
-		return tf.pow(1. - inputs, int(self.num_classes)) * inputs
+		return K.pow(1. - inputs, int(self.num_classes)) * inputs

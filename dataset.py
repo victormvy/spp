@@ -4,7 +4,7 @@ import os
 import math
 import h5py
 from sklearn.model_selection import train_test_split
-import tensorflow as tf
+import keras
 import cv2
 from PIL import Image
 from sklearn.utils.class_weight import compute_class_weight
@@ -166,7 +166,7 @@ class Dataset:
 
 
 	def _load_cifar10(self, split):
-		(x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
+		(x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
 
 		self._data = {}
 		self._data['x'] = []

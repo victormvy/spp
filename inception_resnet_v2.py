@@ -182,8 +182,8 @@ def inception_resnet_block(x, scale, block_type, block_idx, activation='relu'):
             x = activation(x)
     return x
 
-from tensorflow.keras import utils as keras_utils
-from tensorflow.keras import backend, layers, models
+from keras import utils as keras_utils
+from keras import backend, layers, models
 
 def InceptionResNetV2(include_top=True,
                       weights='imagenet',

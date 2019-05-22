@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-import tensorflow as tf
 
-from tensorflow.keras.layers import Layer, Input, Activation, Dense, Conv2D, MaxPool2D, AveragePooling2D, Flatten, Lambda
-from tensorflow.keras.initializers import Ones, constant
-from tensorflow.keras import backend as K
+from keras.layers import Layer, Input, Activation, Dense, Conv2D, MaxPool2D, AveragePooling2D, Flatten, Lambda
+from keras.initializers import Ones, constant
+from keras import backend as K
 import numpy as np
 
 class TauLayer(Layer):

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from tensorflow.keras.regularizers import l2
+from keras.regularizers import l2
 
-from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.initializers import Constant, he_normal
-from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, AveragePooling2D, \
+from keras.models import Model, Sequential
+from keras.initializers import Constant, he_normal
+from keras.layers import Input, Conv2D, MaxPooling2D, AveragePooling2D, \
 	Dense, Flatten, Activation, ZeroPadding2D, \
 	Add, Activation, BatchNormalization, GlobalAveragePooling2D
 

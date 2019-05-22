@@ -1,6 +1,7 @@
 import os
 import json
 import tensorflow as tf
+from keras import backend as K
 import gc
 from experiment import Experiment
 
@@ -116,7 +117,7 @@ class ExperimentSet:
 				if experiment.task != 'train': # 'test' or 'both'
 					experiment.evaluate()
 			# Clear session
-			tf.keras.backend.clear_session()
+			K.clear_session()
 
 			# Free memory
 			del experiment

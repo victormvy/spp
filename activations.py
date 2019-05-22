@@ -1,8 +1,9 @@
-import tensorflow as tf
 import math
+import keras
+from tensorflow import distributions, matrix_band_part, igamma, lgamma
+from keras import backend as K
 
-
-class SPP(tf.keras.layers.Activation):
+class SPP(keras.layers.Activation):
 	"""
 	Parametric softplus activation layer.
 	"""
@@ -20,12 +21,12 @@ def parametric_softplus(spp_alpha):
 	"""
 
 	def spp(x):
-		return tf.log(1 + tf.exp(x)) - spp_alpha
+		return K.log(1 + K.exp(x)) - spp_alpha
 
 	return spp
 
 
-class MPELU(tf.keras.layers.Layer):
+class MPELU(keras.layers.Layer):
 	def __init__(self, channel_wise=True, **kwargs):
 		super(MPELU, self).__init__(**kwargs)
 		self.channel_wise = channel_wise
@@ -36,19 +37,19 @@ class MPELU(tf.keras.layers.Layer):
 		if self.channel_wise:
 			shape = [int(input_shape[-1])]  # Number of channels
 
-		self.alpha = self.add_weight(name='alpha', shape=shape, dtype=tf.float32,
-									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+		self.alpha = self.add_weight(name='alpha', shape=shape, dtype=K.floatx(),
+									 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
 									 trainable=True)
-		self.beta = self.add_weight(name='beta', shape=shape, dtype=tf.float32,
-									initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+		self.beta = self.add_weight(name='beta', shape=shape, dtype=K.floatx(),
+									initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
 									trainable=True)
 
 		# Finish buildidng
 		super(MPELU, self).build(input_shape)
 
 	def call(self, inputs):
-		positive = tf.nn.relu(inputs)
-		negative = self.alpha * (tf.exp(-tf.nn.relu(-inputs) * self.beta) - 1)
+		positive = K.nn.relu(inputs)
+		negative = self.alpha * (K.exp(-K.nn.relu(-inputs) * self.beta) - 1)
 
 		return positive + negative
 
@@ -56,74 +57,74 @@ class MPELU(tf.keras.layers.Layer):
 		return input_shape
 
 
-class RTReLU(tf.keras.layers.Layer):
+class RTReLU(keras.layers.Layer):
 	def __init__(self, **kwargs):
 		super(RTReLU, self).__init__(**kwargs)
 
 	def build(self, input_shape):
 		shape = [int(input_shape[-1])]  # Number of channels
 
-		self.a = self.add_weight(name='a', shape=shape, dtype=tf.float32,
-								 initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+		self.a = self.add_weight(name='a', shape=shape, dtype=K.floatx(),
+								 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
 								 trainable=False)
 
 		# Finish building
 		super(RTReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		return tf.nn.relu(inputs + self.a)
+		return K.nn.relu(inputs + self.a)
 
 	def compute_output_shape(self, input_shape):
 		return input_shape
 
 
-class RTPReLU(tf.keras.layers.PReLU):
+class RTPReLU(keras.layers.PReLU):
 	def __init__(self, **kwargs):
 		super(RTPReLU, self).__init__(**kwargs)
 
 	def build(self, input_shape):
 		shape = [int(input_shape[-1])]  # Number of channels
 
-		self.a = self.add_weight(name='a', shape=shape, dtype=tf.float32,
-								 initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+		self.a = self.add_weight(name='a', shape=shape, dtype=K.floatx(),
+								 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
 								 trainable=False)
 
 		# Call PReLU build method
 		super(RTPReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = tf.nn.relu(inputs + self.a)
-		neg = -self.alpha * tf.nn.relu(-(inputs * self.a))
+		pos = K.nn.relu(inputs + self.a)
+		neg = -self.alpha * K.nn.relu(-(inputs * self.a))
 
 		return pos + neg
 
 
-class PairedReLU(tf.keras.layers.Layer):
+class PairedReLU(keras.layers.Layer):
 	def __init__(self, scale=0.5, **kwargs):
 		super(PairedReLU, self).__init__(**kwargs)
 		self.scale = scale
 
 	def build(self, input_shape):
-		self.theta = self.add_weight(name='theta', shape=[1], dtype=tf.float32,
-									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+		self.theta = self.add_weight(name='theta', shape=[1], dtype=K.floatx(),
+									 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
 									 trainable=True)
-		self.theta_p = self.add_weight(name='theta_p', shape=[1], dtype=tf.float32,
-									   initializer=tf.random_uniform_initializer(minval=-1, maxval=1, dtype=tf.float32),
+		self.theta_p = self.add_weight(name='theta_p', shape=[1], dtype=K.floatx(),
+									   initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
 									   trainable=True)
 
 		# Finish building
 		super(PairedReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		return tf.concat(
-			(tf.nn.relu(self.scale * inputs - self.theta), tf.nn.relu(-self.scale * inputs - self.theta_p)),
+		return K.concatenate(
+			(K.nn.relu(self.scale * inputs - self.theta), K.nn.relu(-self.scale * inputs - self.theta_p)),
 			axis=len(inputs.get_shape()) - 1)
 
 	def compute_output_shape(self, input_shape):
 		return [input_shape[:-1], input_shape[-1] * 2]
 
 
-class EReLU(tf.keras.layers.Layer):
+class EReLU(keras.layers.Layer):
 	def __init__(self, alpha=0.5, **kwargs):
 		super(EReLU, self).__init__(**kwargs)
 		self.alpha = alpha
@@ -131,21 +132,21 @@ class EReLU(tf.keras.layers.Layer):
 	def build(self, input_shape):
 		shape = input_shape[1:]
 
-		self.k = self.add_weight(name='k', shape=shape, dtype=tf.float32,
-								 initializer=tf.random_uniform_initializer(minval=1 - self.alpha, maxval=1 + self.alpha,
-																		   dtype=tf.float32), trainable=False)
+		self.k = self.add_weight(name='k', shape=shape, dtype=K.floatx(),
+								 initializer=keras.initializers.RandomUniform(minval=1 - self.alpha, maxval=1 + self.alpha,
+																		   dtype=K.floatx()), trainable=False)
 
 		# Finish building
 		super(EReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		return tf.nn.relu(inputs * self.k)
+		return K.nn.relu(inputs * self.k)
 
 	def compute_output_shape(self, input_shape):
 		return input_shape
 
 
-class EPReLU(tf.keras.layers.PReLU):
+class EPReLU(keras.layers.PReLU):
 	def __init__(self, alpha=0.5, **kwargs):
 		super(EPReLU, self).__init__(**kwargs)
 		self.alpha = alpha
@@ -153,21 +154,21 @@ class EPReLU(tf.keras.layers.PReLU):
 	def build(self, input_shape):
 		shape = input_shape[1:]
 
-		self.k = self.add_weight(name='k', shape=shape, dtype=tf.float32,
-								 initializer=tf.random_uniform_initializer(minval=1 - self.alpha, maxval=1 + self.alpha,
-																		   dtype=tf.float32), trainable=False)
+		self.k = self.add_weight(name='k', shape=shape, dtype=K.floatx(),
+								 initializer=keras.initializers.RandomUniform(minval=1 - self.alpha, maxval=1 + self.alpha,
+																		   dtype=K.floatx()), trainable=False)
 
 		# Call PReLU build method
 		super(EPReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = tf.nn.relu(inputs * self.k)
-		neg = -self.alpha * tf.nn.relu(-(inputs))
+		pos = K.nn.relu(inputs * self.k)
+		neg = -self.alpha * K.nn.relu(-(inputs))
 
 		return pos + neg
 
 
-class SQRTActivation(tf.keras.layers.Layer):
+class SQRTActivation(keras.layers.Layer):
 	def __init__(self, **kwargs):
 		super(SQRTActivation, self).__init__(**kwargs)
 
@@ -175,217 +176,217 @@ class SQRTActivation(tf.keras.layers.Layer):
 		super(SQRTActivation, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = tf.sqrt(tf.nn.relu(inputs))
-		neg = - tf.sqrt(-tf.nn.relu(-inputs))
+		pos = K.sqrt(K.nn.relu(inputs))
+		neg = - K.sqrt(-K.nn.relu(-inputs))
 
 		return pos + neg
 
 
-class RReLu(tf.keras.layers.Layer):
+class RReLu(keras.layers.Layer):
 	def __init__(self, **kwargs):
 		super(RReLu, self).__init__(**kwargs)
 
 	def build(self, input_shape):
-		self.alpha = self.add_weight(name='alpha', shape=input_shape, dtype=tf.float32,
-									 initializer=tf.keras.initializers.RandomNormal(stddev=1))
+		self.alpha = self.add_weight(name='alpha', shape=input_shape, dtype=K.floatx(),
+									 initializer=keras.initializers.RandomNormal(stddev=1))
 
 		super(RReLu, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = tf.nn.relu(inputs)
-		neg = self.alpha * tf.nn.relu(-inputs)
+		pos = K.nn.relu(inputs)
+		neg = self.alpha * K.nn.relu(-inputs)
 
 		return pos + neg
 
 
-class PELU(tf.keras.layers.Layer):
+class PELU(keras.layers.Layer):
 	def __init__(self, **kwargs):
 		super(PELU, self).__init__(**kwargs)
 
 	def build(self, input_shape):
-		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=tf.float32,
-									 initializer=tf.random_uniform_initializer(minval=0.01,
+		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
+									 initializer=keras.initializers.RandomUniform(minval=0.01,
 																			   maxval=1,
-																			   dtype=tf.float32))
-		self.alpha = tf.clip_by_value(self.alpha, 0.0001, 10)
+																			   dtype=K.floatx()))
+		self.alpha = K.clip(self.alpha, 0.0001, 10)
 
-		self.beta = self.add_weight(name='beta', shape=(1,), dtype=tf.float32,
-									initializer=tf.random_uniform_initializer(minval=0.01,
+		self.beta = self.add_weight(name='beta', shape=(1,), dtype=K.floatx(),
+									initializer=keras.initializers.RandomUniform(minval=0.01,
 																			  maxval=1,
-																			  dtype=tf.float32))
-		self.beta = tf.clip_by_value(self.beta, 0.0001, 10)
+																			  dtype=K.floatx()))
+		self.beta = K.clip(self.beta, 0.0001, 10)
 
 		super(PELU, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = (self.alpha / self.beta) * tf.nn.relu(inputs)
-		neg = self.alpha * (tf.exp((-tf.nn.relu(-x)) / self.beta) - 1)
+		pos = (self.alpha / self.beta) * K.nn.relu(inputs)
+		neg = self.alpha * (K.exp((-K.nn.relu(-x)) / self.beta) - 1)
 
 		return pos + neg
 
 
-class SlopedReLU(tf.keras.layers.Layer):
+class SlopedReLU(keras.layers.Layer):
 	def __init__(self, **kwargs):
 		super(SlopedReLU, self).__init__(**kwargs)
 
 	def build(self, input_shape):
-		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=tf.float32,
-									 initializer=tf.random_uniform_initializer(minval=0.01,
+		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
+									 initializer=keras.initializers.RandomUniform(minval=0.01,
 																			   maxval=1,
-																			   dtype=tf.float32))
-		self.alpha = tf.clip_by_value(self.alpha, 0.0001, 10)
+																			   dtype=K.floatx()))
+		self.alpha = K.clip(self.alpha, 0.0001, 10)
 
 		super(SlopedReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		return tf.nn.relu(self.alpha * inputs)
+		return K.nn.relu(self.alpha * inputs)
 
 
-class PTELU(tf.keras.layers.Layer):
+class PTELU(keras.layers.Layer):
 	def __init__(self, **kwargs):
 		super(PTELU, self).__init__(**kwargs)
 
 	def build(self, input_shape):
-		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=tf.float32,
-									 initializer=tf.random_uniform_initializer(minval=0.01,
+		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
+									 initializer=keras.initializers.RandomUniform(minval=0.01,
 																			   maxval=1,
-																			   dtype=tf.float32))
-		self.alpha = tf.clip_by_value(self.alpha, 0.0001, 10)
+																			   dtype=K.floatx()))
+		self.alpha = K.clip(self.alpha, 0.0001, 10)
 
-		self.beta = self.add_weight(name='beta', shape=(1,), dtype=tf.float32,
-									initializer=tf.random_uniform_initializer(minval=0.01,
+		self.beta = self.add_weight(name='beta', shape=(1,), dtype=K.floatx(),
+									initializer=keras.initializers.RandomUniform(minval=0.01,
 																			  maxval=1,
-																			  dtype=tf.float32))
-		self.beta = tf.clip_by_value(self.beta, 0.0001, 10)
+																			  dtype=K.floatx()))
+		self.beta = K.clip(self.beta, 0.0001, 10)
 
 		super(PTELU, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = tf.nn.relu(inputs)
-		neg = self.alpha * tf.tanh(self.beta * tf.nn.relu(-inputs))
+		pos = K.nn.relu(inputs)
+		neg = self.alpha * K.tanh(self.beta * K.nn.relu(-inputs))
 
 		return pos + neg
 
 
-class NNPOM(tf.keras.layers.Layer):
+class CLM(keras.layers.Layer):
 	"""
 	Proportional Odds Model activation layer.
 	"""
 
 	def __init__(self, num_classes, link_function, p, use_tau, **kwargs):
 		self.num_classes = num_classes
-		self.dist = tf.distributions.Normal(loc=0., scale=1.)
+		self.dist = distributions.Normal(loc=0., scale=1.)
 		self.link_function = link_function
 		self.p = p.copy()
 		self.use_tau = use_tau
-		super(NNPOM, self).__init__(**kwargs)
+		super(CLM, self).__init__(**kwargs)
 
 	def _convert_thresholds(self, b, a):
-		a = tf.pow(a, 2)
-		thresholds_param = tf.concat([b, a], axis=0)
-		th = tf.reduce_sum(
-			tf.matrix_band_part(tf.ones([self.num_classes - 1, self.num_classes - 1]), -1, 0) * tf.reshape(
-				tf.tile(thresholds_param, [self.num_classes - 1]), shape=[self.num_classes - 1, self.num_classes - 1]),
+		a = K.pow(a, 2)
+		thresholds_param = K.concatenate([b, a], axis=0)
+		th = K.sum(
+			matrix_band_part(K.ones([self.num_classes - 1, self.num_classes - 1]), -1, 0) * K.reshape(
+				K.tile(thresholds_param, [self.num_classes - 1]), shape=[self.num_classes - 1, self.num_classes - 1]),
 			axis=1)
 		return th
 
 	def _nnpom(self, projected, thresholds):
 		if self.use_tau == 1:
-			projected = tf.reshape(projected, shape=[-1]) / self.tau
+			projected = K.reshape(projected, shape=[-1]) / self.tau
 		else:
-			projected = tf.reshape(projected, shape=[-1])
+			projected = K.reshape(projected, shape=[-1])
 
-		# projected = tf.Print(projected, data=[tf.reduce_min(projected), tf.reduce_max(projected), tf.reduce_mean(projected)], message='projected min max mean')
+		# projected = K.Print(projected, data=[K.reduce_min(projected), K.reduce_max(projected), K.reduce_mean(projected)], message='projected min max mean')
 
-		m = tf.shape(projected)[0]
-		a = tf.reshape(tf.tile(thresholds, [m]), shape=[m, -1])
-		b = tf.transpose(tf.reshape(tf.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
+		m = K.shape(projected)[0]
+		a = K.reshape(K.tile(thresholds, [m]), shape=[m, -1])
+		b = K.transpose(K.reshape(K.tile(projected, [self.num_classes - 1]), shape=[-1, m]))
 		z3 = a - b
 
-		# z3 = tf.cond(tf.reduce_min(tf.abs(z3)) < 0.01, lambda: tf.Print(z3, data=[tf.reduce_min(tf.abs(z3))], message='z3 abs min', summarize=100), lambda: z3)
+		# z3 = K.cond(K.reduce_min(K.abs(z3)) < 0.01, lambda: K.Print(z3, data=[K.reduce_min(K.abs(z3))], message='z3 abs min', summarize=100), lambda: z3)
 
 		if self.link_function == 'probit':
 			a3T = self.dist.cdf(z3)
 		elif self.link_function == 'cloglog':
-			a3T = 1 - tf.exp(-tf.exp(z3))
+			a3T = 1 - K.exp(-K.exp(z3))
 		elif self.link_function == 'glogit':
-			a3T = 1.0 / tf.pow(1.0 + tf.exp(-self.lmbd * (z3 - self.mu)), self.alpha)
+			a3T = 1.0 / K.pow(1.0 + K.exp(-self.lmbd * (z3 - self.mu)), self.alpha)
 		elif self.link_function == 'cauchit':
-			a3T = tf.atan(z3 / math.pi) + 0.5
+			a3T = K.atan(z3 / math.pi) + 0.5
 		elif self.link_function == 'lgamma':
-			a3T = tf.cond(self.q < 0, lambda: tf.igammac(tf.pow(self.q, -2), tf.pow(self.q, -2) * tf.exp(self.q * z3)),
-						  lambda: tf.cond(self.q > 0, lambda: tf.igamma(tf.pow(self.q, -2),
-																		tf.pow(self.q, -2) * tf.exp(self.q * z3)),
+			a3T = K.cond(self.q < 0, lambda: igammac(K.pow(self.q, -2), K.pow(self.q, -2) * K.exp(self.q * z3)),
+						  lambda: K.cond(self.q > 0, lambda: igamma(K.pow(self.q, -2),
+																		K.pow(self.q, -2) * K.exp(self.q * z3)),
 										  lambda: self.dist.cdf(z3)))
 		elif self.link_function == 'gauss':
-			# a3T = 1.0 / 2.0 + tf.sign(z3) * tf.igamma(1.0 / self.alpha, tf.pow(tf.abs(z3) / self.r, self.alpha)) / (2 * tf.exp(tf.lgamma(1.0 / self.alpha)))
-			# z3 = tf.Print(z3, data=[tf.reduce_max(tf.abs(z3))], message='z3 abs max')
-			a3T = 1.0 / 2.0 + (2 * tf.sigmoid(z3 - self.p['mu']) - 1) * tf.igamma(1.0 / self.p['alpha'],
-																	tf.pow(tf.pow((z3 - self.p['mu']) / self.p['r'], 2),
+			# a3T = 1.0 / 2.0 + K.sign(z3) * K.igamma(1.0 / self.alpha, K.pow(K.abs(z3) / self.r, self.alpha)) / (2 * K.exp(K.lgamma(1.0 / self.alpha)))
+			# z3 = K.Print(z3, data=[K.reduce_max(K.abs(z3))], message='z3 abs max')
+			a3T = 1.0 / 2.0 + (2 * K.sigmoid(z3 - self.p['mu']) - 1) * igamma(1.0 / self.p['alpha'],
+																	K.pow(K.pow((z3 - self.p['mu']) / self.p['r'], 2),
 																		   self.p['alpha'])) / (
-								  2 * tf.exp(tf.lgamma(1.0 / self.p['alpha'])))
+								  2 * K.exp(lgamma(1.0 / self.p['alpha'])))
 		elif self.link_function == 'expgauss':
 			u = self.lmbd * (z3 - self.mu)
 			v = self.lmbd * self.sigma
-			dist1 = tf.distributions.Normal(loc=0., scale=v)
-			dist2 = tf.distributions.Normal(loc=v, scale=tf.pow(v, 2))
-			a3T = dist1.cdf(u) - tf.exp(-u + tf.pow(v, 2) / 2 + tf.log(dist2.cdf(u)))
+			dist1 = distributions.Normal(loc=0., scale=v)
+			dist2 = distributions.Normal(loc=v, scale=K.pow(v, 2))
+			a3T = dist1.cdf(u) - K.exp(-u + K.pow(v, 2) / 2 + K.log(dist2.cdf(u)))
 		else:
-			a3T = 1.0 / (1.0 + tf.exp(-z3))
+			a3T = 1.0 / (1.0 + K.exp(-z3))
 
-		a3 = tf.concat([a3T, tf.ones([m, 1])], axis=1)
-		a3 = tf.concat([tf.reshape(a3[:, 0], shape=[-1, 1]), a3[:, 1:] - a3[:, 0:-1]], axis=-1)
+		a3 = K.concatenate([a3T, K.ones([m, 1])], axis=1)
+		a3 = K.concatenate([K.reshape(a3[:, 0], shape=[-1, 1]), a3[:, 1:] - a3[:, 0:-1]], axis=-1)
 
 		return a3
 
 	def build(self, input_shape):
 		self.thresholds_b = self.add_weight('b_b_nnpom', shape=(1,),
-											initializer=tf.random_uniform_initializer(minval=0, maxval=0.1))
+											initializer=keras.initializers.RandomUniform(minval=0, maxval=0.1))
 		self.thresholds_a = self.add_weight('b_a_nnpom', shape=(self.num_classes - 2,),
-											initializer=tf.random_uniform_initializer(
+											initializer=keras.initializers.RandomUniform(
 												minval=math.sqrt((1.0 / (self.num_classes - 2)) / 2),
 												maxval=math.sqrt(1.0 / (self.num_classes - 2))))
 
 		if self.use_tau == 1:
 			print('Using tau')
 			self.tau = self.add_weight('tau_nnpom', shape=(1,),
-									   initializer=tf.random_uniform_initializer(minval=1, maxval=10))
-			self.tau = tf.clip_by_value(self.tau, 1, 1000)
+									   initializer=keras.initializers.RandomUniform(minval=1, maxval=10))
+			self.tau = K.clip(self.tau, 1, 1000)
 
 		if self.link_function == 'glogit':
 			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,),
-										initializer=tf.random_uniform_initializer(minval=1, maxval=1))
+										initializer=keras.initializers.RandomUniform(minval=1, maxval=1))
 			self.alpha = self.add_weight('alpha_nnpom', shape=(1,),
-										 initializer=tf.random_uniform_initializer(minval=1, maxval=1))
+										 initializer=keras.initializers.RandomUniform(minval=1, maxval=1))
 			self.mu = self.add_weight('mu_nnpom', shape=(1,),
-									  initializer=tf.random_uniform_initializer(minval=0, maxval=0))
+									  initializer=keras.initializers.RandomUniform(minval=0, maxval=0))
 		elif self.link_function == 'lgamma':
 			self.q = self.add_weight('q_nnpom', shape=(1,),
-									 initializer=tf.random_uniform_initializer(minval=-1, maxval=1))
+									 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1))
 		elif self.link_function == 'gauss':
 			if not 'alpha' in self.p:
-				self.p['alpha'] = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(0.5))
-				self.p['alpha'] = tf.clip_by_value(self.p['alpha'], 0.1, 1.0)
+				self.p['alpha'] = self.add_weight('alpha_nnpom', shape=(1,), initializer=keras.initializers.Constant(0.5))
+				self.p['alpha'] = K.clip(self.p['alpha'], 0.1, 1.0)
 
 			if not 'r' in self.p:
-				self.p['r'] = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
-				self.p['r'] = tf.clip_by_value(self.p['r'], 0.05, 100)
+				self.p['r'] = self.add_weight('r_nnpom', shape=(1,), initializer=keras.initializers.Constant(1.0))
+				self.p['r'] = K.clip(self.p['r'], 0.05, 100)
 
 			if not 'mu' in self.p:
-				self.p['mu'] = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
+				self.p['mu'] = self.add_weight('mu_nnpom', shape=(1,), initializer=keras.initializers.Constant(0.0))
 
-			# self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=tf.constant_initializer(0.3))
-			# self.alpha = tf.clip_by_value(self.alpha, 0.2, 0.6)
+			# self.alpha = self.add_weight('alpha_nnpom', shape=(1,), initializer=keras.initializers.Constant(0.3))
+			# self.alpha = K.clip(self.alpha, 0.2, 0.6)
 			# self.alpha = 0.5
-			# self.r = self.add_weight('r_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
-			# self.r = tf.clip_by_value(self.r, 0.2, 100)
+			# self.r = self.add_weight('r_nnpom', shape=(1,), initializer=keras.initializers.Constant(1.0))
+			# self.r = K.clip(self.r, 0.2, 100)
 			# self.r = 0.3
-			# self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
+			# self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=keras.initializers.Constant(0.0))
 			# self.mu = 0.0
 		elif self.link_function == 'expgauss':
-			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=tf.constant_initializer(0.0))
-			self.sigma = self.add_weight('sigma_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
-			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=tf.constant_initializer(1.0))
+			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=keras.initializers.Constant(0.0))
+			self.sigma = self.add_weight('sigma_nnpom', shape=(1,), initializer=keras.initializers.Constant(1.0))
+			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=keras.initializers.Constant(1.0))
 
 
 	def call(self, x):
