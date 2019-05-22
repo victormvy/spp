@@ -551,7 +551,7 @@ class Experiment:
 							initial_epoch=start_epoch,
 							steps_per_epoch=steps,
 							callbacks=[#tf.keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-									   tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=15, mode='min', min_lr=1e-4, verbose=1),
+									   tf.keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, mode='min', min_lr=1e-4, verbose=1),
 									   tf.keras.callbacks.ModelCheckpoint(
 										   os.path.join(self.checkpoint_dir, self.model_file)),
 									   save_epoch_callback,
