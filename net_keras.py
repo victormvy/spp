@@ -4,6 +4,7 @@ from layers import GeometricLayer
 from resnet import Resnet_2x4
 
 from inception_resnet_v2 import InceptionResNetV2 as Irnv2
+from unimodal_extensions import _add_binom_m
 
 
 class Net:
@@ -306,6 +307,8 @@ class Net:
 			model.add(tf.keras.layers.Dense(1))
 			model.add(tf.keras.layers.BatchNormalization())
 			model.add(NNPOM(self.num_classes, 'expgauss', self.f_a_params, use_tau=self.use_tau))
+		elif self.final_activation == 'binomial':
+			_add_binom_m(model, self.num_classes, 1.0, 'sigm_learnable')
 		else:
 			model.add(tf.keras.layers.Dense(self.num_classes))
 			if self.prob_layer == 'geometric':

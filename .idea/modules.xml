@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Ordinal-Clasification-with-Residual-Networks/.idea/Ordinal-Clasification-with-Residual-Networks.iml" filepath="$PROJECT_DIR$/../Ordinal-Clasification-with-Residual-Networks/.idea/Ordinal-Clasification-with-Residual-Networks.iml" />
       <module fileurl="file://$PROJECT_DIR$/../deeplearningtf/.idea/deeplearningtf.iml" filepath="$PROJECT_DIR$/../deeplearningtf/.idea/deeplearningtf.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/spp.iml" filepath="$PROJECT_DIR$/.idea/spp.iml" />
     </modules>
