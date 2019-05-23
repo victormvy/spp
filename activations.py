@@ -321,7 +321,8 @@ class CLM(keras.layers.Layer):
 		elif self.link_function == 'gauss':
 			# a3T = 1.0 / 2.0 + K.sign(z3) * K.igamma(1.0 / self.alpha, K.pow(K.abs(z3) / self.r, self.alpha)) / (2 * K.exp(K.lgamma(1.0 / self.alpha)))
 			# z3 = K.Print(z3, data=[K.reduce_max(K.abs(z3))], message='z3 abs max')
-			a3T = 1.0 / 2.0 + (2 * K.sigmoid(z3 - self.p['mu']) - 1) * igamma(1.0 / self.p['alpha'],
+			# K.sigmoid(z3 - self.p['mu']) - 1)
+			a3T = 1.0 / 2.0 + K.tanh(z3 - self.p['mu']) * igamma(1.0 / self.p['alpha'],
 																	K.pow(K.pow((z3 - self.p['mu']) / self.p['r'], 2),
 																		   self.p['alpha'])) / (
 								  2 * K.exp(lgamma(1.0 / self.p['alpha'])))

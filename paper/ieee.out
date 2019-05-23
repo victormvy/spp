@@ -1,0 +1,23 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Related works}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Simply using an ordinal evaluation metric.}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Solving the ordinal problem as multiple binary sub-problems}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Using an ordinal loss function}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Unimodal probability distributions}{section.2}% 6
+\BOOKMARK [1][-]{section.3}{Model proposal}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Cumulative Link Model \(CLM\)}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.2}{Continuous Quadratic Weighted Kappa \(QWK\) loss function}{section.3}% 9
+\BOOKMARK [1][-]{section.4}{Experiments}{}% 10
+\BOOKMARK [2][-]{subsection.4.1}{Data}{section.4}% 11
+\BOOKMARK [3][-]{subsubsection.4.1.1}{Diabetic Retinopathy \(DR\)}{subsection.4.1}% 12
+\BOOKMARK [3][-]{subsubsection.4.1.2}{Adience}{subsection.4.1}% 13
+\BOOKMARK [2][-]{subsection.4.2}{Model}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.3}{Experimental design}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.4}{Factors}{section.4}% 16
+\BOOKMARK [1][-]{section.5}{Results}{}% 17
+\BOOKMARK [2][-]{subsection.5.1}{Diabetic Retinopathy}{section.5}% 18
+\BOOKMARK [2][-]{subsection.5.2}{Adience}{section.5}% 19
+\BOOKMARK [2][-]{subsection.5.3}{Statistical analysis}{section.5}% 20
+\BOOKMARK [2][-]{subsection.5.4}{Comparison with nominal method and previous works}{section.5}% 21
+\BOOKMARK [1][-]{section.6}{Conclusions}{}% 22
+\BOOKMARK [1][-]{section*.1}{References}{}% 23
