@@ -97,9 +97,9 @@ def _resnet_2x4(l_in, nf=(32, 64, 128, 256), N=2, activation='relu'):
 	# layer = AveragePooling2D(pool_size=int(layer.get_shape()[-1]), strides=1, padding='valid')(layer)
 	layer = GlobalAveragePooling2D(data_format='channels_last')(layer)
 
-	layer = Flatten()(layer)
+	# layer = Flatten()(layer)
 
-	model = Sequential([Model(l_in, layer, name='resnet2x4')])
+	model = Model(l_in, layer, name='resnet2x4')
 
 	return model
 
