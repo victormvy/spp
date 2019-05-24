@@ -485,7 +485,7 @@
 	% 
 	% Here we have the typical use of a "T" for an initial drop letter
 	% and "HIS" in caps to complete the first word.
-	\IEEEPARstart{D}{eep learning}, introduced by Yann Lecun~\cite{lecun2015deep}, combines multiple machine learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{cirecsan2012multi,he2016deep,krizhevsky2012imagenet}, speech recognition~\cite{hinton2012deep}, control problems~\cite{mnih2015human}, object detection~\cite{jiang2016speed,girshick2014rich}, privacy and security protection~\cite{yu2017iprivacy,yuan2019adversarial,tan2018deep}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{long2015fully} and image retrieval~\cite{li2015weakly}. Convolutional Neural Networks (CNN) are one of the types of deep networks that are designed to process data that come in the form of multiple arrays. CNNs are appropriate for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,sun2013deep,ronneberger2015u}. For images, each colour channel is represented by a 2D array, and convolutional layers extract the main features from the pixels, and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the CNN, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. However, the softmax may not be the best option depending on the problem considered.
+	\IEEEPARstart{D}{eep learning}, introduced by Yann Lecun~\cite{lecun2015deep}, combines multiple machine learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{cirecsan2012multi,he2016deep,krizhevsky2012imagenet}, speech recognition~\cite{hinton2012deep}, control problems~\cite{mnih2015human}, object detection~\cite{jiang2016speed,girshick2014rich}, privacy and security protection~\cite{yu2017iprivacy,yuan2019adversarial,tan2018deep}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{long2015fully} and image retrieval~\cite{li2015weakly,jin2018deep}. Convolutional Neural Networks (CNN) are one of the types of deep networks that are designed to process data that come in the form of multiple arrays. CNNs are appropriate for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,sun2013deep,ronneberger2015u}. For images, each colour channel is represented by a 2D array, and convolutional layers extract the main features from the pixels, and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the CNN, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. However, the softmax may not be the best option depending on the problem considered.
 	
 	Ordinal classification problems are those classification tasks where labels are ordered, and there are different inter-classes importances for each pair of categories. This kind of problem can be treated as nominal classification, but this discards the ordinal information. A better approach is to use specific methods that take the ordinality into account to improve the performance of the classification model. The Proportional Odds Model (POM)~\cite{mccullagh1980regression} is an ordinal alternative to the binary logistic regression. It belongs to a wider family of models called Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs are inspired in the concept of a latent variable that is projected into a 1-dimensional space and a set of thresholds that divides the projection into the different ordinal levels. A link function needs to be specified, which can be of different types, although the most common option is the \texttt{logit}, which is used in POM. In this paper, we explore different existing alternatives, as explained in depth in Section \ref{sect:ordinalproblem}.
 	
@@ -507,16 +507,12 @@
 
 	\subsection{Solving the ordinal problem as multiple binary sub-problems}
 	
-%		\textbf{(Binarización. Resolución de varios subproblemas.)}
 	Z. Niu et al. \cite{niu2016ordinal} proposed a learning approach to address ordinal regression problems using CNNs. They divided the problem into a series of binary classification sub-problems and proposed a multiple output CNN optimization algorithm to collectively solve these classification sub-problems, taking into account the correlation between them.
 	
-%		\textbf{(Binarización. Resolución de varios subproblemas.)}
 	H. Li et al. \cite{li2017deep} applied deep learning techniques for solving the ordinal problem of Alzheimer's diagnosis and detecting the different levels of the disease as multiple binary sub-problems.
 	
-%		\textbf{(Binarización. Resolución de varios subproblemas.)}
 	Y. Liu et al. \cite{liu2017deep} proposed a new approach which transforms the ordinal regression problem to binary classification sub-problems and use triplets with instances from different categories to train deep neural networks. In this way, high-level features describing the ordinal relationships are extracted automatically. Given that triplets must be generated, this approach is only recommended for small datasets.
 	
-%		\textbf{(Binarización. Resolución de varios subproblemas.)}
 	S. Chen et al. \cite{chen2017using} proposed a deep learning method termed Ranking-CNN. This method combines multiple binary CNNs that are trained with ordinal age labels. The binary outputs are aggregated for the final age prediction. They achieved a tighter error bound for ranking-based age estimation.
 	
 	In general, all these approaches increment the number of parameters to adjust, as several binary classifiers are simultaneously learnt.
@@ -524,20 +520,14 @@
 	
 	\subsection{Using an ordinal loss function}
 	
-%		\textbf{(Función de coste ordinal)}
 	J. de la Torre et al.~\cite{de2018weighted} proposed the use of a continuous version of the quadratic weighted kappa (QWK) metric as loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function using three different datasets, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces overfitting and training time. Also, they checked the importance of hyper-parameter tuning.
 	
-%		\textbf{(Funcion de coste ordinal)}
 	A. Rios et al. \cite{rios2017ordinal} presented a CNN model designed to handle ordinal regression tasks on psychiatric notes. They combined an ordinal loss function, a CNN model and conventional feature engineering. Also, they applied a technique called Locally Interpretable Model-agnostic Explanation (LIME) to make the non-linear model more interpretable.
 	
-%		\textbf{(Funcion de coste ordinal)}
 	H. Fu et al. \cite{fu2018deep} applied deep learning techniques to Monocular Depth Estimation. They introduced a spacing-increasing discretization strategy to treat the problem as an ordinal regression problem. They improved the performance when training the network with an ordinal regression loss. Also, they used a multi-scale network structure that avoids unnecessary spatial pooling.
-%	\textcolor{red}{La parte ordinal no queda muy clara}
 	
-%		\textbf{(Funcion de coste ordinal)}
 	A. Pal et al. \cite{pal2018severity} defined a loss function for CNN that is based on the Earth Mover's Distance and takes into account the ordinal class relationships.
 	
-%		\textbf{(Multi-clase con restricciones)}
 	Y. Liu et al. \cite{liu2018constrained} proposed a constrained optimization formulation for the ordinal regression problem which minimizes the negative loglikelihood for a multi-class problem constrained by the order relationship between instances.	
 	
 	Although the use of these losses introduces the ordinality in model learning, the nature of the models remain nominal.
@@ -545,37 +535,9 @@
 	
 	\subsection{Unimodal probability distributions}
 
-	%\textbf{(Función de coste ordinal y distribución unimodal.)}
 	C. Beckham and C. Pal~\cite{beckham2017unimodal} proposed a straightforward technique to constrain discrete ordinal probability distributions to be unimodal, via the use of the Poisson and binomial probability distributions. The parameters of these distributions were learnt by using a deep neural network. They evaluated this approach on two large ordinal image datasets, including the Adience dataset used in this paper, obtaining promising results. They also included a simple squared-error reformulation \cite{beckham2016simple} that was sensitive to class ordering.
 	
-	This approach is the one most related to the CLMs considered in this paper. However, CLMs indirectly model a latent space together with the set of threshold separating the ordered classes, which provides a more flexible and interpretable approach to deep ordinal classification.
-
-	
-	
-%	The QWK metric is defined as follows:
-%	\begin{equation}
-%	\nonumber
-%	\text{QWK} = 1 - \frac{\sum\limits^N_{i,j} \omega_{i,j} O_{i,j}}{\sum\limits^N_{i,j} \omega_{i,j} E_{i,j}},
-%	\end{equation}
-%	where $N$ is the number of samples rated, $\omega$ is the penalization matrix (in this case, quadratic weights are considered), $O$ is the confusion matrix, $E_{ij} = \frac{O_{i\bullet} O_{\bullet j}}{N}$, $O_{i\bullet}$ is the sum of the $i\text{-th}$ row and $O_{\bullet j}$ is the sum of the $j\text{-th}$ column.
-%	
-%	Then, they provided a continuous version of the QWK metric ($\text{QWK}_c$) based on the probabilities of the predictions:
-%	\begin{equation}
-%	\nonumber
-%	\text{QWK}_c = 1 - \frac{\sum\limits_{k=1}^N \sum\limits_{q=1}^Q \omega_{t_k, q} P(y = \mathcal{C}_q | \mathbf{x}_k)}{\sum\limits_{i=1}^Q \frac{N_i}{N} \sum\limits_{j=1}^Q \left( \omega_{i,j} \sum\limits_{k=1}^N P(y = \mathcal{C}_j | \mathbf{x}_k)\right)},
-%	\end{equation}
-%	where $\text{QWK}_c \in [-1,1]$, $\mathbf{x}_k$ and $t_k$ are the input vector and the real class of the $k$-th sample, respectively, $Q$ is the number of classes, $N$ is the number of samples, $N_i$ is the number of samples of the $i$-th class, $P(y = \mathcal{C}_q | \mathbf{x}_k)$ is the probability that the $k$-th sample belongs to class $\mathcal{C}_q$ and $\omega_{i,j}$ are the elements of the penalization matrix. Generally, $\omega_{i,j} = \frac{|i-j|^n}{(C-1)^n}$, where $\omega_{i,j} \in [0,1]$.
-%	
-%	Then, they defined the loss function based on the QWK as follows:
-%	\begin{equation}
-%	\nonumber
-%	\mathscr{L} = \log(1 - \text{QWK}_c),
-%	\end{equation}
-%	where $\mathscr{L} \in [-\infty, \log 2]$. $\mathscr{L}$ should be minimized, while the $\text{QWK}_c$ metric should be maximized.
-	
-		
-%	\textcolor{red}{Yo intentaría organizar un poco el análisis que has hecho. Por ejemplo, podrías distinguir entre trabajos que modifican la función de error o los que modifican el modelo (ya sea aplicando binarización o utilizando distribuciones unimodales). o los que hacen las dos cosas. También habría que ir poniendo posibles pegas a cada artículo y destacar las ventajas de lo que proponemos (se impone una distribución unimodal, sin aplicar binarización, junco con una versión continua de una de las funciones d eerror más usadas)}
-	
+	This approach is the one most related to the CLMs considered in this paper. However, CLMs indirectly model a latent space together with the set of threshold separating the ordered classes, which provides a more flexible and interpretable approach to deep ordinal classification.	
 	
 	\section{Model proposal}
 	\label{sect:modelProposal}
@@ -778,53 +740,6 @@
 		f(\mathbf{x}) = \frac{l(\mathbf{x})}{\tau}.
 	\end{equation}
 	where $\tau$ is optimized as a free parameter.
-	
-%	\begin{table}[!t]
-%		\caption{Description of the architecture used in the DR experiments.}
-%		\label{table:CNNArchitecture}
-%		\centering
-%		\begin{tabular}{lc}
-%			\hline
-%			\hline
-%			\textbf{Layer} & \textbf{Output shape}\\
-%			\hline
-%			2 x Conv3x3@32s1 & 252x252x32\\
-%			MaxPool2x2s2 & 126x126x32\\
-%			2 x Conv3x3@64s1 & 122x122x64\\
-%			MaxPool2x2s2 & 61x61x64\\
-%			2 x Conv3x3@128s1 & 57x57x128\\
-%			MaxPool2x2s2 & 28x28x128\\
-%			2 x Conv3x3@128s1 & 24x24x128\\
-%			MaxPool2x2s2 & 12x12x128\\		
-%			Conv4x4@128s1 & 9x9x128\\
-%			\hline
-%			\hline
-%		\end{tabular}	
-%	\end{table}
-%	
-%	\begin{table}[!t]
-%		\caption{Description of the architecture used in the Adience experiments.}
-%		\label{table:ResNetArchitecture}
-%		\centering
-%		\begin{tabular}{lc}
-%			\hline
-%			\hline
-%			\textbf{Layer} & \textbf{Output shape}\\
-%			\hline
-%			Conv7x7@32s2 & 112x112x32\\
-%			MaxPool3x3s2 & 55x55x32\\
-%			2 x ResBlock3x3@64s1 & 55x55x32\\
-%			1 x ResBlock3x3@128s2 & 28x28x64\\
-%			2 x ResBlock3x3@128s1 & 28x28x64\\
-%			1 x ResBlock3x3@256s2 & 14x14x128\\
-%			2 x ResBlock3x3@256s1 & 14x14x128\\
-%			1 x ResBlock3x3@512s2 & 7x7x256\\
-%			2 x ResBlock3x3@512s1 & 7x7x256\\
-%			AveragePool7x7s2 & 1x1x256\\
-%			\hline
-%			\hline
-%		\end{tabular}	
-%	\end{table}
 
 	\begin{table}[!t]
 		\caption{Description of the architecture used for each dataset.}
@@ -857,26 +772,9 @@
 		\eta = \eta_0 \cdot e^{-0.025 \cdot \text{epoch}}.
 	\end{equation}
 	
-%	Fig. \ref{fig:lrdecay} represents the learning rate decay across $100$ epochs for the different initial values considered in this work.
-%	\begin{figure}[!t]
-%		\centering
-%		\includegraphics[width=3in]{img/lr.pdf}
-%		\caption{Representation of the learning rate decay.}
-%		\label{fig:lrdecay}
-%	\end{figure}
-	
 	Both datasets are artificially balanced using data augmentation techniques~\cite{van2001art}. However, different transformations are applied to each one. DR dataset augmentation is based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. Horizontal flipping is the only transformation applied to the Adience dataset. These transformations are applied every time a new batch is loaded, and the parameters of each one are randomly chosen from a defined range ($[0.8, 1.2]$ for zooming, $[0.5, 1.5]$ for brightness and $[0, 90]$ degrees for rotation), providing a new set of transformed images for each batch. This technique reduces the overfitting risk and provides an important performance boost as we always work with different but similar images \cite{krizhevsky2012imagenet}.
 	
 	The epoch size is equal to the number of images in the training set. It could be a higher number as we are using data augmentation, but instead of increasing the epoch size, we rather run the training for more epochs. In this case, we set the maximum number of epochs to $100$. However, we always save the best model, that is evaluated when the training finishes.
-	
-	
-%	\textcolor{red}{Es importante distinguir entre función de coste (usada para el ajuste de los pesos en el algoritmo de entrenamiento) y función de evaluación (usada para evaluar los modelos, en test o validación). Yo en esta parte describiría la de evaluación no la de coste, que debería estar descrita con el algoritmo, como hicimos en el congreso}
-%	This evaluation measure gives a higher weight to the errors that are further from the correct class. A similar approach to the one described in \cite{de2018weighted} is used as the loss function as it gives better performance for ordinal classification problems. In this case, we define the QWK loss function ($\text{QWK}_c$) as follows:
-%	\begin{equation}
-%	\nonumber
-%	\text{QWK}_c = \frac{\sum\limits_{k=1}^N \sum\limits_{q=1}^Q \omega_{t_k, q} P(y = \mathcal{C}_q | \mathbf{x}_k)}{\sum\limits_{i=1}^Q \frac{N_i}{N} \sum\limits_{j=1}^Q ( \omega_{i,j} \sum\limits_{k=1}^N P(y = \mathcal{C}_j | \mathbf{x}_k))},
-%	\end{equation}
-%	where $\text{QWK}_c \in [0,2]$, $\mathbf{x}_k$ and $t_k$ are the input data and the real class of the $k$-th sample, $Q$ is the number of classes, $N$ is the number of samples, $N_i$ is the number of samples of the $i$-th class, $P(y = \mathcal{C}_q | \mathbf{x}_k)$ is the probability that the $k$-th sample belongs to class $\mathcal{C}_q$ (estimated using the CLM structure), and $\omega_{i,j}$ are the elements of the penalization matrix. In this case, $\omega_{i,j} = \frac{(i-j)^2}{(C-1)^2}$, where $\omega_{i,j} \in [0,1]$.
 	
 	The models are mainly evaluated using the QWK metric defined in Eq. \eqref{eq:qwk}. Also, other evaluation metrics are used to ease the comparison with alternative works:
 	\begin{itemize}
@@ -1014,124 +912,71 @@
 	
 	The ANOVA test~\cite{miller1997beyond} is one of the most widely used statistical techniques. ANOVA is essentially a method of analysing the variance to which a response is subject into its various components, corresponding to the sources of variation which can be identified. ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the LF, the LR for the Adam optimization algorithm, and the BS. We assume that five executions are enough to do the statistical tests because of the computational time limitations.
 	
-%	The test variable will be QWK, given by Eq. \eqref{eq:qwk}. We denote by $\text{QWK}_{i,j,k,l}(i,j,k\in \{1, 2, 3\})$ the value observed when the first factor is at the $i$-th level, the second at the $j$-th level and the third at the $k$-th level. We assume that the three factors do not act independently, and, therefore, there exists an interaction between each pair of them and between the three factors. In this case, the observations fit:
-%	\begin{equation}
-%	\nonumber
-%	\begin{aligned}
-%	\footnotesize
-%	\text{QWK}_{i,j,k,l} = \mu & + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l},
-%	\label{eq:anova3}
-%	\end{aligned}
-%	\end{equation}
-%	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the LF factor (\texttt{logit}, \texttt{probit}, \texttt{clog-log}); $P_j$ is the effect associated with the \textit{j-th} level of the LR factor and $B_k$ is the effect associated with the \textit{k-th} level of the BS factor. The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the results of everything that could not be evaluated or of random factors.
+	%	The test variable will be QWK, given by Eq. \eqref{eq:qwk}. We denote by $\text{QWK}_{i,j,k,l}(i,j,k\in \{1, 2, 3\})$ the value observed when the first factor is at the $i$-th level, the second at the $j$-th level and the third at the $k$-th level. We assume that the three factors do not act independently, and, therefore, there exists an interaction between each pair of them and between the three factors. In this case, the observations fit:
+	%	\begin{equation}
+	%	\nonumber
+	%	\begin{aligned}
+	%	\footnotesize
+	%	\text{QWK}_{i,j,k,l} = \mu & + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l},
+	%	\label{eq:anova3}
+	%	\end{aligned}
+	%	\end{equation}
+	%	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the LF factor (\texttt{logit}, \texttt{probit}, \texttt{clog-log}); $P_j$ is the effect associated with the \textit{j-th} level of the LR factor and $B_k$ is the effect associated with the \textit{k-th} level of the BS factor. The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the results of everything that could not be evaluated or of random factors.
 	
 	%	We consider the null hypothesis that each term of the above equation is independent of the levels involved. The hypotheses for the levels of the L factor are $H_0 \equiv \left( L_1 = L_2 = L_3 \right),$ and $H_1 \equiv \left( \exists i,j | L_i\neq L_j\right)$. The same hypotheses are made for the other factors. 	The hypothesis associated with the interaction between $L$ and $P$ is $H_0 \equiv \left(LP_{i,j} = 0, \forall i,j\right)$, and $H_1 \equiv \left(\exists LP_{i,j} \ne 0\right)$. Similar hypotheses can be assumed for the interaction between the other factors.
 	
 	%	The ANOVA table represents the study in a compact form, containing the sum of squares, degrees of freedom, mean square value, test statistics and significance levels, where non-significative factors and interactions have been removed ($\text{p-value} > 0.05$). These factors and interactions take part on the error component. In this way, the results of the ANOVA III test for the DR dataset are summarised in Table  \ref{table:ANOVARetinopathy}.
 	The ANOVA test results show that there are significant differences in average QWK depending on the LF and also depending on the LR for $\alpha=0.05$ ($\text{p-value} = 0.000$). Moreover, an interaction between the LF and the LR can be recognised ($\text{p-value} = 0.001$).
 		
-%	\begin{table}[!t]
-%		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Retinopathy dataset.}
-%		\label{table:ANOVARetinopathy}
-%		\centering
-%		\small
-%		\begin{tabular}{lccccc}
-%			\hline
-%			\hline
-%			           \multicolumn{6}{c}{Response variable QWK}             \\ \hline
-%			Source       &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
-%			Model        & $37.860$ &  $9$  & $4.207$ & $1562.840$ & $0.000$ \\
-%			$L$ factor   & $0.057$  &  $2$  & $0.029$ &  $10.646$  & $0.000$ \\
-%			$P$ factor   & $0.121$  &  $2$  & $0.060$ &  $22.468$  & $0.000$ \\
-%			$LP$ factors & $0.057$  &  $4$  & $0.014$ &  $5.261$   & $0.001$ \\
-%			Error        & $0.339$  & $126$ & $0.003$ &            &  \\ \hline
-%			Total        & $38.199$ & $135$ &         &            & \\
-%			\hline
-%			\hline
-%		\end{tabular}
-%	\end{table}
+	%	\begin{table}[!t]
+	%		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Retinopathy dataset.}
+	%		\label{table:ANOVARetinopathy}
+	%		\centering
+	%		\small
+	%		\begin{tabular}{lccccc}
+	%			\hline
+	%			\hline
+	%			           \multicolumn{6}{c}{Response variable QWK}             \\ \hline
+	%			Source       &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
+	%			Model        & $37.860$ &  $9$  & $4.207$ & $1562.840$ & $0.000$ \\
+	%			$L$ factor   & $0.057$  &  $2$  & $0.029$ &  $10.646$  & $0.000$ \\
+	%			$P$ factor   & $0.121$  &  $2$  & $0.060$ &  $22.468$  & $0.000$ \\
+	%			$LP$ factors & $0.057$  &  $4$  & $0.014$ &  $5.261$   & $0.001$ \\
+	%			Error        & $0.339$  & $126$ & $0.003$ &            &  \\ \hline
+	%			Total        & $38.199$ & $135$ &         &            & \\
+	%			\hline
+	%			\hline
+	%		\end{tabular}
+	%	\end{table}
 	
 	Given that there exist significant differences between the means, we analyse now these differences. A post-hoc multiple comparison test has been performed on the mean QWK obtained. An HSD Tukey's test \cite{tukey1949comparing} has been selected under the null hypothesis that the variance of the error of the dependent variable is the same between the groups. The results of this test over the test set are shown in Table \ref{table:Tukey}. They show that the best LF is the \texttt{clog-log} but the \texttt{probit} link performance is close to it. Also, the best value for the LR parameter is $10^{-3}$. The BS is not relevant for this dataset with the values considered.
-%		
-%	\begin{table}[!t]
-%		\caption{Tukey's test results for the DR dataset.}
-%		\label{table:TukeyDR}
-%		\centering
-%		\begin{tabular}{cccc}
-%			\hline\hline
-%			       LF         &        LF         & Mean diff. &  Sig.   \\ \hline
-%			 \texttt{logit}   &  \texttt{probit}  &  $-0.002$  & $0.011$ \\
-%			                  & \texttt{clog-log} &  $0.012$   & $0.000$ \\
-%			 \texttt{probit}  &  \texttt{logit}   &  $0.002$   & $0.011$ \\
-%			                  & \texttt{clog-log} &  $0.014$   & $0.248$ \\
-%			\texttt{clog-log} &  \texttt{logit}   &  $-0.012$  & $0.000$ \\
-%			                  &  \texttt{probit}  &  $-0.014$  & $0.248$ \\ \hline\hline
-%			       LR         &        LR         & Mean diff. &  Sig.   \\ \hline
-%			    $10^{-2}$     &     $10^{-3}$     &  $-0.073$  & $0.000$ \\
-%			                  &     $10^{-4}$     &  $-0.044$  & $0.000$ \\
-%			    $10^{-3}$     &     $10^{-2}$     &  $0.073$   & $0.000$ \\
-%			                  &     $10^{-4}$     &  $0.029$   & $0.023$ \\
-%			    $10^{-4}$     &     $10^{-2}$     &  $0.044$   & $0.000$ \\
-%			                  &     $10^{-3}$     &  $-0.029$  & $0.023$ \\ \hline\hline
-%		\end{tabular}
-%	\end{table}
 	
-%	\begin{table}[!t]
-%		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Adience dataset.}
-%		\label{table:ANOVAAdience}
-%		\centering
-%		\small
-%		\begin{tabular}{lccccc}
-%			\hline\hline
-%			            \multicolumn{6}{c}{Response variable QWK}             \\ \hline
-%			Source        &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
-%			Model         & $84.372$ & $27$  & $3.125$ & $4414.006$ & $0.000$ \\
-%			$L$ factor    & $0.156$  &  $2$  & $0.078$ & $110.103$  & $0.000$ \\
-%			$P$ factor    & $0.925$  &  $2$  & $0.462$ & $653.163$  & $0.000$ \\
-%			$B$ factor    & $0.040$  &  $2$  & $0.020$ &  $28.218$  & $0.000$ \\
-%			$LP$ factors  & $0.284$  &  $4$  & $0.071$ & $100.118$  & $0.000$ \\
-%			$LB$ factors  & $0.008$  &  $4$  & $0.002$ &  $2.837$   & $0.028$ \\
-%			$PB$ factors  & $0.026$  &  $4$  & $0.007$ &  $9.267$   & $0.000$ \\
-%			$LPB$ factors & $0.021$  &  $8$  & $0.003$ &  $3.728$   & $0.001$ \\
-%			Error         & $0.076$  & $108$ & $0.001$ &            &  \\ \hline
-%			Total         & $84.449$ & $135$ &         &            &  \\ \hline\hline
-%		\end{tabular}
-%	\end{table}
-%	
+	%	\begin{table}[!t]
+	%		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Adience dataset.}
+	%		\label{table:ANOVAAdience}
+	%		\centering
+	%		\small
+	%		\begin{tabular}{lccccc}
+	%			\hline\hline
+	%			            \multicolumn{6}{c}{Response variable QWK}             \\ \hline
+	%			Source        &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
+	%			Model         & $84.372$ & $27$  & $3.125$ & $4414.006$ & $0.000$ \\
+	%			$L$ factor    & $0.156$  &  $2$  & $0.078$ & $110.103$  & $0.000$ \\
+	%			$P$ factor    & $0.925$  &  $2$  & $0.462$ & $653.163$  & $0.000$ \\
+	%			$B$ factor    & $0.040$  &  $2$  & $0.020$ &  $28.218$  & $0.000$ \\
+	%			$LP$ factors  & $0.284$  &  $4$  & $0.071$ & $100.118$  & $0.000$ \\
+	%			$LB$ factors  & $0.008$  &  $4$  & $0.002$ &  $2.837$   & $0.028$ \\
+	%			$PB$ factors  & $0.026$  &  $4$  & $0.007$ &  $9.267$   & $0.000$ \\
+	%			$LPB$ factors & $0.021$  &  $8$  & $0.003$ &  $3.728$   & $0.001$ \\
+	%			Error         & $0.076$  & $108$ & $0.001$ &            &  \\ \hline
+	%			Total         & $84.449$ & $135$ &         &            &  \\ \hline\hline
+	%		\end{tabular}
+	%	\end{table}
+	
 	The results of the ANOVA III test for the Adience dataset, first, demonstrate that there exist significant differences in average QWK concerning the three factors ($\text{p-value} = 0.000$). Secondly, we found interactions between all the pairs of factors and between all the three factors together (p-values $0.000$, $0.000$, $0.000$ and $0.001$, respectively).
 	
 	As we did for the DR dataset, a post-hoc multiple comparison test has been performed on the average QWK obtained for Adience. Under the null hypothesis that the variance of the error of the dependent variable is the same between the groups, the HSD Tukey's test has been applied. The results of this test over the test set are shown in Table \ref{table:Tukey}.
 	
-%	\begin{table}[!t]
-%		\caption{Tukey's test results for the Adience dataset.}
-%		\label{table:TukeyAdience}
-%		\centering
-%		\begin{tabular}{cccc}
-%			\hline\hline
-%			       LF         &        LF         & Mean diff. &  Sig.   \\ \hline
-%			 \texttt{logit}   &  \texttt{probit}  &  $0.046$   & $0.000$ \\
-%			                  & \texttt{clog-log} &  $0.084$   & $0.000$ \\
-%			 \texttt{probit}  &  \texttt{logit}   &  $-0.046$  & $0.000$ \\
-%			                  & \texttt{clog-log} &  $0.038$   & $0.000$ \\
-%			\texttt{clog-log} &  \texttt{logit}   &  $-0.084$  & $0.000$ \\
-%			                  &  \texttt{probit}  &  $-0.038$  & $0.000$ \\ \hline\hline
-%			       LR         &        LR         & Mean diff. &  Sig.   \\ \hline
-%			    $10^{-2}$     &     $10^{-3}$     &  $-0.046$  & $0.000$ \\
-%			                  &     $10^{-4}$     &  $0.148$   & $0.000$ \\
-%			    $10^{-3}$     &     $10^{-2}$     &  $0.046$   & $0.000$ \\
-%			                  &     $10^{-4}$     &  $0.194$   & $0.000$ \\
-%			    $10^{-4}$     &     $10^{-2}$     &  $-0.148$  & $0.000$ \\
-%			                  &     $10^{-3}$     &  $-0.194$  & $0.000$ \\ \hline\hline
-%			       BS         &        BS         & Mean diff. &  Sig.   \\ \hline
-%			       64         &        128        &  $-0.041$  & $0.026$ \\
-%			                  &        256        &  $-0.027$  & $0.000$ \\
-%			       128        &        64         &  $0.041$   & $0.026$ \\
-%			                  &        256        &  $0.014$   & $0.000$ \\
-%			       256        &        64         &  $0.027$   & $0.000$ \\
-%			                  &        128        &  $-0.014$  & $0.000$ \\ \hline\hline
-%		\end{tabular}
-%	\end{table}
-
 	\begin{table}[!t]
 		\caption{Tukey's test results for both datasets.}
 		\label{table:Tukey}
@@ -1175,43 +1020,6 @@
 	These results are included in Table \ref{table:Comparison}, together with the comparison against previous works of the state-of-the-art. All the results are given for the test set, except those from \cite{de2018weighted} (DR dataset), because the authors only provided validation results for $128\times 128$ images (however, validation results are usually better than test results). The results for \cite{beckham2017unimodal} were obtained by reproducing their experiments because they didn't provide exact results for test set that could be used to compare with our results. The proposed ordinal model outperforms all the other alternatives in terms of QWK. 
 	
 	The performance gain of CLM over the nominal version reaches $16.8\%$ for DR and $11.9\%$ for Adience dataset. The improvement of the ordinal method for DR is higher than that for Adience. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases. Moreover, when compared against alternative ordinal methods (many of them with a deep structure), CLMs are very competitive, possibly because of the flexibility provided by the threshold model structure (where the threshold of each class is independently adjusted).
-	
-%	\begin{table}[!t]
-%		\caption{Comparison between the best results of nominal, ordinal and previous works for the DR dataset.}
-%		\label{table:ComparisonDR}
-%		\scriptsize
-%		\centering
-%		\def\arraystretch{1.3}
-%		\begin{tabular}{lccc}
-%			\hline
-%			\hline
-%			Method                                   & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
-%			Ordinal network                          &    $0.582_{(0.016)}$    &    $0.723_{(0.004)}$    &        $0.868_{(0.002)}$         \\
-%			Nominal network                          &    $0.498_{(0.013)}$    &    $0.692_{(0.014)}$    &        $0.854_{(0.006)}$         \\
-%			J. Torre et al. \cite{de2018weighted}    &  $0.537_{(\text{-})}$   &            -            &                -                 \\
-%			À. Nebot et al. \cite{nebot2016diabetic} &  $0.555_{(\text{-})}$   &            -            &                -					\\
-%			\hline
-%			\hline
-%		\end{tabular}
-%	\end{table}
-%	
-%	\begin{table}[!t]
-%		\caption{Comparison between the best results of nominal, ordinal and previous works for the Adience dataset.}
-%		\label{table:ComparisonAdience}
-%		\scriptsize
-%		\centering
-%		\def\arraystretch{1.3}
-%		\begin{tabular}{lccc}
-%			\hline\hline
-%			Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
-%			Ordinal network                           &    $0.881_{(0.005)}$    &    $0.519_{(0.013)}$    &        $0.894_{(0.005)}$         \\
-%			Nominal network                           &    $0.787_{(0.004)}$    &    $0.458_{(0.008)}$    &        $0.800_{(0.007)}$         \\
-%			Beckham et al. \cite{beckham2017unimodal} &    $0.855_{(0.012)}$    &    $0.467_{(0.019)}$    &        $0.867_{(0.011)}$         \\
-%			E. Eidinger et al. \cite{eidinger2014age} &            -            &    $0.451_{(0.026)}$    &        $0.807_{(0.011)}$         \\
-%			J.-C. Chen et al. \cite{chen2016cascaded} &            -            &    $0.529_{(0.060)}$    &        $0.885_{(0.022)}$         \\
-%			G. Levi et al. \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$         \\ \hline\hline
-%		\end{tabular}
-%	\end{table}
 
 	\begin{table}[!t]
 		\caption{Comparison between the best results of nominal, ordinal and previous works for the both datasets.}

@@ -185,21 +185,26 @@ class Net:
 		return model
 
 	def inception_resnet_v2_custom(self):
-		model = keras.Sequential()
-		inception = Irnv2(include_top=False, input_shape=(self.size, self.size, self.num_channels),
-						  classes=self.num_classes, pooling='avg', activation=self.__get_activation())
+		input = keras.layers.Input(shape=(self.size, self.size, self.num_channels))
+		x = input
+		# Required size >= 75 x 75
+		size = self.size
+		if size < 75:
+			size = 75
+			x = keras.layers.ZeroPadding2D(padding=(75-self.size) // 2 + 1)(x)
 
-		# for layer in inception.layers:
-		# 	layer.trainable = False
+		x = Irnv2(input_tensor=x, include_top=False, input_shape=(size, size, self.num_channels),
+						  classes=self.num_classes, pooling='avg', activation=self.__get_activation())(x)
 
-		model.add(inception)
-		model.add(keras.layers.Flatten())
-		model.add(keras.layers.Dense(512))
+		x = keras.layers.Dense(512)(x)
 
 		if self.dropout > 0:
-			model.add(keras.layers.Dropout(rate=self.dropout))
+			x = keras.layers.Dropout(rate=self.dropout)(x)
 
-		model = self.__add_activation(model)
+		x = keras.layers.Dense(self.num_classes)(x)
+		x = keras.layers.Activation(self.final_activation)(x)
+
+		model = keras.models.Model(input, x)
 
 		return model
 
@@ -295,10 +300,10 @@ class Net:
 			model.add(keras.layers.Dense(1))
 			model.add(keras.layers.BatchNormalization())
 			model.add(CLM(self.num_classes, 'cauchit', self.f_a_params, use_tau=self.use_tau))
-		elif self.final_activation == 'clmgamma':
+		elif self.final_activation == 'clmggamma':
 			model.add(keras.layers.Dense(1))
 			model.add(keras.layers.BatchNormalization())
-			model.add(CLM(self.num_classes, 'lgamma', self.f_a_params, use_tau=self.use_tau))
+			model.add(CLM(self.num_classes, 'ggamma', self.f_a_params, use_tau=self.use_tau))
 		elif self.final_activation == 'clmgauss':
 			model.add(keras.layers.Dense(1))
 			model.add(keras.layers.BatchNormalization())

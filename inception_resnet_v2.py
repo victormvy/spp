@@ -134,6 +134,7 @@ def inception_resnet_block(x, scale, block_type, block_idx, activation='relu'):
         ValueError: if `block_type` is not one of `'block35'`,
             `'block17'` or `'block8'`.
     """
+
     if block_type == 'block35':
         branch_0 = conv2d_bn(x, 32, 1)
         branch_1 = conv2d_bn(x, 32, 1)
@@ -175,7 +176,6 @@ def inception_resnet_block(x, scale, block_type, block_idx, activation='relu'):
                       arguments={'scale': scale},
                       name=block_name)([x, up])
     if activation is not None:
-        x = layers.Activation(activation, name=block_name + '_ac')(x)
         if type(activation) is str:
             x = layers.Activation(activation, name=block_name + '_ac')(x)
         else:
@@ -184,6 +184,7 @@ def inception_resnet_block(x, scale, block_type, block_idx, activation='relu'):
 
 from keras import utils as keras_utils
 from keras import backend, layers, models
+from keras.engine.topology import get_source_inputs
 
 def InceptionResNetV2(include_top=True,
                       weights='imagenet',
@@ -353,7 +354,7 @@ def InceptionResNetV2(include_top=True,
     # Ensure that the model takes into account
     # any potential predecessors of `input_tensor`.
     if input_tensor is not None:
-        inputs = keras_utils.get_source_inputs(input_tensor)
+        inputs = get_source_inputs(input_tensor)
     else:
         inputs = img_input
 

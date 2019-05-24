@@ -332,6 +332,8 @@ class CLM(keras.layers.Layer):
 			dist1 = distributions.Normal(loc=0., scale=v)
 			dist2 = distributions.Normal(loc=v, scale=K.pow(v, 2))
 			a3T = dist1.cdf(u) - K.exp(-u + K.pow(v, 2) / 2 + K.log(dist2.cdf(u)))
+		elif self.link_function == 'ggamma':
+			a3T = igamma(self.p['d'] / self.p['p'], K.pow((z3 / self.p['a']), self.p['p'])) / K.exp(lgamma(self.p['d'] / self.p['p']))
 		else:
 			a3T = 1.0 / (1.0 + K.exp(-z3))
 
@@ -388,6 +390,10 @@ class CLM(keras.layers.Layer):
 			self.mu = self.add_weight('mu_nnpom', shape=(1,), initializer=keras.initializers.Constant(0.0))
 			self.sigma = self.add_weight('sigma_nnpom', shape=(1,), initializer=keras.initializers.Constant(1.0))
 			self.lmbd = self.add_weight('lambda_nnpom', shape=(1,), initializer=keras.initializers.Constant(1.0))
+		elif self.link_function == 'ggamma':
+			self._set_default_param('a', self.add_weight('a_clm', shape=(1,), initializer=keras.initializers.Constant(0.5)))
+			self._set_default_param('d', self.add_weight('d_clm', shape=(1,), initializer=keras.initializers.Constant(0.5)))
+			self._set_default_param('p', self.add_weight('p_clm', shape=(1,), initializer=keras.initializers.Constant(0.5)))
 
 
 	def call(self, x):
@@ -396,3 +402,7 @@ class CLM(keras.layers.Layer):
 
 	def compute_output_shape(self, input_shape):
 		return (input_shape[0], 1)
+
+	def _set_default_param(self, param, value):
+		if not param in self.p:
+			self.p[param] = value
