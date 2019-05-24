@@ -351,7 +351,7 @@
 
 \usepackage{array,booktabs}
 
-\usepackage{hyperref}
+\usepackage[bookmarks=false]{hyperref}
 
 % *** Do not adjust lengths that control margins, column widths, etc. ***
 % *** Do not use packages that alter fonts (such as pslatex).         ***
@@ -485,7 +485,7 @@
 	% 
 	% Here we have the typical use of a "T" for an initial drop letter
 	% and "HIS" in caps to complete the first word.
-	\IEEEPARstart{D}{eep learning}, introduced by Yann Lecun~\cite{lecun2015deep}, combines multiple machine learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{cirecsan2012multi,he2016deep,krizhevsky2012imagenet}, speech recognition~\cite{hinton2012deep}, control problems~\cite{mnih2015human}, object detection~\cite{jiang2016speed,girshick2014rich}, privacy protection~\cite{yu2017iprivacy}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{long2015fully} and image retrieval~\cite{li2015weakly}. Convolutional Neural Networks (CNN) are one of the types of deep networks that are designed to process data that come in the form of multiple arrays. CNNs are appropriate for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,sun2013deep,ronneberger2015u}. For images, each colour channel is represented by a 2D array, and convolutional layers extract the main features from the pixels, and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the CNN, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. However, the softmax may not be the best option depending on the problem considered.
+	\IEEEPARstart{D}{eep learning}, introduced by Yann Lecun~\cite{lecun2015deep}, combines multiple machine learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{cirecsan2012multi,he2016deep,krizhevsky2012imagenet}, speech recognition~\cite{hinton2012deep}, control problems~\cite{mnih2015human}, object detection~\cite{jiang2016speed,girshick2014rich}, privacy and security protection~\cite{yu2017iprivacy,yuan2019adversarial,tan2018deep}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{long2015fully} and image retrieval~\cite{li2015weakly}. Convolutional Neural Networks (CNN) are one of the types of deep networks that are designed to process data that come in the form of multiple arrays. CNNs are appropriate for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,sun2013deep,ronneberger2015u}. For images, each colour channel is represented by a 2D array, and convolutional layers extract the main features from the pixels, and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the CNN, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. However, the softmax may not be the best option depending on the problem considered.
 	
 	Ordinal classification problems are those classification tasks where labels are ordered, and there are different inter-classes importances for each pair of categories. This kind of problem can be treated as nominal classification, but this discards the ordinal information. A better approach is to use specific methods that take the ordinality into account to improve the performance of the classification model. The Proportional Odds Model (POM)~\cite{mccullagh1980regression} is an ordinal alternative to the binary logistic regression. It belongs to a wider family of models called Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs are inspired in the concept of a latent variable that is projected into a 1-dimensional space and a set of thresholds that divides the projection into the different ordinal levels. A link function needs to be specified, which can be of different types, although the most common option is the \texttt{logit}, which is used in POM. In this paper, we explore different existing alternatives, as explained in depth in Section \ref{sect:ordinalproblem}.
 	
@@ -709,6 +709,7 @@
 	
 	In this paper, the probabilistic structure of CLMs is proposed as a link function for deep convolutional neural networks. This can be achieved by defining a new type of output layer alternative to the standard softmax layer. In this way, the proposed output layer will transform the one-dimensional projection, previously denoted as $f(\mathbf{x})$, into a set of probabilities. $f(\mathbf{x})$ is estimated from a nonlinear transformation of the set of features learnt by the previous layers, $l(\mathbf{x})=f(\mathbf{x})$, where $\mathbf{x}$ is the pattern being evaluated and $l(\mathbf{x})$ is a latent representation of the pattern given by the output of a single neuron. In order to apply unconstrained optimizers while ensuring $b_1 \le b_2 \le ... \le b_{Q-1}$, we can redefine the thresholds. All of them can be derived from the first one in the following form:
 	\begin{equation}
+	\nonumber
 	b_q = b_1 + \sum_{q=1}^{q-1} \alpha_q^2, \quad q = 2, ..., Q,
 	\end{equation}
 	where $b_1$ and $\alpha_q$ are the learnable parameters, and $Q$ is the number of classes.
@@ -765,7 +766,7 @@
 	
 	\subsection{Model}
 	\label{sect:model}
-	CNNs have been used for both datasets. The different architectures of CNNs used in these experiments are presented in Tables \ref{table:CNNArchitecture} and \ref{table:ResNetArchitecture}. The architecture for DR is the same that was used in \cite{de2018weighted} and the network for Adience is a small Residual Network (ResNet) \cite{he2016deep} that was used in \cite{beckham2017unimodal}. The most important parameters for convolutional layers are the number of filters that are used to make the convolution operation, the size of these filters and the stride, which is the number of pixels that the filter is moved in every operation. Pooling layers have similar parameters: pool size (number of pixels that will be involved in the operation) and stride. For convolutional layers, ConvWxH@FsS stands for filters of size WxH and stride S. For pooling layers, PoolWxHsS corresponds to a pool size of WxH and stride S.
+	CNNs have been used for both datasets. The different architectures of CNNs used in these experiments are presented in Table \ref{table:Architecture}. The architecture for DR is the same that was used in \cite{de2018weighted} and the network for Adience is a small Residual Network (ResNet) \cite{he2016deep} that was used in \cite{beckham2017unimodal}. The most important parameters for convolutional layers are the number of filters that are used to make the convolution operation, the size of these filters and the stride, which is the number of pixels that the filter is moved in every operation. Pooling layers have similar parameters: pool size (number of pixels that will be involved in the operation) and stride. For convolutional layers, ConvWxH@FsS stands for filters of size WxH and stride S. For pooling layers, PoolWxHsS corresponds to a pool size of WxH and stride S.
 	
 	The Exponential Linear Unit (ELU)~\cite{clevert2015fast} has been used as the activation function for all the convolutional and dense layers, instead of the ReLU~\cite{nair2010rectified} function, as it mitigates the effects of the vanishing gradient problem \cite{bengio1994learning,pascanu2013difficulty} via the identity for positive values. Also, ELUs lead to faster training and better generalization performance than ReLU and Leaky ReLU (LReLU)~\cite{maas2013rectifier} functions on networks with more than five layers.
 	
@@ -778,59 +779,74 @@
 	\end{equation}
 	where $\tau$ is optimized as a free parameter.
 	
+%	\begin{table}[!t]
+%		\caption{Description of the architecture used in the DR experiments.}
+%		\label{table:CNNArchitecture}
+%		\centering
+%		\begin{tabular}{lc}
+%			\hline
+%			\hline
+%			\textbf{Layer} & \textbf{Output shape}\\
+%			\hline
+%			2 x Conv3x3@32s1 & 252x252x32\\
+%			MaxPool2x2s2 & 126x126x32\\
+%			2 x Conv3x3@64s1 & 122x122x64\\
+%			MaxPool2x2s2 & 61x61x64\\
+%			2 x Conv3x3@128s1 & 57x57x128\\
+%			MaxPool2x2s2 & 28x28x128\\
+%			2 x Conv3x3@128s1 & 24x24x128\\
+%			MaxPool2x2s2 & 12x12x128\\		
+%			Conv4x4@128s1 & 9x9x128\\
+%			\hline
+%			\hline
+%		\end{tabular}	
+%	\end{table}
+%	
+%	\begin{table}[!t]
+%		\caption{Description of the architecture used in the Adience experiments.}
+%		\label{table:ResNetArchitecture}
+%		\centering
+%		\begin{tabular}{lc}
+%			\hline
+%			\hline
+%			\textbf{Layer} & \textbf{Output shape}\\
+%			\hline
+%			Conv7x7@32s2 & 112x112x32\\
+%			MaxPool3x3s2 & 55x55x32\\
+%			2 x ResBlock3x3@64s1 & 55x55x32\\
+%			1 x ResBlock3x3@128s2 & 28x28x64\\
+%			2 x ResBlock3x3@128s1 & 28x28x64\\
+%			1 x ResBlock3x3@256s2 & 14x14x128\\
+%			2 x ResBlock3x3@256s1 & 14x14x128\\
+%			1 x ResBlock3x3@512s2 & 7x7x256\\
+%			2 x ResBlock3x3@512s1 & 7x7x256\\
+%			AveragePool7x7s2 & 1x1x256\\
+%			\hline
+%			\hline
+%		\end{tabular}	
+%	\end{table}
+
 	\begin{table}[!t]
-		\caption{Description of the architecture used in the DR experiments.}
-		\label{table:CNNArchitecture}
+		\caption{Description of the architecture used for each dataset.}
+		\label{table:Architecture}
 		\centering
-		\begin{tabular}{lc}
+		\resizebox{\columnwidth}{!}{
+		\begin{tabular}{lclc}
+			\hline\hline
+			\multicolumn{2}{c}{\textbf{Diabetic Retinopathy}} & \multicolumn{2}{c}{\textbf{Adience}}\\
 			\hline
-			\hline
-			\textbf{Layer} & \textbf{Output shape}\\
-			\hline
-			%Conv3x3@32s1 & 254x254x32\\\hline
-			2 x Conv3x3@32s1 & 252x252x32\\
-			MaxPool2x2s2 & 126x126x32\\
-			
-			%Conv3x3@64s1 & 124x124x64\\\hline
-			2 x Conv3x3@64s1 & 122x122x64\\
-			MaxPool2x2s2 & 61x61x64\\
-			
-			%Conv3x3@128s1 & 59x59x128\\\hline
-			2 x Conv3x3@128s1 & 57x57x128\\
-			MaxPool2x2s2 & 28x28x128\\
-			
-			%Conv3x3@128s1 & 26x26x128\\\hline
-			2 x Conv3x3@128s1 & 24x24x128\\
-			MaxPool2x2s2 & 12x12x128\\
-			
-			Conv4x4@128s1 & 9x9x128\\
-			\hline
-			\hline
-		\end{tabular}	
-	\end{table}
-	
-	\begin{table}[!t]
-		\caption{Description of the architecture used in the Adience experiments.}
-		\label{table:ResNetArchitecture}
-		\centering
-		\begin{tabular}{lc}
-			\hline
-			\hline
-			\textbf{Layer} & \textbf{Output shape}\\
-			\hline
-			Conv7x7@32s2 & 112x112x32\\
-			MaxPool3x3s2 & 55x55x32\\
-			2 x ResBlock3x3@64s1 & 55x55x32\\
-			1 x ResBlock3x3@128s2 & 28x28x64\\
-			2 x ResBlock3x3@128s1 & 28x28x64\\
-			1 x ResBlock3x3@256s2 & 14x14x128\\
-			2 x ResBlock3x3@256s1 & 14x14x128\\
-			1 x ResBlock3x3@512s2 & 7x7x256\\
-			2 x ResBlock3x3@512s1 & 7x7x256\\
-			AveragePool7x7s2 & 1x1x256\\
-			\hline
-			\hline
-		\end{tabular}	
+			\textbf{Layer}  & \textbf{Output} & \textbf{Layer}      & \textbf{Output} \\ \hline
+			2 Conv3x3@32s1  &   252x252x32    & Conv7x7@32s2        &   112x112x32    \\
+			MaxPool2x2s2    &   126x126x32    & MaxPool3x3s2        &    55x55x32     \\
+			2 Conv3x3@64s1  &   122x122x64    & 2 ResBlock3x3@64s1  &    55x55x32     \\
+			MaxPool2x2s2    &    61x61x64     & ResBlock3x3@128s2   &    28x28x64     \\
+			2 Conv3x3@128s1 &    57x57x128    & 2 ResBlock3x3@128s1 &    28x28x64     \\
+			MaxPool2x2s2    &    28x28x128    & 1 ResBlock3x3@256s2 &    14x14x128    \\
+			2 Conv3x3@128s1 &    24x24x128    & 2 ResBlock3x3@256s1 &    14x14x128    \\
+			MaxPool2x2s2    &   12x12x128\    & 1 ResBlock3x3@512s2 &     7x7x256     \\
+			Conv4x4@128s1   &     9x9x128     & 2 ResBlock3x3@512s1 &     7x7x256     \\
+			                &                 & AveragePool7x7s2    &     1x1x256     \\ \hline\hline
+		\end{tabular}}	
 	\end{table}
 	
 	\subsection{Experimental design}
@@ -841,13 +857,13 @@
 		\eta = \eta_0 \cdot e^{-0.025 \cdot \text{epoch}}.
 	\end{equation}
 	
-	Fig. \ref{fig:lrdecay} represents the learning rate decay across $100$ epochs for the different initial values considered in this work.
-	\begin{figure}[!t]
-		\centering
-		\includegraphics[width=3in]{img/lr.pdf}
-		\caption{Representation of the learning rate decay.}
-		\label{fig:lrdecay}
-	\end{figure}
+%	Fig. \ref{fig:lrdecay} represents the learning rate decay across $100$ epochs for the different initial values considered in this work.
+%	\begin{figure}[!t]
+%		\centering
+%		\includegraphics[width=3in]{img/lr.pdf}
+%		\caption{Representation of the learning rate decay.}
+%		\label{fig:lrdecay}
+%	\end{figure}
 	
 	Both datasets are artificially balanced using data augmentation techniques~\cite{van2001art}. However, different transformations are applied to each one. DR dataset augmentation is based on image cropping and zooming, horizontal and vertical flipping, brightness adjustment and random rotations. Horizontal flipping is the only transformation applied to the Adience dataset. These transformations are applied every time a new batch is loaded, and the parameters of each one are randomly chosen from a defined range ($[0.8, 1.2]$ for zooming, $[0.5, 1.5]$ for brightness and $[0, 90]$ degrees for rotation), providing a new set of transformed images for each batch. This technique reduces the overfitting risk and provides an important performance boost as we always work with different but similar images \cite{krizhevsky2012imagenet}.
 	
@@ -998,121 +1014,154 @@
 	
 	The ANOVA test~\cite{miller1997beyond} is one of the most widely used statistical techniques. ANOVA is essentially a method of analysing the variance to which a response is subject into its various components, corresponding to the sources of variation which can be identified. ANOVA, in this case, examines the effects of three quantitative variables (termed factors) on one quantitative response. Considered factors are the LF, the LR for the Adam optimization algorithm, and the BS. We assume that five executions are enough to do the statistical tests because of the computational time limitations.
 	
-	The test variable will be QWK, given by Eq. \eqref{eq:qwk}. We denote by $\text{QWK}_{i,j,k,l}(i,j,k\in \{1, 2, 3\})$ the value observed when the first factor is at the $i$-th level, the second at the $j$-th level and the third at the $k$-th level. We assume that the three factors do not act independently, and, therefore, there exists an interaction between each pair of them and between the three factors. In this case, the observations fit:
-	\begin{equation}
-	\nonumber
-	\begin{aligned}
-	\footnotesize
-	\text{QWK}_{i,j,k,l} = \mu & + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l},
-	\label{eq:anova3}
-	\end{aligned}
-	\end{equation}
-	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the LF factor (\texttt{logit}, \texttt{probit}, \texttt{clog-log}); $P_j$ is the effect associated with the \textit{j-th} level of the LR factor and $B_k$ is the effect associated with the \textit{k-th} level of the BS factor. The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the results of everything that could not be evaluated or of random factors.
+%	The test variable will be QWK, given by Eq. \eqref{eq:qwk}. We denote by $\text{QWK}_{i,j,k,l}(i,j,k\in \{1, 2, 3\})$ the value observed when the first factor is at the $i$-th level, the second at the $j$-th level and the third at the $k$-th level. We assume that the three factors do not act independently, and, therefore, there exists an interaction between each pair of them and between the three factors. In this case, the observations fit:
+%	\begin{equation}
+%	\nonumber
+%	\begin{aligned}
+%	\footnotesize
+%	\text{QWK}_{i,j,k,l} = \mu & + L_i + P_j + B_k + LP_{i,j} + LB_{i,k} \\& + PB_{j,k} + LPB_{i,j,k} + \epsilon_{i,j,k,l},
+%	\label{eq:anova3}
+%	\end{aligned}
+%	\end{equation}
+%	where $\mu$ is the fixed effect that is common to all the populations; $L_i$ is the effect associated with the \textit{i-th} level of the LF factor (\texttt{logit}, \texttt{probit}, \texttt{clog-log}); $P_j$ is the effect associated with the \textit{j-th} level of the LR factor and $B_k$ is the effect associated with the \textit{k-th} level of the BS factor. The term $LP_{i,j}$ denotes the joint effect of the presence of level $i$ of the first factor and level $j$ of the second one; this, therefore, is denominated the interaction term between $L$ and $P$ factors. The same interaction effect is appreciated on $LB_{i,k}$, $PB_{j,k}$ and $LPB_{i,j,k}$. The term $\epsilon_{i,j,k,l}$ is the influence on the results of everything that could not be evaluated or of random factors.
 	
-	We consider the null hypothesis that each term of the above equation is independent of the levels involved. The hypotheses for the levels of the L factor are $H_0 \equiv \left( L_1 = L_2 = L_3 \right),$ and $H_1 \equiv \left( \exists i,j | L_i\neq L_j\right)$. The same hypotheses are made for the other factors. 	The hypothesis associated with the interaction between $L$ and $P$ is $H_0 \equiv \left(LP_{i,j} = 0, \forall i,j\right)$, and $H_1 \equiv \left(\exists LP_{i,j} \ne 0\right)$. Similar hypotheses can be assumed for the interaction between the other factors.
+	%	We consider the null hypothesis that each term of the above equation is independent of the levels involved. The hypotheses for the levels of the L factor are $H_0 \equiv \left( L_1 = L_2 = L_3 \right),$ and $H_1 \equiv \left( \exists i,j | L_i\neq L_j\right)$. The same hypotheses are made for the other factors. 	The hypothesis associated with the interaction between $L$ and $P$ is $H_0 \equiv \left(LP_{i,j} = 0, \forall i,j\right)$, and $H_1 \equiv \left(\exists LP_{i,j} \ne 0\right)$. Similar hypotheses can be assumed for the interaction between the other factors.
 	
-	The ANOVA table represents the study in a compact form, containing the sum of squares, degrees of freedom, mean square value, test statistics and significance levels, where non-significative factors and interactions have been removed ($\text{p-value} > 0.05$). These factors and interactions take part on the error component. In this way, the results of the ANOVA III test for the DR dataset are summarised in Table  \ref{table:ANOVARetinopathy}. There are significant differences in average QWK depending on the LF and also depending on the LR for $\alpha=0.05$ ($\text{p-value} = 0.000$). Moreover, an interaction between the LF and the LR can be recognised ($\text{p-value} = 0.001$).
+	%	The ANOVA table represents the study in a compact form, containing the sum of squares, degrees of freedom, mean square value, test statistics and significance levels, where non-significative factors and interactions have been removed ($\text{p-value} > 0.05$). These factors and interactions take part on the error component. In this way, the results of the ANOVA III test for the DR dataset are summarised in Table  \ref{table:ANOVARetinopathy}.
+	The ANOVA test results show that there are significant differences in average QWK depending on the LF and also depending on the LR for $\alpha=0.05$ ($\text{p-value} = 0.000$). Moreover, an interaction between the LF and the LR can be recognised ($\text{p-value} = 0.001$).
 		
-	\begin{table}[!t]
-		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Retinopathy dataset.}
-		\label{table:ANOVARetinopathy}
-		\centering
-		\small
-		\begin{tabular}{lccccc}
-			\hline
-			\hline
-			           \multicolumn{6}{c}{Response variable QWK}             \\ \hline
-			Source       &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
-			Model        & $37.860$ &  $9$  & $4.207$ & $1562.840$ & $0.000$ \\
-			$L$ factor   & $0.057$  &  $2$  & $0.029$ &  $10.646$  & $0.000$ \\
-			$P$ factor   & $0.121$  &  $2$  & $0.060$ &  $22.468$  & $0.000$ \\
-			$LP$ factors & $0.057$  &  $4$  & $0.014$ &  $5.261$   & $0.001$ \\
-			Error        & $0.339$  & $126$ & $0.003$ &            &  \\ \hline
-			Total        & $38.199$ & $135$ &         &            & \\
-			\hline
-			\hline
-		\end{tabular}
-	\end{table}
+%	\begin{table}[!t]
+%		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Retinopathy dataset.}
+%		\label{table:ANOVARetinopathy}
+%		\centering
+%		\small
+%		\begin{tabular}{lccccc}
+%			\hline
+%			\hline
+%			           \multicolumn{6}{c}{Response variable QWK}             \\ \hline
+%			Source       &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
+%			Model        & $37.860$ &  $9$  & $4.207$ & $1562.840$ & $0.000$ \\
+%			$L$ factor   & $0.057$  &  $2$  & $0.029$ &  $10.646$  & $0.000$ \\
+%			$P$ factor   & $0.121$  &  $2$  & $0.060$ &  $22.468$  & $0.000$ \\
+%			$LP$ factors & $0.057$  &  $4$  & $0.014$ &  $5.261$   & $0.001$ \\
+%			Error        & $0.339$  & $126$ & $0.003$ &            &  \\ \hline
+%			Total        & $38.199$ & $135$ &         &            & \\
+%			\hline
+%			\hline
+%		\end{tabular}
+%	\end{table}
 	
-	Given that there exist significant differences between the means, we analyse now these differences. A post-hoc multiple comparison test has been performed on the mean QWK obtained. An HSD Tukey's test \cite{tukey1949comparing} has been selected under the null hypothesis that the variance of the error of the dependent variable is the same between the groups. The results of this test over the test set are shown in Table \ref{table:TukeyDR}. They show that the best LF is the \texttt{clog-log} but the \texttt{probit} link performance is close to it. Also, the best value for the LR parameter is $10^{-3}$. The BS is not relevant for this dataset with the values considered.
-		
+	Given that there exist significant differences between the means, we analyse now these differences. A post-hoc multiple comparison test has been performed on the mean QWK obtained. An HSD Tukey's test \cite{tukey1949comparing} has been selected under the null hypothesis that the variance of the error of the dependent variable is the same between the groups. The results of this test over the test set are shown in Table \ref{table:Tukey}. They show that the best LF is the \texttt{clog-log} but the \texttt{probit} link performance is close to it. Also, the best value for the LR parameter is $10^{-3}$. The BS is not relevant for this dataset with the values considered.
+%		
+%	\begin{table}[!t]
+%		\caption{Tukey's test results for the DR dataset.}
+%		\label{table:TukeyDR}
+%		\centering
+%		\begin{tabular}{cccc}
+%			\hline\hline
+%			       LF         &        LF         & Mean diff. &  Sig.   \\ \hline
+%			 \texttt{logit}   &  \texttt{probit}  &  $-0.002$  & $0.011$ \\
+%			                  & \texttt{clog-log} &  $0.012$   & $0.000$ \\
+%			 \texttt{probit}  &  \texttt{logit}   &  $0.002$   & $0.011$ \\
+%			                  & \texttt{clog-log} &  $0.014$   & $0.248$ \\
+%			\texttt{clog-log} &  \texttt{logit}   &  $-0.012$  & $0.000$ \\
+%			                  &  \texttt{probit}  &  $-0.014$  & $0.248$ \\ \hline\hline
+%			       LR         &        LR         & Mean diff. &  Sig.   \\ \hline
+%			    $10^{-2}$     &     $10^{-3}$     &  $-0.073$  & $0.000$ \\
+%			                  &     $10^{-4}$     &  $-0.044$  & $0.000$ \\
+%			    $10^{-3}$     &     $10^{-2}$     &  $0.073$   & $0.000$ \\
+%			                  &     $10^{-4}$     &  $0.029$   & $0.023$ \\
+%			    $10^{-4}$     &     $10^{-2}$     &  $0.044$   & $0.000$ \\
+%			                  &     $10^{-3}$     &  $-0.029$  & $0.023$ \\ \hline\hline
+%		\end{tabular}
+%	\end{table}
+	
+%	\begin{table}[!t]
+%		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Adience dataset.}
+%		\label{table:ANOVAAdience}
+%		\centering
+%		\small
+%		\begin{tabular}{lccccc}
+%			\hline\hline
+%			            \multicolumn{6}{c}{Response variable QWK}             \\ \hline
+%			Source        &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
+%			Model         & $84.372$ & $27$  & $3.125$ & $4414.006$ & $0.000$ \\
+%			$L$ factor    & $0.156$  &  $2$  & $0.078$ & $110.103$  & $0.000$ \\
+%			$P$ factor    & $0.925$  &  $2$  & $0.462$ & $653.163$  & $0.000$ \\
+%			$B$ factor    & $0.040$  &  $2$  & $0.020$ &  $28.218$  & $0.000$ \\
+%			$LP$ factors  & $0.284$  &  $4$  & $0.071$ & $100.118$  & $0.000$ \\
+%			$LB$ factors  & $0.008$  &  $4$  & $0.002$ &  $2.837$   & $0.028$ \\
+%			$PB$ factors  & $0.026$  &  $4$  & $0.007$ &  $9.267$   & $0.000$ \\
+%			$LPB$ factors & $0.021$  &  $8$  & $0.003$ &  $3.728$   & $0.001$ \\
+%			Error         & $0.076$  & $108$ & $0.001$ &            &  \\ \hline
+%			Total         & $84.449$ & $135$ &         &            &  \\ \hline\hline
+%		\end{tabular}
+%	\end{table}
+%	
+	The results of the ANOVA III test for the Adience dataset, first, demonstrate that there exist significant differences in average QWK concerning the three factors ($\text{p-value} = 0.000$). Secondly, we found interactions between all the pairs of factors and between all the three factors together (p-values $0.000$, $0.000$, $0.000$ and $0.001$, respectively).
+	
+	As we did for the DR dataset, a post-hoc multiple comparison test has been performed on the average QWK obtained for Adience. Under the null hypothesis that the variance of the error of the dependent variable is the same between the groups, the HSD Tukey's test has been applied. The results of this test over the test set are shown in Table \ref{table:Tukey}.
+	
+%	\begin{table}[!t]
+%		\caption{Tukey's test results for the Adience dataset.}
+%		\label{table:TukeyAdience}
+%		\centering
+%		\begin{tabular}{cccc}
+%			\hline\hline
+%			       LF         &        LF         & Mean diff. &  Sig.   \\ \hline
+%			 \texttt{logit}   &  \texttt{probit}  &  $0.046$   & $0.000$ \\
+%			                  & \texttt{clog-log} &  $0.084$   & $0.000$ \\
+%			 \texttt{probit}  &  \texttt{logit}   &  $-0.046$  & $0.000$ \\
+%			                  & \texttt{clog-log} &  $0.038$   & $0.000$ \\
+%			\texttt{clog-log} &  \texttt{logit}   &  $-0.084$  & $0.000$ \\
+%			                  &  \texttt{probit}  &  $-0.038$  & $0.000$ \\ \hline\hline
+%			       LR         &        LR         & Mean diff. &  Sig.   \\ \hline
+%			    $10^{-2}$     &     $10^{-3}$     &  $-0.046$  & $0.000$ \\
+%			                  &     $10^{-4}$     &  $0.148$   & $0.000$ \\
+%			    $10^{-3}$     &     $10^{-2}$     &  $0.046$   & $0.000$ \\
+%			                  &     $10^{-4}$     &  $0.194$   & $0.000$ \\
+%			    $10^{-4}$     &     $10^{-2}$     &  $-0.148$  & $0.000$ \\
+%			                  &     $10^{-3}$     &  $-0.194$  & $0.000$ \\ \hline\hline
+%			       BS         &        BS         & Mean diff. &  Sig.   \\ \hline
+%			       64         &        128        &  $-0.041$  & $0.026$ \\
+%			                  &        256        &  $-0.027$  & $0.000$ \\
+%			       128        &        64         &  $0.041$   & $0.026$ \\
+%			                  &        256        &  $0.014$   & $0.000$ \\
+%			       256        &        64         &  $0.027$   & $0.000$ \\
+%			                  &        128        &  $-0.014$  & $0.000$ \\ \hline\hline
+%		\end{tabular}
+%	\end{table}
+
 	\begin{table}[!t]
-		\caption{Tukey's test results for the DR dataset.}
-		\label{table:TukeyDR}
+		\caption{Tukey's test results for both datasets.}
+		\label{table:Tukey}
 		\centering
-		\begin{tabular}{cccc}
+		\resizebox{\columnwidth}{!}{
+		\begin{tabular}{cccccc}
 			\hline\hline
-			       LF         &        LF         & Mean diff. &  Sig.   \\ \hline
-			 \texttt{logit}   &  \texttt{probit}  &  $-0.002$  & $0.011$ \\
-			                  & \texttt{clog-log} &  $0.012$   & $0.000$ \\
-			 \texttt{probit}  &  \texttt{logit}   &  $0.002$   & $0.011$ \\
-			                  & \texttt{clog-log} &  $0.014$   & $0.248$ \\
-			\texttt{clog-log} &  \texttt{logit}   &  $-0.012$  & $0.000$ \\
-			                  &  \texttt{probit}  &  $-0.014$  & $0.248$ \\ \hline\hline
-			       LR         &        LR         & Mean diff. &  Sig.   \\ \hline
-			    $10^{-2}$     &     $10^{-3}$     &  $-0.073$  & $0.000$ \\
-			                  &     $10^{-4}$     &  $-0.044$  & $0.000$ \\
-			    $10^{-3}$     &     $10^{-2}$     &  $0.073$   & $0.000$ \\
-			                  &     $10^{-4}$     &  $0.029$   & $0.023$ \\
-			    $10^{-4}$     &     $10^{-2}$     &  $0.044$   & $0.000$ \\
-			                  &     $10^{-3}$     &  $-0.029$  & $0.023$ \\ \hline\hline
-		\end{tabular}
-	\end{table}
-	
-	\begin{table}[!t]
-		\caption{ANOVA III for the analysis of the main factors in the design of a Convolutional Ordinal Neural Network for the Adience dataset.}
-		\label{table:ANOVAAdience}
-		\centering
-		\small
-		\begin{tabular}{lccccc}
-			\hline\hline
-			            \multicolumn{6}{c}{Response variable QWK}             \\ \hline
-			Source        &   S.S.   & D.F.  &  M.S.   &  F-ratio   &  Sig.   \\ \hline
-			Model         & $84.372$ & $27$  & $3.125$ & $4414.006$ & $0.000$ \\
-			$L$ factor    & $0.156$  &  $2$  & $0.078$ & $110.103$  & $0.000$ \\
-			$P$ factor    & $0.925$  &  $2$  & $0.462$ & $653.163$  & $0.000$ \\
-			$B$ factor    & $0.040$  &  $2$  & $0.020$ &  $28.218$  & $0.000$ \\
-			$LP$ factors  & $0.284$  &  $4$  & $0.071$ & $100.118$  & $0.000$ \\
-			$LB$ factors  & $0.008$  &  $4$  & $0.002$ &  $2.837$   & $0.028$ \\
-			$PB$ factors  & $0.026$  &  $4$  & $0.007$ &  $9.267$   & $0.000$ \\
-			$LPB$ factors & $0.021$  &  $8$  & $0.003$ &  $3.728$   & $0.001$ \\
-			Error         & $0.076$  & $108$ & $0.001$ &            &  \\ \hline
-			Total         & $84.449$ & $135$ &         &            &  \\ \hline\hline
-		\end{tabular}
-	\end{table}
-	
-	The results of the ANOVA III test for the Adience dataset are shown in Table \ref{table:ANOVAAdience}. First, we observe that there exist significant differences in average QWK concerning the three factors ($\text{p-value} = 0.000$). Secondly, we found interactions between all the pairs of factors and between all the three factors together (p-values $0.000$, $0.000$, $0.000$ and $0.001$, respectively).
-	
-	As we did for the DR dataset, a post-hoc multiple comparison test has been performed on the average QWK obtained for Adience. Under the null hypothesis that the variance of the error of the dependent variable is the same between the groups, the HSD Tukey's test has been applied. The results of this test over the test set are shown in Table \ref{table:TukeyAdience}.
-	
-	\begin{table}[!t]
-		\caption{Tukey's test results for the Adience dataset.}
-		\label{table:TukeyAdience}
-		\centering
-		\begin{tabular}{cccc}
-			\hline\hline
-			       LF         &        LF         & Mean diff. &  Sig.   \\ \hline
-			 \texttt{logit}   &  \texttt{probit}  &  $0.046$   & $0.000$ \\
-			                  & \texttt{clog-log} &  $0.084$   & $0.000$ \\
-			 \texttt{probit}  &  \texttt{logit}   &  $-0.046$  & $0.000$ \\
-			                  & \texttt{clog-log} &  $0.038$   & $0.000$ \\
-			\texttt{clog-log} &  \texttt{logit}   &  $-0.084$  & $0.000$ \\
-			                  &  \texttt{probit}  &  $-0.038$  & $0.000$ \\ \hline\hline
-			       LR         &        LR         & Mean diff. &  Sig.   \\ \hline
-			    $10^{-2}$     &     $10^{-3}$     &  $-0.046$  & $0.000$ \\
-			                  &     $10^{-4}$     &  $0.148$   & $0.000$ \\
-			    $10^{-3}$     &     $10^{-2}$     &  $0.046$   & $0.000$ \\
-			                  &     $10^{-4}$     &  $0.194$   & $0.000$ \\
-			    $10^{-4}$     &     $10^{-2}$     &  $-0.148$  & $0.000$ \\
-			                  &     $10^{-3}$     &  $-0.194$  & $0.000$ \\ \hline\hline
-			       BS         &        BS         & Mean diff. &  Sig.   \\ \hline
-			       64         &        128        &  $-0.041$  & $0.026$ \\
-			                  &        256        &  $-0.027$  & $0.000$ \\
-			       128        &        64         &  $0.041$   & $0.026$ \\
-			                  &        256        &  $0.014$   & $0.000$ \\
-			       256        &        64         &  $0.027$   & $0.000$ \\
-			                  &        128        &  $-0.014$  & $0.000$ \\ \hline\hline
-		\end{tabular}
+			                  &                   & \multicolumn{2}{c}{\textbf{DR}} & \multicolumn{2}{c}{\textbf{Adience}} \\ \hline
+			       LF         &        LF         & Mean diff. &        Sig.        & Mean diff. &          Sig.           \\ \hline
+			 \texttt{logit}   &  \texttt{probit}  &  $0.046$   &      $0.000$       &  $-0.002$  &         $0.011$         \\
+			                  & \texttt{clog-log} &  $0.084$   &      $0.000$       &  $0.012$   &         $0.000$         \\
+			 \texttt{probit}  &  \texttt{logit}   &  $-0.046$  &      $0.000$       &  $0.002$   &         $0.011$         \\
+			                  & \texttt{clog-log} &  $0.038$   &      $0.000$       &  $0.014$   &         $0.248$         \\
+			\texttt{clog-log} &  \texttt{logit}   &  $-0.084$  &      $0.000$       &  $-0.012$  &         $0.000$         \\
+			                  &  \texttt{probit}  &  $-0.038$  &      $0.000$       &  $-0.014$  &         $0.248$         \\ \hline\hline
+			       LR         &        LR         & Mean diff. &        Sig.        & Mean diff. &          Sig.           \\ \hline
+			    $10^{-2}$     &     $10^{-3}$     &  $-0.046$  &      $0.000$       &  $-0.073$  &         $0.000$         \\
+			                  &     $10^{-4}$     &  $0.148$   &      $0.000$       &  $-0.044$  &         $0.000$         \\
+			    $10^{-3}$     &     $10^{-2}$     &  $0.046$   &      $0.000$       &  $0.073$   &         $0.000$         \\
+			                  &     $10^{-4}$     &  $0.194$   &      $0.000$       &  $0.029$   &         $0.023$         \\
+			    $10^{-4}$     &     $10^{-2}$     &  $-0.148$  &      $0.000$       &  $0.044$   &         $0.000$         \\
+			                  &     $10^{-3}$     &  $-0.194$  &      $0.000$       &  $-0.029$  &         $0.023$         \\ \hline\hline
+			       BS         &        BS         & Mean diff. &        Sig.        & Mean diff. &          Sig.           \\ \hline
+			       64         &        128        &  $-0.041$  &      $0.026$       &     -      &            -            \\
+			                  &        256        &  $-0.027$  &      $0.000$       &     -      &            -            \\
+			       128        &        64         &  $0.041$   &      $0.026$       &     -      &            -            \\
+			                  &        256        &  $0.014$   &      $0.000$       &     -      &            -            \\
+			       256        &        64         &  $0.027$   &      $0.000$       &     -      &            -            \\
+			                  &        128        &  $-0.014$  &      $0.000$       &     -      &            -
+		\end{tabular}}
 	\end{table}
 		
 	The results over the test set show that the best LF is the \texttt{logit}, the best LR is $10^{-3}$ and the best BS is 128. However, the interactions between these factors made the configuration that uses a \texttt{logit} link, $\eta=10^{-3}$ and BS of 64, the best configuration. It obtained a mean QWK value of $0.940$ for validation and $0.881$ for test. The same parameters, but using the \texttt{probit} link, achieves the second best result ($0.874$). The standard deviation is very low for both cases.
@@ -1123,37 +1172,65 @@
 	\label{sect:NominalComparison}
 	Once the factor parameters have been studied and selected, experiments are run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of considering the ordinality of the problem (QWK loss and the CLM). The evaluation metrics remains the same in order to be able to compare. When considering the nominal version, for the DR dataset, the best mean value of QWK was $0.497$ and was obtained when using a BS of 10 and a LR of $10^{-4}$. In the case of Adience dataset, the highest QWK was $0.787$ and was achieved with a BS of 64 and a LR of $10^{-3}$. There are some parameter configurations where the training process gets stagnated and a very low QWK is obtained. As we saw in Sections \ref{sect:dr} and \ref{sect:adience}, this problem is not found when using the ordinal method. 
 
-	These results are included in Tables \ref{table:ComparisonDR} and \ref{table:ComparisonAdience}, together with the comparison against previous works of the state-of-the-art. All the results are given for the test set, except those from \cite{de2018weighted} (DR dataset), because the authors only provided validation results for $128\times 128$ images (however, validation results are usually better than test results). The proposed ordinal model outperforms all the other alternatives in terms of QWK. 
+	These results are included in Table \ref{table:Comparison}, together with the comparison against previous works of the state-of-the-art. All the results are given for the test set, except those from \cite{de2018weighted} (DR dataset), because the authors only provided validation results for $128\times 128$ images (however, validation results are usually better than test results). The results for \cite{beckham2017unimodal} were obtained by reproducing their experiments because they didn't provide exact results for test set that could be used to compare with our results. The proposed ordinal model outperforms all the other alternatives in terms of QWK. 
 	
 	The performance gain of CLM over the nominal version reaches $16.8\%$ for DR and $11.9\%$ for Adience dataset. The improvement of the ordinal method for DR is higher than that for Adience. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases. Moreover, when compared against alternative ordinal methods (many of them with a deep structure), CLMs are very competitive, possibly because of the flexibility provided by the threshold model structure (where the threshold of each class is independently adjusted).
 	
+%	\begin{table}[!t]
+%		\caption{Comparison between the best results of nominal, ordinal and previous works for the DR dataset.}
+%		\label{table:ComparisonDR}
+%		\scriptsize
+%		\centering
+%		\def\arraystretch{1.3}
+%		\begin{tabular}{lccc}
+%			\hline
+%			\hline
+%			Method                                   & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
+%			Ordinal network                          &    $0.582_{(0.016)}$    &    $0.723_{(0.004)}$    &        $0.868_{(0.002)}$         \\
+%			Nominal network                          &    $0.498_{(0.013)}$    &    $0.692_{(0.014)}$    &        $0.854_{(0.006)}$         \\
+%			J. Torre et al. \cite{de2018weighted}    &  $0.537_{(\text{-})}$   &            -            &                -                 \\
+%			À. Nebot et al. \cite{nebot2016diabetic} &  $0.555_{(\text{-})}$   &            -            &                -					\\
+%			\hline
+%			\hline
+%		\end{tabular}
+%	\end{table}
+%	
+%	\begin{table}[!t]
+%		\caption{Comparison between the best results of nominal, ordinal and previous works for the Adience dataset.}
+%		\label{table:ComparisonAdience}
+%		\scriptsize
+%		\centering
+%		\def\arraystretch{1.3}
+%		\begin{tabular}{lccc}
+%			\hline\hline
+%			Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
+%			Ordinal network                           &    $0.881_{(0.005)}$    &    $0.519_{(0.013)}$    &        $0.894_{(0.005)}$         \\
+%			Nominal network                           &    $0.787_{(0.004)}$    &    $0.458_{(0.008)}$    &        $0.800_{(0.007)}$         \\
+%			Beckham et al. \cite{beckham2017unimodal} &    $0.855_{(0.012)}$    &    $0.467_{(0.019)}$    &        $0.867_{(0.011)}$         \\
+%			E. Eidinger et al. \cite{eidinger2014age} &            -            &    $0.451_{(0.026)}$    &        $0.807_{(0.011)}$         \\
+%			J.-C. Chen et al. \cite{chen2016cascaded} &            -            &    $0.529_{(0.060)}$    &        $0.885_{(0.022)}$         \\
+%			G. Levi et al. \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$         \\ \hline\hline
+%		\end{tabular}
+%	\end{table}
+
 	\begin{table}[!t]
-		\caption{Comparison between the best results of nominal, ordinal and previous works for the DR dataset.}
-		\label{table:ComparisonDR}
-		\scriptsize
-		\centering
-		\def\arraystretch{1.3}
-		\begin{tabular}{lccc}
-			\hline
-			\hline
-			Method                                   & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
-			Ordinal network                          &    $0.582_{(0.016)}$    &    $0.723_{(0.004)}$    &        $0.868_{(0.002)}$         \\
-			Nominal network                          &    $0.498_{(0.013)}$    &    $0.692_{(0.014)}$    &        $0.854_{(0.006)}$         \\
-			J. Torre et al. \cite{de2018weighted}    &  $0.537_{(\text{-})}$   &            -            &                -                 \\
-			À. Nebot et al. \cite{nebot2016diabetic} &  $0.555_{(\text{-})}$   &            -            &                -					\\
-			\hline
-			\hline
-		\end{tabular}
-	\end{table}
-	
-	\begin{table}[!t]
-		\caption{Comparison between the best results of nominal, ordinal and previous works for the Adience dataset.}
-		\label{table:ComparisonAdience}
+		\caption{Comparison between the best results of nominal, ordinal and previous works for the both datasets.}
+		\label{table:Comparison}
 		\scriptsize
 		\centering
 		\def\arraystretch{1.3}
 		\begin{tabular}{lccc}
 			\hline\hline
+			\multicolumn{4}{c}{\textbf{Diabetic Retinopathy}}\\
+			\hline
+			Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
+			Ordinal network                           &    $0.582_{(0.016)}$    &    $0.723_{(0.004)}$    &        $0.868_{(0.002)}$         \\
+			Nominal network                           &    $0.498_{(0.013)}$    &    $0.692_{(0.014)}$    &        $0.854_{(0.006)}$         \\
+			J. Torre et al. \cite{de2018weighted}     &  $0.537_{(\text{-})}$   &            -            &                -                 \\
+			À. Nebot et al. \cite{nebot2016diabetic}  &  $0.555_{(\text{-})}$   &            -            &                -                 \\
+			\hline
+			\multicolumn{4}{c}{\textbf{Adience}}\\
+			\hline
 			Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
 			Ordinal network                           &    $0.881_{(0.005)}$    &    $0.519_{(0.013)}$    &        $0.894_{(0.005)}$         \\
 			Nominal network                           &    $0.787_{(0.004)}$    &    $0.458_{(0.008)}$    &        $0.800_{(0.007)}$         \\

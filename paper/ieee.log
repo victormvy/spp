@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  22 MAY 2019 14:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  23 MAY 2019 13:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -676,13 +676,14 @@ Now handling font encoding PD1 ...
 (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
 )
+Package hyperref Info: Option `bookmarks' set `false' on input line 4319.
 Package hyperref Info: Hyper figures OFF on input line 4443.
 Package hyperref Info: Link nesting OFF on input line 4448.
 Package hyperref Info: Hyper index ON on input line 4451.
 Package hyperref Info: Plain pages OFF on input line 4458.
 Package hyperref Info: Backreferencing OFF on input line 4463.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
-Package hyperref Info: Bookmarks ON on input line 4688.
+Package hyperref Info: Bookmarks OFF on input line 4694.
 \c@Hy@tempcnt=\count114
 LaTeX Info: Redefining \url on input line 5041.
 \XeTeXLinkMargin=\dimen153
@@ -782,14 +783,10 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 370.
 LaTeX Info: Redefining \pageref on input line 370.
 LaTeX Info: Redefining \nameref on input line 370.
-
-(./ieee.out) (./ieee.out)
-\@outlinefile=\write3
-\openout3 = `ieee.out'.
-
 LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 490
 .
- (/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
+
+(/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
 File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Try loading font information for OML+lmm on input line 494.
@@ -840,7 +837,7 @@ LaTeX Font Info:    Try loading font information for U+dsrom on input line 587.
 (/usr/share/texlive/texmf-dist/tex/latex/doublestroke/Udsrom.fd
 File: Udsrom.fd 1995/08/01 v0.1 Double stroke roman font definitions
 ) [2]
-<img/linkfunctions.pdf, id=196, 462.52798pt x 346.89601pt>
+<img/linkfunctions.pdf, id=118, 462.52798pt x 346.89601pt>
 File: img/linkfunctions.pdf Graphic file (type pdf)
 
 <use img/linkfunctions.pdf>
@@ -989,238 +986,230 @@ ier (name{equation.3.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.711 	\begin{equation}
+                       pdfTeX warning (ext4): destination with the same identif
+ier (name{equation.3.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.721 	\begin{equation}
+                       pdfTeX warning (ext4): destination with the same identif
+ier (name{equation.3.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.721 	\begin{equation}
+                       pdfTeX warning (ext4): destination with the same identif
+ier (name{equation.3.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.721 	\begin{equation}
+                       pdfTeX warning (ext4): destination with the same identif
+ier (name{equation.3.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.721 	\begin{equation}
                        
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 738.
+(Font)              <8> on input line 739.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 738.
+(Font)              <6> on input line 739.
  [4pdfTeX warning (ext4): destination with the same identifier (name{equation.3
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.739 
-      ] <img/retinopathy/1.jpg, id=270, 96.36pt x 96.36pt>
+l.740 
+      ] <img/retinopathy/1.jpg, id=194, 96.36pt x 96.36pt>
 File: img/retinopathy/1.jpg Graphic file (type jpg)
 
 <use img/retinopathy/1.jpg>
-Package pdftex.def Info: img/retinopathy/1.jpg used on input line 743.
+Package pdftex.def Info: img/retinopathy/1.jpg used on input line 744.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
- <img/retinopathy/2.jpg, id=271, 96.36pt x 96.36pt>
+ <img/retinopathy/2.jpg, id=195, 96.36pt x 96.36pt>
 File: img/retinopathy/2.jpg Graphic file (type jpg)
 
 <use img/retinopathy/2.jpg>
-Package pdftex.def Info: img/retinopathy/2.jpg used on input line 743.
+Package pdftex.def Info: img/retinopathy/2.jpg used on input line 744.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
- <img/retinopathy/3.jpg, id=272, 96.36pt x 96.36pt>
+ <img/retinopathy/3.jpg, id=196, 96.36pt x 96.36pt>
 File: img/retinopathy/3.jpg Graphic file (type jpg)
 
 <use img/retinopathy/3.jpg>
-Package pdftex.def Info: img/retinopathy/3.jpg used on input line 743.
+Package pdftex.def Info: img/retinopathy/3.jpg used on input line 744.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
- <img/retinopathy/4.jpg, id=273, 96.36pt x 96.36pt>
+ <img/retinopathy/4.jpg, id=197, 96.36pt x 96.36pt>
 File: img/retinopathy/4.jpg Graphic file (type jpg)
 
 <use img/retinopathy/4.jpg>
-Package pdftex.def Info: img/retinopathy/4.jpg used on input line 743.
+Package pdftex.def Info: img/retinopathy/4.jpg used on input line 744.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
- <img/retinopathy/5.jpg, id=274, 96.36pt x 96.36pt>
+ <img/retinopathy/5.jpg, id=198, 96.36pt x 96.36pt>
 File: img/retinopathy/5.jpg Graphic file (type jpg)
 
 <use img/retinopathy/5.jpg>
-Package pdftex.def Info: img/retinopathy/5.jpg used on input line 744.
+Package pdftex.def Info: img/retinopathy/5.jpg used on input line 745.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
- <img/retinopathy/6.jpg, id=275, 96.36pt x 96.36pt>
+ <img/retinopathy/6.jpg, id=199, 96.36pt x 96.36pt>
 File: img/retinopathy/6.jpg Graphic file (type jpg)
 
 <use img/retinopathy/6.jpg>
-Package pdftex.def Info: img/retinopathy/6.jpg used on input line 744.
+Package pdftex.def Info: img/retinopathy/6.jpg used on input line 745.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
- <img/retinopathy/7.jpg, id=276, 96.36pt x 96.36pt>
+ <img/retinopathy/7.jpg, id=200, 96.36pt x 96.36pt>
 File: img/retinopathy/7.jpg Graphic file (type jpg)
 
 <use img/retinopathy/7.jpg>
-Package pdftex.def Info: img/retinopathy/7.jpg used on input line 744.
+Package pdftex.def Info: img/retinopathy/7.jpg used on input line 745.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
- <img/retinopathy/8.jpg, id=277, 96.36pt x 96.36pt>
+ <img/retinopathy/8.jpg, id=201, 96.36pt x 96.36pt>
 File: img/retinopathy/8.jpg Graphic file (type jpg)
 
 <use img/retinopathy/8.jpg>
-Package pdftex.def Info: img/retinopathy/8.jpg used on input line 744.
+Package pdftex.def Info: img/retinopathy/8.jpg used on input line 745.
 (pdftex.def)             Requested size: 45.52458pt x 45.52444pt.
- <img/adience/1.jpg, id=285, 256.96pt x 256.96pt>
+ <img/adience/1.jpg, id=209, 256.96pt x 256.96pt>
 File: img/adience/1.jpg Graphic file (type jpg)
 
 <use img/adience/1.jpg>
-Package pdftex.def Info: img/adience/1.jpg used on input line 758.
+Package pdftex.def Info: img/adience/1.jpg used on input line 759.
 (pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
- <img/adience/2.jpg, id=286, 256.96pt x 256.96pt>
+ <img/adience/2.jpg, id=210, 256.96pt x 256.96pt>
 File: img/adience/2.jpg Graphic file (type jpg)
 
 <use img/adience/2.jpg>
-Package pdftex.def Info: img/adience/2.jpg used on input line 758.
+Package pdftex.def Info: img/adience/2.jpg used on input line 759.
 (pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
- <img/adience/3.jpg, id=287, 256.96pt x 256.96pt>
+ <img/adience/3.jpg, id=211, 256.96pt x 256.96pt>
 File: img/adience/3.jpg Graphic file (type jpg)
 
 <use img/adience/3.jpg>
-Package pdftex.def Info: img/adience/3.jpg used on input line 758.
+Package pdftex.def Info: img/adience/3.jpg used on input line 759.
 (pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
- <img/adience/4.jpg, id=288, 256.96pt x 256.96pt>
+ <img/adience/4.jpg, id=212, 256.96pt x 256.96pt>
 File: img/adience/4.jpg Graphic file (type jpg)
 
 <use img/adience/4.jpg>
-Package pdftex.def Info: img/adience/4.jpg used on input line 758.
+Package pdftex.def Info: img/adience/4.jpg used on input line 759.
 (pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
- <img/adience/5.jpg, id=289, 256.96pt x 256.96pt>
+ <img/adience/5.jpg, id=213, 256.96pt x 256.96pt>
 File: img/adience/5.jpg Graphic file (type jpg)
 
 <use img/adience/5.jpg>
-Package pdftex.def Info: img/adience/5.jpg used on input line 759.
+Package pdftex.def Info: img/adience/5.jpg used on input line 760.
 (pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
- <img/adience/6.jpg, id=290, 256.96pt x 256.96pt>
+ <img/adience/6.jpg, id=214, 256.96pt x 256.96pt>
 File: img/adience/6.jpg Graphic file (type jpg)
 
 <use img/adience/6.jpg>
-Package pdftex.def Info: img/adience/6.jpg used on input line 759.
+Package pdftex.def Info: img/adience/6.jpg used on input line 760.
 (pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
- <img/adience/7.jpg, id=291, 256.96pt x 256.96pt>
+ <img/adience/7.jpg, id=215, 256.96pt x 256.96pt>
 File: img/adience/7.jpg Graphic file (type jpg)
 
 <use img/adience/7.jpg>
-Package pdftex.def Info: img/adience/7.jpg used on input line 759.
+Package pdftex.def Info: img/adience/7.jpg used on input line 760.
 (pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
- <img/adience/8.jpg, id=292, 256.96pt x 256.96pt>
+ <img/adience/8.jpg, id=216, 256.96pt x 256.96pt>
 File: img/adience/8.jpg Graphic file (type jpg)
 
 <use img/adience/8.jpg>
-Package pdftex.def Info: img/adience/8.jpg used on input line 759.
+Package pdftex.def Info: img/adience/8.jpg used on input line 760.
 (pdftex.def)             Requested size: 45.52458pt x 45.52151pt.
  [5 <./img/retinopathy/1.jpg> <./img/retinopathy/2.jpg> <./img/retinopathy/3.jp
 g> <./img/retinopathy/4.jpg> <./img/retinopathy/5.jpg> <./img/retinopathy/6.jpg
 > <./img/retinopathy/7.jpg> <./img/retinopathy/8.jpg> <./img/adience/1.jpg> <./
 img/adience/2.jpg> <./img/adience/3.jpg> <./img/adience/4.jpg> <./img/adience/5
 .jpg> <./img/adience/6.jpg> <./img/adience/7.jpg> <./img/adience/8.jpg>]pdfTeX 
-warning (ext4): destination with the same identifier (name{equation.4.3}) has b
+warning (ext4): destination with the same identifier (name{equation.4.2}) has b
 een already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.839 	\begin{equation}
+l.855 	\begin{equation}
                        pdfTeX warning (ext4): destination with the same identif
-ier (name{equation.4.3}) has been already used, duplicate ignored
+ier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.839 	\begin{equation}
+l.855 	\begin{equation}
                        pdfTeX warning (ext4): destination with the same identif
-ier (name{equation.4.3}) has been already used, duplicate ignored
+ier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.839 	\begin{equation}
+l.855 	\begin{equation}
                        pdfTeX warning (ext4): destination with the same identif
-ier (name{equation.4.3}) has been already used, duplicate ignored
+ier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.839 	\begin{equation}
-                        <img/lr.pdf, id=330, 462.52798pt x 346.89601pt>
-File: img/lr.pdf Graphic file (type pdf)
-
-<use img/lr.pdf>
-Package pdftex.def Info: img/lr.pdf used on input line 847.
-(pdftex.def)             Requested size: 216.81pt x 162.6071pt.
-pdfTeX warning (ext4): destination with the same identifier (name{equation.4.3}
-) has been already used, duplicate ignored
+l.855 	\begin{equation}
+                       pdfTeX warning (ext4): destination with the same identif
+ier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.868 		\begin{equation}
+l.884 		\begin{equation}
                         pdfTeX warning (ext4): destination with the same identi
-fier (name{equation.4.3}) has been already used, duplicate ignored
+fier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.868 		\begin{equation}
+l.884 		\begin{equation}
                         pdfTeX warning (ext4): destination with the same identi
-fier (name{equation.4.3}) has been already used, duplicate ignored
+fier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.868 		\begin{equation}
+l.884 		\begin{equation}
                         pdfTeX warning (ext4): destination with the same identi
-fier (name{equation.4.3}) has been already used, duplicate ignored
+fier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.868 		\begin{equation}
+l.884 		\begin{equation}
                         pdfTeX warning (ext4): destination with the same identi
-fier (name{equation.4.3}) has been already used, duplicate ignored
+fier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.875 		\begin{equation}
+l.891 		\begin{equation}
                         pdfTeX warning (ext4): destination with the same identi
-fier (name{equation.4.3}) has been already used, duplicate ignored
+fier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.875 		\begin{equation}
+l.891 		\begin{equation}
                         pdfTeX warning (ext4): destination with the same identi
-fier (name{equation.4.3}) has been already used, duplicate ignored
+fier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.875 		\begin{equation}
+l.891 		\begin{equation}
                         pdfTeX warning (ext4): destination with the same identi
-fier (name{equation.4.3}) has been already used, duplicate ignored
+fier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.875 		\begin{equation}
-                         [6 <./img/lr.pdf>]
-
-LaTeX Font Warning: Command \footnotesize invalid in math mode on input line 10
-05.
-
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 1021.
-[7]
-
-LaTeX Warning: Text page 8 contains only floats.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-LaTeX Warning: Text page 8 contains only floats.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
+l.891 		\begin{equation}
+                         [6] [7]
+Underfull \vbox (badness 2617) has occurred while \output is active []
 
  [8]
-[9]
-Underfull \hbox (badness 1590) in paragraph at lines 1172--1173
+Underfull \hbox (badness 1590) in paragraph at lines 1249--1250
 \OT1/lmr/m/n/10 for the di-ffe-rent pa-ram-e-ters con-sid-ered are problem-
  []
 
-(./ieee.bbl [10]
-Underfull \hbox (badness 7595) in paragraph at lines 113--117
+(./ieee.bbl [9]
+Underfull \hbox (badness 7595) in paragraph at lines 123--127
 []\OT1/lmr/m/n/8 P. A. Gutier-rez, M. Perez-Ortiz, J. Sanchez-Monedero,
  []
 
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1249.
- [11]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1249.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1326.
+ [10]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1326.
  (./ieee.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1249.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1249.
-
-Package rerunfilecheck Info: File `ieee.out' has not changed.
-(rerunfilecheck)             Checksum: 2E969A8DAD96657267C04B798B8FEC01;1558.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1249.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1326.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1326.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1326.
  ) 
 Here is how much of TeX's memory you used:
- 7747 strings out of 493029
- 115777 string characters out of 6136233
- 240820 words of memory out of 5000000
- 11007 multiletter control sequences out of 15000+600000
- 203905 words of font info for 142 fonts, out of 8000000 for 9000
+ 7691 strings out of 493029
+ 115072 string characters out of 6136233
+ 231997 words of memory out of 5000000
+ 10966 multiletter control sequences out of 15000+600000
+ 202577 words of font info for 136 fonts, out of 8000000 for 9000
  1148 hyphenation exceptions out of 8191
- 29i,13n,28p,1609b,456s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,13n,26p,1654b,458s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
-c/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/s
+c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/s
 hare/texmf/fonts/enc/dvips/lm/lm-rmtt.enc}{/usr/share/texmf/fonts/enc/dvips/lm/
 lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rmsc.enc}</usr/share/texl
 ive/texmf-dist/fonts/type1/public/doublestroke/dsrom10.pfb></usr/share/texmf/fo
@@ -1233,22 +1222,21 @@ e/texmf/fonts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/l
 m/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi5.pfb></usr/share/texm
 f/fonts/type1/public/lm/lmmi6.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7
 .pfb></usr/share/texmf/fonts/type1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/
-type1/public/lm/lmmi9.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></u
-sr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/pu
-blic/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmr5.pfb></usr/share/
-texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lm
-r7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts
-/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></
-usr/share/texmf/fonts/type1/public/lm/lmri7.pfb></usr/share/texmf/fonts/type1/p
-ublic/lm/lmri8.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/sha
-re/texmf/fonts/type1/public/lm/lmsy5.pfb></usr/share/texmf/fonts/type1/public/l
-m/lmsy6.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf
-/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10
-.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb>
-Output written on ieee.pdf (11 pages, 740448 bytes).
+type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></u
+sr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/pu
+blic/lm/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/t
+exmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr
+8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/font
+s/type1/public/lm/lmri7.pfb></usr/share/texmf/fonts/type1/public/lm/lmri8.pfb><
+/usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1
+/public/lm/lmsy5.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy6.pfb></usr/sh
+are/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/
+lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/tex
+mf/fonts/type1/public/lm/lmtt8.pfb>
+Output written on ieee.pdf (10 pages, 713637 bytes).
 PDF statistics:
- 581 PDF objects out of 1000 (max. 8388607)
- 465 compressed objects within 5 object streams
- 108 named destinations out of 1000 (max. 500000)
- 275 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 464 PDF objects out of 1000 (max. 8388607)
+ 370 compressed objects within 4 object streams
+ 101 named destinations out of 1000 (max. 500000)
+ 86 words of extra memory for PDF output out of 10000 (max. 10000000)
 

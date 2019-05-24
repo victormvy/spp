@@ -563,7 +563,7 @@ class Experiment:
 									   PrintWeightsCallback()
 									   ],
 							workers=self.workers,
-							use_multiprocessing=True,
+							use_multiprocessing=False,
 							max_queue_size=self.queue_size,
 							class_weight=class_weight,
 							validation_data=val_generator,

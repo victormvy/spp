@@ -70,6 +70,16 @@ J.~Yu, B.~Zhang, Z.~Kuang, D.~Lin, and J.~Fan, ``iprivacy: image privacy
   \emph{IEEE Transactions on Information Forensics and Security}, vol.~12,
   no.~5, pp. 1005--1016, 2017.
 
+\bibitem{yuan2019adversarial}
+X.~Yuan, P.~He, Q.~Zhu, and X.~Li, ``Adversarial examples: Attacks and defenses
+  for deep learning,'' \emph{IEEE transactions on neural networks and learning
+  systems}, 2019.
+
+\bibitem{tan2018deep}
+F.~Tan, X.~Hou, J.~Zhang, Z.~Wei, and Z.~Yan, ``A deep learning approach to
+  competing risks representation in peer-to-peer lending,'' \emph{IEEE
+  transactions on neural networks and learning systems}, 2018.
+
 \bibitem{hong2015multimodal}
 C.~Hong, J.~Yu, J.~Wan, D.~Tao, and M.~Wang, ``Multimodal deep autoencoder for
   human pose recovery,'' \emph{IEEE Transactions on Image Processing}, vol.~24,
