@@ -751,22 +751,11 @@ class Experiment:
 		if db.lower() == 'retinopathy':
 			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
 			# return "../retinopathy/h5/retinopathy_128_train.h5", "../retinopathy/h5/retinopathy_128_val.h5", "../retinopathy/h5/retinopathy_128_test.h5"
-		elif db.lower() == 'retinopathy1':
-			return "../retinopathy/128/split1/train", "../retinopathy/128/split1/val", "../retinopathy/128/test"
-		elif db.lower() == 'retinopathy2':
-			return "../retinopathy/128/split2/train", "../retinopathy/128/split2/val", "../retinopathy/128/test"
-		elif db.lower() == 'retinopathy3':
-			return "../retinopathy/128/split3/train", "../retinopathy/128/split3/val", "../retinopathy/128/test"
-		elif db.lower() == 'retinopathy4':
-			return "../retinopathy/128/split4/train", "../retinopathy/128/split4/val", "../retinopathy/128/test"
-		elif db.lower() == 'retinopathy5':
-			return "../retinopathy/128/split5/train", "../retinopathy/128/split5/val", "../retinopathy/128/test"
 		elif db.lower() == 'retinopathytoy':
 			return "../retinopathy/h5/retinopathytoy_128_train.h5", "../retinopathy/h5/retinopathytoy_128_val.h5", "../retinopathy/h5/retinopathytoy_128_test.h5"
 		elif db.lower() == 'retinopathy256':
 			return "../retinopathy/256/train", "../retinopathy/256/val", "../retinopathy/256/test"
 		elif db.lower() == 'adience':
-			# return "../adience/256/train", "../adience/256/val", "../adience/256/test"
 			return "../adience/adience_train_256.h5", "../adience/adience_val_256.h5", "../adience/adience_test_256.h5"
 		elif db.lower() == 'cifar10_128':
 			return "../cifar10/cifar10_128_train.h5", "../cifar10/cifar10_128_val.h5", "../cifar10/cifar10_128_test.h5"
@@ -774,6 +763,8 @@ class Experiment:
 			return "../cifar10/cifar10_75_train.h5", "../cifar10/cifar10_75_val.h5", "../cifar10/cifar10_75_test.h5"
 		elif db.lower() == 'cifar10' or db.lower() == 'cifar100':
 			return db.lower() + 'train', db.lower() + 'val', db.lower() + 'test'
+		elif db.lower() == 'wiki':
+			return "../wiki_crop/h5/wiki_train_256.h5", "../wiki_crop/h5/wiki_val_256.h5", "../wiki_crop/h5/wiki_test_256.h5"
 		else:
 			return "", "", ""
 

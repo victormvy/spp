@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="deeplearningtf" />
     <orderEntry type="module" module-name="Ordinal-Clasification-with-Residual-Networks" />
+    <orderEntry type="module" module-name="deep_ordinal_clm" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />

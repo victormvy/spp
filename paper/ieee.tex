@@ -387,7 +387,7 @@
 	% was not built to handle multiple paragraphs
 	%
 	
-	\author{Víctor-Manuel~Vargas, Pedro-Antonio~Gutiérrez and César~Hervás}
+	\author{Víctor-Manuel~Vargas, Pedro-Antonio~Gutiérrez,~\IEEEmembership{Senior~Member,~IEEE,} and César~Hervás-Mart\'inez,~\IEEEmembership{Senior~Member,~IEEE}}
 	
 	% note the % following the last \IEEEmembership and also \thanks - 
 	% these prevent an unwanted space from occurring between the last author name
@@ -410,8 +410,8 @@
 	
 	
 	% The paper headers
-	\markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
-	{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
+	\markboth{}%
+	{}
 	% The only time the second header will appear is for the odd numbered pages
 	% after the title page when using the twoside option.
 	% 
@@ -443,12 +443,12 @@
 	% As a general rule, do not put math, special symbols or citations
 	% in the abstract or keywords.
 	\begin{abstract}
-		This paper proposes a deep convolutional neural network model for ordinal regression by considering a family of probabilistic ordinal link functions in the output layer. The link functions are those used for cumulative link models, which are traditional statistical linear models based on projecting each pattern into a 1-dimensional space. A set of ordered thresholds splits this space into the different classes of the problem. In our case, the projections are estimated by a non-linear deep neural network. To further improve the results, we combine these ordinal models with a loss function that takes into account the distance between the categories, based on the weighted Kappa index. Three different link functions are studied in the experimental study, and the results are contrasted with statistical analysis. The experiments run over two different ordinal classification problems and the statistical tests confirm that these models improve the results of a nominal model and outperform other proposals considered in the literature.
+		This paper proposes a deep convolutional neural network model for ordinal regression by considering a family of probabilistic ordinal link functions in the output layer. The link functions are those used for cumulative link models, which are traditional statistical linear models based on projecting each pattern into a 1-dimensional space. A set of ordered thresholds splits this space into the different classes of the problem. In our case, the projections are estimated by a non-linear deep neural network. To further improve the results, we combine these ordinal models with a loss function that takes into account the distance between the categories, based on the weighted Kappa index. Three different link functions are studied in the experimental study, and the results are contrasted with statistical analysis. The experiments run over two different ordinal classification problems, and the statistical tests confirm that these models improve the results of a nominal model and outperform other proposals considered in the literature.
 	\end{abstract}
 	
 	% Note that keywords are not normally used for peerreview papers.
 	\begin{IEEEkeywords}
-		Deep learning, ordinal regression, cumulative link models.
+		Deep learning, ordinal regression, cumulative link models, Kappa index.
 	\end{IEEEkeywords}
 	
 	
@@ -485,11 +485,11 @@
 	% 
 	% Here we have the typical use of a "T" for an initial drop letter
 	% and "HIS" in caps to complete the first word.
-	\IEEEPARstart{D}{eep learning}, introduced by Yann Lecun~\cite{lecun2015deep}, combines multiple machine learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{cirecsan2012multi,he2016deep,krizhevsky2012imagenet}, speech recognition~\cite{hinton2012deep}, control problems~\cite{mnih2015human}, object detection~\cite{jiang2016speed,girshick2014rich}, privacy and security protection~\cite{yu2017iprivacy,yuan2019adversarial,tan2018deep}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{long2015fully} and image retrieval~\cite{li2015weakly,jin2018deep}. Convolutional Neural Networks (CNN) are one of the types of deep networks that are designed to process data that come in the form of multiple arrays. CNNs are appropriate for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,sun2013deep,ronneberger2015u}. For images, each colour channel is represented by a 2D array, and convolutional layers extract the main features from the pixels, and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the CNN, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. However, the softmax may not be the best option depending on the problem considered.
+	\IEEEPARstart{D}{eep learning}, introduced by Lecun~et al. \cite{lecun2015deep}, combines multiple machine learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{cirecsan2012multi,he2016deep,krizhevsky2012imagenet}, speech recognition~\cite{hinton2012deep}, control problems~\cite{mnih2015human}, object detection~\cite{jiang2016speed,girshick2014rich}, privacy and security protection~\cite{yu2017iprivacy,yuan2019adversarial,tan2018deep}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{long2015fully} and image retrieval~\cite{li2015weakly,jin2018deep}. Convolutional Neural Networks (CNN) are one of the types of deep networks that are designed to process data that come in the form of multiple arrays. CNNs are appropriate for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,sun2013deep,ronneberger2015u}. For images, each colour channel is represented by a 2D array, and convolutional layers extract the main features from the pixels, and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the CNN, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. However, the softmax may not be the best option depending on the problem considered.
 	
 	Ordinal classification problems are those classification tasks where labels are ordered, and there are different inter-classes importances for each pair of categories. This kind of problem can be treated as nominal classification, but this discards the ordinal information. A better approach is to use specific methods that take the ordinality into account to improve the performance of the classification model. The Proportional Odds Model (POM)~\cite{mccullagh1980regression} is an ordinal alternative to the binary logistic regression. It belongs to a wider family of models called Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs are inspired in the concept of a latent variable that is projected into a 1-dimensional space and a set of thresholds that divides the projection into the different ordinal levels. A link function needs to be specified, which can be of different types, although the most common option is the \texttt{logit}, which is used in POM. In this paper, we explore different existing alternatives, as explained in depth in Section \ref{sect:ordinalproblem}.
 	
-	In this paper, we propose the use of CLMs for deriving deep learning ordinal classifiers. In the case of CNNs, the model projection used by the threshold model can be obtained from the last layer of the network. Given that we work with a 1-dimensional space, the last layer would have only one neuron (projection of the pattern), and its value could be used to classify the sample into the corresponding class according to the thresholds. Some previous works have used the \texttt{logit} in shallow neural networks~\cite{gutierrez2016ordinal}, but this strategy has not been considered for deep learning, and alternative link functions have not been evaluated. To further improve the results, we train these models by minimising an ordinal loss function based on the Weighted Kappa index \cite{de2018weighted}, instead of using the standard cross-entropy.
+	In this paper, we propose the use of CLMs for deriving deep learning ordinal classifiers\footnote{The source code is available at \url{https://github.com/ayrna/deep-ordinal-clm}.}. In the case of CNNs, the model projection used by the threshold model can be obtained from the last layer of the network. Given that we work with a 1-dimensional space, the last layer would have only one neuron (projection of the pattern), and its value could be used to classify the sample into the corresponding class according to the thresholds. Some previous works have used the \texttt{logit} in shallow neural networks~\cite{gutierrez2016ordinal}, but this strategy has not been considered for deep learning, and alternative link functions have not been evaluated. To further improve the results, we train these models by minimising an ordinal loss function based on the Weighted Kappa index \cite{de2018weighted}, instead of using the standard cross-entropy.
 	
 	An experimental study evaluating the three most common link functions is performed. Also, other parameters that can affect the training process and the model performance are studied, such as the learning rate of the optimization algorithm, the batch size, and their interaction. The nominal version of this model is used as a baseline for comparison. We contrast the results obtained with a statistical analysis to provide more robust conclusions. An ANOVA III test \cite{miller1997beyond}, followed by a posthoc Tukey's test \cite{tukey1949comparing}, is performed over $5$ runs of the experiments, because of the demands of computational time required to run a higher number of executions. The experiments are run using two different ordinal datasets: Diabetic Retinopathy~\cite{de2018weighted}, which contains high-resolution fundus images related with diabetes disease, and Adience~\cite{beckham2017unimodal}, which includes human faces images associated with an age range.
 	
@@ -503,39 +503,39 @@
 	\subsection{Simply using an ordinal evaluation metric.}
 		
 	%\textbf{(Métrica ordinal (MAE))}
-	M. ALALI et al. \cite{alali2018multi} proposed a complex CNN architecture for solving Twitter Sentiment Classification as an ordinal problem. They checked that using average pooling preserves significant features that provide more expressiveness to ordinal scale. They didn't propose any method to include the ordinal information into the classifier, but they tried to find the best CNN model architecture based on an ordinal metric.
+	ALALI et al. \cite{alali2018multi} proposed a complex CNN architecture for solving Twitter Sentiment Classification as an ordinal problem. They checked that using average pooling preserves significant features that provide more expressiveness to ordinal scale. They didn't propose any method to include the ordinal information into the classifier, but they tried to find the best CNN model architecture based on an ordinal metric.
 
 	\subsection{Solving the ordinal problem as multiple binary sub-problems}
 	
-	Z. Niu et al. \cite{niu2016ordinal} proposed a learning approach to address ordinal regression problems using CNNs. They divided the problem into a series of binary classification sub-problems and proposed a multiple output CNN optimization algorithm to collectively solve these classification sub-problems, taking into account the correlation between them.
+	Niu et al. \cite{niu2016ordinal} proposed a learning approach to address ordinal regression problems using CNNs. They divided the problem into a series of binary classification sub-problems and proposed a multiple output CNN optimization algorithm to collectively solve these classification sub-problems, taking into account the correlation between them.
 	
-	H. Li et al. \cite{li2017deep} applied deep learning techniques for solving the ordinal problem of Alzheimer's diagnosis and detecting the different levels of the disease as multiple binary sub-problems.
+	Li et al. \cite{li2017deep} applied deep learning techniques for solving the ordinal problem of Alzheimer's diagnosis and detecting the different levels of the disease as multiple binary sub-problems.
 	
-	Y. Liu et al. \cite{liu2017deep} proposed a new approach which transforms the ordinal regression problem to binary classification sub-problems and use triplets with instances from different categories to train deep neural networks. In this way, high-level features describing the ordinal relationships are extracted automatically. Given that triplets must be generated, this approach is only recommended for small datasets.
+	Liu et al. \cite{liu2017deep} proposed a new approach which transforms the ordinal regression problem to binary classification sub-problems and use triplets with instances from different categories to train deep neural networks. In this way, high-level features describing the ordinal relationships are extracted automatically. Given that triplets must be generated, this approach is only recommended for small datasets.
 	
-	S. Chen et al. \cite{chen2017using} proposed a deep learning method termed Ranking-CNN. This method combines multiple binary CNNs that are trained with ordinal age labels. The binary outputs are aggregated for the final age prediction. They achieved a tighter error bound for ranking-based age estimation.
+	Chen et al. \cite{chen2017using} proposed a deep learning method termed Ranking-CNN. This method combines multiple binary CNNs that are trained with ordinal age labels. The binary outputs are aggregated for the final age prediction. They achieved a tighter error bound for ranking-based age estimation.
 	
 	In general, all these approaches increment the number of parameters to adjust, as several binary classifiers are simultaneously learnt.
 	
 	
 	\subsection{Using an ordinal loss function}
 	
-	J. de la Torre et al.~\cite{de2018weighted} proposed the use of a continuous version of the quadratic weighted kappa (QWK) metric as loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function using three different datasets, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces overfitting and training time. Also, they checked the importance of hyper-parameter tuning.
+	de la Torre et al.~\cite{de2018weighted} proposed the use of a continuous version of the quadratic weighted kappa (QWK) metric as loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function using three different datasets, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces overfitting and training time. Also, they checked the importance of hyper-parameter tuning.
 	
-	A. Rios et al. \cite{rios2017ordinal} presented a CNN model designed to handle ordinal regression tasks on psychiatric notes. They combined an ordinal loss function, a CNN model and conventional feature engineering. Also, they applied a technique called Locally Interpretable Model-agnostic Explanation (LIME) to make the non-linear model more interpretable.
+	Rios et al. \cite{rios2017ordinal} presented a CNN model designed to handle ordinal regression tasks on psychiatric notes. They combined an ordinal loss function, a CNN model and conventional feature engineering. Also, they applied a technique called Locally Interpretable Model-agnostic Explanation (LIME) to make the non-linear model more interpretable.
 	
-	H. Fu et al. \cite{fu2018deep} applied deep learning techniques to Monocular Depth Estimation. They introduced a spacing-increasing discretization strategy to treat the problem as an ordinal regression problem. They improved the performance when training the network with an ordinal regression loss. Also, they used a multi-scale network structure that avoids unnecessary spatial pooling.
+	Fu et al. \cite{fu2018deep} applied deep learning techniques to Monocular Depth Estimation. They introduced a spacing-increasing discretization strategy to treat the problem as an ordinal regression problem. They improved the performance when training the network with an ordinal regression loss. Also, they used a multi-scale network structure that avoids unnecessary spatial pooling.
 	
-	A. Pal et al. \cite{pal2018severity} defined a loss function for CNN that is based on the Earth Mover's Distance and takes into account the ordinal class relationships.
+	Pal et al. \cite{pal2018severity} defined a loss function for CNN that is based on the Earth Mover's Distance and takes into account the ordinal class relationships.
 	
-	Y. Liu et al. \cite{liu2018constrained} proposed a constrained optimization formulation for the ordinal regression problem which minimizes the negative loglikelihood for a multi-class problem constrained by the order relationship between instances.	
+	Liu et al. \cite{liu2018constrained} proposed a constrained optimization formulation for the ordinal regression problem which minimizes the negative loglikelihood for a multi-class problem constrained by the order relationship between instances.	
 	
 	Although the use of these losses introduces the ordinality in model learning, the nature of the models remain nominal.
 	
 	
 	\subsection{Unimodal probability distributions}
 
-	C. Beckham and C. Pal~\cite{beckham2017unimodal} proposed a straightforward technique to constrain discrete ordinal probability distributions to be unimodal, via the use of the Poisson and binomial probability distributions. The parameters of these distributions were learnt by using a deep neural network. They evaluated this approach on two large ordinal image datasets, including the Adience dataset used in this paper, obtaining promising results. They also included a simple squared-error reformulation \cite{beckham2016simple} that was sensitive to class ordering.
+	Beckham and Pal~\cite{beckham2017unimodal} proposed a straightforward technique to constrain discrete ordinal probability distributions to be unimodal, via the use of the Poisson and binomial probability distributions. The parameters of these distributions were learnt by using a deep neural network. They evaluated this approach on two large ordinal image datasets, including the Adience dataset used in this paper, obtaining promising results. They also included a simple squared-error reformulation \cite{beckham2016simple} that was sensitive to class ordering.
 	
 	This approach is the one most related to the CLMs considered in this paper. However, CLMs indirectly model a latent space together with the set of threshold separating the ordered classes, which provides a more flexible and interpretable approach to deep ordinal classification.	
 	
@@ -713,7 +713,7 @@
 		
 		
 	\subsubsection{Adience}
-	Adience\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html} dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work~\cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset was split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set. Some images of this dataset are shown in Figure \ref{fig:AdienceExamples}. Adience dataset has been used in other works for human age estimation but most of them solved the problem as a multi-class problem instead of using the ordinal relation between classes. E. Eidinger \cite{eidinger2014age} presented an approach using support vector machines and neural networks. J.-C. Chen \cite{chen2016cascaded} proposed a coarse-to-fine strategy for deep CNNs. G. Levi \cite{levi2015age} presented another convolutional network model for age estimation, while Beckham \cite{beckham2017unimodal} proposed a straightforward method to constrain discrete ordinal probability distributions to be unimodal.
+	Adience\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html} dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work~\cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset was split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set. Some images of this dataset are shown in Figure \ref{fig:AdienceExamples}. Adience dataset has been used in other works for human age estimation but most of them solved the problem as a multi-class problem instead of using the ordinal relation between classes. Eidinger et al. \cite{eidinger2014age} presented an approach using support vector machines and neural networks. Chen et al. \cite{chen2016cascaded} proposed a coarse-to-fine strategy for deep CNNs. Levi and Hassner \cite{levi2015age} presented another convolutional network model for age estimation. As previously discussed, Beckham and Pal \cite{beckham2017unimodal} proposed a straightforward method to constrain discrete probability distributions to be unimodal.
 		
 		\begin{figure}[!t]
 			\centering
@@ -748,19 +748,18 @@
 		\resizebox{\columnwidth}{!}{
 		\begin{tabular}{lclc}
 			\hline\hline
-			\multicolumn{2}{c}{\textbf{Diabetic Retinopathy}} & \multicolumn{2}{c}{\textbf{Adience}}\\
-			\hline
-			\textbf{Layer}  & \textbf{Output} & \textbf{Layer}      & \textbf{Output} \\ \hline
-			2 Conv3x3@32s1  &   252x252x32    & Conv7x7@32s2        &   112x112x32    \\
-			MaxPool2x2s2    &   126x126x32    & MaxPool3x3s2        &    55x55x32     \\
-			2 Conv3x3@64s1  &   122x122x64    & 2 ResBlock3x3@64s1  &    55x55x32     \\
-			MaxPool2x2s2    &    61x61x64     & ResBlock3x3@128s2   &    28x28x64     \\
-			2 Conv3x3@128s1 &    57x57x128    & 2 ResBlock3x3@128s1 &    28x28x64     \\
-			MaxPool2x2s2    &    28x28x128    & 1 ResBlock3x3@256s2 &    14x14x128    \\
-			2 Conv3x3@128s1 &    24x24x128    & 2 ResBlock3x3@256s1 &    14x14x128    \\
-			MaxPool2x2s2    &   12x12x128\    & 1 ResBlock3x3@512s2 &     7x7x256     \\
-			Conv4x4@128s1   &     9x9x128     & 2 ResBlock3x3@512s1 &     7x7x256     \\
-			                &                 & AveragePool7x7s2    &     1x1x256     \\ \hline\hline
+			\multicolumn{2}{c}{\textbf{Diabetic Retinopathy}} & \multicolumn{2}{c}{\textbf{Adience}}  \\ \hline
+			\textbf{Layer}  &         \textbf{Output}         & \textbf{Layer}      & \textbf{Output} \\ \hline
+			2 Conv3x3@32s1  &           124x124x32            & Conv7x7@32s2        &   112x112x32    \\
+			MaxPool2x2s2    &            62x62x32             & MaxPool3x3s2        &    55x55x32     \\
+			2 Conv3x3@64s1  &            58x58x64             & 2 ResBlock3x3@64s1  &    55x55x32     \\
+			MaxPool2x2s2    &            29x29x64             & ResBlock3x3@128s2   &    28x28x64     \\
+			2 Conv3x3@128s1 &            25x25x128            & 2 ResBlock3x3@128s1 &    28x28x64     \\
+			MaxPool2x2s2    &            12x12x128            & 1 ResBlock3x3@256s2 &    14x14x128    \\
+			2 Conv3x3@128s1 &             8x8x128             & 2 ResBlock3x3@256s1 &    14x14x128    \\
+			MaxPool2x2s2    &             4x4x128             & 1 ResBlock3x3@512s2 &     7x7x256     \\
+			Conv4x4@128s1   &             1x1x128             & 2 ResBlock3x3@512s1 &     7x7x256     \\
+			                &                                 & AveragePool7x7s2    &     1x1x256     \\ \hline\hline
 		\end{tabular}}	
 	\end{table}
 	
@@ -792,12 +791,13 @@
 		\end{equation}
 		where $N$ is the number of samples, $Q$ is the number of classes and O is the confusion matrix.
 		
-		\item Accuracy-based metrics. Correct Classification Rate (CCR) or standard accuracy is the most common metric for classification tasks and shows the percentage of correctly classified samples. We also include Top-2 CCR \cite{beckham2017unimodal} and Top-3 CCR \cite{beckham2017unimodal}, which are similar to CCR, but they take a prediction as correct when the real class is between the two or three classes, respectively, with the highest probability.
+		\item Accuracy-based metrics. Correct Classification Rate (CCR) or standard accuracy is the most common metric for classification tasks and shows the percentage of correctly classified samples. We also include Top-2 CCR and Top-3 CCR \cite{beckham2017unimodal}, which are similar to CCR, but they take a prediction as correct when the real class is between the two or three classes, respectively, with the highest probability.
 		
 		\item 1-off accuracy \cite{eidinger2014age,chen2016cascaded,levi2015age} marks the prediction as correct when the correct class is at one category of distance (in the ordinal scale) from the predicted one.
 	\end{itemize}
 	QWK, MAE and 1-off accuracy are ordinal evaluation metrics, while MS, CCR, Top-2 CCR and Top-3 CCR do not take the order of categories into consideration.
 	
+	In order to ease reproducibility, the source code is available in a public repository\footnote{\url{https://github.com/ayrna/deep-ordinal-clm}}.
 	\subsection{Factors}
 	In our study, three different factors are considered:
 	\begin{itemize}
@@ -1005,24 +1005,24 @@
 			       128        &        64         &  $0.041$   &      $0.026$       &     -      &            -            \\
 			                  &        256        &  $0.014$   &      $0.000$       &     -      &            -            \\
 			       256        &        64         &  $0.027$   &      $0.000$       &     -      &            -            \\
-			                  &        128        &  $-0.014$  &      $0.000$       &     -      &            -
+			                  &        128        &  $-0.014$  &      $0.000$       &     -      &            -\\\hline\hline
 		\end{tabular}}
 	\end{table}
 		
 	The results over the test set show that the best LF is the \texttt{logit}, the best LR is $10^{-3}$ and the best BS is 128. However, the interactions between these factors made the configuration that uses a \texttt{logit} link, $\eta=10^{-3}$ and BS of 64, the best configuration. It obtained a mean QWK value of $0.940$ for validation and $0.881$ for test. The same parameters, but using the \texttt{probit} link, achieves the second best result ($0.874$). The standard deviation is very low for both cases.
 	
-	To sum up, the results showed that the best parameter configuration depends on the problem that is being solved. The optimal value for the batch size and the optimal LF are not the same for Retinopathy and Adience datasets. These results highlight the importance of adjusting the hyper-parameters for each problem instead of trying to find an optimal configuration for all the datasets. However, the best LR for both datasets were $10^{-3}$. It is recommended to use this value for future datasets. The best BS for DR was 10, while the best value for Adience was 128 (intermediate values considered). Finally, there are more interactions between the three factors for the Adience dataset than for DR. This highlights the importance of making experimental designs associated with each dataset to determine the best value for each factor.
+	To sum up, the results showed that the best parameter configuration depends on the problem that is being solved. The \texttt{clog-log} function offers the best results in DR dataset while the \texttt{logit} link is the best option for the Adience dataset. However, the best LR for both datasets were $10^{-3}$. It is recommended to use this value for future datasets. The best BS for DR was 10, while the best value for Adience was 128 (intermediate values considered). Finally, there are more interactions between the three factors for the Adience dataset than for DR. These results highlight the importance of adjusting the hyper-parameters for each problem instead of trying to find an optimal configuration for all the datasets. 
 	
 	\subsection{Comparison with nominal method and previous works}
 	\label{sect:NominalComparison}
 	Once the factor parameters have been studied and selected, experiments are run with the standard cross-entropy loss and the softmax function too in order to prove the performance improvement of considering the ordinality of the problem (QWK loss and the CLM). The evaluation metrics remains the same in order to be able to compare. When considering the nominal version, for the DR dataset, the best mean value of QWK was $0.497$ and was obtained when using a BS of 10 and a LR of $10^{-4}$. In the case of Adience dataset, the highest QWK was $0.787$ and was achieved with a BS of 64 and a LR of $10^{-3}$. There are some parameter configurations where the training process gets stagnated and a very low QWK is obtained. As we saw in Sections \ref{sect:dr} and \ref{sect:adience}, this problem is not found when using the ordinal method. 
 
-	These results are included in Table \ref{table:Comparison}, together with the comparison against previous works of the state-of-the-art. All the results are given for the test set, except those from \cite{de2018weighted} (DR dataset), because the authors only provided validation results for $128\times 128$ images (however, validation results are usually better than test results). The results for \cite{beckham2017unimodal} were obtained by reproducing their experiments because they didn't provide exact results for test set that could be used to compare with our results. The proposed ordinal model outperforms all the other alternatives in terms of QWK. 
+	These results are included in Table \ref{table:Comparison}, together with the comparison against previous works of the state-of-the-art. All the results are given for the test set, except those from \cite{de2018weighted} (DR dataset), because the authors only provided validation results for $128\times 128$ images (however, validation results are usually better than test results). The results for \cite{beckham2017unimodal} were obtained by reproducing their experiments because they did not provide the results for test set. As can be checked, the proposed ordinal model outperforms all the other alternatives in terms of QWK. 
 	
 	The performance gain of CLM over the nominal version reaches $16.8\%$ for DR and $11.9\%$ for Adience dataset. The improvement of the ordinal method for DR is higher than that for Adience. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases. Moreover, when compared against alternative ordinal methods (many of them with a deep structure), CLMs are very competitive, possibly because of the flexibility provided by the threshold model structure (where the threshold of each class is independently adjusted).
 
 	\begin{table}[!t]
-		\caption{Comparison between the best results of nominal, ordinal and previous works for the both datasets.}
+		\caption{Comparison between the best results of the CLM network, a nominal network (using softmax and cross-entropy) and previous works for both datasets.}
 		\label{table:Comparison}
 		\scriptsize
 		\centering
@@ -1032,31 +1032,26 @@
 			\multicolumn{4}{c}{\textbf{Diabetic Retinopathy}}\\
 			\hline
 			Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
-			Ordinal network                           &    $0.582_{(0.016)}$    &    $0.723_{(0.004)}$    &        $0.868_{(0.002)}$         \\
+			CLM network (proposal)                          &    $0.582_{(0.016)}$    &    $0.723_{(0.004)}$    &        $0.868_{(0.002)}$         \\
 			Nominal network                           &    $0.498_{(0.013)}$    &    $0.692_{(0.014)}$    &        $0.854_{(0.006)}$         \\
-			J. Torre et al. \cite{de2018weighted}     &  $0.537_{(\text{-})}$   &            -            &                -                 \\
-			À. Nebot et al. \cite{nebot2016diabetic}  &  $0.555_{(\text{-})}$   &            -            &                -                 \\
+			de la Torre et al. \cite{de2018weighted}     &  $0.537_{(\text{-})}$   &            -            &                -                 \\
+			Nebot et al. \cite{nebot2016diabetic}  &  $0.555_{(\text{-})}$   &            -            &                -                 \\
 			\hline
 			\multicolumn{4}{c}{\textbf{Adience}}\\
 			\hline
 			Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
-			Ordinal network                           &    $0.881_{(0.005)}$    &    $0.519_{(0.013)}$    &        $0.894_{(0.005)}$         \\
+			CLM network (proposal)                          &    $0.881_{(0.005)}$    &    $0.519_{(0.013)}$    &        $0.894_{(0.005)}$         \\
 			Nominal network                           &    $0.787_{(0.004)}$    &    $0.458_{(0.008)}$    &        $0.800_{(0.007)}$         \\
-			Beckham et al. \cite{beckham2017unimodal} &    $0.855_{(0.012)}$    &    $0.467_{(0.019)}$    &        $0.867_{(0.011)}$         \\
-			E. Eidinger et al. \cite{eidinger2014age} &            -            &    $0.451_{(0.026)}$    &        $0.807_{(0.011)}$         \\
-			J.-C. Chen et al. \cite{chen2016cascaded} &            -            &    $0.529_{(0.060)}$    &        $0.885_{(0.022)}$         \\
-			G. Levi et al. \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$         \\ \hline\hline
+			Beckham and Pal \cite{beckham2017unimodal} &    $0.855_{(0.012)}$    &    $0.467_{(0.019)}$    &        $0.867_{(0.011)}$         \\
+			Eidinger et al. \cite{eidinger2014age} &            -            &    $0.451_{(0.026)}$    &        $0.807_{(0.011)}$         \\
+			Chen et al. \cite{chen2016cascaded} &            -            &    $0.529_{(0.060)}$    &        $0.885_{(0.022)}$         \\
+			Levi and Hassner \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$         \\ \hline\hline
 		\end{tabular}
 	\end{table}
 	
 	\section{Conclusions}
-	\label{sect:conclusions}
-	
-	This paper introduces a new deep ordinal network based on combining CLM models with a continuous QWK loss function. The proposed model is able to improve the performance of the deep network compared to the equivalent nominal version and other models proposed in previous works. Also, it is able to reduce the chance that the model gets stuck when training with some parameter configurations. 
-	
-	Moreover, we also conclude that the optimal values for the different parameters considered are problem-dependant. The \texttt{clog-log} function offers the best results in DR dataset while the \texttt{logit} link is the best option for the Adience dataset. The best value for the learning rate parameter for both datasets is $\eta = 10^{-3}$. It can be considered a good value when training the model with new datasets. Both datasets have obtained the best performance with an intermediate BS: 10 for DR and 128 for Adience. The results highlight the importance of making an experimental design where all of these parameters are adjusted for each problem. 
-	
-	In summary, the most significant contributions of the model proposal are the performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention from over-fitting and stagnation.
+	\label{sect:conclusions} 
+	This paper introduces a new deep ordinal network based on combining CLM models with a continuous QWK loss function. The proposed model is able to improve the performance of the deep network compared to the equivalent nominal version and other models proposed in previous works. Also, it is able to reduce the chance that the model gets stuck when training with some parameter configurations. We conclude that the optimal values for the different parameters considered are problem-dependant. The results highlight the importance of making an experimental design where all of these parameters are adjusted for each problem. In summary, the most significant contributions of the model proposal are the performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention from over-fitting and stagnation.
 	
 	As future research, it seems that the design of new generalised link functions could be promising, which could be dynamically adapted to any problem based on a learnable parameter. 
 	
@@ -1079,7 +1074,11 @@
 	
 	
 
-	
+
+% use section* for acknowledgement
+\section*{Acknowledgment}
+This work has been partially subsidised by the TIN2017-85887-C2-1-P and TIN2017-90567-REDT projects of the Spanish Ministry of Economy and Competitiveness (MINECO), and FEDER funds of the European Union.
+
 	
 	% Can use something like this to put references on a page
 	% by themselves when using endfloat and the captionsoff option.
@@ -1131,6 +1130,27 @@
 	
 	
 	% that's all folks
+	
+	
+	
+	\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{img/bio/VVargas.png}}]{Víctor Manuel Vargas} was born in Córdoba, Spain. He received the degree of Computer Engineering from the University of Córdoba, Spain, in 2018. He is currently studying a master's degree at the International University of Menéndez Pelayo, Spain. He is a member of the AYRNA group of the Department of Computer Science and Numerical Analysis of the University of Córdoba. His current research interests include deep neural networks and their applications to image classification on ordinal problems.
+
+	\end{IEEEbiography}
+	
+	
+	\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{img/bio/PAGutierrez.png}}]{Pedro Antonio Gutiérrez}  (M'07-SM'15) received the B.S. degree in computer science from the University of Sevilla (Spain) in 2006, and the Ph.D. degree in computer science and artificial intelligence from the University of Granada (Spain) in 2009. He is currently an Assistant Professor with the Department of Computer Science and Numerical Analysis, University of Córdoba (Spain).
+		His research interests are in the areas of supervised learning, evolutionary artificial neural networks, ordinal classification and the application of these techniques to different real world problems, including precision agriculture, renewable energy, climatology and biomedicine, among others. He serves on the Editorial board for the journals \textit{IEEE Transaction on Neural Networks and Learning Systems} and \textit{Progress in Artificial Intelligence} and on the organization/program committees of several computational intelligence conferences.
+	\end{IEEEbiography}
+
+	\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{img/bio/CHervas.png}}]{César Hervás-Martínez}  (M'07-SM'14) was born in Cuenca, Spain. He received the B.S. degree in statistics and operations research from the Universidad Complutense de Madrid, Madrid, Spain, in 1978, and the Ph.D. degree in mathematics from the University of Seville, Seville, Spain, in 1986.
+	He is currently a Professor of Computer Science and Artificial Intelligence with the Department of Computer Science and Numerical Analysis, University of Córdoba, Córdoba, Spain, and an Associate Professor with the Department of Mathematics and Engineering, Loyola University Andalucía, Spain. His current research interests include neural networks, evolutionary computation, and the modelling of natural systems.
+	\end{IEEEbiography}
+%	
+%	
+%	\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{CHervas.png}}]{C\'{e}sar Herv\'{a}s-Mart\'{i}nez} was born in Cuenca, Spain. He received his B.S. degree in Statistics and Operation Research from the Universidad Complutense, Madrid, Spain, in 1978, and his Ph.D. degree in Mathematics from the University of Seville, Seville, Spain, in 1986. He is a Professor at the University of C\'{o}rdoba in the Department of Computer Science and Numerical Analysis, in the area of Computer Science and Artificial Intelligence, and an Associate Professor in the Department of Quantitative Methods in the School of Economics. His current research interests include neural networks, evolutionary computation, and the modelling of natural systems.
+%	\end{IEEEbiography}
+	
+
 \end{document}
 
 

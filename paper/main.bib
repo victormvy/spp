@@ -110,25 +110,46 @@
 
 
 @article{clevert2015fast,
-	title={Fast and accurate deep network learning by exponential linear units (elus)},
-	author={Clevert, Djork-Arn{\'e} and Unterthiner, Thomas and Hochreiter, Sepp},
-	journal={arXiv preprint arXiv:1511.07289},
-	year={2015}
+	author = {Clevert, Djork-Arné and Unterthiner, Thomas and Hochreiter, Sepp},
+	year = {2015},
+	month = {11},
+	pages = {},
+	title = {Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)},
+	booktitle = {Proceedings of ICLR2016},
+	series = {ICLR2016}
 }
 
-@article{ioffe2015batch,
-	title={Batch normalization: Accelerating deep network training by reducing internal covariate shift},
-	author={Ioffe, Sergey and Szegedy, Christian},
-	journal={arXiv preprint arXiv:1502.03167},
-	year={2015}
+@inproceedings{ioffe2015batch,
+	title = 	 {Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift},
+	author = 	 {Sergey Ioffe and Christian Szegedy},
+	booktitle = 	 {Proceedings of the 32nd International Conference on Machine Learning},
+	pages = 	 {448--456},
+	year = 	 {2015},
+	editor = 	 {Francis Bach and David Blei},
+	volume = 	 {37},
+	series = 	 {Proceedings of Machine Learning Research},
+	address = 	 {Lille, France},
+	month = 	 {07--09 Jul},
+	publisher = 	 {PMLR},
+	pdf = 	 {http://proceedings.mlr.press/v37/ioffe15.pdf},
+	url = 	 {http://proceedings.mlr.press/v37/ioffe15.html},
+	abstract = 	 {Training Deep Neural Networks is complicated by the fact that the distribution of each layer’s inputs changes during training, as the parameters of the previous layers change. This slows down the training by requiring lower learning rates and careful parameter initialization, and makes it notoriously hard to train models with saturating nonlinearities. We refer to this phenomenon as internal covariate shift, and address the problem by normalizing layer inputs. Our method draws its strength from making normalization a part of the model architecture and performing the normalization for each training mini-batch. Batch Normalization allows us to use much higher learning rates and be less careful about initialization, and in some cases eliminates the need for Dropout. Applied to a stateof-the-art image classification model, Batch Normalization achieves the same accuracy with 14 times fewer training steps, and beats the original model by a significant margin. Using an ensemble of batch-normalized networks, we improve upon the best published result on ImageNet classification: reaching 4.82% top-5 test error, exceeding the accuracy of human raters.}
 }
 
-@article{beckham2017unimodal,
-	title={Unimodal probability distributions for deep ordinal classification},
-	author={Beckham, Christopher and Pal, Christopher},
-	journal={arXiv preprint arXiv:1705.05278},
-	year={2017}
-}
+
+@inproceedings{beckham2017unimodal,
+ author = {Beckham, Christopher and Pal, Christopher},
+ title = {Unimodal Probability Distributions for Deep Ordinal Classification},
+ booktitle = {Proceedings of the 34th International Conference on Machine Learning - Volume 70},
+ series = {ICML'17},
+ year = {2017},
+ location = {Sydney, NSW, Australia},
+ pages = {411--419},
+ numpages = {9},
+ url = {http://dl.acm.org/citation.cfm?id=3305381.3305424},
+ acmid = {3305424},
+ publisher = {JMLR.org},
+} 
 
 @inproceedings{smith2017cyclical,
 	title={Cyclical learning rates for training neural networks},
@@ -158,11 +179,12 @@
 	publisher={J. Wiley \& Sons}
 }
 
-@article{kingma2014adam,
+@inproceedings{kingma2014adam,
 	title={Adam: A method for stochastic optimization},
 	author={Kingma, Diederik P and Ba, Jimmy},
-	journal={arXiv preprint arXiv:1412.6980},
-	year={2014}
+	booktitle={Proceedings of ICLR2015},
+	year={2014},
+	series = {ICLR2015}
 }
 
 @article{van2001art,
@@ -293,11 +315,12 @@
 	doi={10.1109/72.377972}
 }
 
-@article{keskar2016large,
+@inproceedings{keskar2016large,
 	title={On large-batch training for deep learning: Generalization gap and sharp minima},
 	author={Keskar, Nitish Shirish and Mudigere, Dheevatsa and Nocedal, Jorge and Smelyanskiy, Mikhail and Tang, Ping Tak Peter},
-	journal={arXiv preprint arXiv:1609.04836},
-	year={2016}
+	booktitle={Proceedings of ICLR2017},
+	year={2016},
+	series = {ICLR2017}
 }
 
 @article{radiuk2017impact,
@@ -312,8 +335,6 @@
 	doi={10.1515/itms-2017-0003}
 }
 
-
-
 @article{hinton2012deep,
 	title={Deep neural networks for acoustic modeling in speech recognition: The shared views of four research groups},
 	author={Hinton, Geoffrey and Deng, Li and Yu, Dong and Dahl, George E and Mohamed, Abdel-rahman and Jaitly, Navdeep and Senior, Andrew and Vanhoucke, Vincent and Nguyen, Patrick and Sainath, Tara N and others},
@@ -325,13 +346,13 @@
 	publisher={IEEE}
 }
 
-
-
-@article{cirecsan2012multi,
+@inproceedings{cirecsan2012multi,
 	title={Multi-column deep neural networks for image classification},
-	author={Cire{\c{s}}an, Dan and Meier, Ueli and Schmidhuber, J{\"u}rgen},
-	journal={arXiv preprint arXiv:1202.2745},
-	year={2012}
+	author={Schmidhuber, J and Meier, U and Ciresan, D},
+	booktitle={2012 IEEE Conference on Computer Vision and Pattern Recognition},
+	pages={3642--3649},
+	year={2012},
+	organization={IEEE}
 }
 
 @inproceedings{he2016deep,
@@ -428,7 +449,7 @@
 @article{bengio1994learning,
 	title={Learning long-term dependencies with gradient descent is difficult},
 	author={Bengio, Yoshua and Simard, Patrice and Frasconi, Paolo},
-	journal={IEEE transactions on neural networks},
+	journal={IEEE Transactions on Neural Networks},
 	volume={5},
 	number={2},
 	pages={157--166},
@@ -525,7 +546,7 @@
 @article{perez2014projection,
 	title={Projection-based ensemble learning for ordinal regression},
 	author={P{\'e}rez-Ortiz, Mar{\'\i}a and Guti{\'e}rrez, Pedro Antonio and Herv{\'a}s-Mart{\'\i}nez, C{\'e}sar},
-	journal={IEEE transactions on cybernetics},
+	journal={IEEE Transactions on Cybernetics},
 	volume={44},
 	number={5},
 	pages={681--694},
@@ -760,52 +781,85 @@
 }
 
 @article{humbird2018deep,
-	title={Deep neural network initialization with decision trees},
-	author={Humbird, Kelli D and Peterson, J Luc and McClarren, Ryan G},
-	journal={IEEE transactions on neural networks and learning systems},
-	year={2018},
-	publisher={IEEE}
+	author={K. D. {Humbird} and J. L. {Peterson} and R. G. {Mcclarren}},
+	journal={IEEE Transactions on Neural Networks and Learning Systems},
+	title={Deep Neural Network Initialization With Decision Trees},
+	year={2019},
+	volume={30},
+	number={5},
+	pages={1286-1295},
+	keywords={decision trees;feedforward neural nets;learning (artificial intelligence);optimisation;pattern classification;regression analysis;automated process;deep feedforward neural networks;tree-informed initialization;neural network training process;deep jointly informed neural networks;classification data sets;decision tree models;neural network initialization;regression method;Bayesian hyperparameter optimization;Biological neural networks;Decision trees;Vegetation;Neurons;Training;Data models;Decision trees;multilayer neural networks;neural networks},
+	doi={10.1109/TNNLS.2018.2869694},
+	ISSN={2162-237X},
+	month={May}
 }
 
 @article{mahmud2018applications,
-	title={Applications of deep learning and reinforcement learning to biological data},
-	author={Mahmud, Mufti and Kaiser, Mohammed Shamim and Hussain, Amir and Vassanelli, Stefano},
-	journal={IEEE transactions on neural networks and learning systems},
+	author={M. {Mahmud} and M. S. {Kaiser} and A. {Hussain} and S. {Vassanelli}},
+	journal={IEEE Transactions on Neural Networks and Learning Systems},
+	title={Applications of Deep Learning and Reinforcement Learning to Biological Data},
+	year={2018},
 	volume={29},
 	number={6},
-	pages={2063--2079},
-	year={2018},
-	publisher={IEEE}
+	pages={2063-2079},
+	keywords={biology computing;data mining;learning (artificial intelligence);deep RL techniques;DL techniques;deep learning;reinforcement learning;multimodal data;medical imaging;computational power;data-intensive machine learning techniques;hardware-based technologies;artificial intelligence;biological data mining;Biology;Feature extraction;Recurrent neural networks;Data models;Biomedical imaging;Computer architecture;Machine learning;Bioimaging;brain–machine interfaces;convolutional neural network (CNN);deep autoencoder (DA);deep belief network (DBN);deep learning performance;medical imaging;omics;recurrent neural network (RNN)},
+	doi={10.1109/TNNLS.2018.2790388},
+	ISSN={2162-237X},
+	month={June}
 }
 
 @article{yuan2019adversarial,
-	title={Adversarial examples: Attacks and defenses for deep learning},
-	author={Yuan, Xiaoyong and He, Pan and Zhu, Qile and Li, Xiaolin},
-	journal={IEEE transactions on neural networks and learning systems},
+	author={X. {Yuan} and P. {He} and Q. {Zhu} and X. {Li}},
+	journal={IEEE Transactions on Neural Networks and Learning Systems},
+	title={Adversarial Examples: Attacks and Defenses for Deep Learning},
 	year={2019},
-	publisher={IEEE}
+	volume={},
+	number={},
+	pages={1-20},
+	keywords={Task analysis;Security;Data models;Deep learning;Feature extraction;Computer architecture;Computational modeling;Adversarial examples;deep learning (DL);deep neural network (DNN);security.},
+	doi={10.1109/TNNLS.2018.2886017},
+	ISSN={2162-237X},
+	month={}
 }
 
 @article{lin2018generalization,
+	author={S. {Lin}},
+	journal={IEEE Transactions on Neural Networks and Learning Systems},
 	title={Generalization and Expressivity for Deep Nets},
-	author={Lin, Shao-Bo},
-	journal={IEEE transactions on neural networks and learning systems},
-	year={2018},
-	publisher={IEEE}
+	year={2019},
+	volume={30},
+	number={5},
+	pages={1392-1406},
+	keywords={approximation theory;learning (artificial intelligence);minimisation;neural nets;set theory;sparse matrices;deep net;shallow nets;empirical risk minimization;sparse approximation;near-optimal learning rates;learning theory viewpoint;deep learning;Neurons;Sparse representation;Biological neural networks;Machine learning;Learning systems;Power measurement;Risk management;Deep learning;expressivity;generalization;learning theory;localized approximation},
+	doi={10.1109/TNNLS.2018.2868980},
+	ISSN={2162-237X},
+	month={May}
 }
 
 @article{jin2018deep,
-	title={Deep semantic-preserving ordinal hashing for cross-modal similarity search},
-	author={Jin, Lu and Li, Kai and Li, Zechao and Xiao, Fu and Qi, Guo-Jun and Tang, Jinhui},
-	journal={IEEE transactions on neural networks and learning systems},
-	year={2018},
-	publisher={IEEE}
+	author={L. {Jin} and K. {Li} and Z. {Li} and F. {Xiao} and G. {Qi} and J. {Tang}},
+	journal={IEEE Transactions on Neural Networks and Learning Systems},
+	title={Deep Semantic-Preserving Ordinal Hashing for Cross-Modal Similarity Search},
+	year={2019},
+	volume={30},
+	number={5},
+	pages={1429-1440},
+	keywords={binary codes;file organisation;image representation;image retrieval;information retrieval;learning (artificial intelligence);neural nets;optimisation;cross-modal similarity search;binary quantization functions;DSPOH;deep neural networks;feature dimensions;ordinal representation;cross-modal retrieval tasks;feature representation;hash function learning;deep cross-modal hashing methods;deep semantic-preserving ordinal hashing;large-scale multimedia retrieval;ranking-based hashing framework;rank correlation measures;Semantics;Feature extraction;Correlation;Neural networks;Quantization (signal);Scalability;Learning systems;Class labels;cross-modal hashing;deep neural networks;intermodality similarity;ranking-based hash function},
+	doi={10.1109/TNNLS.2018.2869601},
+	ISSN={2162-237X},
+	month={May}
 }
 
 @article{tan2018deep,
-	title={A deep learning approach to competing risks representation in peer-to-peer lending},
-	author={Tan, Fei and Hou, Xiurui and Zhang, Jie and Wei, Zhi and Yan, Zhenyu},
-	journal={IEEE transactions on neural networks and learning systems},
-	year={2018},
-	publisher={IEEE}
+	author={F. {Tan} and X. {Hou} and J. {Zhang} and Z. {Wei} and Z. {Yan}},
+	journal={IEEE Transactions on Neural Networks and Learning Systems},
+	title={A Deep Learning Approach to Competing Risks Representation in Peer-to-Peer Lending},
+	year={2019},
+	volume={30},
+	number={5},
+	pages={1565-1574},
+	keywords={decision making;investment;learning (artificial intelligence);neural nets;pattern classification;peer-to-peer computing;risk analysis;borrowers;low transaction cost;decision-making procedure;hierarchical grading framework;end-to-end deep learning approach;multiple binary classification subproblems;feature representation;real-world loan data;potential investors;peer-to-peer lending;deep neural networks;risks representation;P2P lending;prepayment;Investment;Neural networks;Peer-to-peer computing;Machine learning;Loans and mortgages;Data models;Learning systems;Competing risks;deep neural networks;peer-to-peer (P2P) lending;return on investment (ROI)},
+	doi={10.1109/TNNLS.2018.2870573},
+	ISSN={2162-237X},
+	month={May}
 }
