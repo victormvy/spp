@@ -729,6 +729,8 @@ class Experiment:
 	def get_model(self, net_object, name):
 		if name == 'vgg19':
 			model = net_object.vgg19()
+		elif name == 'vgg19_v2':
+			model = net_object.vgg19_v2()
 		elif name == 'conv128':
 			model = net_object.conv128()
 		elif name == 'testing':
