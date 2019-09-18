@@ -196,6 +196,41 @@ class Dataset:
 		# Upscale
 		self._resize_data(32, 32)
 
+	def _load_cinic10(self, split):
+		images = []
+
+		train_path = "CINIC/train/"
+		valid_path = "CINIC/valid/"
+		test_path = "CINIC/test/"
+
+		if split == 'train':
+			path = train_path
+		elif split == 'val':
+			path = valid_path
+		elif split == 'test':
+			path = test_path
+		else:
+			print('Not valid split')
+			return
+
+		for label_path in os.listdir(path):
+			label = label_path
+			for image_path in os.listdir(train_path + "/" + label_path):
+				img = io.imread(train_path + "/" + label_path + "/" + image_path)
+				if img.shape != (32, 32, 3):
+					continue
+				images.append(img)
+				y_names.append(label)
+		images = np.concatenate([arr[np.newaxis] for arr in images])
+
+		categories = pd.Categorical(y_names)
+		y = categories.codes
+		x = images
+
+		self._data['x'] = x.astype('float32')
+		self._data['y'] = keras.utils.to_categorical(y, 10)
+
+
 
 	def _resize_data(self, width, height):
 		data_resized = np.zeros((self._data['x'].shape[0], width, height, self.num_channels))
