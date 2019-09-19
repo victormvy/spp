@@ -3,7 +3,7 @@ from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, BatchNormalization, Activation, Dropout, Flatten, Dense
 from keras import regularizers
 from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, CLM, RReLu, \
-	PELU, SlopedReLU, PTELU, Antirectifier
+	PELU, SlopedReLU, PTELU, Antirectifier, CReLU
 from layers import GeometricLayer
 from resnet import Resnet_2x4
 
@@ -327,6 +327,8 @@ class Net:
 			return PTELU()
 		elif self.activation == 'antirectifier':
 			return Antirectifier()
+		elif self.activation == 'crelu':
+			return CReLU()
 		else:
 			return keras.layers.Activation('relu')
 

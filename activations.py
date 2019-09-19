@@ -304,6 +304,17 @@ class Antirectifier(keras.layers.Layer):
 		return K.concatenate([pos, neg], axis=1)
 
 
+class CReLU(keras.layers.Layer):
+	def compute_output_shape(self, input_shape):
+		shape = list(input_shape)
+		shape[-1] *= 2
+		return tuple(shape)
+
+	def call(self, inputs):
+		pos = K.relu(inputs)
+		neg = K.relu(-inputs)
+		return K.concatenate([pos, neg])
+
 class CLM(keras.layers.Layer):
 	"""
 	Proportional Odds Model activation layer.
