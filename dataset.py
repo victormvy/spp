@@ -96,6 +96,14 @@ class Dataset:
 	def portion(self):
 		del self._portion
 
+	@property
+	def mean(self):
+		return np.array(self._data['x']).mean()
+
+	@property
+	def std(self):
+		return np.array(self._data['x']).std()
+
 	def load(self, path):
 		if path == 'cifar10train':
 			self._load_cifar10('train')
@@ -281,23 +289,6 @@ class Dataset:
 
 		y_label = np.argmax(self._data['y'], axis=1)
 		return compute_class_weight('balanced', np.unique(y_label), y_label)
-
-		counts = {}
-		total_count = 0
-		for lbl_oh in self._data['y']:
-			label = np.argmax(lbl_oh)
-			total_count += 1
-			if label in counts:
-				counts[label] += 1
-			else:
-				counts[label] = 1
-
-		weights = {}
-
-		for k in counts:
-			weights[k] = np.log(total_count / counts[k])
-
-		return weights
 
 	@property
 	def num_channels(self):
