@@ -3,14 +3,24 @@ import keras
 from tensorflow import distributions, matrix_band_part, igamma, lgamma
 from keras import backend as K
 
-class SPP(keras.layers.Activation):
+class SPP(keras.layers.Layer):
 	"""
 	Parametric softplus activation layer.
 	"""
 
-	def __init__(self, activation, **kwargs):
-		super(SPP, self).__init__(activation, **kwargs)
+	def __init__(self, alpha, **kwargs):
+		super(SPP, self).__init__(**kwargs)
 		self.__name__ = 'SPP'
+		self.alpha = alpha
+
+	def build(self, input_shape):
+		super(SPP, self).build(input_shape)
+
+	def call(self, inputs):
+		return K.softplus(inputs) - self.alpha
+
+	def compute_output_shape(self, input_shape):
+		return input_shape
 
 
 def parametric_softplus(spp_alpha):
