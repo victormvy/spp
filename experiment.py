@@ -409,59 +409,36 @@ class Experiment:
 			**self.augmentation
 		)
 
-		# Augmentation for validation / test
-		eval_augmentation = {k: v for k, v in self.augmentation.items() if
-							 k == 'featurewise_center' or k == 'featurewise_std_normalization'}
-
-		# shear_range=0.2,
-		# zoom_range=0.2,
-		# horizontal_flip=True,
-		# vertical_flip=True,
-		# brightness_range=(0.5, 1.5),
-		# rotation_range=90,
-		# fill_mode='nearest',
-
 		# Validation data generator
-		val_datagen = keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor, **eval_augmentation)
+		val_datagen = keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor)
 
 		# Get database paths
 		train_path, val_path, _ = self.get_db_path(self.db)
 
 		# Check that database exists and paths are correct
 		if train_path == '' or val_path == '':
-			raise Exception('Invalid database. Choose one of: Retinopathy or Adience.')
+			raise Exception('Invalid database.')
 
 		# Load datasets
 		ds_train = Dataset(train_path)
-		# ds_train.standardize_data()
 		ds_val = Dataset(val_path)
-		# ds_val.standardize_data()
+
+		# Standardize datasets
+		mean = ds_train.mean
+		std = ds_train.std
+		ds_train.standardize_data(mean, std)
+		ds_val.standardize_data(mean, std)
 
 		# Get dataset details
 		num_classes = ds_train.num_classes
 		num_channels = ds_train.num_channels
 		img_size = ds_train.img_size
 
-		# Fit for zca_whitening, featurewise_center, featurewise_std_normalization
-		if 'zca_whitening' in self.augmentation or 'featurewise_center' in self.augmentation or 'featurewise_std_normalization' in self.augmentation:
-			train_datagen.fit(ds_train.x)
-			val_datagen.mean = train_datagen.mean
-			val_datagen.std = train_datagen.std
-
 		# Train data generator used for training
-		train_generator = train_datagen.flow(
-			ds_train.x,
-			ds_train.y,
-			batch_size=self.batch_size
-		)
+		train_generator = train_datagen.flow(ds_train.x, ds_train.y, batch_size=self.batch_size)
 
 		# Validation generator
-		val_generator = val_datagen.flow(
-			ds_val.x,
-			ds_val.y,
-			batch_size=self.batch_size,
-			shuffle=True
-		)
+		val_generator = val_datagen.flow(ds_val.x, ds_val.y, batch_size=self.batch_size, shuffle=True)
 
 		# Calculate the number of steps per epoch
 		steps = (len(ds_train.y) * 1) // self.batch_size
@@ -476,19 +453,16 @@ class Experiment:
 		gc.collect()
 
 		# Learning rate scheduler callback
-		def learning_rate_scheduler(epoch):
+		def lr_exp_scheduler(epoch):
 			lr = self.lr * np.exp(-0.01 * epoch)
-
-			# stepsize = 10
-			# low = 1e-4
-			# high = 1e-2
-			# cycle = math.floor(1 + epoch /(2 * stepsize))
-			# x = abs(epoch / stepsize - 2 * cycle + 1)
-			# lr = low + (high - low) * max(0, 1-x)
-
 			print("New LR: {}".format(lr))
 
 			return lr
+
+		lr_drop = 20
+		def lr_scheduler(epoch):
+			return self.lr * (0.5 ** (epoch // lr_drop))
+
 
 		# Save epoch callback for training process
 		def save_epoch(epoch, logs):
@@ -502,14 +476,11 @@ class Experiment:
 				f.write('\n' + str(self.best_metric))
 
 
-		save_epoch_callback = keras.callbacks.LambdaCallback(
-			on_epoch_end=save_epoch
-		)
+		save_epoch_callback = keras.callbacks.LambdaCallback(on_epoch_end=save_epoch)
 
 		# NNet object
-		net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau, self.prob_layer, num_channels, num_classes,
-						 self.spp_alpha,
-						 self.dropout)
+		net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau,
+						 self.prob_layer, num_channels, num_classes, self.spp_alpha, self.dropout)
 
 		model = self.get_model(net_object, self.net_type)
 
@@ -536,11 +507,14 @@ class Experiment:
 		# Computing QWK for training properly is too expensive
 		metrics = ['accuracy']
 
+		lr_decay = 1e-6
+
 		# Compile the keras model
 		model.compile(
-			optimizer=keras.optimizers.Adam(lr=self.lr),  # keras.optimizers.SGD(self.lr, 0.9),
-			loss=loss,
-			metrics=metrics
+			optimizer = keras.optimizers.SGD(lr=self.lr, decay=lr_decay, momentum=0.9, nesterov=True),
+			# keras.optimizers.SGD(lr=self.lr, decay=lr_decay, momentum=0.9, nesterov=True),
+			# keras.optimizers.Adam(lr=self.lr, decay=lr_decay),
+			loss=loss, metrics=metrics
 		)
 
 		# Print model summary
@@ -550,8 +524,8 @@ class Experiment:
 		model.fit_generator(train_generator, epochs=self.epochs,
 							initial_epoch=start_epoch,
 							steps_per_epoch=steps,
-							callbacks=[#keras.callbacks.LearningRateScheduler(learning_rate_scheduler),
-									   keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, mode='min', min_lr=1e-4, verbose=1),
+							callbacks=[keras.callbacks.LearningRateScheduler(lr_scheduler),
+									   #keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, mode='min', min_lr=1e-4, verbose=1),
 									   keras.callbacks.ModelCheckpoint(
 										   os.path.join(self.checkpoint_dir, self.model_file)),
 									   save_epoch_callback,
@@ -560,7 +534,7 @@ class Experiment:
 									   keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 									   keras.callbacks.TerminateOnNaN(),
 									   keras.callbacks.EarlyStopping(min_delta=0.0005, patience=40, verbose=1),
-									   PrintWeightsCallback()
+									   # PrintWeightsCallback()
 									   ],
 							workers=self.workers,
 							use_multiprocessing=False,
@@ -611,73 +585,57 @@ class Experiment:
 
 		all_metrics = {}
 
-		# Augmentation for validation / test
-		eval_augmentation = {k: v for k, v in self.augmentation.items() if
-							 k == 'featurewise_center' or k == 'featurewise_std_normalization'}
+		mean = 0.0
+		std  = 0.0
 
-		mean = 0
-		std = 0
-
+		# Train dataset MUST ALWAYS BE in the first place in order to get mean and std for standardization
 		for path, set in zip(paths, ['Train', 'Validation', 'Test']):
 			print('\n=== {} dataset ===\n'.format(set))
 
 			# Load test dataset
-			ds_test = Dataset(path)
-			# ds_test.standardize_data()
+			ds = Dataset(path)
+
+			# Get mean and std from Train dataset
+			if set == 'Train':
+				mean = ds.mean
+				std = ds.std
+
+			# Standardize data
+			ds.standardize_data(mean, std)
 
 			# Get dataset details
-			num_classes = ds_test.num_classes
-			num_channels = ds_test.num_channels
-			img_size = ds_test.img_size
+			num_classes = ds.num_classes
+			num_channels = ds.num_channels
+			img_size = ds.img_size
 
 			# Validation data generator
-			test_datagen = keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor,
-																		   **eval_augmentation)
-
-			# Save mean and std of train set
-			if set == 'Train':
-				# Fit for zca_whitening, featurewise_center, featurewise_std_normalization
-				if 'zca_whitening' in self.augmentation or 'featurewise_center' in self.augmentation or 'featurewise_std_normalization' in self.augmentation:
-					test_datagen.fit(ds_test.x)
-					mean = test_datagen.mean
-					std = test_datagen.std
-			else:
-				if 'zca_whitening' in self.augmentation or 'featurewise_center' in self.augmentation or 'featurewise_std_normalization' in self.augmentation:
-					test_datagen.mean = mean
-					test_datagen.std = std
+			datagen = keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor)
 
 			# Test generator
-			test_generator = test_datagen.flow(
-				ds_test.x,
-				ds_test.y,
-				batch_size=self.batch_size,
-				shuffle=False
-			)
+			generator = datagen.flow(ds.x, ds.y, batch_size=self.batch_size, shuffle=False)
 
 			# NNet object
-			net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau, self.prob_layer, num_channels,
-							 num_classes,
-							 self.spp_alpha,
-							 self.dropout)
+			net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau,
+							 self.prob_layer, num_channels, num_classes, self.spp_alpha, self.dropout)
 
 			model = self.get_model(net_object, self.net_type)
 
-			# Restore weights
+			# Load weights
 			model.load_weights(os.path.join(self.checkpoint_dir, self.best_model_file))
 
 			# Get predictions
-			test_generator.reset()
-			predictions = model.predict_generator(test_generator, verbose=1)
+			generator.reset()
+			predictions = model.predict_generator(generator, verbose=1)
 
-			metrics = self.compute_metrics(ds_test.y, predictions, num_classes)
+			metrics = self.compute_metrics(ds.y, predictions, num_classes)
 			self.print_metrics(metrics)
 
 			all_metrics[set] = metrics
 
 			# Free objects
-			del ds_test
-			del test_datagen
-			del test_generator
+			del ds
+			del datagen
+			del generator
 			del net_object
 			del model
 			del predictions
