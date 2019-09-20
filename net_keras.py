@@ -2,7 +2,7 @@ import keras
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, BatchNormalization, Activation, Dropout, Flatten, Dense
 from keras import regularizers
-from activations import SPP, parametric_softplus, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, CLM, RReLu, \
+from activations import SPP, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, CLM, RReLu, \
 	PELU, SlopedReLU, PTELU, Antirectifier, CReLU
 from layers import GeometricLayer
 from resnet import Resnet_2x4
@@ -24,9 +24,6 @@ class Net:
 		self.num_classes = num_classes
 		self.spp_alpha = spp_alpha
 		self.dropout = dropout
-
-		# Add new activation function
-		keras.utils.get_custom_objects().update({'spp': SPP(parametric_softplus(spp_alpha))})
 
 	def vgg19(self):
 		model = keras.models.Sequential([
@@ -302,7 +299,7 @@ class Net:
 		elif self.activation == 'softplus':
 			return keras.layers.Activation('softplus')
 		elif self.activation == 'spp':
-			return keras.layers.Activation('spp')
+			return SPP(self.spp_alpha)
 		elif self.activation == 'mpelu':
 			return MPELU(channel_wise=True)
 		elif self.activation == 'rtrelu':
