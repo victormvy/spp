@@ -111,6 +111,12 @@ class Dataset:
 			self._load_cifar10('val')
 		elif path == 'cifar10test':
 			self._load_cifar10('test')
+		elif path == 'mnisttrain':
+			self._load_mnist('train')
+		elif path == 'mnistval':
+			self._load_mnist('val')
+		elif path == 'mnisttest':
+			self._load_mnist('test')
 		elif os.path.isdir(path):
 			self._load_from_dir(path)
 		else:
@@ -239,11 +245,45 @@ class Dataset:
 		self._data['y'] = keras.utils.to_categorical(y, 10)
 
 
+	def _load_mnist(self, split):
+		(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+
+		self._data = {}
+		self._data['x'] = []
+		self._data['y'] = []
+		self._sample_shape = (32,32, 1)
+
+		if split == 'train':
+			self._data['x'] = x_train
+			self._data['y'] = y_train
+		elif split == 'val' or split == 'test':
+			xt, xv, yt, yv = train_test_split(x_test, y_test, test_size=0.2, random_state=1)
+
+			if split == 'val':
+				self._data['x'] = xv
+				self._data['y'] = yv
+			elif split == 'test':
+				self._data['x'] = xt
+				self._data['y'] = yt
+
+
+		y = np.array(self._data['y']).ravel()
+		self.num_classes = 10
+		self._data['y'] = list(keras.utils.to_categorical(y, self.num_classes))
+		self._data['x'] = np.expand_dims(self._data['x'], axis=-1)
+
+		# Upscale
+		self._resize_data(32, 32)
+
+
 
 	def _resize_data(self, width, height):
 		data_resized = np.zeros((self._data['x'].shape[0], width, height, self.num_channels))
 		for i, img in enumerate(self._data['x']):
 			img_resized = cv2.resize(img, dsize=(width, height), interpolation=cv2.INTER_CUBIC)
+			# cv2 returns 2 dims array when using non rgb images but we need 3 dims
+			if len(img_resized.shape) < 3:
+				img_resized = np.expand_dims(img_resized, axis=-1)
 			data_resized[i] = img_resized
 
 		self._data['x'] = data_resized

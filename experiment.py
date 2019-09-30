@@ -10,7 +10,7 @@ import pickle
 import h5py
 from scipy import io as spio
 from callbacks import ComputeMetricsCallback, PrintWeightsCallback
-from losses import qwk_loss, make_cost_matrix
+from losses import qwk_loss, make_cost_matrix, ms_n_qwk_loss
 from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm, top_2_accuracy, top_3_accuracy, \
 	minimum_sensitivity, accuracy_off1
 from dataset import Dataset
@@ -502,6 +502,8 @@ class Experiment:
 		# Quadratic Weighted Kappa loss
 		if self.loss == 'qwk':
 			loss = qwk_loss(cost_matrix)
+		elif self.loss == 'msqwk':
+			loss = ms_n_qwk_loss(cost_matrix)
 
 		# Only accuracy for training.
 		# Computing QWK for training properly is too expensive
@@ -721,7 +723,7 @@ class Experiment:
 			return "../cifar10/cifar10_128_train.h5", "../cifar10/cifar10_128_val.h5", "../cifar10/cifar10_128_test.h5"
 		elif db.lower() == 'cifar10_75':
 			return "../cifar10/cifar10_75_train.h5", "../cifar10/cifar10_75_val.h5", "../cifar10/cifar10_75_test.h5"
-		elif db.lower() == 'cifar10' or db.lower() == 'cifar100':
+		elif db.lower() == 'cifar10' or db.lower() == 'cifar100' or db.lower() == 'mnist':
 			return db.lower() + 'train', db.lower() + 'val', db.lower() + 'test'
 		elif db.lower() == 'wiki':
 			return "../wiki_crop/h5/wiki_train_256.h5", "../wiki_crop/h5/wiki_val_256.h5", "../wiki_crop/h5/wiki_test_256.h5"
