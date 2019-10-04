@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: elsarticle-template.aux
+The style file: elsarticle-num.bst
+Database file #1: main.bib.bib
+Warning--empty journal in clevert2015fast
+Warning--can't use both volume and number fields in maas2013rectifier
+Warning--empty pages in kingma2014adam
+You've used 54 entries,
+            2937 wiz_defined-function locations,
+            998 strings with 16173 characters,
+and the built_in function-call counts, 20711 in all, are:
+= -- 2000
+> -- 622
+< -- 29
++ -- 243
+- -- 189
+* -- 1410
+:= -- 2571
+add.period$ -- 77
+call.type$ -- 54
+change.case$ -- 52
+chr.to.int$ -- 0
+cite$ -- 57
+duplicate$ -- 744
+empty$ -- 2343
+format.name$ -- 237
+if$ -- 5449
+int.to.chr$ -- 0
+int.to.str$ -- 54
+missing$ -- 56
+newline$ -- 195
+num.names$ -- 56
+pop$ -- 414
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 1448
+stack$ -- 0
+substring$ -- 1330
+swap$ -- 316
+text.length$ -- 29
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 3
+while$ -- 167
+width$ -- 56
+write$ -- 509
+(There were 3 warnings)
