@@ -11,26 +11,38 @@ Y.~LeCun, Y.~Bengio, G.~Hinton, Deep learning, nature 521~(7553) (2015)
 \newblock \href {http://dx.doi.org/10.1038/nature14539}
   {\path{doi:10.1038/nature14539}}.
 
-\bibitem{cirecsan2012multi}
-J.~Schmidhuber, U.~Meier, D.~Ciresan, Multi-column deep neural networks for
-  image classification, in: 2012 IEEE Conference on Computer Vision and Pattern
-  Recognition, IEEE, 2012, pp. 3642--3649.
+\bibitem{yu2017convolutional}
+S.~Yu, S.~Jia, C.~Xu, Convolutional neural networks for hyperspectral image
+  classification, Neurocomputing 219 (2017) 88 -- 98.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2016.09.010}
+  {\path{doi:10.1016/j.neucom.2016.09.010}}.
 
-\bibitem{he2016deep}
-K.~He, X.~Zhang, S.~Ren, J.~Sun, Deep residual learning for image recognition,
-  in: Proc. of the IEEE conf. computer vision and pat. recog., 2016, pp.
-  770--778.
+\bibitem{fang2019image}
+Image classification with an rgb-channel nonsubsampled contourlet transform and
+  a convolutional neural network, Neurocomputing\href
+  {http://dx.doi.org/10.1016/j.neucom.2018.10.094}
+  {\path{doi:10.1016/j.neucom.2018.10.094}}.
 
-\bibitem{krizhevsky2012imagenet}
-A.~Krizhevsky, I.~Sutskever, G.~E. Hinton, Imagenet classification with deep
-  convolutional neural networks, in: Adv. in neural inf. proc. sys., 2012, pp.
-  1097--1105.
+\bibitem{zhu2019image}
+F.~Zhu, Z.~Ma, X.~Li, G.~Chen, J.-T. Chien, J.-H. Xue, J.~Guo, Image-text dual
+  neural network with decision strategy for small-sample image classification,
+  Neurocomputing 328 (2019) 182 -- 188, chinese Conference on Computer Vision
+  2017.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2018.02.099}
+  {\path{doi:10.1016/j.neucom.2018.02.099}}.
 
-\bibitem{hinton2012deep}
-G.~Hinton, L.~Deng, D.~Yu, G.~E. Dahl, A.-r. Mohamed, N.~Jaitly, A.~Senior,
-  V.~Vanhoucke, P.~Nguyen, T.~N. Sainath, et~al., Deep neural networks for
-  acoustic modeling in speech recognition: The shared views of four research
-  groups, IEEE Signal processing magazine 29~(6) (2012) 82--97.
+\bibitem{song2018music}
+G.~Song, Z.~Wang, F.~Han, S.~Ding, M.~A. Iqbal, Music auto-tagging using deep
+  recurrent neural networks, Neurocomputing 292 (2018) 104--110.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2018.02.076}
+  {\path{doi:10.1016/j.neucom.2018.02.076}}.
+
+\bibitem{liu2018speech}
+Z.-T. Liu, M.~Wu, W.-H. Cao, J.-W. Mao, J.-P. Xu, G.-Z. Tan, Speech emotion
+  recognition based on feature selection and extreme learning machine decision
+  tree, Neurocomputing 273 (2018) 271--280.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2017.07.050}
+  {\path{doi:10.1016/j.neucom.2017.07.050}}.
 
 \bibitem{mnih2015human}
 V.~Mnih, K.~Kavukcuoglu, D.~Silver, A.~A. Rusu, J.~Veness, M.~G. Bellemare,
@@ -39,31 +51,23 @@ V.~Mnih, K.~Kavukcuoglu, D.~Silver, A.~A. Rusu, J.~Veness, M.~G. Bellemare,
 \newblock \href {http://dx.doi.org/10.1038/nature14236}
   {\path{doi:10.1038/nature14236}}.
 
-\bibitem{jiang2016speed}
-X.~Jiang, Y.~Pang, X.~Li, J.~Pan, Speed up deep neural network based pedestrian
-  detection by sharing features across multi-scale models, Neurocomputing 185
-  (2016) 163--170.
-\newblock \href {http://dx.doi.org/10.1016/j.neucom.2015.12.042}
-  {\path{doi:10.1016/j.neucom.2015.12.042}}.
+\bibitem{sun2018face}
+X.~Sun, P.~Wu, S.~C. Hoi, Face detection using deep learning: An improved
+  faster rcnn approach, Neurocomputing 299 (2018) 42--50.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2018.03.030}
+  {\path{doi:10.1016/j.neucom.2018.03.030}}.
 
-\bibitem{girshick2014rich}
-R.~Girshick, J.~Donahue, T.~Darrell, J.~Malik, Rich feature hierarchies for
-  accurate object detection and semantic segmentation, in: Proceedings of the
-  IEEE conference on computer vision and pattern recognition, 2014, pp.
-  580--587.
+\bibitem{chu2018deep}
+W.~Chu, D.~Cai, Deep feature based contextual model for object detection,
+  Neurocomputing 275 (2018) 1035--1042.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2017.09.048}
+  {\path{doi:10.1016/j.neucom.2017.09.048}}.
 
-\bibitem{yu2017iprivacy}
-J.~Yu, B.~Zhang, Z.~Kuang, D.~Lin, J.~Fan, iprivacy: image privacy protection
-  by identifying sensitive objects via deep multi-task learning, IEEE
-  Transactions on Information Forensics and Security 12~(5) (2017) 1005--1016.
-\newblock \href {http://dx.doi.org/10.1109/TIFS.2016.2636090}
-  {\path{doi:10.1109/TIFS.2016.2636090}}.
-
-\bibitem{yuan2019adversarial}
-X.~{Yuan}, P.~{He}, Q.~{Zhu}, X.~{Li}, Adversarial examples: Attacks and
-  defenses for deep learning, IEEE Transactions on Neural Networks and Learning
-  Systems (2019) 1--20\href {http://dx.doi.org/10.1109/TNNLS.2018.2886017}
-  {\path{doi:10.1109/TNNLS.2018.2886017}}.
+\bibitem{olmos2018automatic}
+R.~Olmos, S.~Tabik, F.~Herrera, Automatic handgun detection alarm in videos
+  using deep learning, Neurocomputing 275 (2018) 66--72.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2017.05.012}
+  {\path{doi:10.1016/j.neucom.2017.05.012}}.
 
 \bibitem{tan2018deep}
 F.~{Tan}, X.~{Hou}, J.~{Zhang}, Z.~{Wei}, Z.~{Yan}, A deep learning approach to
@@ -72,6 +76,12 @@ F.~{Tan}, X.~{Hou}, J.~{Zhang}, Z.~{Wei}, Z.~{Yan}, A deep learning approach to
 \newblock \href {http://dx.doi.org/10.1109/TNNLS.2018.2870573}
   {\path{doi:10.1109/TNNLS.2018.2870573}}.
 
+\bibitem{yuan2019adversarial}
+X.~{Yuan}, P.~{He}, Q.~{Zhu}, X.~{Li}, Adversarial examples: Attacks and
+  defenses for deep learning, IEEE Transactions on Neural Networks and Learning
+  Systems (2019) 1--20\href {http://dx.doi.org/10.1109/TNNLS.2018.2886017}
+  {\path{doi:10.1109/TNNLS.2018.2886017}}.
+
 \bibitem{hong2015multimodal}
 C.~Hong, J.~Yu, J.~Wan, D.~Tao, M.~Wang, Multimodal deep autoencoder for human
   pose recovery, IEEE Transactions on Image Processing 24~(12) (2015)
@@ -79,25 +89,30 @@ C.~Hong, J.~Yu, J.~Wan, D.~Tao, M.~Wang, Multimodal deep autoencoder for human
 \newblock \href {http://dx.doi.org/10.1109/TIP.2015.2487860}
   {\path{doi:10.1109/TIP.2015.2487860}}.
 
-\bibitem{long2015fully}
-J.~Long, E.~Shelhamer, T.~Darrell, Fully convolutional networks for semantic
-  segmentation, in: Proceedings of the IEEE conference on computer vision and
-  pattern recognition, 2015, pp. 3431--3440.
+\bibitem{li2019deep}
+L.~Li, X.~Zhao, W.~Lu, S.~Tan, Deep learning for variational multimodality
+  tumor segmentation in pet/ct, Neurocomputing\href
+  {http://dx.doi.org/10.1016/j.neucom.2018.10.099}
+  {\path{doi:10.1016/j.neucom.2018.10.099}}.
 
-\bibitem{li2015weakly}
-Z.~Li, J.~Tang, Weakly supervised deep metric learning for
-  community-contributed image retrieval, IEEE Transactions on Multimedia
-  17~(11) (2015) 1989--1999.
-\newblock \href {http://dx.doi.org/10.1109/TMM.2015.2477035}
-  {\path{doi:10.1109/TMM.2015.2477035}}.
+\bibitem{tzelepi2018deep}
+M.~Tzelepi, A.~Tefas, Deep convolutional learning for content based image
+  retrieval, Neurocomputing 275 (2018) 2467--2478.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2017.11.022}
+  {\path{doi:10.1016/j.neucom.2017.11.022}}.
 
-\bibitem{jin2018deep}
-L.~{Jin}, K.~{Li}, Z.~{Li}, F.~{Xiao}, G.~{Qi}, J.~{Tang}, Deep
-  semantic-preserving ordinal hashing for cross-modal similarity search, IEEE
-  Transactions on Neural Networks and Learning Systems 30~(5) (2019)
-  1429--1440.
-\newblock \href {http://dx.doi.org/10.1109/TNNLS.2018.2869601}
-  {\path{doi:10.1109/TNNLS.2018.2869601}}.
+\bibitem{qayyum2017medical}
+A.~Qayyum, S.~M. Anwar, M.~Awais, M.~Majid, Medical image retrieval using deep
+  convolutional neural network, Neurocomputing 266 (2017) 8 -- 20.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2017.05.025}
+  {\path{doi:10.1016/j.neucom.2017.05.025}}.
+
+\bibitem{bai2018optimization}
+C.~Bai, L.~Huang, X.~Pan, J.~Zheng, S.~Chen, Optimization of deep convolutional
+  neural network for large scale image retrieval, Neurocomputing 303 (2018)
+  60--67.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2018.04.034}
+  {\path{doi:10.1016/j.neucom.2018.04.034}}.
 
 \bibitem{dong2014learning}
 C.~Dong, C.~C. Loy, K.~He, X.~Tang, Learning a deep convolutional network for
@@ -105,11 +120,6 @@ C.~Dong, C.~C. Loy, K.~He, X.~Tang, Learning a deep convolutional network for
   2014, pp. 184--199.
 \newblock \href {http://dx.doi.org/10.1007/978-3-319-10593-2_13}
   {\path{doi:10.1007/978-3-319-10593-2_13}}.
-
-\bibitem{sun2013deep}
-Y.~Sun, X.~Wang, X.~Tang, Deep convolutional network cascade for facial point
-  detection, in: Proceedings of the IEEE conference on computer vision and
-  pattern recognition, 2013, pp. 3476--3483.
 
 \bibitem{ronneberger2015u}
 O.~Ronneberger, P.~Fischer, T.~Brox, U-net: Convolutional networks for
@@ -152,12 +162,9 @@ J.~W. Tukey, Comparing individual means in the analysis of variance, Biometrics
   (1949) 99--114.
 
 \bibitem{beckham2017unimodal}
-C.~Beckham, C.~Pal,
-  \href{http://dl.acm.org/citation.cfm?id=3305381.3305424}{Unimodal probability
-  distributions for deep ordinal classification}, in: Proceedings of the 34th
-  International Conference on Machine Learning - Volume 70, ICML'17, JMLR.org,
-  2017, pp. 411--419.
-\newline\urlprefix\url{http://dl.acm.org/citation.cfm?id=3305381.3305424}
+C.~Beckham, C.~Pal, Unimodal probability distributions for deep ordinal
+  classification, in: Proceedings of the 34th International Conference on
+  Machine Learning - Volume 70, ICML'17, JMLR.org, 2017, pp. 411--419.
 
 \bibitem{liu2017deep}
 Y.~Liu, A.~W.-K. Kong, C.~K. Goh, Deep ordinal regression based on data
@@ -188,7 +195,9 @@ S.~Chen, C.~Zhang, M.~Dong, J.~Le, M.~Rao, Using ranking-cnn for age
 
 \bibitem{de2019deep}
 J.~de~La~Torre, A.~Valls, D.~Puig, A deep learning interpretable classifier for
-  diabetic retinopathy disease grading, Neurocomputing.
+  diabetic retinopathy disease grading, Neurocomputing\href
+  {http://dx.doi.org/10.1016/j.neucom.2018.07.102}
+  {\path{doi:10.1016/j.neucom.2018.07.102}}.
 
 \bibitem{rios2017ordinal}
 A.~Rios, R.~Kavuluru, Ordinal convolutional neural networks for predicting rdoc
@@ -233,8 +242,8 @@ A.~Ben-David, Comparison of classification accuracy using cohen’s weighted
 \bibitem{nebot2016diabetic}
 {\`A}.~Nebot, et~al., Diabetic retinopathy detection through image analysis
   using deep convolutional neural networks, in: A.I. Research and Development:
-  Proc. of the 19th Int. Conf. of the Catalan Association for A.I., IOS press,
-  2016, p.~58.
+  Proceedings of the 19th Int. Conf. of the Catalan Association for A.I., IOS
+  press, 2016, p.~58.
 \newblock \href {http://dx.doi.org/10.3233/978-1-61499-696-5-58}
   {\path{doi:10.3233/978-1-61499-696-5-58}}.
 
@@ -248,15 +257,26 @@ E.~Eidinger, R.~Enbar, T.~Hassner, Age and gender estimation of unfiltered
 \bibitem{chen2016cascaded}
 J.-C. Chen, A.~Kumar, R.~Ranjan, V.~M. Patel, A.~Alavi, R.~Chellappa, A
   cascaded convolutional neural network for age estimation of unconstrained
-  faces, in: Proc. of 8th IEEE Conference on Biometrics Theory, Applications
-  and Systems (BTAS), IEEE, 2016, pp. 1--8.
+  faces, in: Proceedings of 8th IEEE Conference on Biometrics Theory,
+  Applications and Systems (BTAS), IEEE, 2016, pp. 1--8.
 \newblock \href {http://dx.doi.org/10.1109/BTAS.2016.7791154}
   {\path{doi:10.1109/BTAS.2016.7791154}}.
 
 \bibitem{levi2015age}
 G.~Levi, T.~Hassner, Age and gender classification using convolutional neural
-  networks, in: Proc. of the IEEE conf. comp. vision and pat. rec., 2015, pp.
-  34--42.
+  networks, in: Proceedings of the IEEE conf. comp. vision and pat. rec., 2015,
+  pp. 34--42.
+
+\bibitem{duan2018hybrid}
+M.~Duan, K.~Li, C.~Yang, K.~Li, A hybrid deep learning cnn--elm for age and
+  gender classification, Neurocomputing 275 (2018) 448--461.
+\newblock \href {http://dx.doi.org/10.1016/j.neucom.2017.08.062}
+  {\path{doi:10.1016/j.neucom.2017.08.062}}.
+
+\bibitem{he2016deep}
+K.~He, X.~Zhang, S.~Ren, J.~Sun, Deep residual learning for image recognition,
+  in: Proceedings of the IEEE conf. computer vision and pat. recog., 2016, pp.
+  770--778.
 
 \bibitem{clevert2015fast}
 D.-A. Clevert, T.~Unterthiner, S.~Hochreiter, Fast and accurate deep network
@@ -279,16 +299,14 @@ R.~Pascanu, T.~Mikolov, Y.~Bengio, On the difficulty of training recurrent
 
 \bibitem{maas2013rectifier}
 A.~L. Maas, A.~Y. Hannun, A.~Y. Ng, Rectifier nonlinearities improve neural
-  network acoustic models, in: Proc. icml, Vol.~30, 2013, p.~3.
+  network acoustic models, in: Proceedings of ICML, Vol.~30, 2013, p.~3.
 
 \bibitem{ioffe2015batch}
-S.~Ioffe, C.~Szegedy,
-  \href{http://proceedings.mlr.press/v37/ioffe15.html}{Batch normalization:
-  Accelerating deep network training by reducing internal covariate shift}, in:
-  F.~Bach, D.~Blei (Eds.), Proceedings of the 32nd International Conference on
-  Machine Learning, Vol.~37 of Proceedings of Machine Learning Research, PMLR,
-  Lille, France, 2015, pp. 448--456.
-\newline\urlprefix\url{http://proceedings.mlr.press/v37/ioffe15.html}
+S.~Ioffe, C.~Szegedy, Batch normalization: Accelerating deep network training
+  by reducing internal covariate shift, in: F.~Bach, D.~Blei (Eds.),
+  Proceedings of the 32nd International Conference on Machine Learning, Vol.~37
+  of Proceedings of Machine Learning Research, PMLR, Lille, France, 2015, pp.
+  448--456.
 
 \bibitem{kingma2014adam}
 D.~P. Kingma, J.~Ba, Adam: A method for stochastic optimization, in:
@@ -305,6 +323,11 @@ D.~A. Van~Dyk, X.-L. Meng, The art of data augmentation, Journal of
   Computational and Graphical Statistics 10~(1) (2001) 1--50.
 \newblock \href {http://dx.doi.org/10.1198/10618600152418584}
   {\path{doi:10.1198/10618600152418584}}.
+
+\bibitem{krizhevsky2012imagenet}
+A.~Krizhevsky, I.~Sutskever, G.~E. Hinton, Imagenet classification with deep
+  convolutional neural networks, in: Adv. in neural inf. proc. sys., 2012, pp.
+  1097--1105.
 
 \bibitem{cruz2014metrics}
 M.~Cruz-Ram{\'\i}rez, C.~Herv{\'a}s-Mart{\'\i}nez, J.~S{\'a}nchez-Monedero,

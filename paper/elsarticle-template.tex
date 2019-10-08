@@ -74,7 +74,7 @@ Deep learning\sep ordinal regression\sep cumulative link models\sep Kappa index.
 
 \section{Introduction}
 \label{sect:introduction}
-Deep learning, introduced by Lecun~et al. \cite{lecun2015deep}, combines multiple machine learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{cirecsan2012multi,he2016deep,krizhevsky2012imagenet}, speech recognition~\cite{hinton2012deep}, control problems~\cite{mnih2015human}, object detection~\cite{jiang2016speed,girshick2014rich}, privacy and security protection~\cite{yu2017iprivacy,yuan2019adversarial,tan2018deep}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{long2015fully} and image retrieval~\cite{li2015weakly,jin2018deep}. Convolutional Neural Networks (CNN) are one of the types of deep networks that are designed to process data that come in the form of multiple arrays. CNNs are appropriate for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,sun2013deep,ronneberger2015u}. For images, each colour channel is represented by a 2D array, and convolutional layers extract the main features from the pixels, and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the CNN, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. However, the softmax may not be the best option depending on the problem considered.
+Deep learning, introduced by Lecun~et al. \cite{lecun2015deep}, combines multiple machine learning techniques and allows computational models that are composed of numerous processing layers to learn representations of data with various levels of abstraction. These methods have dramatically improved the state-of-the-art in many domains, such as image classification~\cite{yu2017convolutional,fang2019image,zhu2019image}, speech recognition~\cite{song2018music,liu2018speech}, control problems~\cite{mnih2015human}, object detection~\cite{sun2018face,chu2018deep,olmos2018automatic}, privacy and security protection~\cite{tan2018deep,yuan2019adversarial}, recovery of human pose~\cite{hong2015multimodal}, semantic segmentation~\cite{li2019deep} and image retrieval~\cite{tzelepi2018deep,qayyum2017medical,bai2018optimization}. Convolutional Neural Networks (CNN) are one of the types of deep networks that are designed to process data that come in the form of multiple arrays. CNNs are appropriate for images, video, speech and audio processing, and they have been used extensively in the last years for automatic classification tasks~\cite{dong2014learning,ronneberger2015u}. For images, each colour channel is represented by a 2D array, and convolutional layers extract the main features from the pixels, and, after that, a fully connected layer classify every sample based on its extracted features. At the output of the CNN, a softmax function provides the probabilities of the set of classes predefined in the model for classification tasks. However, the softmax may not be the best option depending on the problem considered.
 
 Ordinal classification problems are those classification tasks where labels are ordered, and there are different inter-classes importances for each pair of categories. This kind of problem can be treated as nominal classification, but this discards the ordinal information. A better approach is to use specific methods that take the ordinality into account to improve the performance of the classification model. The Proportional Odds Model (POM)~\cite{mccullagh1980regression} is an ordinal alternative to the binary logistic regression. It belongs to a wider family of models called Cumulative Link Models (CLMs)~\cite{agresti2010analysis}. CLMs are inspired in the concept of a latent variable that is projected into a 1-dimensional space and a set of thresholds that divides the projection into the different ordinal levels. A link function needs to be specified, which can be of different types, although the most common option is the \texttt{logit}, which is used in POM. In this paper, we explore different existing alternatives, as explained in depth in Section \ref{sect:ordinalproblem}.
 
@@ -291,10 +291,11 @@ DR\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data} is a d
 
 \begin{figure}[!t]
 	\centering
+	\resizebox{\columnwidth}{!}{
 	\begin{tabular}{cccc}
 		\includegraphics[width=2.4cm]{img/retinopathy/1.jpg} & \includegraphics[width=2.4cm]{img/retinopathy/2.jpg} & \includegraphics[width=2.4cm]{img/retinopathy/3.jpg} & \includegraphics[width=2.4cm]{img/retinopathy/4.jpg}\\
 		\includegraphics[width=2.4cm]{img/retinopathy/5.jpg} & \includegraphics[width=2.4cm]{img/retinopathy/6.jpg} & \includegraphics[width=2.4cm]{img/retinopathy/7.jpg} & \includegraphics[width=2.4cm]{img/retinopathy/8.jpg}
-	\end{tabular}						
+	\end{tabular}}					
 	\caption{Examples taken from the Diabetic Retinopathy test set.}
 	\label{fig:DRexamples}
 \end{figure}
@@ -302,14 +303,15 @@ DR\footnote{https://www.kaggle.com/c/diabetic-retinopathy-detection/data} is a d
 
 
 \subsubsection{Adience}
-Adience\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html} dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work~\cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset was split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set. Some images of this dataset are shown in Figure \ref{fig:AdienceExamples}. Adience dataset has been used in other works for human age estimation but most of them solved the problem as a multi-class problem instead of using the ordinal relation between classes. Eidinger et al. \cite{eidinger2014age} presented an approach using support vector machines and neural networks. Chen et al. \cite{chen2016cascaded} proposed a coarse-to-fine strategy for deep CNNs. Levi and Hassner \cite{levi2015age} presented another convolutional network model for age estimation. As previously discussed, Beckham and Pal \cite{beckham2017unimodal} proposed a straightforward method to constrain discrete probability distributions to be unimodal.
+Adience\footnote{http://www.openu.ac.il/home/hassner/Adience/data.html} dataset consists of $26580$ faces belonging to $2284$ subjects. We use the form of the dataset where faces have been pre-cropped and aligned. The dataset was preprocessed, using the methods described in a previous work~\cite{beckham2017unimodal}, so that the images are 256 pixels in width and height, and pixels values follow a $(0;1)$ normal distribution. The original dataset was split into five cross-validation folds. The training set consists of merging the first four folds which comprise a total of $15554$ images. From this, $10\%$ of the images are held out as part of a validation set. The last fold is used as test set. Some images of this dataset are shown in Figure \ref{fig:AdienceExamples}. Adience dataset has been used in other works for human age estimation but most of them solved the problem as a multi-class problem instead of using the ordinal relation between classes. Eidinger et al. \cite{eidinger2014age} presented an approach using support vector machines and neural networks. Chen et al. \cite{chen2016cascaded} proposed a coarse-to-fine strategy for deep CNNs. Levi and Hassner \cite{levi2015age} presented another convolutional network model for age estimation. As previously discussed, Beckham and Pal \cite{beckham2017unimodal} proposed a straightforward method to constrain discrete probability distributions to be unimodal. M. Duan et al. \cite{duan2018hybrid} proposed a hybrid approach that combines CNN with Extreme Learning Machine (ELM).
 
 \begin{figure}[!t]
 	\centering
+	\resizebox{\columnwidth}{!}{
 	\begin{tabular}{cccc}
 		\includegraphics[width=2.4cm]{img/adience/1.jpg} & \includegraphics[width=2.4cm]{img/adience/2.jpg} & \includegraphics[width=2.4cm]{img/adience/3.jpg} & \includegraphics[width=2.4cm]{img/adience/4.jpg}\\
 		\includegraphics[width=2.4cm]{img/adience/5.jpg} & \includegraphics[width=2.4cm]{img/adience/6.jpg} & \includegraphics[width=2.4cm]{img/adience/7.jpg} & \includegraphics[width=2.4cm]{img/adience/8.jpg}
-	\end{tabular}						
+	\end{tabular}}				
 	\caption{Examples taken from the Adience test set.}
 	\label{fig:AdienceExamples}
 \end{figure}
@@ -335,6 +337,7 @@ where $\tau$ is optimized as a free parameter.
 	\label{table:Architecture}
 	\centering
 	\footnotesize
+	\resizebox{\columnwidth}{!}{
 	\begin{tabular}{lclc}
 		\hline\hline
 		\multicolumn{2}{c}{\textbf{Diabetic Retinopathy}} & \multicolumn{2}{c}{\textbf{Adience}}  \\ \hline
@@ -349,7 +352,7 @@ where $\tau$ is optimized as a free parameter.
 		MaxPool2x2s2    &             4x4x128             & 1 ResBlock3x3@512s2 &     7x7x256     \\
 		Conv4x4@128s1   &             1x1x128             & 2 ResBlock3x3@512s1 &     7x7x256     \\
 		                &                                 & AveragePool7x7s2    &     1x1x256     \\ \hline\hline
-	\end{tabular}	
+	\end{tabular}}
 \end{table}
 
 \subsection{Experimental design}
@@ -573,30 +576,30 @@ As we did for the DR dataset, a post-hoc multiple comparison test has been perfo
 	\label{table:Tukey}
 	\centering
 	\footnotesize
-		\begin{tabular}{cccccc}
-			\hline\hline
-			&                   & \multicolumn{2}{c}{\textbf{DR}} & \multicolumn{2}{c}{\textbf{Adience}} \\ \hline
-			LF         &        LF         & Mean diff. &        Sig.        & Mean diff. &          Sig.           \\ \hline
-			\texttt{logit}   &  \texttt{probit}  &  $0.046$   &      $0.000$       &  $-0.002$  &         $0.011$         \\
-			& \texttt{clog-log} &  $0.084$   &      $0.000$       &  $0.012$   &         $0.000$         \\
-			\texttt{probit}  &  \texttt{logit}   &  $-0.046$  &      $0.000$       &  $0.002$   &         $0.011$         \\
-			& \texttt{clog-log} &  $0.038$   &      $0.000$       &  $0.014$   &         $0.248$         \\
-			\texttt{clog-log} &  \texttt{logit}   &  $-0.084$  &      $0.000$       &  $-0.012$  &         $0.000$         \\
-			&  \texttt{probit}  &  $-0.038$  &      $0.000$       &  $-0.014$  &         $0.248$         \\ \hline\hline
-			LR         &        LR         & Mean diff. &        Sig.        & Mean diff. &          Sig.           \\ \hline
-			$10^{-2}$     &     $10^{-3}$     &  $-0.046$  &      $0.000$       &  $-0.073$  &         $0.000$         \\
-			&     $10^{-4}$     &  $0.148$   &      $0.000$       &  $-0.044$  &         $0.000$         \\
-			$10^{-3}$     &     $10^{-2}$     &  $0.046$   &      $0.000$       &  $0.073$   &         $0.000$         \\
-			&     $10^{-4}$     &  $0.194$   &      $0.000$       &  $0.029$   &         $0.023$         \\
-			$10^{-4}$     &     $10^{-2}$     &  $-0.148$  &      $0.000$       &  $0.044$   &         $0.000$         \\
-			&     $10^{-3}$     &  $-0.194$  &      $0.000$       &  $-0.029$  &         $0.023$         \\ \hline\hline
-			BS         &        BS         & Mean diff. &        Sig.        & Mean diff. &          Sig.           \\ \hline
-			64         &        128        &  $-0.041$  &      $0.026$       &     -      &            -            \\
-			&        256        &  $-0.027$  &      $0.000$       &     -      &            -            \\
-			128        &        64         &  $0.041$   &      $0.026$       &     -      &            -            \\
-			&        256        &  $0.014$   &      $0.000$       &     -      &            -            \\
-			256        &        64         &  $0.027$   &      $0.000$       &     -      &            -            \\
-			&        128        &  $-0.014$  &      $0.000$       &     -      &            -\\\hline\hline
+	\begin{tabular}{cccccc}
+		\hline\hline
+		&                   & \multicolumn{2}{c}{\textbf{DR}} & \multicolumn{2}{c}{\textbf{Adience}} \\ \hline
+		LF         &        LF         & Mean diff. &        Sig.        & Mean diff. &          Sig.           \\ \hline
+		\texttt{logit}   &  \texttt{probit}  &  $0.046$   &      $0.000$       &  $-0.002$  &         $0.011$         \\
+		& \texttt{clog-log} &  $0.084$   &      $0.000$       &  $0.012$   &         $0.000$         \\
+		\texttt{probit}  &  \texttt{logit}   &  $-0.046$  &      $0.000$       &  $0.002$   &         $0.011$         \\
+		& \texttt{clog-log} &  $0.038$   &      $0.000$       &  $0.014$   &         $0.248$         \\
+		\texttt{clog-log} &  \texttt{logit}   &  $-0.084$  &      $0.000$       &  $-0.012$  &         $0.000$         \\
+		&  \texttt{probit}  &  $-0.038$  &      $0.000$       &  $-0.014$  &         $0.248$         \\ \hline\hline
+		LR         &        LR         & Mean diff. &        Sig.        & Mean diff. &          Sig.           \\ \hline
+		$10^{-2}$     &     $10^{-3}$     &  $-0.046$  &      $0.000$       &  $-0.073$  &         $0.000$         \\
+		&     $10^{-4}$     &  $0.148$   &      $0.000$       &  $-0.044$  &         $0.000$         \\
+		$10^{-3}$     &     $10^{-2}$     &  $0.046$   &      $0.000$       &  $0.073$   &         $0.000$         \\
+		&     $10^{-4}$     &  $0.194$   &      $0.000$       &  $0.029$   &         $0.023$         \\
+		$10^{-4}$     &     $10^{-2}$     &  $-0.148$  &      $0.000$       &  $0.044$   &         $0.000$         \\
+		&     $10^{-3}$     &  $-0.194$  &      $0.000$       &  $-0.029$  &         $0.023$         \\ \hline\hline
+		BS         &        BS         & Mean diff. &        Sig.        & Mean diff. &          Sig.           \\ \hline
+		64         &        128        &  $-0.041$  &      $0.026$       &     -      &            -            \\
+		&        256        &  $-0.027$  &      $0.000$       &     -      &            -            \\
+		128        &        64         &  $0.041$   &      $0.026$       &     -      &            -            \\
+		&        256        &  $0.014$   &      $0.000$       &     -      &            -            \\
+		256        &        64         &  $0.027$   &      $0.000$       &     -      &            -            \\
+		&        128        &  $-0.014$  &      $0.000$       &     -      &            -\\\hline\hline
 	\end{tabular}
 \end{table}
 
@@ -610,7 +613,7 @@ Once the factor parameters have been studied and selected, experiments are run w
 
 These results are included in Table \ref{table:Comparison}, together with the comparison against previous works of the state-of-the-art. All the results are given for the test set, except those from \cite{de2018weighted} (DR dataset), because the authors only provided validation results for $128\times 128$ images (however, validation results are usually better than test results). The results for \cite{beckham2017unimodal} were obtained by reproducing their experiments because they did not provide the results for test set. As can be checked, the proposed ordinal model with the best configuration found in the previous step outperforms all the other alternatives in terms of QWK. 
 
-The performance gain of CLM over the nominal version reaches $16.8\%$ for DR and $11.9\%$ for Adience dataset. The improvement of the ordinal method for DR is higher than that for Adience. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases. Moreover, when compared against alternative ordinal methods (many of them with a deep structure), CLMs are very competitive, possibly because of the flexibility provided by the threshold model structure (where the threshold of each class is independently adjusted).
+The performance gain of CLM over the nominal version reaches $16.8\%$ for DR and $11.9\%$ for Adience dataset. The DR dataset obtains a higher performance gain from the ordinal method than the Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases. Moreover, when compared against alternative ordinal methods (many of them with a deep structure), CLMs are very competitive, possibly because of the flexibility provided by the threshold model structure (where the threshold of each class is independently adjusted). Our proposed model shows a high score and a very low standard deviation, which proves very high stability compared to other alternatives.
 
 \begin{table}[!t]
 	\caption{Comparison between the best results of the CLM network, a nominal network (using softmax and cross-entropy) and previous works for both datasets.}
@@ -636,7 +639,8 @@ The performance gain of CLM over the nominal version reaches $16.8\%$ for DR and
 		Beckham and Pal \cite{beckham2017unimodal} &    $0.855_{(0.012)}$    &    $0.467_{(0.019)}$    &        $0.867_{(0.011)}$         \\
 		Eidinger et al. \cite{eidinger2014age} &            -            &    $0.451_{(0.026)}$    &        $0.807_{(0.011)}$         \\
 		Chen et al. \cite{chen2016cascaded} &            -            &    $0.529_{(0.060)}$    &        $0.885_{(0.022)}$         \\
-		Levi and Hassner \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$         \\ \hline\hline
+		Levi and Hassner \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$         \\ 
+		M. Duan et al. \cite{duan2018hybrid}         &            -            &    $0.523_{(0.057)}$    &        -         \\ \hline\hline
 	\end{tabular}
 \end{table}
 
