@@ -3,6 +3,10 @@ import keras
 from tensorflow import distributions, matrix_band_part, igamma, lgamma
 from keras import backend as K
 
+def cons_greater_zero(value):
+	epsilon = 1e-9
+	return epsilon + K.pow(value, 2)
+
 class SPP(keras.layers.Layer):
 	"""
 	Parametric softplus activation layer.
@@ -51,7 +55,7 @@ class MPELU(keras.layers.Layer):
 									 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1),
 									 trainable=True)
 		self.beta = self.add_weight(name='beta', shape=shape, dtype=K.floatx(),
-									initializer=keras.initializers.RandomUniform(minval=0.0001, maxval=1),
+									initializer=keras.initializers.RandomUniform(minval=0.0, maxval=1),
 									trainable=True)
 
 		# Finish buildidng
@@ -59,7 +63,7 @@ class MPELU(keras.layers.Layer):
 
 	def call(self, inputs):
 		positive = keras.activations.relu(inputs)
-		negative = self.alpha * (K.exp(-keras.activations.relu(-inputs) * K.pow(self.beta, 2)) - 1)
+		negative = self.alpha * (K.exp(-keras.activations.relu(-inputs) * cons_greater_zero(self.beta)) - 1)
 
 		return positive + negative
 
@@ -217,18 +221,18 @@ class PELU(keras.layers.Layer):
 
 	def build(self, input_shape):
 		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
-									 initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
-		self.alpha = K.clip(self.alpha, 0.0001, 10)
+									 initializer=keras.initializers.RandomUniform(minval=0.0, maxval=1))
+		# self.alpha = K.clip(self.alpha, 0.0001, 10)
 
 		self.beta = self.add_weight(name='beta', shape=(1,), dtype=K.floatx(),
-									initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
-		self.beta = K.clip(self.beta, 0.0001, 10)
+									initializer=keras.initializers.RandomUniform(minval=0.0, maxval=1))
+		# self.beta = K.clip(self.beta, 0.0001, 10)
 
 		super(PELU, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = (self.alpha / self.beta) * keras.activations.relu(inputs)
-		neg = self.alpha * (K.exp((-keras.activations.relu(-inputs)) / self.beta) - 1)
+		pos = (cons_greater_zero(self.alpha) / cons_greater_zero(self.beta)) * keras.activations.relu(inputs)
+		neg = cons_greater_zero(self.alpha) * (K.exp((-keras.activations.relu(-inputs)) / cons_greater_zero(self.beta)) - 1)
 
 		return pos + neg
 
