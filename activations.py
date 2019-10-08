@@ -48,18 +48,18 @@ class MPELU(keras.layers.Layer):
 			shape = [int(input_shape[-1])]  # Number of channels
 
 		self.alpha = self.add_weight(name='alpha', shape=shape, dtype=K.floatx(),
-									 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
+									 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1),
 									 trainable=True)
 		self.beta = self.add_weight(name='beta', shape=shape, dtype=K.floatx(),
-									initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
+									initializer=keras.initializers.RandomUniform(minval=0.0001, maxval=1),
 									trainable=True)
 
 		# Finish buildidng
 		super(MPELU, self).build(input_shape)
 
 	def call(self, inputs):
-		positive = K.nn.relu(inputs)
-		negative = self.alpha * (K.exp(-K.nn.relu(-inputs) * self.beta) - 1)
+		positive = keras.activations.relu(inputs)
+		negative = self.alpha * (K.exp(-keras.activations.relu(-inputs) * K.pow(self.beta, 2)) - 1)
 
 		return positive + negative
 
@@ -75,14 +75,14 @@ class RTReLU(keras.layers.Layer):
 		shape = [int(input_shape[-1])]  # Number of channels
 
 		self.a = self.add_weight(name='a', shape=shape, dtype=K.floatx(),
-								 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
+								 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1),
 								 trainable=False)
 
 		# Finish building
 		super(RTReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		return K.nn.relu(inputs + self.a)
+		return keras.activations.relu(inputs + self.a)
 
 	def compute_output_shape(self, input_shape):
 		return input_shape
@@ -96,15 +96,15 @@ class RTPReLU(keras.layers.PReLU):
 		shape = [int(input_shape[-1])]  # Number of channels
 
 		self.a = self.add_weight(name='a', shape=shape, dtype=K.floatx(),
-								 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
+								 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1),
 								 trainable=False)
 
 		# Call PReLU build method
 		super(RTPReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = K.nn.relu(inputs + self.a)
-		neg = -self.alpha * K.nn.relu(-(inputs * self.a))
+		pos = keras.activations.relu(inputs + self.a)
+		neg = -self.alpha * keras.activations.relu(-(inputs * self.a))
 
 		return pos + neg
 
@@ -116,10 +116,10 @@ class PairedReLU(keras.layers.Layer):
 
 	def build(self, input_shape):
 		self.theta = self.add_weight(name='theta', shape=[1], dtype=K.floatx(),
-									 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
+									 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1),
 									 trainable=True)
 		self.theta_p = self.add_weight(name='theta_p', shape=[1], dtype=K.floatx(),
-									   initializer=keras.initializers.RandomUniform(minval=-1, maxval=1, dtype=K.floatx()),
+									   initializer=keras.initializers.RandomUniform(minval=-1, maxval=1),
 									   trainable=True)
 
 		# Finish building
@@ -127,11 +127,14 @@ class PairedReLU(keras.layers.Layer):
 
 	def call(self, inputs):
 		return K.concatenate(
-			(K.nn.relu(self.scale * inputs - self.theta), K.nn.relu(-self.scale * inputs - self.theta_p)),
+			(keras.activations.relu(self.scale * inputs - self.theta), keras.activations.relu(-self.scale * inputs - self.theta_p)),
 			axis=len(inputs.get_shape()) - 1)
 
 	def compute_output_shape(self, input_shape):
-		return [input_shape[:-1], input_shape[-1] * 2]
+		shape = list(input_shape)
+		shape[-1]  = shape[-1] * 2
+		shape = tuple(shape)
+		return shape
 
 
 class EReLU(keras.layers.Layer):
@@ -143,14 +146,13 @@ class EReLU(keras.layers.Layer):
 		shape = input_shape[1:]
 
 		self.k = self.add_weight(name='k', shape=shape, dtype=K.floatx(),
-								 initializer=keras.initializers.RandomUniform(minval=1 - self.alpha, maxval=1 + self.alpha,
-																		   dtype=K.floatx()), trainable=False)
+								 initializer=keras.initializers.RandomUniform(minval=1 - self.alpha, maxval=1 + self.alpha), trainable=False)
 
 		# Finish building
 		super(EReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		return K.nn.relu(inputs * self.k)
+		return keras.activations.relu(inputs * self.k)
 
 	def compute_output_shape(self, input_shape):
 		return input_shape
@@ -165,15 +167,14 @@ class EPReLU(keras.layers.PReLU):
 		shape = input_shape[1:]
 
 		self.k = self.add_weight(name='k', shape=shape, dtype=K.floatx(),
-								 initializer=keras.initializers.RandomUniform(minval=1 - self.alpha, maxval=1 + self.alpha,
-																		   dtype=K.floatx()), trainable=False)
+								 initializer=keras.initializers.RandomUniform(minval=1 - self.alpha, maxval=1 + self.alpha), trainable=False)
 
 		# Call PReLU build method
 		super(EPReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = K.nn.relu(inputs * self.k)
-		neg = -self.alpha * K.nn.relu(-(inputs))
+		pos = keras.activations.relu(inputs * self.k)
+		neg = -self.alpha * keras.activations.relu(-(inputs))
 
 		return pos + neg
 
@@ -186,25 +187,26 @@ class SQRTActivation(keras.layers.Layer):
 		super(SQRTActivation, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = K.sqrt(K.nn.relu(inputs))
-		neg = - K.sqrt(-K.nn.relu(-inputs))
+		pos = K.sqrt(keras.activations.relu(inputs))
+		neg = - K.sqrt(-keras.activations.relu(-inputs))
 
 		return pos + neg
 
 
+# Randomized Leaky Rectified Linear Unit
 class RReLu(keras.layers.Layer):
 	def __init__(self, **kwargs):
 		super(RReLu, self).__init__(**kwargs)
 
 	def build(self, input_shape):
-		self.alpha = self.add_weight(name='alpha', shape=input_shape, dtype=K.floatx(),
-									 initializer=keras.initializers.RandomNormal(stddev=1))
+		self.alpha = self.add_weight(name='alpha', shape=input_shape[1:], dtype=K.floatx(),
+									 initializer=keras.initializers.RandomUniform(minval=0.0, maxval=1.0))
 
 		super(RReLu, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = K.nn.relu(inputs)
-		neg = self.alpha * K.nn.relu(-inputs)
+		pos = keras.activations.relu(inputs)
+		neg = self.alpha * keras.activations.relu(-inputs)
 
 		return pos + neg
 
@@ -215,22 +217,18 @@ class PELU(keras.layers.Layer):
 
 	def build(self, input_shape):
 		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
-									 initializer=keras.initializers.RandomUniform(minval=0.01,
-																			   maxval=1,
-																			   dtype=K.floatx()))
+									 initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
 		self.alpha = K.clip(self.alpha, 0.0001, 10)
 
 		self.beta = self.add_weight(name='beta', shape=(1,), dtype=K.floatx(),
-									initializer=keras.initializers.RandomUniform(minval=0.01,
-																			  maxval=1,
-																			  dtype=K.floatx()))
+									initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
 		self.beta = K.clip(self.beta, 0.0001, 10)
 
 		super(PELU, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = (self.alpha / self.beta) * K.nn.relu(inputs)
-		neg = self.alpha * (K.exp((-K.nn.relu(-x)) / self.beta) - 1)
+		pos = (self.alpha / self.beta) * keras.activations.relu(inputs)
+		neg = self.alpha * (K.exp((-keras.activations.relu(-inputs)) / self.beta) - 1)
 
 		return pos + neg
 
@@ -241,15 +239,13 @@ class SlopedReLU(keras.layers.Layer):
 
 	def build(self, input_shape):
 		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
-									 initializer=keras.initializers.RandomUniform(minval=0.01,
-																			   maxval=1,
-																			   dtype=K.floatx()))
-		self.alpha = K.clip(self.alpha, 0.0001, 10)
+									 initializer=keras.initializers.RandomUniform(minval=1.0, maxval=10.0))
+		self.alpha = K.clip(self.alpha, 1.0, 10)
 
 		super(SlopedReLU, self).build(input_shape)
 
 	def call(self, inputs):
-		return K.nn.relu(self.alpha * inputs)
+		return keras.activations.relu(self.alpha * inputs)
 
 
 class PTELU(keras.layers.Layer):
@@ -258,22 +254,18 @@ class PTELU(keras.layers.Layer):
 
 	def build(self, input_shape):
 		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
-									 initializer=keras.initializers.RandomUniform(minval=0.01,
-																			   maxval=1,
-																			   dtype=K.floatx()))
+									 initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
 		self.alpha = K.clip(self.alpha, 0.0001, 10)
 
 		self.beta = self.add_weight(name='beta', shape=(1,), dtype=K.floatx(),
-									initializer=keras.initializers.RandomUniform(minval=0.01,
-																			  maxval=1,
-																			  dtype=K.floatx()))
+									initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
 		self.beta = K.clip(self.beta, 0.0001, 10)
 
 		super(PTELU, self).build(input_shape)
 
 	def call(self, inputs):
-		pos = K.nn.relu(inputs)
-		neg = self.alpha * K.tanh(self.beta * K.nn.relu(-inputs))
+		pos = keras.activations.relu(inputs)
+		neg = self.alpha * K.tanh(self.beta * keras.activations.relu(-inputs))
 
 		return pos + neg
 
