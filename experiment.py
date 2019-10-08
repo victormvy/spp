@@ -9,7 +9,7 @@ import click
 import pickle
 import h5py
 from scipy import io as spio
-from callbacks import ComputeMetricsCallback, PrintWeightsCallback
+from callbacks import ComputeMetricsCallback, PrintWeightsCallback, ReweightClassesCallback
 from losses import qwk_loss, make_cost_matrix, ms_n_qwk_loss
 from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm, top_2_accuracy, top_3_accuracy, \
 	minimum_sensitivity, accuracy_off1
@@ -446,6 +446,7 @@ class Experiment:
 
 		# Get class weights based on frequency
 		class_weight = ds_train.get_class_weights()
+		# class_weight = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 100000.0])
 
 		# Free dataset object
 		del ds_train
@@ -536,7 +537,8 @@ class Experiment:
 									   keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 									   keras.callbacks.TerminateOnNaN(),
 									   keras.callbacks.EarlyStopping(min_delta=0.0005, patience=40, verbose=1),
-									   # PrintWeightsCallback()
+									   # PrintWeightsCallback(class_weight),
+									   # ReweightClassesCallback(val_generator=val_generator, val_steps=steps_val, class_weights=class_weight)
 									   ],
 							workers=self.workers,
 							use_multiprocessing=False,
@@ -689,8 +691,8 @@ class Experiment:
 	def get_model(self, net_object, name):
 		if name == 'vgg19':
 			model = net_object.vgg19()
-		elif name == 'vgg19_v2':
-			model = net_object.vgg19_v2()
+		elif name == 'vgg16':
+			model = net_object.vgg16()
 		elif name == 'conv128':
 			model = net_object.conv128()
 		elif name == 'testing':

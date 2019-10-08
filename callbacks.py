@@ -1,7 +1,7 @@
 import keras
 import numpy as np
 from sklearn.metrics import confusion_matrix, accuracy_score
-from metrics import quadratic_weighted_kappa_cm, quadratic_weighted_kappa
+from metrics import quadratic_weighted_kappa_cm, quadratic_weighted_kappa, _compute_sensitivities
 from losses import make_cost_matrix
 
 class ComputeMetricsCallback(keras.callbacks.Callback):
@@ -112,8 +112,67 @@ class ComputeMetricsCallback(keras.callbacks.Callback):
 
 
 class PrintWeightsCallback(keras.callbacks.Callback):
-	def __init__(self):
-		pass
+	def __init__(self, class_weights):
+		self.class_weights = class_weights
 
-	def on_epoch_end(self, epoch, logs={}):
-		print(self.model.layers[-1].get_weights())
+#	def on_epoch_end(self, epoch, logs={}):
+#		print(self.model.layers[-1].get_weights())
+
+	def on_epoch_begin(self, epoch, logs):
+		print(self.class_weights)
+
+'''
+ Compute class weights based on class sensitivity on the validation dataset.
+'''
+class ReweightClassesCallback(keras.callbacks.Callback):
+	'''
+	:param validation_data: validation data tuple (x, y)
+	:param class_weights: weights list that is going to be adjusted according to sensitvity.
+	'''
+	def __init__(self, val_generator, val_steps, class_weights):
+		self.class_weights = class_weights
+		self.val_generator = val_generator
+		self.val_steps = val_steps
+
+		super(ReweightClassesCallback, self).__init__()
+
+	def on_epoch_begin(self, epoch, logs):
+		print(self.class_weights)
+
+		steps = 0
+
+		y_pred = None
+		y_true = None
+
+		for x, y in self.val_generator:
+			if steps >= self.val_steps:
+				break
+			steps += 1
+
+			y_pred_batch = self.model.predict_on_batch(x)
+
+			if y_pred is None:
+				y_pred = y_pred_batch
+			else:
+				y_pred = np.vstack((y_pred, y_pred_batch))
+
+			if y_true is None:
+				y_true = y
+			else:
+				y_true = np.vstack((y_true, y))
+
+		sensis = _compute_sensitivities(y_true, y_pred)
+
+		del y_true
+		del y_pred
+
+		# weights = np.exp(1/(sensis+1e-9))
+
+		print(sensis)
+
+		# TEST (REMOVE)
+		weights = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 100000.0])
+
+		assert(len(weights) == len(self.class_weights))
+		for i, w in enumerate(weights):
+			self.class_weights[i] = w
