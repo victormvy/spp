@@ -2,8 +2,7 @@ import keras
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, BatchNormalization, Activation, Dropout, Flatten, Dense
 from keras import regularizers
-from activations import SPP, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, CLM, RReLu, \
-	PELU, SlopedReLU, PTELU, Antirectifier, CReLU
+from activations import SPP, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, CLM, RReLu, PELU, SlopedReLU, PTELU, Antirectifier, CReLU, EPReLU
 from layers import GeometricLayer
 from resnet import Resnet_2x4
 
@@ -104,7 +103,7 @@ class Net:
 
 		return model
 
-	def vgg19_v2(self):
+	def vgg16(self):
 		# Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.
 		model = Sequential()
 		weight_decay = 0.0005
