@@ -33,8 +33,8 @@ J.~Schmidhuber, U.~Meier, and D.~Ciresan, ``Multi-column deep neural networks
 
 \bibitem{he2016deep}
 K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
-  recognition,'' in \emph{Proc. of the IEEE conf. computer vision and pat.
-  recog.}, 2016, pp. 770--778.
+  recognition,'' in \emph{Proceedings of the IEEE conf. computer vision and
+  pat. recog.}, 2016, pp. 770--778.
 
 \bibitem{krizhevsky2012imagenet}
 A.~Krizhevsky, I.~Sutskever, and G.~E. Hinton, ``Imagenet classification with
@@ -147,13 +147,10 @@ J.~W. Tukey, ``Comparing individual means in the analysis of variance,''
   \emph{Biometrics}, pp. 99--114, 1949.
 
 \bibitem{beckham2017unimodal}
-\BIBentryALTinterwordspacing
 C.~Beckham and C.~Pal, ``Unimodal probability distributions for deep ordinal
   classification,'' in \emph{Proceedings of the 34th International Conference
   on Machine Learning - Volume 70}, ser. ICML'17.\hskip 1em plus 0.5em minus
-  0.4em\relax JMLR.org, 2017, pp. 411--419. [Online]. Available:
-  \url{http://dl.acm.org/citation.cfm?id=3305381.3305424}
-\BIBentrySTDinterwordspacing
+  0.4em\relax JMLR.org, 2017, pp. 411--419.
 
 \bibitem{liu2017deep}
 Y.~Liu, A.~W.-K. Kong, and C.~K. Goh, ``Deep ordinal regression based on data
@@ -221,8 +218,9 @@ A.~Ben-David, ``Comparison of classification accuracy using cohen’s weighted
 \bibitem{nebot2016diabetic}
 {\`A}.~Nebot \emph{et~al.}, ``Diabetic retinopathy detection through image
   analysis using deep convolutional neural networks,'' in \emph{A.I. Research
-  and Development: Proc. of the 19th Int. Conf. of the Catalan Association for
-  A.I.}\hskip 1em plus 0.5em minus 0.4em\relax IOS press, 2016, p.~58.
+  and Development: Proceedings of the 19th Int. Conf. of the Catalan
+  Association for A.I.}\hskip 1em plus 0.5em minus 0.4em\relax IOS press, 2016,
+  p.~58.
 
 \bibitem{eidinger2014age}
 E.~Eidinger, R.~Enbar, and T.~Hassner, ``Age and gender estimation of
@@ -232,14 +230,14 @@ E.~Eidinger, R.~Enbar, and T.~Hassner, ``Age and gender estimation of
 \bibitem{chen2016cascaded}
 J.-C. Chen, A.~Kumar, R.~Ranjan, V.~M. Patel, A.~Alavi, and R.~Chellappa, ``A
   cascaded convolutional neural network for age estimation of unconstrained
-  faces,'' in \emph{Proc. of 8th IEEE Conference on Biometrics Theory,
+  faces,'' in \emph{Proceedings of 8th IEEE Conference on Biometrics Theory,
   Applications and Systems (BTAS)}.\hskip 1em plus 0.5em minus 0.4em\relax
   IEEE, 2016, pp. 1--8.
 
 \bibitem{levi2015age}
 G.~Levi and T.~Hassner, ``Age and gender classification using convolutional
-  neural networks,'' in \emph{Proc. of the IEEE conf. comp. vision and pat.
-  rec.}, 2015, pp. 34--42.
+  neural networks,'' in \emph{Proceedings of the IEEE conf. comp. vision and
+  pat. rec.}, 2015, pp. 34--42.
 
 \bibitem{clevert2015fast}
 D.-A. Clevert, T.~Unterthiner, and S.~Hochreiter, ``Fast and accurate deep
@@ -262,18 +260,15 @@ R.~Pascanu, T.~Mikolov, and Y.~Bengio, ``On the difficulty of training
 
 \bibitem{maas2013rectifier}
 A.~L. Maas, A.~Y. Hannun, and A.~Y. Ng, ``Rectifier nonlinearities improve
-  neural network acoustic models,'' in \emph{Proc. icml}, vol.~30, no.~1, 2013,
-  p.~3.
+  neural network acoustic models,'' in \emph{Proceedings of ICML}, vol.~30,
+  no.~1, 2013, p.~3.
 
 \bibitem{ioffe2015batch}
-\BIBentryALTinterwordspacing
 S.~Ioffe and C.~Szegedy, ``Batch normalization: Accelerating deep network
   training by reducing internal covariate shift,'' in \emph{Proceedings of the
   32nd International Conference on Machine Learning}, ser. Proceedings of
   Machine Learning Research, F.~Bach and D.~Blei, Eds., vol.~37.\hskip 1em plus
   0.5em minus 0.4em\relax Lille, France: PMLR, 07--09 Jul 2015, pp. 448--456.
-  [Online]. Available: \url{http://proceedings.mlr.press/v37/ioffe15.html}
-\BIBentrySTDinterwordspacing
 
 \bibitem{kingma2014adam}
 D.~P. Kingma and J.~Ba, ``Adam: A method for stochastic optimization,'' in

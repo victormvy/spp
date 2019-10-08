@@ -16,15 +16,15 @@ Warning--empty journal in clevert2015fast
 Done.
 You've used 53 entries,
             4087 wiz_defined-function locations,
-            1121 strings with 17566 characters,
-and the built_in function-call counts, 46476 in all, are:
-= -- 3682
+            1119 strings with 17505 characters,
+and the built_in function-call counts, 46398 in all, are:
+= -- 3670
 > -- 1151
 < -- 445
 + -- 648
 - -- 186
-* -- 2216
-:= -- 6546
+* -- 2206
+:= -- 6518
 add.period$ -- 118
 call.type$ -- 53
 change.case$ -- 53
@@ -33,20 +33,20 @@ cite$ -- 54
 duplicate$ -- 3220
 empty$ -- 3780
 format.name$ -- 233
-if$ -- 11005
+if$ -- 10993
 int.to.chr$ -- 0
 int.to.str$ -- 53
 missing$ -- 538
-newline$ -- 186
+newline$ -- 182
 num.names$ -- 55
-pop$ -- 1272
+pop$ -- 1274
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 3593
+skip$ -- 3587
 stack$ -- 0
 substring$ -- 2608
-swap$ -- 2727
+swap$ -- 2725
 text.length$ -- 81
 text.prefix$ -- 0
 top$ -- 5
@@ -54,5 +54,5 @@ type$ -- 53
 warning$ -- 1
 while$ -- 230
 width$ -- 55
-write$ -- 534
+write$ -- 528
 (There was 1 warning)

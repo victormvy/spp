@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  7 OCT 2019 12:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.15)  8 OCT 2019 09:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -821,7 +821,7 @@ File: img/linkfunctions.pdf Graphic file (type pdf)
 
 <use img/linkfunctions.pdf>
 Package pdftex.def Info: img/linkfunctions.pdf used on input line 158.
-(pdftex.def)             Requested size: 216.81pt x 162.6071pt.
+(pdftex.def)             Requested size: 345.0pt x 258.76337pt.
 LaTeX Font Info:    Try loading font information for OMS+lmr on input line 164.
 
  (/usr/share/texmf/tex/latex/lm/omslmr.fd
@@ -844,8 +844,9 @@ ier (name{equation.3.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.180 	\begin{equation}
-                       pdfTeX warning (ext4): destination with the same identif
-ier (name{equation.3.1}) has been already used, duplicate ignored
+                        [6 <./img/linkfunctions.pdf>]pdfTeX warning (ext4): des
+tination with the same identifier (name{equation.3.1}) has been already used, d
+uplicate ignored
 <to be read again> 
                    \relax 
 l.189 	\begin{equation}
@@ -854,9 +855,8 @@ ier (name{equation.3.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.196 	\begin{equation}
-                        [6 <./img/linkfunctions.pdf>]pdfTeX warning (ext4): des
-tination with the same identifier (name{equation.3.1}) has been already used, d
-uplicate ignored
+                       pdfTeX warning (ext4): destination with the same identif
+ier (name{equation.3.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.204 	\begin{equation}
@@ -890,13 +890,13 @@ ier (name{equation.3.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.253 	\begin{equation}
-                       pdfTeX warning (ext4): destination with the same identif
-ier (name{equation.3.1}) has been already used, duplicate ignored
+                        [7]pdfTeX warning (ext4): destination with the same ide
+ntifier (name{equation.3.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.262 \begin{equation}
-                       [7]pdfTeX warning (ext4): destination with the same iden
-tifier (name{equation.3.1}) has been already used, duplicate ignored
+                      pdfTeX warning (ext4): destination with the same identifi
+er (name{equation.3.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.272 \begin{equation}
@@ -949,49 +949,49 @@ File: img/retinopathy/8.jpg Graphic file (type jpg)
 Package pdftex.def Info: img/retinopathy/8.jpg used on input line 298.
 (pdftex.def)             Requested size: 68.28644pt x 68.28667pt.
  [9]
-<img/adience/1.jpg, id=316, 256.96pt x 256.96pt>
+<img/adience/1.jpg, id=315, 256.96pt x 256.96pt>
 File: img/adience/1.jpg Graphic file (type jpg)
  <use img/adience/1.jpg>
 Package pdftex.def Info: img/adience/1.jpg used on input line 314.
 (pdftex.def)             Requested size: 68.28644pt x 68.2862pt.
 
-<img/adience/2.jpg, id=317, 256.96pt x 256.96pt>
+<img/adience/2.jpg, id=316, 256.96pt x 256.96pt>
 File: img/adience/2.jpg Graphic file (type jpg)
  <use img/adience/2.jpg>
 Package pdftex.def Info: img/adience/2.jpg used on input line 314.
 (pdftex.def)             Requested size: 68.28644pt x 68.2862pt.
 
-<img/adience/3.jpg, id=318, 256.96pt x 256.96pt>
+<img/adience/3.jpg, id=317, 256.96pt x 256.96pt>
 File: img/adience/3.jpg Graphic file (type jpg)
  <use img/adience/3.jpg>
 Package pdftex.def Info: img/adience/3.jpg used on input line 314.
 (pdftex.def)             Requested size: 68.28644pt x 68.2862pt.
 
-<img/adience/4.jpg, id=319, 256.96pt x 256.96pt>
+<img/adience/4.jpg, id=318, 256.96pt x 256.96pt>
 File: img/adience/4.jpg Graphic file (type jpg)
  <use img/adience/4.jpg>
 Package pdftex.def Info: img/adience/4.jpg used on input line 314.
 (pdftex.def)             Requested size: 68.28644pt x 68.2862pt.
 
-<img/adience/5.jpg, id=320, 256.96pt x 256.96pt>
+<img/adience/5.jpg, id=319, 256.96pt x 256.96pt>
 File: img/adience/5.jpg Graphic file (type jpg)
  <use img/adience/5.jpg>
 Package pdftex.def Info: img/adience/5.jpg used on input line 314.
 (pdftex.def)             Requested size: 68.28644pt x 68.2862pt.
 
-<img/adience/6.jpg, id=321, 256.96pt x 256.96pt>
+<img/adience/6.jpg, id=320, 256.96pt x 256.96pt>
 File: img/adience/6.jpg Graphic file (type jpg)
  <use img/adience/6.jpg>
 Package pdftex.def Info: img/adience/6.jpg used on input line 314.
 (pdftex.def)             Requested size: 68.28644pt x 68.2862pt.
 
-<img/adience/7.jpg, id=322, 256.96pt x 256.96pt>
+<img/adience/7.jpg, id=321, 256.96pt x 256.96pt>
 File: img/adience/7.jpg Graphic file (type jpg)
  <use img/adience/7.jpg>
 Package pdftex.def Info: img/adience/7.jpg used on input line 314.
 (pdftex.def)             Requested size: 68.28644pt x 68.2862pt.
 
-<img/adience/8.jpg, id=323, 256.96pt x 256.96pt>
+<img/adience/8.jpg, id=322, 256.96pt x 256.96pt>
 File: img/adience/8.jpg Graphic file (type jpg)
  <use img/adience/8.jpg>
 Package pdftex.def Info: img/adience/8.jpg used on input line 314.
@@ -999,22 +999,16 @@ Package pdftex.def Info: img/adience/8.jpg used on input line 314.
 
 [10 <./img/retinopathy/1.jpg> <./img/retinopathy/2.jpg> <./img/retinopathy/3.jp
 g> <./img/retinopathy/4.jpg> <./img/retinopathy/5.jpg> <./img/retinopathy/6.jpg
-> <./img/retinopathy/7.jpg> <./img/retinopathy/8.jpg>]
+> <./img/retinopathy/7.jpg> <./img/retinopathy/8.jpg>] [11 <./img/adience/1.jpg
+> <./img/adience/2.jpg> <./img/adience/3.jpg> <./img/adience/4.jpg> <./img/adie
+nce/5.jpg> <./img/adience/6.jpg> <./img/adience/7.jpg> <./img/adience/8.jpg>]
 Overfull \hbox (9.02795pt too wide) in paragraph at lines 366--367
 []\OT1/lmr/m/n/10 Both datasets are ar-ti-fi-cially bal-anced us-ing data aug-m
 en-ta-tion tech-niques [[]].
  []
 
-[11pdfTeX warning (ext4): destination with the same identifier (name{equation.4
-.2}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.367 
-       <./img/adience/1.jpg> <./img/adience/2.jpg> <./img/adience/3.jpg> <./img
-/adience/4.jpg> <./img/adience/5.jpg> <./img/adience/6.jpg> <./img/adience/7.jp
-g> <./img/adience/8.jpg>]pdfTeX warning (ext4): destination with the same ident
-ifier (name{equation.4.2}) has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{equation.4.2}
+) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.373 	\begin{equation}
@@ -1023,8 +1017,14 @@ ier (name{equation.4.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.380 	\begin{equation}
-                        [12] [13] [14] [15] [16] [17]
-(./elsarticle-template.bbl [18] [19] [20] [21] [22]
+                        [12pdfTeX warning (ext4): destination with the same ide
+ntifier (name{equation.4.2}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.383 	\end{equation}
+                     ] [13] [14] [15] [16] [17] (./elsarticle-template.bbl
+[18] [19] [20] [21] [22]
 Underfull \hbox (badness 1173) in paragraph at lines 333--338
 []\OT1/lmr/m/n/10 M. Cruz-Ram^^S^^Prez, C. Herv^^Sas-Mart^^S^^Pnez, J. S^^Sanch
 ez-Monedero, P. A.
@@ -1044,11 +1044,11 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 661.
 Here is how much of TeX's memory you used:
  7774 strings out of 493029
  111292 string characters out of 6136233
- 234911 words of memory out of 5000000
+ 216519 words of memory out of 5000000
  11012 multiletter control sequences out of 15000+600000
  65287 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 34i,14n,30p,1680b,619s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 34i,14n,30p,1680b,615s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
 c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/s
 hare/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/l
@@ -1071,7 +1071,7 @@ m/lmri7.pfb></usr/share/texmf/fonts/type1/public/lm/lmri8.pfb></usr/share/texmf
 type1/public/lm/lmsy7.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb></u
 sr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/p
 ublic/lm/lmtt8.pfb>
-Output written on elsarticle-template.pdf (23 pages, 639399 bytes).
+Output written on elsarticle-template.pdf (23 pages, 639456 bytes).
 PDF statistics:
  645 PDF objects out of 1000 (max. 8388607)
  540 compressed objects within 6 object streams
