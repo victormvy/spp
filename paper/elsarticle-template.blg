@@ -1,51 +1,56 @@
 This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: elsarticle-template.aux
-The style file: elsarticle-num.bst
+The style file: IEEEtran.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: main.bib.bib
-Warning--empty author in fang2019image
-Warning--empty journal in clevert2015fast
-Warning--can't use both volume and number fields in maas2013rectifier
-Warning--empty pages in kingma2014adam
+-- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+-- http://www.michaelshell.org/tex/ieeetran/bibtex/
+-- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+
+Done.
 You've used 58 entries,
-            2937 wiz_defined-function locations,
-            1021 strings with 16743 characters,
-and the built_in function-call counts, 21066 in all, are:
-= -- 2059
-> -- 647
-< -- 25
-+ -- 254
-- -- 196
-* -- 1480
-:= -- 2665
-add.period$ -- 88
+            4087 wiz_defined-function locations,
+            1128 strings with 17870 characters,
+and the built_in function-call counts, 48944 in all, are:
+= -- 3919
+> -- 1217
+< -- 467
++ -- 679
+- -- 198
+* -- 2323
+:= -- 6997
+add.period$ -- 126
 call.type$ -- 58
-change.case$ -- 57
-chr.to.int$ -- 0
-cite$ -- 62
-duplicate$ -- 714
-empty$ -- 2343
-format.name$ -- 247
-if$ -- 5507
+change.case$ -- 56
+chr.to.int$ -- 1131
+cite$ -- 58
+duplicate$ -- 3417
+empty$ -- 3906
+format.name$ -- 249
+if$ -- 11541
 int.to.chr$ -- 0
 int.to.str$ -- 58
-missing$ -- 60
-newline$ -- 212
-num.names$ -- 59
-pop$ -- 405
+missing$ -- 565
+newline$ -- 197
+num.names$ -- 58
+pop$ -- 1326
 preamble$ -- 1
 purify$ -- 0
-quote$ -- 0
-skip$ -- 1457
+quote$ -- 2
+skip$ -- 3788
 stack$ -- 0
-substring$ -- 1307
-swap$ -- 298
-text.length$ -- 25
+substring$ -- 2698
+swap$ -- 2875
+text.length$ -- 90
 text.prefix$ -- 0
-top$ -- 0
-type$ -- 0
-warning$ -- 4
-while$ -- 168
+top$ -- 5
+type$ -- 58
+warning$ -- 0
+while$ -- 246
 width$ -- 60
-write$ -- 550
-(There were 4 warnings)
+write$ -- 575
