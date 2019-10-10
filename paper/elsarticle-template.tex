@@ -46,8 +46,7 @@
 %\usepackage{numcompress}\bibliographystyle{model6-num-names}
 
 %% `Elsevier LaTeX' style
-%\bibliographystyle{elsarticle-num}
-\bibliographystyle{IEEEtran}
+\bibliographystyle{elsarticle-num}
 %%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
@@ -58,11 +57,12 @@
 
 \author{V\'ictor Manuel Vargas}
 \author{Pedro Antonio Guti\'errez}
-\author{C\'esar Herv\'as Mart\'inez}
+\author{C\'esar Herv\'as-Mart\'inez}
 \address{Department of Computer Science and Numerical Analysis, University of C\'ordoba, C\'ordoba, Spain}
+\cortext[a]{V\'ictor Manuel Vargas is the corresponding author.}
 
 \begin{abstract}
-	This paper proposes a deep convolutional neural network model for ordinal regression by considering a family of probabilistic ordinal link functions in the output layer. The link functions are those used for cumulative link models, which are traditional statistical linear models based on projecting each pattern into a 1-dimensional space. A set of ordered thresholds splits this space into the different classes of the problem. In our case, the projections are estimated by a non-linear deep neural network. To further improve the results, we combine these ordinal models with a loss function that takes into account the distance between the categories, based on the weighted Kappa index. Three different link functions are studied in the experimental study, and the results are contrasted with statistical analysis. The experiments run over two different ordinal classification problems, and the statistical tests confirm that these models improve the results of a nominal model and outperform other robust proposals considered in the literature.
+	This paper proposes a deep convolutional neural network model for ordinal regression by considering a family of probabilistic ordinal link functions in the output layer. The link functions are those used for cumulative link models, which are traditional statistical linear models based on projecting each pattern into a 1-dimensional space. A set of ordered thresholds splits this space into the different classes of the problem. In our case, the projections are estimated by a non-linear deep neural network. To further improve the results, we combine these ordinal models with a loss function that takes into account the distance between the categories, based on the weighted Kappa index. Three different link functions are studied in the experimental study, and the results are contrasted with statistical analysis. The experiments run over two different ordinal classification problems and the statistical tests confirm that these models improve the results of a nominal model and outperform other robust proposals considered in the literature.
 \end{abstract}
 
 \begin{keyword}
@@ -83,7 +83,7 @@ In this paper, we propose the use of CLMs for deriving deep learning ordinal cla
 
 An experimental study evaluating the three most common link functions is performed. Also, other parameters that can affect the training process and the model performance are studied, such as the learning rate of the optimization algorithm, the batch size, and their interaction. The nominal version of this model is used as a baseline for comparison. We contrast the results obtained with a statistical analysis to provide more robust conclusions. An ANOVA III test \cite{miller1997beyond}, followed by a posthoc Tukey's test \cite{tukey1949comparing}, is performed over $5$ runs of the experiments, because of the demands of computational time required to run a higher number of executions. The experiments are run using two different ordinal datasets: Diabetic Retinopathy~\cite{de2018weighted}, which contains high-resolution fundus images related with diabetes disease, and Adience~\cite{beckham2017unimodal}, which includes human faces images associated with an age range.
 
-The highlights of this work are to introduce the CLM for CNNs combined with the QWK loss function to achieve high classification performance and better stability than previous works in terms of standard deviation and stagnation problems.
+The main contribution of this work is to introduce CLM for CNNs combined with the QWK loss function to achieve high classification performance and better stability than previous works in terms of standard deviation and stagnation problems.
 
 The paper is organized as follows: in Section~\ref{sect:relatedwork}, we analyse previous related works. Section~\ref{sect:modelProposal} presents a formal description of the proposal in this paper, which combines a CLM with an ordinal loss function. In Section~\ref{sect:experiments}, we describe the experiments and the datasets used, while, in Section~\ref{sect:results}, we present the results obtained and the statistical analysis. Finally, Section~\ref{sect:conclusions} exposes the conclusions of this work.
 
@@ -112,7 +112,7 @@ In general, all these approaches increment the number of parameters to adjust, a
 
 \subsection{Using an ordinal loss function}
 
-De la Torre et al.~\cite{de2018weighted} proposed the use of a continuous version of the quadratic weighted kappa (QWK) metric as loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function using three different datasets, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces overfitting and training time. Also, they checked the importance of hyper-parameter tuning. Later, in 2019, another work related to the Diabetic Retinopathy dataset was published \cite{de2019deep} where they combined the QWK loss function with the use of images of a higher resolution and new dataset partitions with many more samples on the training split. They achieved a proper classification score but tested the classifier against a tiny testing set compared to the original one from the Kaggle competition (around $12\%$ of the samples for testing against $60\%$ on the initial dataset splits). Further comparisons with this work are not possible as they didn't provide the dataset splits along with the paper.
+De la Torre et al.~\cite{de2018weighted} proposed the use of a continuous version of the quadratic weighted kappa (QWK) metric as loss function for the optimization algorithm. They compared this cost function against the traditional log-loss function using three different datasets, including the Diabetic Retinopathy database as the most complex one. They proved that their function could improve the results as it reduces overfitting and training time. Also, they checked the importance of hyper-parameter tuning. Later, in 2019, another work related to the Diabetic Retinopathy dataset was published \cite{de2019deep} where the authors combined the QWK loss function with the use of images of a higher resolution and new dataset partitions with many more samples on the training split. Although they achieved a proper classification score, the test set only contained a small portion of the test patterns used in the Kaggle competition (around $12\%$ of the samples for testing against $60\%$ on the initial dataset splits).
 
 Rios et al. \cite{rios2017ordinal} presented a CNN model designed to handle ordinal regression tasks on psychiatric notes. They combined an ordinal loss function, a CNN model and conventional feature extraction. Also, the authors applied a technique called Locally Interpretable Model-agnostic Explanation (LIME) to make the non-linear model more interpretable.
 
@@ -579,6 +579,7 @@ As we did for the DR dataset, a post-hoc multiple comparison test has been perfo
 	\label{table:Tukey}
 	\centering
 	\footnotesize
+	\resizebox{\columnwidth}{!}{
 	\begin{tabular}{cccccc}
 		\hline\hline
 		&                   & \multicolumn{2}{c}{\textbf{DR}} & \multicolumn{2}{c}{\textbf{Adience}} \\ \hline
@@ -603,7 +604,7 @@ As we did for the DR dataset, a post-hoc multiple comparison test has been perfo
 		&        256        &  $0.014$   &      $0.000$       &     -      &            -            \\
 		256        &        64         &  $0.027$   &      $0.000$       &     -      &            -            \\
 		&        128        &  $-0.014$  &      $0.000$       &     -      &            -\\\hline\hline
-	\end{tabular}
+	\end{tabular}}
 \end{table}
 
 The results over the test set show that the best LF is the \texttt{logit}, the best LR is $10^{-3}$ and the best BS is 128. However, the interactions between these factors made the configuration that uses a \texttt{logit} link, $\eta=10^{-3}$ and BS of 64, the best configuration. It obtained a mean QWK value of $0.940$ for validation and $0.881$ for test. The same parameters, but using the \texttt{probit} link, achieves the second best result ($0.874$). The standard deviation is very low for both cases.
@@ -616,7 +617,7 @@ Once the factor parameters have been studied and selected, experiments are run w
 
 These results are included in Table \ref{table:Comparison}, together with the comparison against previous works of the state-of-the-art. All the results are given for the test set, except those from \cite{de2018weighted} (DR dataset), because the authors only provided validation results for $128\times 128$ images (however, validation results are usually better than test results). The results for \cite{beckham2017unimodal} were obtained by reproducing their experiments because they did not provide the results for test set. As can be checked, the proposed ordinal model with the best configuration found in the previous step outperforms all the other alternatives in terms of QWK. 
 
-The performance gain of CLM over the nominal version reaches $16.8\%$ for DR and $11.9\%$ for Adience dataset. The DR dataset obtains a higher performance gain from the ordinal method than the Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases. Moreover, when compared against alternative ordinal methods (many of them with a deep structure), CLMs are very competitive, possibly because of the flexibility provided by the threshold model structure (where the threshold of each class is independently adjusted). Our proposed model shows a high score and a very low standard deviation, which proves very high stability compared to other alternatives.
+The performance gain of CLM over the nominal version reaches $16.8\%$ for DR and $11.9\%$ for Adience dataset. The DR dataset obtains a higher performance gain from the ordinal method than the Adience dataset. It seems that the method proposed in this work offers a more significant improvement as the given problem complexity increases. Moreover, when compared against alternative ordinal methods (many of them with a deep structure), CLMs are very competitive, possibly because of the flexibility provided by the threshold model structure (where the threshold of each class is independently adjusted). Our proposed model shows a high score and a very low standard deviation, which proves very high robustness compared to other alternatives.
 
 \begin{table}[!t]
 	\caption{Comparison between the best results of the CLM network, a nominal network (using softmax and cross-entropy) and previous works for both datasets.}
@@ -624,37 +625,38 @@ The performance gain of CLM over the nominal version reaches $16.8\%$ for DR and
 	\scriptsize
 	\centering
 	\def\arraystretch{1.3}
+	\resizebox{\columnwidth}{!}{
 	\begin{tabular}{lccc}
 		\hline\hline
 		\multicolumn{4}{c}{\textbf{Diabetic Retinopathy}}\\
 		\hline
-		Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
-		CLM network (proposal)                          &    $0.582_{(0.016)}$    &    $0.723_{(0.004)}$    &        $0.868_{(0.002)}$         \\
-		Nominal network                           &    $0.498_{(0.013)}$    &    $0.692_{(0.014)}$    &        $0.854_{(0.006)}$         \\
-		de la Torre et al. \cite{de2018weighted}     &  $0.537_{(\text{-})}$   &            -            &                -                 \\
-		Nebot et al. \cite{nebot2016diabetic}  &  $0.555_{(\text{-})}$   &            -            &                -                 \\
+		Method                                    & $\overline{QWK}_{SD}$ & $\overline{CCR}_{SD}$ & $\overline{\text{1-off}}_{SD}$ \\ \hline
+		CLM network (proposal)                          &    $0.582_{0.016}$    &    $0.723_{0.004}$    &        $0.868_{0.002}$         \\
+		Nominal network                           &    $0.498_{0.013}$    &    $0.692_{0.014}$    &        $0.854_{0.006}$         \\
+		de la Torre et al. \cite{de2018weighted}     &  $0.537_{\text{-}}$   &            -            &                -                 \\
+		Nebot et al. \cite{nebot2016diabetic}  &  $0.555_{\text{-}}$   &            -            &                -                 \\
 		\hline
 		\multicolumn{4}{c}{\textbf{Adience}}\\
 		\hline
-		Method                                    & $\overline{QWK}_{(SD)}$ & $\overline{CCR}_{(SD)}$ & $\overline{\text{1-off}}_{(SD)}$ \\ \hline
-		CLM network (proposal)                          &    $0.881_{(0.005)}$    &    $0.519_{(0.013)}$    &        $0.894_{(0.005)}$         \\
-		Nominal network                           &    $0.787_{(0.004)}$    &    $0.458_{(0.008)}$    &        $0.800_{(0.007)}$         \\
-		Beckham and Pal \cite{beckham2017unimodal} &    $0.855_{(0.012)}$    &    $0.467_{(0.019)}$    &        $0.867_{(0.011)}$         \\
-		Eidinger et al. \cite{eidinger2014age} &            -            &    $0.451_{(0.026)}$    &        $0.807_{(0.011)}$         \\
-		Chen et al. \cite{chen2016cascaded} &            -            &    $0.529_{(0.060)}$    &        $0.885_{(0.022)}$         \\
-		Levi and Hassner \cite{levi2015age}         &            -            &    $0.507_{(0.051)}$    &        $0.847_{(0.022)}$         \\ 
-		M. Duan et al. \cite{duan2018hybrid}         &            -            &    $0.523_{(0.057)}$    &        -         \\ \hline\hline
-	\end{tabular}
+		Method                                    & $\overline{QWK}_{SD}$ & $\overline{CCR}_{SD}$ & $\overline{\text{1-off}}_{SD}$ \\ \hline
+		CLM network (proposal)                          &    $0.881_{0.005}$    &    $0.519_{0.013}$    &        $0.894_{0.005}$         \\
+		Nominal network                           &    $0.787_{0.004}$    &    $0.458_{0.008}$    &        $0.800_{0.007}$         \\
+		Beckham and Pal \cite{beckham2017unimodal} &    $0.855_{0.012}$    &    $0.467_{0.019}$    &        $0.867_{0.011}$         \\
+		Eidinger et al. \cite{eidinger2014age} &            -            &    $0.451_{0.026}$    &        $0.807_{0.011}$         \\
+		Chen et al. \cite{chen2016cascaded} &            -            &    $0.529_{0.060}$    &        $0.885_{0.022}$         \\
+		Levi and Hassner \cite{levi2015age}         &            -            &    $0.507_{0.051}$    &        $0.847_{0.022}$         \\ 
+		M. Duan et al. \cite{duan2018hybrid}         &            -            &    $0.523_{0.057}$    &        -         \\ \hline\hline
+	\end{tabular}}
 \end{table}
 
 \section{Conclusions}
 \label{sect:conclusions} 
-This paper introduces a new deep ordinal network based on combining CLM models with a continuous QWK loss function. The proposed model is able to improve the performance of the deep network compared to the equivalent nominal version and other models proposed in previous works. Also, it is able to reduce the chance that the model gets stuck when training with some parameter configurations. We conclude that the optimal values for the different parameters considered are problem-dependant. The results highlight the importance of making an experimental design where all of these parameters are adjusted for each problem. In summary, the most significant contributions of the model proposal are the performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention from over-fitting and stagnation, which gives our method high stability compared to other alternatives.
+This paper introduces a new deep ordinal network based on combining CLM models with a continuous QWK loss function. The proposed model is able to improve the performance of the deep network compared to the equivalent nominal version and other models proposed in previous works. Also, it is able to reduce the chance that the model gets stuck when training with some parameter configurations. We conclude that the optimal values for the different parameters considered are problem-dependant. The results highlight the importance of making an experimental design where all of these parameters are adjusted for each problem. In summary, the most significant contributions of the model proposal are the performance increase, the reduction of the number of parameters configurations that should be tried to find the best one and the prevention from over-fitting and stagnation, which grants our method high stability compared to other alternatives.
 
 As future research, it seems that the design of new generalised link functions could be promising, which could be dynamically adapted to any problem based on a learnable parameter. 
 
 \section*{Acknowledgment}
-This work has been partially subsidised by the TIN2017-85887-C2-1-P project of the Spanish Ministry of Economy and Competitiveness (MINECO), and FEDER funds of the European Union. Víctor Manuel Vargas's research has been subsidized by the FPU Predoctoral Program of the Spanish Ministry of Education, Culture and Sport (MECD), grant reference FPU18/00358.
+This work has been partially subsidised by the TIN2017-85887-C2-1-P and TIN2017-90567-REDT projects of the Spanish Ministry of Economy and Competitiveness (MINECO), and FEDER funds of the European Union. Víctor Manuel Vargas's research has been subsidized by the FPU Predoctoral Program of the Spanish Ministry of Science, Innovation and Universities (MCIU), grant reference FPU18/00358.
 
 
 \section*{References}
