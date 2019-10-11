@@ -12,3 +12,8 @@ class GeometricLayer(keras.layers.Layer):
 
 	def call(self, inputs):
 		return K.pow(1. - inputs, int(self.num_classes)) * inputs
+
+
+class DenseMultiplicative(keras.layers.Dense):
+	def call(self, inputs):
+		pass
