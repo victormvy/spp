@@ -1,0 +1,6 @@
+[
+	{"db": "adience", "net_type" : "conv128", "batch_size" : 10, "epochs" : 100, "checkpoint_dir" : "../results/adience_10_softmax_1e-4", "loss" : "crossentropy", "activation" : "elu", "final_activation" : "softmax", "lr" : 1e-4, "dropout" : 0, "executions": 5, "workers" : 6},
+	{"db": "adience", "net_type" : "conv128", "batch_size" : 15, "epochs" : 100, "checkpoint_dir" : "../results/adience_15_softmax_1e-2", "loss" : "crossentropy", "activation" : "elu", "final_activation" : "softmax", "lr" : 1e-2, "dropout" : 0, "executions": 5, "workers" : 6},
+	{"db": "adience", "net_type" : "conv128", "batch_size" : 15, "epochs" : 100, "checkpoint_dir" : "../results/adience_15_softmax_1e-3", "loss" : "crossentropy", "activation" : "elu", "final_activation" : "softmax", "lr" : 1e-3, "dropout" : 0, "executions": 5, "workers" : 6},
+	{"db": "adience", "net_type" : "conv128", "batch_size" : 15, "epochs" : 100, "checkpoint_dir" : "../results/adience_15_softmax_1e-4", "loss" : "crossentropy", "activation" : "elu", "final_activation" : "softmax", "lr" : 1e-4, "dropout" : 0, "executions": 5, "workers" : 6}
+]
