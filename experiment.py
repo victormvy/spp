@@ -629,7 +629,7 @@ class Experiment:
 
 			# Get predictions
 			generator.reset()
-			predictions = model.predict_generator(generator, verbose=1)
+			predictions = model.predict_generator(generator, steps=ds.num_batches(self.batch_size), verbose=1)
 
 			metrics = self.compute_metrics(ds.y, predictions, num_classes)
 			self.print_metrics(metrics)
