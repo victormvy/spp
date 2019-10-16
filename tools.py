@@ -8,6 +8,7 @@ import prettytable
 import h5py
 import keras
 import cv2
+import csv
 from PIL import Image
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -57,9 +58,54 @@ def resume_one_metric(metric, results_path):
 
 				t2.add_row([i, item])
 
-
 	print(t2)
 	print(t)
+
+
+def resume_one_metric_csv(metric, results_path, csv_path):
+	t = [['#', 'Name', 'Dataset', 'BS', 'LR', 'LF', 'ACT', 'Train ' + metric, 'Mean Train', 'Std Train', 'Validation ' + metric, 'Mean Val', 'Std Val', 'Test ' + metric, 'Mean Test', 'Std Test']]
+	for i, item in enumerate(sorted(os.listdir(results_path))):
+		if os.path.isdir(os.path.join(results_path, item)):
+			train, val, test = '', '', ''
+			train_values, val_values, test_values = np.array([]), np.array([]), np.array([])
+			for item2 in sorted(os.listdir(os.path.join(results_path, item))):
+				if os.path.isdir(os.path.join(results_path, item, item2)) and os.path.isfile(os.path.join(results_path, item, item2, evaluation_file)):
+					with open(os.path.join(results_path, item, item2, evaluation_file), 'rb') as f:
+						p = pickle.load(f)
+
+						if metric in p['metrics']['Train'] and metric in p['metrics']['Validation'] and metric in p['metrics']['Test']:
+							train += '{:.5} '.format(round(p['metrics']['Train'][metric], 5))
+							val += '{:.5} '.format(round(p['metrics']['Validation'][metric], 5))
+							test += '{:.5} '.format(round(p['metrics']['Test'][metric], 5))
+
+							# Accumulate sums
+							train_values = np.append(train_values, p['metrics']['Train'][metric])
+							val_values = np.append(val_values, p['metrics']['Validation'][metric])
+							test_values = np.append(test_values, p['metrics']['Test'][metric])
+
+			if 'p' in locals():
+				t.append([
+					i,
+					item,
+					p['config']['db'],
+					p['config']['batch_size'],
+					p['config']['lr'],
+					p['config']['final_activation'],
+					p['config']['activation'],
+					train,
+					train_values.size > 0 and '{:.5}'.format(round(np.mean(train_values), 5)) or 0,
+					train_values.size > 0 and '{:.5}'.format(round(np.std(train_values), 5)) or 0,
+					val,
+					val_values.size > 0 and '{:.5}'.format(round(np.mean(val_values), 5)) or 0,
+					val_values.size > 0 and '{:.5}'.format(round(np.std(val_values), 5)) or 0,
+					test,
+					test_values.size > 0 and '{:.5}'.format(round(np.mean(test_values), 5)) or 0,
+					test_values.size > 0 and '{:.5}'.format(round(np.std(test_values), 5)) or 0
+				])
+
+	with open(csv_path, 'w') as csvfile:
+		writer = csv.writer(csvfile, delimiter=';')
+		writer.writerows(t)
 
 
 def show_confusion_matrices(results_path):
@@ -411,6 +457,12 @@ def option_resume_one_metric():
 	metric = input('Metric name: ')
 	resume_one_metric(metric, results_path)
 
+def option_resume_one_metric_csv():
+	results_path = input('Results path: ')
+	metric = input('Metric name: ')
+	csv_path = input('Output CSV file path: ')
+	resume_one_metric_csv(metric, results_path, csv_path)
+
 def option_show_confusion_matrices():
 	results_path = input('Results path: ')
 	show_confusion_matrices(results_path)
@@ -466,6 +518,7 @@ def show_menu():
 	print('6. Display images from h5')
 	print('7. Create retinopathy h5')
 	print('8. Split train and val')
+	print('9. Resume results for one metric in csv file')
 	print('=====================================')
 	option = input(' Choose one option: ')
 
@@ -489,6 +542,8 @@ def select_option(option):
 		option_create_retinopathy_h5()
 	elif option == '8':
 		option_split_train_val()
+	elif option == '9':
+		option_resume_one_metric_csv()
 
 
 if __name__ == '__main__':
