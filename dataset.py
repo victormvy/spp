@@ -6,6 +6,8 @@ import h5py
 from sklearn.model_selection import train_test_split
 import keras
 import cv2
+import pandas as pd
+from skimage import io
 from PIL import Image
 from sklearn.utils.class_weight import compute_class_weight
 
@@ -117,6 +119,12 @@ class Dataset:
 			self._load_mnist('val')
 		elif path == 'mnisttest':
 			self._load_mnist('test')
+		elif path == 'cinic10train':
+			self._load_cinic10('train')
+		elif path == 'cinic10val':
+			self._load_cinic10('val')
+		elif path == 'cinic10test':
+			self._load_cinic10('test')
 		elif os.path.isdir(path):
 			self._load_from_dir(path)
 		else:
@@ -212,10 +220,11 @@ class Dataset:
 
 	def _load_cinic10(self, split):
 		images = []
+		y_names = []
 
-		train_path = "CINIC/train/"
-		valid_path = "CINIC/valid/"
-		test_path = "CINIC/test/"
+		train_path = "../datasets/CINIC/train/"
+		valid_path = "../datasets/CINIC/valid/"
+		test_path = "../datasets/CINIC/test/"
 
 		if split == 'train':
 			path = train_path
@@ -241,8 +250,10 @@ class Dataset:
 		y = categories.codes
 		x = images
 
+		self.num_classes = 10
+		self._sample_shape = x.shape[1:]
 		self._data['x'] = x.astype('float32')
-		self._data['y'] = keras.utils.to_categorical(y, 10)
+		self._data['y'] = list(keras.utils.to_categorical(y, self.num_classes))
 
 
 	def _load_mnist(self, split):
