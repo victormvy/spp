@@ -20,7 +20,29 @@ class SPP(keras.layers.Layer):
 	def build(self, input_shape):
 		super(SPP, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
+		return K.softplus(inputs) - self.alpha
+
+	def compute_output_shape(self, input_shape):
+		return input_shape
+
+class SPPT(keras.layers.Layer):
+	"""
+	Trainable Parametric softplus activation layer.
+	"""
+
+	def __init__(self, **kwargs):
+		super(SPPT, self).__init__(**kwargs)
+		self.__name__ = 'SPP'
+
+	def build(self, input_shape):
+		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
+									 initializer=keras.initializers.RandomUniform(minval=0, maxval=1),
+									 trainable=True)
+
+		super(SPPT, self).build(input_shape)
+
+	def call(self, inputs, **kwargs):
 		return K.softplus(inputs) - self.alpha
 
 	def compute_output_shape(self, input_shape):
@@ -61,7 +83,7 @@ class MPELU(keras.layers.Layer):
 		# Finish buildidng
 		super(MPELU, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		positive = keras.activations.relu(inputs)
 		negative = self.alpha * (K.exp(-keras.activations.relu(-inputs) * cons_greater_zero(self.beta)) - 1)
 
@@ -85,7 +107,7 @@ class RTReLU(keras.layers.Layer):
 		# Finish building
 		super(RTReLU, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		return keras.activations.relu(inputs + self.a)
 
 	def compute_output_shape(self, input_shape):
@@ -106,7 +128,7 @@ class RTPReLU(keras.layers.PReLU):
 		# Call PReLU build method
 		super(RTPReLU, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		pos = keras.activations.relu(inputs + self.a)
 		neg = -self.alpha * keras.activations.relu(-(inputs * self.a))
 
@@ -129,7 +151,7 @@ class PairedReLU(keras.layers.Layer):
 		# Finish building
 		super(PairedReLU, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		return K.concatenate(
 			(keras.activations.relu(self.scale * inputs - self.theta), keras.activations.relu(-self.scale * inputs - self.theta_p)),
 			axis=len(inputs.get_shape()) - 1)
@@ -155,7 +177,7 @@ class EReLU(keras.layers.Layer):
 		# Finish building
 		super(EReLU, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		return keras.activations.relu(inputs * self.k)
 
 	def compute_output_shape(self, input_shape):
@@ -176,7 +198,7 @@ class EPReLU(keras.layers.PReLU):
 		# Call PReLU build method
 		super(EPReLU, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		pos = keras.activations.relu(inputs * self.k)
 		neg = -self.alpha * keras.activations.relu(-(inputs))
 
@@ -190,7 +212,7 @@ class SQRTActivation(keras.layers.Layer):
 	def build(self, input_shape):
 		super(SQRTActivation, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		pos = K.sqrt(keras.activations.relu(inputs))
 		neg = - K.sqrt(-keras.activations.relu(-inputs))
 
@@ -208,7 +230,7 @@ class RReLu(keras.layers.Layer):
 
 		super(RReLu, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		pos = keras.activations.relu(inputs)
 		neg = self.alpha * keras.activations.relu(-inputs)
 
@@ -230,7 +252,7 @@ class PELU(keras.layers.Layer):
 
 		super(PELU, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		pos = (cons_greater_zero(self.alpha) / cons_greater_zero(self.beta)) * keras.activations.relu(inputs)
 		neg = cons_greater_zero(self.alpha) * (K.exp((-keras.activations.relu(-inputs)) / cons_greater_zero(self.beta)) - 1)
 
@@ -248,7 +270,7 @@ class SlopedReLU(keras.layers.Layer):
 
 		super(SlopedReLU, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		return keras.activations.relu(self.alpha * inputs)
 
 
@@ -267,7 +289,7 @@ class PTELU(keras.layers.Layer):
 
 		super(PTELU, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		pos = keras.activations.relu(inputs)
 		neg = self.alpha * K.tanh(self.beta * keras.activations.relu(-inputs))
 
@@ -302,7 +324,7 @@ class Antirectifier(keras.layers.Layer):
 		shape[-1] *= 2
 		return tuple(shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		inputs -= K.mean(inputs, axis=1, keepdims=True)
 		inputs = K.l2_normalize(inputs, axis=1)
 		pos = K.relu(inputs)
@@ -316,7 +338,7 @@ class CReLU(keras.layers.Layer):
 		shape[-1] *= 2
 		return tuple(shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		pos = K.relu(inputs)
 		neg = K.relu(-inputs)
 		return K.concatenate([pos, neg])
@@ -449,7 +471,7 @@ class CLM(keras.layers.Layer):
 			self.__set_default_param('p', self.add_weight('p_clm', shape=(1,), initializer=keras.initializers.Constant(0.5)))
 
 
-	def call(self, x):
+	def call(self, x, **kwargs):
 		thresholds = self._convert_thresholds(self.thresholds_b, self.thresholds_a)
 		return self._nnpom(x, thresholds)
 
