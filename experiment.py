@@ -483,7 +483,8 @@ class Experiment:
 		net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau,
 						 self.prob_layer, num_channels, num_classes, self.spp_alpha, self.dropout)
 
-		model = self.get_model(net_object, self.net_type)
+		# model = self.get_model(net_object, self.net_type)
+		model = net_object.build(self.net_type)
 
 		# Create checkpoint dir if not exists
 		if not os.path.isdir(self.checkpoint_dir):
@@ -622,7 +623,8 @@ class Experiment:
 			net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau,
 							 self.prob_layer, num_channels, num_classes, self.spp_alpha, self.dropout)
 
-			model = self.get_model(net_object, self.net_type)
+			# model = self.get_model(net_object, self.net_type)
+			model = net_object.build(self.net_type)
 
 			# Load weights
 			model.load_weights(os.path.join(self.checkpoint_dir, self.best_model_file))
@@ -688,24 +690,6 @@ class Experiment:
 		print('MSE: {:.4f}'.format(metrics['MSE']))
 		print('MS: {:.4f}'.format(metrics['MS']))
 
-	def get_model(self, net_object, name):
-		if name == 'vgg19':
-			model = net_object.vgg19()
-		elif name == 'vgg16':
-			model = net_object.vgg16()
-		elif name == 'conv128':
-			model = net_object.conv128()
-		elif name == 'testing':
-			model = net_object.testing()
-		elif name == 'inceptionresnetv2':
-			model = net_object.inception_resnet_v2_custom()
-		elif name == 'beckhamresnet':
-			model = net_object.beckham_resnet()
-		else:
-			raise Exception('Invalid net type. You must select one of these: vgg19, conv128')
-
-		return model
-
 	def get_db_path(self, db):
 		"""
 		Get dataset path for train, validation and test for a given database name.
@@ -725,7 +709,7 @@ class Experiment:
 			return "../cifar10/cifar10_128_train.h5", "../cifar10/cifar10_128_val.h5", "../cifar10/cifar10_128_test.h5"
 		elif db.lower() == 'cifar10_75':
 			return "../cifar10/cifar10_75_train.h5", "../cifar10/cifar10_75_val.h5", "../cifar10/cifar10_75_test.h5"
-		elif db.lower() == 'cifar10' or db.lower() == 'cifar100' or db.lower() == 'mnist':
+		elif db.lower() == 'cifar10' or db.lower() == 'cifar100' or db.lower() == 'mnist' or db.lower() == 'cinic10':
 			return db.lower() + 'train', db.lower() + 'val', db.lower() + 'test'
 		elif db.lower() == 'wiki':
 			return "../wiki_crop/h5/wiki_train_256.h5", "../wiki_crop/h5/wiki_val_256.h5", "../wiki_crop/h5/wiki_test_256.h5"

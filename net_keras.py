@@ -2,8 +2,8 @@ import keras
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, BatchNormalization, Activation, Dropout, Flatten, Dense
 from keras import regularizers
-from activations import SPP, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, CLM, RReLu, PELU, SlopedReLU, PTELU, Antirectifier, CReLU, EPReLU
-from layers import GeometricLayer
+from activations import SPP, SPPT, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, CLM, RReLu, PELU, SlopedReLU, PTELU, Antirectifier, CReLU, EPReLU
+from layers import GeometricLayer, DenseMultiplicative
 from resnet import Resnet_2x4
 
 from inception_resnet_v2 import InceptionResNetV2 as Irnv2
@@ -23,6 +23,12 @@ class Net:
 		self.num_classes = num_classes
 		self.spp_alpha = spp_alpha
 		self.dropout = dropout
+
+	def build(self, net_model):
+		if hasattr(self, net_model):
+			return getattr(self, net_model)()
+		else:
+			raise Exception('Invalid network model.')
 
 	def vgg19(self):
 		model = keras.models.Sequential([
@@ -247,7 +253,7 @@ class Net:
 
 		return model
 
-	def inception_resnet_v2_custom(self):
+	def inceptionresnetv2(self):
 		input = keras.layers.Input(shape=(self.size, self.size, self.num_channels))
 		x = input
 		# Required size >= 75 x 75
@@ -270,7 +276,7 @@ class Net:
 
 		return model
 
-	def beckham_resnet(self):
+	def beckhamresnet(self):
 		input = keras.layers.Input(shape=(self.size, self.size, self.num_channels))
 		x = input
 
@@ -299,6 +305,8 @@ class Net:
 			return keras.layers.Activation('softplus')
 		elif self.activation == 'spp':
 			return SPP(self.spp_alpha)
+		elif self.activation == 'sppt':
+			return SPPT()
 		elif self.activation == 'mpelu':
 			return MPELU(channel_wise=True)
 		elif self.activation == 'rtrelu':
