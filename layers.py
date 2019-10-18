@@ -10,7 +10,7 @@ class GeometricLayer(keras.layers.Layer):
 
 		super(GeometricLayer, self).build(input_shape)
 
-	def call(self, inputs):
+	def call(self, inputs, **kwargs):
 		return K.pow(1. - inputs, int(self.num_classes)) * inputs
 
 
@@ -31,3 +31,14 @@ class DenseMultiplicative(keras.layers.Dense):
 		out = K.prod(inputs_pow, axis=1)
 
 		return out
+
+
+class ScaleLayer(keras.layers.Layer):
+	def build(self, input_shape):
+		super(ScaleLayer, self).build(input_shape)
+
+	def call(self, inputs, **kwargs):
+		_max = K.max(inputs)
+		_min = K.min(inputs)
+
+		return (inputs - _min) / (_max - _min) * (2.0 - 1.0) + 1.0
