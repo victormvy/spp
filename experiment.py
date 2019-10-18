@@ -494,6 +494,9 @@ class Experiment:
 		if os.path.isfile(os.path.join(self.checkpoint_dir, self.model_file)):
 			print("===== RESTORING SAVED MODEL =====")
 			model.load_weights(os.path.join(self.checkpoint_dir, self.model_file))
+		elif os.path.isfile(os.path.join(self.checkpoint_dir, self.best_model_file)):
+			print("===== RESTORING SAVED BEST MODEL =====")
+			model.load_weights(os.path.join(self.checkpoint_dir, self.best_model_file))
 
 		# Create the cost matrix that will be used to compute qwk
 		cost_matrix = K.constant(make_cost_matrix(num_classes), dtype=K.floatx())
@@ -536,7 +539,7 @@ class Experiment:
 									   keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, self.csv_file),
 																	append=True),
 									   keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
-									   keras.callbacks.TerminateOnNaN(),
+									   # keras.callbacks.TerminateOnNaN(),
 									   keras.callbacks.EarlyStopping(min_delta=0.0005, patience=40, verbose=1),
 									   # PrintWeightsCallback(class_weight),
 									   # ReweightClassesCallback(val_generator=val_generator, val_steps=steps_val, class_weights=class_weight)
@@ -557,6 +560,10 @@ class Experiment:
 		with open(os.path.join(self.checkpoint_dir, self.model_file_extra), 'w') as f:
 			f.write(str(self.epochs))
 			f.write('\n' + str(self.best_metric))
+
+		# Delete model file
+		if os.path.isfile(os.path.join(self.checkpoint_dir, self.model_file)):
+			os.remove(os.path.join(self.checkpoint_dir, self.model_file))
 
 		# Free objects
 		del model
