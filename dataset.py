@@ -287,6 +287,62 @@ class Dataset:
 		self._resize_data(32, 32)
 
 
+	def _load_wiki(self, split):
+		train_path = '../datasets/wiki_crop/data_processed/train.csv'
+		val_path = '../datasets/wiki_crop/data_processed/val.csv'
+		test_path = '../datasets/wiki_crop/data_processed/test.csv'
+		images_path = '../datasets/wiki_crop/data_processed/'
+
+		path = val_path if split == 'val' else test_path if split == 'test' else train_path
+
+		self._sample_shape = (128, 128, 3)
+		self.num_classes = 8
+
+		df = pd.read_csv(path)
+
+		self._data['x'] = []
+		self._data['y'] = list(df['age_cat'])
+
+		for path in df['path']:
+			img = io.imread(os.path.join(images_path, path))
+
+			if len(img.shape) < 3:
+				img = np.stack((img,)*3, axis=-1)
+
+			self._data['x'].append(img)
+
+		self._data['x'] = np.concatenate([arr[np.newaxis] for arr in self._data['x']])
+		self._data['y'] = keras.utils.to_categorical(self._data['y'], self.num_classes)
+
+
+	def _load_imdb(self, split):
+		train_path = '../datasets/imdb_crop/data_processed/train.csv'
+		val_path = '../datasets/imdb_crop/data_processed/val.csv'
+		test_path = '../datasets/imdb_crop/data_processed/test.csv'
+		images_path = '../datasets/imdb_crop/data_processed/'
+
+		path = val_path if split == 'val' else test_path if split == 'test' else train_path
+
+		self._sample_shape = (128, 128, 3)
+		self.num_classes = 8
+
+		df = pd.read_csv(path)
+
+		self._data['x'] = []
+		self._data['y'] = list(df['age_cat'])
+
+		for path in df['path']:
+			img = io.imread(os.path.join(images_path, path))
+
+			if len(img.shape) < 3:
+				img = np.stack((img,)*3, axis=-1)
+
+			self._data['x'].append(img)
+
+		self._data['x'] = np.concatenate([arr[np.newaxis] for arr in self._data['x']])
+		self._data['y'] = keras.utils.to_categorical(self._data['y'], self.num_classes)
+
+
 
 	def _resize_data(self, width, height):
 		data_resized = np.zeros((self._data['x'].shape[0], width, height, self.num_channels))

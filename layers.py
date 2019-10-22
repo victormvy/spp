@@ -14,25 +14,6 @@ class GeometricLayer(keras.layers.Layer):
 		return K.pow(1. - inputs, int(self.num_classes)) * inputs
 
 
-class DenseMultiplicative(keras.layers.Dense):
-	def build(self, input_shape):
-		print(input_shape)
-
-		super(DenseMultiplicative, self).build(input_shape)
-
-	def call(self, inputs):
-		# Tile inputs vector (units x inputs)
-		t_inputs = K.tile(inputs, (self.units, 1))
-
-		# inputs pow kernel (weights)
-		inputs_pow = K.pow(t_inputs, self.kernel)
-
-		# Product of columns
-		out = K.prod(inputs_pow, axis=1)
-
-		return out
-
-
 class ScaleLayer(keras.layers.Layer):
 	def build(self, input_shape):
 		super(ScaleLayer, self).build(input_shape)
