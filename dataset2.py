@@ -1,8 +1,6 @@
-import imageio
 import numpy as np
 import os
 import math
-import h5py
 from sklearn.model_selection import train_test_split
 import keras
 import cv2
@@ -10,6 +8,7 @@ import pandas as pd
 from skimage.io import imread
 from sklearn.utils.class_weight import compute_class_weight
 from generators import SmallGenerator, BigGenerator
+
 
 
 class Dataset:
@@ -57,14 +56,15 @@ class Dataset:
 		self._std_val = None
 		self._std_test = None
 
-		# Load dataset if available
-		self.load(name)
+		# Do not load dataset here. Better load it when we need it.
+		# self.load(name)
 
 	def load(self, name):
-		if hasattr(self, "_load_" + name):
-			return getattr(self, "_load_" + name)()
-		else:
-			raise Exception('Invalid dataset.')
+		if not self._loaded:
+			if hasattr(self, "_load_" + name):
+				return getattr(self, "_load_" + name)()
+			else:
+				raise Exception('Invalid dataset.')
 
 	def _load_cifar10(self):
 		# Small dataset
@@ -196,18 +196,27 @@ class Dataset:
 		return x_resized
 
 	def generate_train(self, batch_size, augmentation):
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		if self._big_dataset:
 			return BigGenerator(self._df_train, self._base_path, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
 		else:
 			return SmallGenerator(self._x_train, self._y_train, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
 
 	def generate_val(self, batch_size):
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		if self._big_dataset:
 			return BigGenerator(self._df_val, self._base_path, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
 		else:
 			return SmallGenerator(self._x_val, self._y_val, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
 
 	def generate_test(self, batch_size):
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		if self._big_dataset:
 			return BigGenerator(self._df_test, self._base_path, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
 		else:
@@ -219,9 +228,6 @@ class Dataset:
 			if not os.path.exists(os.path.join(base_path, path)):
 				return False
 		return True
-
-	def _convert_augmentation(self, aug):
-		replacements = {"rotation_range" : "theta", "width_shift_range" : "tx", "height_shift_range" : "ty", "shear_range" : "shear"}
 
 	def _mean_small(self, x):
 		return x.mean()
@@ -261,43 +267,61 @@ class Dataset:
 
 	@property
 	def mean_train(self):
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		if not self._mean_train:
 			self._mean_train = self._mean_big(self._df_train) if self._big_dataset else self._mean_small(self._x_train)
 		return self._mean_train
 
 	@property
 	def mean_val(self):
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		if not self._mean_val:
 			self._mean_val = self._mean_big(self._df_val) if self._big_dataset else self._mean_small(self._x_val)
 		return self._mean_val
 
 	@property
 	def mean_test(self):
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		if not self._mean_test:
 			self._mean_test = self._mean_big(self._df_test) if self._big_dataset else self._mean_small(self._x_test)
 		return self._mean_test
 
 	@property
 	def std_train(self):
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		if not self._std_train:
 			self._std_train = self._std_big(self._df_train) if self._big_dataset else self._std_small(self._x_train)
 		return self._std_train
 
 	@property
 	def std_val(self):
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		if not self._std_val:
 			self._std_val = self._std_big(self._df_val) if self._big_dataset else self._std_small(self._x_val)
 		return self._std_val
 
 	@property
 	def std_test(self):
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		if not self._std_test:
 			self._std_test = self._std_big(self._df_test) if self._big_dataset else self._std_small(self._x_test)
 		return self._std_test
 
 	@property
 	def num_classes(self):
-		return self._num_classes
+		return self._num_classes if self._num_classes is not None else 0
 
 	@num_classes.setter
 	def num_classes(self, num_classes):
@@ -309,7 +333,7 @@ class Dataset:
 
 	@property
 	def sample_shape(self):
-		return self._sample_shape
+		return self._sample_shape if self._sample_shape is not None else ()
 
 	@sample_shape.setter
 	def sample_shape(self, sample_shape):
@@ -324,6 +348,9 @@ class Dataset:
 		Get dataset train size.
 		:return: number of samples.
 		"""
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		return 0 if not self._loaded else self._df_train.shape[0] if self._big_dataset else self._y_train.shape[0]
 
 	def size_val(self):
@@ -331,6 +358,9 @@ class Dataset:
 		Get dataset val size.
 		:return: number of samples.
 		"""
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		return 0 if not self._loaded else self._df_val.shape[0] if self._big_dataset else self._y_val.shape[0]
 
 	def size_test(self):
@@ -338,6 +368,9 @@ class Dataset:
 		Get dataset test size.
 		:return: number of samples.
 		"""
+		# Load dataset if not loaded
+		self.load(self._name)
+
 		return 0 if not self._loaded else self._df_test.shape[0] if self._big_dataset else self._y_test.shape[0]
 
 	def num_batches_train(self, batch_size):
@@ -370,6 +403,8 @@ class Dataset:
 		Class weights are calculated based on the frequency of each class.
 		:return: dictionary that contains the weight for each class.
 		"""
+		# Load dataset if not loaded
+		self.load(self._name)
 
 		# No weights if not loaded
 		if not self._loaded:
