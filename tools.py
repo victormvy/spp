@@ -63,7 +63,10 @@ def resume_one_metric(metric, results_path):
 
 
 def resume_one_metric_csv(metric, results_path, csv_path):
-	t = [['#', 'Name', 'Dataset', 'BS', 'LR', 'LF', 'ACT', 'Train ' + metric, 'Mean Train', 'Std Train', 'Validation ' + metric, 'Mean Val', 'Std Val', 'Test ' + metric, 'Mean Test', 'Std Test']]
+	t = []
+	max_train_values = 0
+	max_val_values = 0
+	max_test_values = 0
 	for i, item in enumerate(sorted(os.listdir(results_path))):
 		if os.path.isdir(os.path.join(results_path, item)):
 			train, val, test = '', '', ''
@@ -74,14 +77,18 @@ def resume_one_metric_csv(metric, results_path, csv_path):
 						p = pickle.load(f)
 
 						if metric in p['metrics']['Train'] and metric in p['metrics']['Validation'] and metric in p['metrics']['Test']:
-							train += '{:.5} '.format(round(p['metrics']['Train'][metric], 5))
-							val += '{:.5} '.format(round(p['metrics']['Validation'][metric], 5))
-							test += '{:.5} '.format(round(p['metrics']['Test'][metric], 5))
+							# train += '{:.5};'.format(round(p['metrics']['Train'][metric], 5))
+							# val += '{:.5};'.format(round(p['metrics']['Validation'][metric], 5))
+							# test += '{:.5};'.format(round(p['metrics']['Test'][metric], 5))
 
 							# Accumulate sums
 							train_values = np.append(train_values, p['metrics']['Train'][metric])
 							val_values = np.append(val_values, p['metrics']['Validation'][metric])
 							test_values = np.append(test_values, p['metrics']['Test'][metric])
+
+			max_train_values = train_values.size if train_values.size > max_train_values else max_train_values
+			max_val_values = val_values.size if val_values.size > max_val_values else max_val_values
+			max_test_values = test_values.size if test_values.size > max_test_values else max_test_values
 
 			if 'p' in locals():
 				t.append([
@@ -92,16 +99,38 @@ def resume_one_metric_csv(metric, results_path, csv_path):
 					p['config']['lr'],
 					p['config']['final_activation'],
 					p['config']['activation'],
-					train,
-					train_values.size > 0 and '{:.5}'.format(round(np.mean(train_values), 5)) or 0,
-					train_values.size > 0 and '{:.5}'.format(round(np.std(train_values), 5)) or 0,
-					val,
-					val_values.size > 0 and '{:.5}'.format(round(np.mean(val_values), 5)) or 0,
-					val_values.size > 0 and '{:.5}'.format(round(np.std(val_values), 5)) or 0,
-					test,
-					test_values.size > 0 and '{:.5}'.format(round(np.mean(test_values), 5)) or 0,
-					test_values.size > 0 and '{:.5}'.format(round(np.std(test_values), 5)) or 0
+					*list(train_values.round(5)),
+					train_values.size > 0 and round(np.mean(train_values), 5) or 0,
+					train_values.size > 0 and round(np.std(train_values), 5) or 0,
+					*list(val_values.round(5)),
+					val_values.size > 0 and round(np.mean(val_values), 5) or 0,
+					val_values.size > 0 and round(np.std(val_values), 5) or 0,
+					*list(test_values.round(5)),
+					test_values.size > 0 and round(np.mean(test_values), 5) or 0,
+					test_values.size > 0 and round(np.std(test_values), 5) or 0
 				])
+
+	header = ['#', 'Name', 'Dataset', 'BS', 'LR', 'LF', 'ACT']
+	
+	for i in range(max_train_values):
+		header.append('Train ' + metric + str(i))
+
+	header.append('Train mean')
+	header.append('Train std')
+
+	for i in range(max_val_values):
+		header.append('Val ' + metric + str(i))
+
+	header.append('Val mean')
+	header.append('Val std')
+
+	for i in range(max_test_values):
+		header.append('Test ' + metric + str(i))
+
+	header.append('Test mean')
+	header.append('Test std')
+
+	t = [header] + t
 
 	with open(csv_path, 'w') as csvfile:
 		writer = csv.writer(csvfile, delimiter=';')

@@ -4,7 +4,7 @@ from keras.layers import Conv2D, MaxPooling2D, BatchNormalization, Activation, D
 from keras import regularizers
 from keras import backend as K
 from activations import SPP, SPPT, MPELU, RTReLU, RTPReLU, PairedReLU, EReLU, SQRTActivation, CLM, RReLu, PELU, SlopedReLU, PTELU, Antirectifier, CReLU, EPReLU
-from layers import GeometricLayer, DenseMultiplicative, ScaleLayer
+from layers import GeometricLayer, ScaleLayer
 from resnet import Resnet_2x4
 
 from inception_resnet_v2 import InceptionResNetV2 as Irnv2
