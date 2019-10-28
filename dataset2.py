@@ -57,7 +57,8 @@ class Dataset:
 		self._std_val = None
 		self._std_test = None
 
-		super(Dataset, self).__init__()
+		# Load dataset if available
+		self.load(name)
 
 	def load(self, name):
 		if hasattr(self, "_load_" + name):
@@ -219,6 +220,9 @@ class Dataset:
 				return False
 		return True
 
+	def _convert_augmentation(self, aug):
+		replacements = {"rotation_range" : "theta", "width_shift_range" : "tx", "height_shift_range" : "ty", "shear_range" : "shear"}
+
 	def _mean_small(self, x):
 		return x.mean()
 
@@ -251,7 +255,7 @@ class Dataset:
 			summ += img.sum()
 			sumsq += pow(img.sum(), 2)
 
-		var = (sumsq - pow(sum, 2) / n) / (n - 1)
+		var = (sumsq - pow(summ, 2) / n) / (n - 1)
 
 		return math.sqrt(var)
 
