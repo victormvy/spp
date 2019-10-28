@@ -13,7 +13,7 @@ from callbacks import ComputeMetricsCallback, PrintWeightsCallback, ReweightClas
 from losses import qwk_loss, make_cost_matrix, ms_n_qwk_loss
 from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm, top_2_accuracy, top_3_accuracy, \
 	minimum_sensitivity, accuracy_off1
-from dataset import Dataset
+from dataset2 import Dataset
 from sklearn.metrics import confusion_matrix
 import math
 import gc
@@ -54,6 +54,9 @@ class Experiment:
 		self._augmentation = augmentation
 
 		self._best_metric = None
+
+		# Load dataset
+		self._ds = Dataset(self._db)
 
 		# Model and results file names
 		self.model_file = 'model.h5'
@@ -403,55 +406,11 @@ class Experiment:
 			print("Training already finished. Skipping...")
 			return
 
-		# Train data generator
-		train_datagen = keras.preprocessing.image.ImageDataGenerator(
-			rescale=self.rescale_factor,
-			**self.augmentation
-		)
-
-		# Validation data generator
-		val_datagen = keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor)
-
-		# Get database paths
-		train_path, val_path, _ = self.get_db_path(self.db)
-
-		# Check that database exists and paths are correct
-		if train_path == '' or val_path == '':
-			raise Exception('Invalid database.')
-
-		# Load datasets
-		ds_train = Dataset(train_path)
-		ds_val = Dataset(val_path)
-
-		# Standardize datasets
-		mean = ds_train.mean
-		std = ds_train.std
-		ds_train.standardize_data(mean, std)
-		ds_val.standardize_data(mean, std)
-
-		# Get dataset details
-		num_classes = ds_train.num_classes
-		num_channels = ds_train.num_channels
-		img_size = ds_train.img_size
-
-		# Train data generator used for training
-		train_generator = train_datagen.flow(ds_train.x, ds_train.y, batch_size=self.batch_size)
-
-		# Validation generator
-		val_generator = val_datagen.flow(ds_val.x, ds_val.y, batch_size=self.batch_size, shuffle=True)
-
-		# Calculate the number of steps per epoch
-		steps = (len(ds_train.y) * 1) // self.batch_size
-		steps_val = ds_val.num_batches(self.batch_size)
 
 		# Get class weights based on frequency
 		class_weight = ds_train.get_class_weights()
 		# class_weight = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 100000.0])
 
-		# Free dataset object
-		del ds_train
-		del ds_val
-		gc.collect()
 
 		# Learning rate scheduler callback
 		def lr_exp_scheduler(epoch):
