@@ -19,9 +19,9 @@ def parallel_img_sum(base_path, path):
 	return img.sum()
 
 # Parallel square sum of image pixels
-def parallel_img_sqsum(base_path, path):
+def parallel_variance_sum(base_path, mean, n, path):
 	img = imread(os.path.join(base_path, path))
-	return img.sum(), pow(img, 2).sum()
+	return np.sum(((img - mean) ** 2) / n)
 
 
 class Dataset:
@@ -275,43 +275,26 @@ class Dataset:
 
 		return math.sqrt(var)
 
-	def _std_big(self, df):
+	def _std_big(self, df, mean):
 		paths = df[self._x_col].values
+		n = df.shape[0]
 
 		with Pool(7) as p:
-			func = partial(parallel_img_sqsum, self._base_path)
-			t = p.map(func, paths)
-			summ, sqsum = zip(*t)
+			func = partial(parallel_variance_sum, self._base_path, mean, n)
+			sums = p.map(func, paths)
 
-		summ = np.array(summ).sum()
-		sqsum = np.array(sqsum).sum()
-		n = np.array(self._sample_shape).prod() * df.shape[0]
+		std = np.sqrt(np.sum(sums) / np.prod(self._sample_shape))
 
-		print(summ)
-		print(sqsum)
-
-		var = (sqsum - pow(summ, 2) / n) / (n - 1)
-
-		print(var)
-
-		return math.sqrt(var)
-
-
+		return std
 
 	@property
 	def mean_train(self):
 		# Load dataset if not loaded
 		self.load(self._name)
 
-		print("Mean")
-		t = time.time()
-
 		if not self._mean_train:
 			self._mean_train = self._mean_big(self._df_train) if self._big_dataset else self._mean_small(self._x_train)
 
-		et = time.time() - t
-		print(et)
-		print(self._mean_train)
 		return self._mean_train
 
 	@property
@@ -337,14 +320,8 @@ class Dataset:
 		# Load dataset if not loaded
 		self.load(self._name)
 
-		print("Std")
-		t = time.time()
-
 		if not self._std_train:
-			self._std_train = self._std_big(self._df_train) if self._big_dataset else self._std_small(self._x_train)
-
-		et = time.time() - t
-		print(et)
+			self._std_train = self._std_big(self._df_train, self.mean_train) if self._big_dataset else self._std_small(self._x_train)
 
 		return self._std_train
 
@@ -354,7 +331,7 @@ class Dataset:
 		self.load(self._name)
 
 		if not self._std_val:
-			self._std_val = self._std_big(self._df_val) if self._big_dataset else self._std_small(self._x_val)
+			self._std_val = self._std_big(self._df_val, self.mean_val) if self._big_dataset else self._std_small(self._x_val)
 		return self._std_val
 
 	@property
@@ -363,7 +340,7 @@ class Dataset:
 		self.load(self._name)
 
 		if not self._std_test:
-			self._std_test = self._std_big(self._df_test) if self._big_dataset else self._std_small(self._x_test)
+			self._std_test = self._std_big(self._df_test, self.mean_test) if self._big_dataset else self._std_small(self._x_test)
 		return self._std_test
 
 	@property
