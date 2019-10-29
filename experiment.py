@@ -1,21 +1,13 @@
 import keras
 import numpy as np
-import resnet
 from net_keras import Net
 import os
-import glob
-import time
-import click
 import pickle
-import h5py
-from scipy import io as spio
-from callbacks import ComputeMetricsCallback, PrintWeightsCallback, ReweightClassesCallback
 from losses import qwk_loss, make_cost_matrix, ms_n_qwk_loss
-from metrics import np_quadratic_weighted_kappa, quadratic_weighted_kappa_cm, top_2_accuracy, top_3_accuracy, \
+from metrics import np_quadratic_weighted_kappa, top_2_accuracy, top_3_accuracy, \
 	minimum_sensitivity, accuracy_off1
 from dataset2 import Dataset
 from sklearn.metrics import confusion_matrix
-import math
 import gc
 from keras import backend as K
 
@@ -24,7 +16,7 @@ class Experiment:
 	Class that represents a single experiment that can be run and evaluated.
 	"""
 
-	def __init__(self, name='unnamed', db='100', net_type='vgg19', batch_size=128, epochs=100,
+	def __init__(self, name='unnamed', db='cifar10', net_type='vgg19', batch_size=128, epochs=100,
 				 checkpoint_dir='checkpoint', loss='categorical_crossentropy', activation='relu',
 				 final_activation='softmax', f_a_params = {}, use_tau=True,
 				 prob_layer=None, spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4,
@@ -408,9 +400,8 @@ class Experiment:
 
 
 		# Get class weights based on frequency
-		class_weight = ds_train.get_class_weights()
+		class_weight = self._ds.get_class_weights()
 		# class_weight = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 100000.0])
-
 
 		# Learning rate scheduler callback
 		def lr_exp_scheduler(epoch):
@@ -439,8 +430,8 @@ class Experiment:
 		save_epoch_callback = keras.callbacks.LambdaCallback(on_epoch_end=save_epoch)
 
 		# NNet object
-		net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau,
-						 self.prob_layer, num_channels, num_classes, self.spp_alpha, self.dropout)
+		net_object = Net(self._ds.img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau,
+						 self.prob_layer, self._ds.num_channels, self._ds.num_classes, self.spp_alpha, self.dropout)
 
 		# model = self.get_model(net_object, self.net_type)
 		model = net_object.build(self.net_type)
@@ -458,7 +449,7 @@ class Experiment:
 			model.load_weights(os.path.join(self.checkpoint_dir, self.best_model_file))
 
 		# Create the cost matrix that will be used to compute qwk
-		cost_matrix = K.constant(make_cost_matrix(num_classes), dtype=K.floatx())
+		cost_matrix = K.constant(make_cost_matrix(self._ds.num_classes), dtype=K.floatx())
 
 		# Cross-entropy loss by default
 		loss = 'categorical_crossentropy'
@@ -487,9 +478,9 @@ class Experiment:
 		model.summary()
 
 		# Run training
-		model.fit_generator(train_generator, epochs=self.epochs,
+		model.fit_generator(self._ds.generate_train(self.batch_size, self.augmentation), epochs=self.epochs,
 							initial_epoch=start_epoch,
-							steps_per_epoch=steps,
+							steps_per_epoch=self._ds.num_batches_train(self.batch_size),
 							callbacks=[keras.callbacks.LearningRateScheduler(lr_scheduler),
 									   #keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, mode='min', min_lr=1e-4, verbose=1),
 									   keras.callbacks.ModelCheckpoint(
@@ -507,8 +498,8 @@ class Experiment:
 							use_multiprocessing=False,
 							max_queue_size=self.queue_size,
 							class_weight=class_weight,
-							validation_data=val_generator,
-							validation_steps=steps_val,
+							validation_data=self._ds.generate_val(self.batch_size),
+							validation_steps=self._ds.num_batches_val(self.batch_size),
 							verbose=2
 							)
 
@@ -527,10 +518,6 @@ class Experiment:
 		# Free objects
 		del model
 		del cost_matrix
-		del train_datagen
-		del train_generator
-		del val_datagen
-		del val_generator
 
 	def evaluate(self):
 		"""
@@ -552,42 +539,18 @@ class Experiment:
 			print('Model already evaluated')
 			return
 
-		paths = self.get_db_path(self.db)
-
 		all_metrics = {}
 
-		mean = 0.0
-		std  = 0.0
+		# Get the generators for train, validation and test
+		generators = [self._ds.generate_train(self.batch_size, {}), self._ds.generate_val(self.batch_size), self._ds.generate_test(self.batch_size)]
+		steps = [self._ds.num_batches_train(self.batch_size), self._ds.num_batches_val(self.batch_size), self._ds.num_batches_test(self.batch_size)]
 
-		# Train dataset MUST ALWAYS BE in the first place in order to get mean and std for standardization
-		for path, set in zip(paths, ['Train', 'Validation', 'Test']):
+		for generator, step, set in zip(generators, steps, ['Train', 'Validation', 'Test']):
 			print('\n=== {} dataset ===\n'.format(set))
 
-			# Load test dataset
-			ds = Dataset(path)
-
-			# Get mean and std from Train dataset
-			if set == 'Train':
-				mean = ds.mean
-				std = ds.std
-
-			# Standardize data
-			ds.standardize_data(mean, std)
-
-			# Get dataset details
-			num_classes = ds.num_classes
-			num_channels = ds.num_channels
-			img_size = ds.img_size
-
-			# Validation data generator
-			datagen = keras.preprocessing.image.ImageDataGenerator(rescale=self.rescale_factor)
-
-			# Test generator
-			generator = datagen.flow(ds.x, ds.y, batch_size=self.batch_size, shuffle=False)
-
 			# NNet object
-			net_object = Net(img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau,
-							 self.prob_layer, num_channels, num_classes, self.spp_alpha, self.dropout)
+			net_object = Net(self._ds.img_size, self.activation, self.final_activation, self.f_a_params, self.use_tau,
+							 self.prob_layer, self._ds.num_channels, self._ds.num_classes, self.spp_alpha, self.dropout)
 
 			# model = self.get_model(net_object, self.net_type)
 			model = net_object.build(self.net_type)
@@ -597,17 +560,19 @@ class Experiment:
 
 			# Get predictions
 			generator.reset()
-			predictions = model.predict_generator(generator, steps=ds.num_batches(self.batch_size), verbose=1)
+			predictions = model.predict_generator(generator, steps=step, verbose=1)
 
-			metrics = self.compute_metrics(ds.y, predictions, num_classes)
+			generator.reset()
+			y_set = []
+			for x, y in generator:
+				y_set.append(y)
+
+			metrics = self.compute_metrics(y_set, predictions, self._ds.num_classes)
 			self.print_metrics(metrics)
 
 			all_metrics[set] = metrics
 
 			# Free objects
-			del ds
-			del datagen
-			del generator
 			del net_object
 			del model
 			del predictions
@@ -718,7 +683,7 @@ class Experiment:
 		:param config: config dictionary.
 		:return: None
 		"""
-		self.db = 'db' in config and config['db'] or '10'
+		self.db = 'db' in config and config['db'] or 'cifar10'
 		self.net_type = 'net_type' in config and config['net_type'] or 'vgg19'
 		self.batch_size = 'batch_size' in config and config['batch_size'] or 128
 		self.epochs = 'epochs' in config and config['epochs'] or 100
@@ -744,6 +709,9 @@ class Experiment:
 			self.name = config['name']
 		else:
 			self.set_auto_name()
+
+		# Load dataset
+		self._ds = Dataset(self.db)
 
 	def save_to_file(self, path):
 		"""

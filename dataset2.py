@@ -5,10 +5,23 @@ from sklearn.model_selection import train_test_split
 import keras
 import cv2
 import pandas as pd
+import time
 from skimage.io import imread
 from sklearn.utils.class_weight import compute_class_weight
 from generators import SmallGenerator, BigGenerator
+from multiprocessing import Pool
+from functools import partial
 
+
+# Parallel sum of image pixels
+def parallel_img_sum(base_path, path):
+	img = imread(os.path.join(base_path, path))
+	return img.sum()
+
+# Parallel square sum of image pixels
+def parallel_img_sqsum(base_path, path):
+	img = imread(os.path.join(base_path, path))
+	return img.sum(), pow(img, 2).sum()
 
 
 class Dataset:
@@ -72,7 +85,7 @@ class Dataset:
 
 		# Set sample shape and number of classes
 		self._sample_shape = (32, 32, 3)
-		self.num_classes = 10
+		self._num_classes = 10
 
 		# Load data
 		(x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
@@ -92,7 +105,7 @@ class Dataset:
 
 		# Set sample shape and number of classes
 		self._sample_shape = (32, 32, 1)
-		self.num_classes = 10
+		self._num_classes = 10
 
 		# Load data
 		(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
@@ -129,7 +142,7 @@ class Dataset:
 
 		# Set sample shape and number of classes
 		self._sample_shape = (128, 128, 3)
-		self.num_classes = 8
+		self._num_classes = 8
 
 		# Load data from dataframe
 		self._x_train, self._y_train = self._load_from_dataframe(df_train, x_col, y_col, base_path)
@@ -153,7 +166,7 @@ class Dataset:
 		self._y_col = 'age_cat'
 
 		# Set base path for images
-		self._base_path = '../datasets/imdb/data_processed/'
+		self._base_path = '../datasets/imdb_crop/data_processed/'
 
 		# Set sample shape and number of classes
 		self._sample_shape = (128, 128, 3)
@@ -200,27 +213,27 @@ class Dataset:
 		self.load(self._name)
 
 		if self._big_dataset:
-			return BigGenerator(self._df_train, self._base_path, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
+			return BigGenerator(self._df_train, self._base_path, self._num_classes, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
 		else:
-			return SmallGenerator(self._x_train, self._y_train, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
+			return SmallGenerator(self._x_train, self._y_train, self._num_classes, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
 
 	def generate_val(self, batch_size):
 		# Load dataset if not loaded
 		self.load(self._name)
 
 		if self._big_dataset:
-			return BigGenerator(self._df_val, self._base_path, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
+			return BigGenerator(self._df_val, self._base_path, self._num_classes, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
 		else:
-			return SmallGenerator(self._x_val, self._y_val, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
+			return SmallGenerator(self._x_val, self._y_val, self._num_classes, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
 
 	def generate_test(self, batch_size):
 		# Load dataset if not loaded
 		self.load(self._name)
 
 		if self._big_dataset:
-			return BigGenerator(self._df_test, self._base_path, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
+			return BigGenerator(self._df_test, self._base_path, self._num_classes, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
 		else:
-			return SmallGenerator(self._x_test, self._y_test, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
+			return SmallGenerator(self._x_test, self._y_test, self._num_classes, mean=self.mean_train, std=self.std_train, batch_size=batch_size)
 
 
 	def _check_dataframe_images(self, df, x_col, base_path):
@@ -236,19 +249,16 @@ class Dataset:
 		paths = df[self._x_col].values
 		count = df.shape[0]
 
-		mean = 0
-		for path in paths:
-			img = io.imread(os.path.join(self._base_path, path))
-			mean += img.mean()
-		
-		mean /= count
+		with Pool(7) as p:
+			func = partial(parallel_img_sum, self._base_path)
+			summ = p.map(func, paths)
 
-		return mean
+		return np.array(summ).sum() / (np.array(self._sample_shape).prod() * count)
 
 	def _std_small(self, x):
 		return x.std()
 
-	def _std_big(self, df):
+	def _std_big2(self, df):
 		paths = df[self._x_col].values
 
 		n = 0
@@ -256,7 +266,7 @@ class Dataset:
 		sumsq = 0
 
 		for path in paths:
-			img = io.imread(os.path.join(self._base_path, path))
+			img = imread(os.path.join(self._base_path, path))
 			n += np.array(img.shape).prod()
 			summ += img.sum()
 			sumsq += pow(img.sum(), 2)
@@ -265,13 +275,43 @@ class Dataset:
 
 		return math.sqrt(var)
 
+	def _std_big(self, df):
+		paths = df[self._x_col].values
+
+		with Pool(7) as p:
+			func = partial(parallel_img_sqsum, self._base_path)
+			t = p.map(func, paths)
+			summ, sqsum = zip(*t)
+
+		summ = np.array(summ).sum()
+		sqsum = np.array(sqsum).sum()
+		n = np.array(self._sample_shape).prod() * df.shape[0]
+
+		print(summ)
+		print(sqsum)
+
+		var = (sqsum - pow(summ, 2) / n) / (n - 1)
+
+		print(var)
+
+		return math.sqrt(var)
+
+
+
 	@property
 	def mean_train(self):
 		# Load dataset if not loaded
 		self.load(self._name)
 
+		print("Mean")
+		t = time.time()
+
 		if not self._mean_train:
 			self._mean_train = self._mean_big(self._df_train) if self._big_dataset else self._mean_small(self._x_train)
+
+		et = time.time() - t
+		print(et)
+		print(self._mean_train)
 		return self._mean_train
 
 	@property
@@ -297,8 +337,15 @@ class Dataset:
 		# Load dataset if not loaded
 		self.load(self._name)
 
+		print("Std")
+		t = time.time()
+
 		if not self._std_train:
 			self._std_train = self._std_big(self._df_train) if self._big_dataset else self._std_small(self._x_train)
+
+		et = time.time() - t
+		print(et)
+
 		return self._std_train
 
 	@property
@@ -436,3 +483,15 @@ class Dataset:
 		:return:
 		"""
 		return self.num_channels == 3
+
+	@property
+	def y_train(self):
+		return self._df_train[self._y_col].values if self._loaded else np.array([])
+
+	@property
+	def y_val(self):
+		return self._df_val[self._y_col].values if self._loaded else np.array([])
+
+	@property
+	def y_test(self):
+		return self._df_test[self._y_col].values if self._loaded else np.array([])
