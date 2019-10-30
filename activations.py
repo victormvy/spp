@@ -214,7 +214,7 @@ class SQRTActivation(keras.layers.Layer):
 
 	def call(self, inputs, **kwargs):
 		pos = K.sqrt(keras.activations.relu(inputs))
-		neg = - K.sqrt(-keras.activations.relu(-inputs))
+		neg = - K.sqrt(keras.activations.relu(-inputs))
 
 		return pos + neg
 
@@ -281,17 +281,17 @@ class PTELU(keras.layers.Layer):
 	def build(self, input_shape):
 		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
 									 initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
-		self.alpha = K.clip(self.alpha, 0.0001, 10)
+		self.alpha = K.clip(self.alpha, 0.0001, 100)
 
 		self.beta = self.add_weight(name='beta', shape=(1,), dtype=K.floatx(),
 									initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
-		self.beta = K.clip(self.beta, 0.0001, 10)
+		self.beta = K.clip(self.beta, 0.0001, 100)
 
 		super(PTELU, self).build(input_shape)
 
 	def call(self, inputs, **kwargs):
 		pos = keras.activations.relu(inputs)
-		neg = self.alpha * K.tanh(self.beta * keras.activations.relu(-inputs))
+		neg = self.alpha * K.tanh(- self.beta * keras.activations.relu(-inputs))
 
 		return pos + neg
 
