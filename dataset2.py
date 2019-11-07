@@ -179,6 +179,60 @@ class Dataset:
 			# If everything is correct, mark dataset as loaded
 			self._loaded = True
 
+	def _load_retinopathy(self):
+		# Big dataset
+		self._big_dataset = True
+
+		# Load dataframes
+		self._df_train = pd.read_csv('../datasets/retinopathy/data128/train.csv')
+		self._df_val = pd.read_csv('../datasets/retinopathy/data128/val.csv')
+		self._df_test = pd.read_csv('../datasets/retinopathy/data128/test.csv')
+
+		# Set x and y columns
+		self._x_col = 'path'
+		self._y_col = 'category'
+
+		# Set base path for images
+		self._base_path = '../datasets/retinopathy/data128/'
+
+		# Set sample shape and number of classes
+		self._sample_shape = (128, 128, 3)
+		self._num_classes = 5
+
+		# Check that images exist
+		if self._check_dataframe_images(self._df_train, self._x_col, self._base_path) and \
+				self._check_dataframe_images(self._df_val, self._x_col, self._base_path) and \
+				self._check_dataframe_images(self._df_test, self._x_col, self._base_path):
+			# If everything is correct, mark dataset as loaded
+			self._loaded = True
+
+	def _load_adience(self):
+		# Big dataset
+		self._big_dataset = True
+
+		# Load dataframes
+		self._df_train = pd.read_csv('../datasets/adience/data256/train.csv')
+		self._df_val = pd.read_csv('../datasets/adience/data256/val.csv')
+		self._df_test = pd.read_csv('../datasets/adience/data256/test.csv')
+
+		# Set x and y columns
+		self._x_col = 'path'
+		self._y_col = 'category'
+
+		# Set base path for images
+		self._base_path = '../datasets/adience/data256/'
+
+		# Set sample shape and number of classes
+		self._sample_shape = (256, 256, 3)
+		self._num_classes = 8
+
+		# Check that images exist
+		if self._check_dataframe_images(self._df_train, self._x_col, self._base_path) and \
+				self._check_dataframe_images(self._df_val, self._x_col, self._base_path) and \
+				self._check_dataframe_images(self._df_test, self._x_col, self._base_path):
+			# If everything is correct, mark dataset as loaded
+			self._loaded = True
+
 	# Fully load x and y from dataframe
 	def _load_from_dataframe(self, df, x_col, y_col, base_path):
 		x = []
