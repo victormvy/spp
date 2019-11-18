@@ -490,7 +490,7 @@ class Dataset:
 
 		y_label = self._df_train[self._y_col] if self._big_dataset else self._y_train
 
-		return compute_class_weight('balanced', np.unique(y_label), y_label)
+		return compute_class_weight('balanced', np.unique(y_label), y_label.ravel())
 
 	@property
 	def num_channels(self):
