@@ -238,8 +238,8 @@ class Dataset:
 
 		for label_path in os.listdir(path):
 			label = label_path
-			for image_path in os.listdir(train_path + "/" + label_path):
-				img = io.imread(train_path + "/" + label_path + "/" + image_path)
+			for image_path in os.listdir(path + "/" + label_path):
+				img = io.imread(path + "/" + label_path + "/" + image_path)
 				if img.shape != (32, 32, 3):
 					continue
 				images.append(img)

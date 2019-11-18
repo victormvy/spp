@@ -169,38 +169,43 @@ class EReLU(keras.layers.Layer):
 		self.alpha = alpha
 
 	def build(self, input_shape):
-		shape = input_shape[1:]
+		# shape = input_shape[1:]
 
-		self.k = self.add_weight(name='k', shape=shape, dtype=K.floatx(),
-								 initializer=keras.initializers.RandomUniform(minval=1 - self.alpha, maxval=1 + self.alpha), trainable=False)
+		# self.k = self.add_weight(name='k', shape=shape, dtype=K.floatx(),
+		# 						 initializer=keras.initializers.RandomUniform(minval=1 - self.alpha, maxval=1 + self.alpha), trainable=False)
 
 		# Finish building
 		super(EReLU, self).build(input_shape)
 
 	def call(self, inputs, **kwargs):
-		return keras.activations.relu(inputs * self.k)
+		# Generate random uniform tensor between [1-alpha, 1+alpha] for training and ones tensor for test (ReLU)
+		k = K.in_train_phase(K.random_uniform(inputs.shape[1:], 1 - self.alpha, 1 + self.alpha), K.ones(inputs.shape[1:]))
+
+		return keras.activations.relu(inputs * k)
 
 	def compute_output_shape(self, input_shape):
 		return input_shape
 
 
-class EPReLU(keras.layers.PReLU):
+class EPReLU(keras.layers.Layer):
 	def __init__(self, alpha=0.5, **kwargs):
 		super(EPReLU, self).__init__(**kwargs)
 		self.alpha = alpha
 
 	def build(self, input_shape):
-		shape = input_shape[1:]
+		# Trainable (PReLU) parameter
+		self.a = self.add_weight(name='a', shape=input_shape[1:], dtype=K.floatx(), initializer=keras.initializers.RandomUniform(0.0, 1.0))
 
-		self.k = self.add_weight(name='k', shape=shape, dtype=K.floatx(),
-								 initializer=keras.initializers.RandomUniform(minval=1 - self.alpha, maxval=1 + self.alpha), trainable=False)
-
-		# Call PReLU build method
+		# Finish building
 		super(EPReLU, self).build(input_shape)
 
 	def call(self, inputs, **kwargs):
-		pos = keras.activations.relu(inputs * self.k)
-		neg = -self.alpha * keras.activations.relu(-(inputs))
+		# Generate random uniform tensor between [1-alpha, 1+alpha] for training and ones tensor for test
+		k = K.in_train_phase(K.random_uniform(inputs.shape[1:], 1 - self.alpha, 1 + self.alpha),
+							 K.ones(inputs.shape[1:]))
+
+		pos = keras.activations.relu(inputs) * k
+		neg = -self.a * keras.activations.relu(-inputs)
 
 		return pos + neg
 
@@ -214,7 +219,7 @@ class SQRTActivation(keras.layers.Layer):
 
 	def call(self, inputs, **kwargs):
 		pos = K.sqrt(keras.activations.relu(inputs))
-		neg = - K.sqrt(-keras.activations.relu(-inputs))
+		neg = - K.sqrt(keras.activations.relu(-inputs))
 
 		return pos + neg
 
@@ -225,14 +230,17 @@ class RReLu(keras.layers.Layer):
 		super(RReLu, self).__init__(**kwargs)
 
 	def build(self, input_shape):
-		self.alpha = self.add_weight(name='alpha', shape=input_shape[1:], dtype=K.floatx(),
-									 initializer=keras.initializers.RandomUniform(minval=0.0, maxval=1.0))
+		# self.alpha = self.add_weight(name='alpha', shape=input_shape[1:], dtype=K.floatx(),
+		#							 initializer=keras.initializers.RandomUniform(minval=0.0, maxval=1.0))
 
 		super(RReLu, self).build(input_shape)
 
 	def call(self, inputs, **kwargs):
+		# Generate random uniform alpha
+		alpha = K.in_train_phase(K.random_uniform(inputs.shape[1:], 0.0, 1.0), K.constant((0.0+1.0)/2.0, shape=inputs.shape[1:]))
+
 		pos = keras.activations.relu(inputs)
-		neg = self.alpha * keras.activations.relu(-inputs)
+		neg = alpha * keras.activations.relu(-inputs)
 
 		return pos + neg
 
@@ -281,17 +289,17 @@ class PTELU(keras.layers.Layer):
 	def build(self, input_shape):
 		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
 									 initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
-		self.alpha = K.clip(self.alpha, 0.0001, 10)
+		self.alpha = K.clip(self.alpha, 0.0001, 100)
 
 		self.beta = self.add_weight(name='beta', shape=(1,), dtype=K.floatx(),
 									initializer=keras.initializers.RandomUniform(minval=0.01, maxval=1))
-		self.beta = K.clip(self.beta, 0.0001, 10)
+		self.beta = K.clip(self.beta, 0.0001, 100)
 
 		super(PTELU, self).build(input_shape)
 
 	def call(self, inputs, **kwargs):
 		pos = keras.activations.relu(inputs)
-		neg = self.alpha * K.tanh(self.beta * keras.activations.relu(-inputs))
+		neg = self.alpha * K.tanh(- self.beta * keras.activations.relu(-inputs))
 
 		return pos + neg
 
