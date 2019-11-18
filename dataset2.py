@@ -5,7 +5,6 @@ from sklearn.model_selection import train_test_split
 import keras
 import cv2
 import pandas as pd
-import time
 from skimage.io import imread
 from sklearn.utils.class_weight import compute_class_weight
 from generators import SmallGenerator, BigGenerator
@@ -28,9 +27,12 @@ class Dataset:
 	"""
 	Class that represents a dataset that is loaded from a file.
 	"""
-	def __init__(self, name):
+	def __init__(self, name, seed=1):
 		# Name / path of the dataset
 		self._name = name
+		
+		# Random seed
+		self._seed = seed
 
 		# Load status
 		self._loaded = False
@@ -89,7 +91,7 @@ class Dataset:
 
 		# Load data
 		(x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
-		x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.2, random_state=1)
+		x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.2, random_state=self._seed)
 
 		# Save x and y
 		self._x_train, self._y_train = x_train, y_train
@@ -109,7 +111,7 @@ class Dataset:
 
 		# Load data
 		(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-		x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.2, random_state=1)
+		x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.2, random_state=self._seed)
 
 		# Upscale
 		x_train = self._resize_data(x_train, 32, 32, self.num_channels)

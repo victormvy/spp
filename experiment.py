@@ -621,31 +621,31 @@ class Experiment:
 		print('MSE: {:.4f}'.format(metrics['MSE']))
 		print('MS: {:.4f}'.format(metrics['MS']))
 
-	def get_db_path(self, db):
-		"""
-		Get dataset path for train, validation and test for a given database name.
-		:param db: database name.
-		:return: train path, validation path, test path.
-		"""
-		if db.lower() == 'retinopathy':
-			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
-			# return "../retinopathy/h5/retinopathy_128_train.h5", "../retinopathy/h5/retinopathy_128_val.h5", "../retinopathy/h5/retinopathy_128_test.h5"
-		elif db.lower() == 'retinopathytoy':
-			return "../retinopathy/h5/retinopathytoy_128_train.h5", "../retinopathy/h5/retinopathytoy_128_val.h5", "../retinopathy/h5/retinopathytoy_128_test.h5"
-		elif db.lower() == 'retinopathy256':
-			return "../retinopathy/256/train", "../retinopathy/256/val", "../retinopathy/256/test"
-		elif db.lower() == 'adience':
-			return "../adience/adience_train_256.h5", "../adience/adience_val_256.h5", "../adience/adience_test_256.h5"
-		elif db.lower() == 'cifar10_128':
-			return "../cifar10/cifar10_128_train.h5", "../cifar10/cifar10_128_val.h5", "../cifar10/cifar10_128_test.h5"
-		elif db.lower() == 'cifar10_75':
-			return "../cifar10/cifar10_75_train.h5", "../cifar10/cifar10_75_val.h5", "../cifar10/cifar10_75_test.h5"
-		elif db.lower() == 'cifar10' or db.lower() == 'cifar100' or db.lower() == 'mnist' or db.lower() == 'cinic10':
-			return db.lower() + 'train', db.lower() + 'val', db.lower() + 'test'
-		elif db.lower() == 'wiki':
-			return "../wiki_crop/h5/wiki_train_256.h5", "../wiki_crop/h5/wiki_val_256.h5", "../wiki_crop/h5/wiki_test_256.h5"
-		else:
-			return "", "", ""
+#	def get_db_path(self, db):
+#		"""
+#		Get dataset path for train, validation and test for a given database name.
+#		:param db: database name.
+#		:return: train path, validation path, test path.
+#		"""
+#		if db.lower() == 'retinopathy':
+#			return "../retinopathy/128/train", "../retinopathy/128/val", "../retinopathy/128/test"
+#			# return "../retinopathy/h5/retinopathy_128_train.h5", "../retinopathy/h5/retinopathy_128_val.h5", "../retinopathy/h5/retinopathy_128_test.h5"
+#		elif db.lower() == 'retinopathytoy':
+#			return "../retinopathy/h5/retinopathytoy_128_train.h5", "../retinopathy/h5/retinopathytoy_128_val.h5", "../retinopathy/h5/retinopathytoy_128_test.h5"
+#		elif db.lower() == 'retinopathy256':
+#			return "../retinopathy/256/train", "../retinopathy/256/val", "../retinopathy/256/test"
+#		elif db.lower() == 'adience':
+#			return "../adience/adience_train_256.h5", "../adience/adience_val_256.h5", "../adience/adience_test_256.h5"
+#		elif db.lower() == 'cifar10_128':
+#			return "../cifar10/cifar10_128_train.h5", "../cifar10/cifar10_128_val.h5", "../cifar10/cifar10_128_test.h5"
+#		elif db.lower() == 'cifar10_75':
+#			return "../cifar10/cifar10_75_train.h5", "../cifar10/cifar10_75_val.h5", "../cifar10/cifar10_75_test.h5"
+#		elif db.lower() == 'cifar10' or db.lower() == 'cifar100' or db.lower() == 'mnist' or db.lower() == 'cinic10':
+#			return db.lower() + 'train', db.lower() + 'val', db.lower() + 'test'
+#		elif db.lower() == 'wiki':
+#			return "../wiki_crop/h5/wiki_train_256.h5", "../wiki_crop/h5/wiki_val_256.h5", "../wiki_crop/h5/wiki_test_256.h5"
+#		else:
+#			return "", "", ""
 
 	def get_config(self):
 		"""
