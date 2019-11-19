@@ -112,19 +112,41 @@ class Dataset:
 
 			self._splits_loaded = True
 
-	# Define number of folds
-	def set_folds(self, folds):
+	@property
+	def n_folds(self):
+		return self._n_folds
+
+	@n_folds.setter
+	def n_folds(self, n_folds):
 		# If folds == 1 -> hold out
-		self._n_folds = folds
+		self._n_folds = n_folds
+
+		self._clear_partitions()
+
+	@property
+	def holdout(self):
+		return self._holdout
+
+	@holdout.setter
+	def holdout(self, holdout):
+		# Define holdout portion for validation
+		self._holdout = holdout
 
 		self._clear_partitions()
 
 
-	# Define holdout portion for validation
-	def set_holdout(self, portion):
-		self._holdout = portion
+	# Load next fold
+	def next_fold(self):
+		# Check if it is the last fold
+		if self._current_fold + 1 < self._n_folds:
+			self._current_fold += 1
+		else:
+			# Return to the first fold when the end is reached
+			self._current_fold = 0
 
-		self._clear_partitions()
+		# Mark the splits as not loaded in order to load them again (load next fold)
+		self._splits_loaded = False
+
 
 	# Get indices of each fold for a given number of folds 
 	def _create_folds(self, n_folds):
@@ -401,23 +423,6 @@ class Dataset:
 
 	def _std_small(self, x):
 		return x.std()
-
-	def _std_big2(self, df):
-		paths = df[self._x_col].values
-
-		n = 0
-		summ = 0
-		sumsq = 0
-
-		for path in paths:
-			img = imread(os.path.join(self._base_path, path))
-			n += np.array(img.shape).prod()
-			summ += img.sum()
-			sumsq += pow(img.sum(), 2)
-
-		var = (sumsq - pow(summ, 2) / n) / (n - 1)
-
-		return math.sqrt(var)
 
 	def _std_big(self, df, mean):
 		paths = df[self._x_col].values
