@@ -20,7 +20,8 @@ class Experiment:
 				 checkpoint_dir='checkpoint', loss='categorical_crossentropy', activation='relu',
 				 final_activation='softmax', f_a_params = {}, use_tau=True,
 				 prob_layer=None, spp_alpha=1.0, lr=0.1, momentum=0.9, dropout=0, task='both', workers=4,
-				 queue_size=1024, val_metrics=['loss', 'acc'], rescale_factor=0, augmentation={}):
+				 queue_size=1024, val_metrics=['loss', 'acc'], rescale_factor=0, augmentation={},
+				 val_type='holdout', holdout=0.2, n_folds=5):
 		self._name = name
 		self._db = db
 		self._net_type = net_type
@@ -44,6 +45,10 @@ class Experiment:
 		self._val_metrics = val_metrics
 		self._rescale_factor = rescale_factor
 		self._augmentation = augmentation
+		self._val_type = val_type
+		self._holdout = holdout
+		self._n_folds = n_folds
+		self._current_fold = 0
 
 		self._best_metric = None
 
@@ -358,6 +363,14 @@ class Experiment:
 	def best_metric(self):
 		return self._best_metric
 
+	@property
+	def current_fold(self):
+		return self._current_fold
+
+	@current_fold.setter
+	def current_fold(self, current_fold):
+		self._current_fold = current_fold
+
 	def new_metric(self, metric, maximize=False):
 		"""
 		Updates best metric if metric provided is better than the best metric stored.
@@ -476,6 +489,15 @@ class Experiment:
 
 		# Print model summary
 		model.summary()
+
+		# Validation config
+		if self._val_type == 'kfold':
+			self._ds.n_folds = self._n_folds
+		elif self._val_type == 'holdout':
+			self._ds.n_folds = 1 # 1 fold means holdout
+			self._ds.holdout = self._holdout
+		else:
+			raise Exception('{} is not a valid validation type.'.format(self._val_type))
 
 		# Run training
 		model.fit_generator(self._ds.generate_train(self.batch_size, self.augmentation), epochs=self.epochs,
@@ -649,7 +671,10 @@ class Experiment:
 			'queue_size': self.queue_size,
 			'val_metrics': self.val_metrics,
 			'rescale_factor': self.rescale_factor,
-			'augmentation': self.augmentation
+			'augmentation': self.augmentation,
+			'val_type' : self._val_type,
+			'holdout' : self._holdout,
+			'n_folds' : self._n_folds
 		}
 
 	def set_config(self, config):
@@ -679,6 +704,9 @@ class Experiment:
 		self.val_metrics = 'val_metrics' in config and config['val_metrics'] or ['acc', 'loss']
 		self.rescale_factor = 'rescale_factor' in config and config['rescale_factor'] or 0
 		self.augmentation = 'augmentation' in config and config['augmentation'] or {}
+		self._val_type = 'val_type' in config and config['val_type'] or {}
+		self._holdout = 'holdout' in config and config['holdout'] or {}
+		self._n_folds = 'n_folds' in config and config['n_folds'] or {}
 
 		if 'name' in config:
 			self.name = config['name']

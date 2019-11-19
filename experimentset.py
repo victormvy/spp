@@ -79,16 +79,22 @@ class ExperimentSet:
 
 		# Add experiments
 		for config in configs:
-			executions = 'executions' in config and int(config['executions']) or 1
-			for execution in range(1, executions + 1):
+			val_type = config['val_type'] if 'val_type' in config else 'holdout'
+			if val_type == 'holdout' and 'executions' in config:
+				executions = int(config['executions'])
+			elif val_type == 'kfold' and 'n_folds' in config:
+				executions = int(config['n_folds'])
+
+			for execution in range(0, executions):
 				exec_config = config.copy()
 				if 'name' in exec_config:
 					exec_config['name'] += "_{}".format(execution)
 				exec_config['checkpoint_dir'] += "/{}".format(execution)
 				experiment = Experiment()
 				experiment.set_config(exec_config)
+				experiment.current_fold = execution
 				self.add_experiment(experiment)
-
+			
 	def save_to_file(self, path):
 		"""
 		Save experiments set to json file

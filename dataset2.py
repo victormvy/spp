@@ -147,6 +147,14 @@ class Dataset:
 		# Mark the splits as not loaded in order to load them again (load next fold)
 		self._splits_loaded = False
 
+	# Set current fold
+	def set_fold(self, fold):
+		# Check if it is a valid fold number
+		if fold < self._n_folds:
+			self._current_fold = fold
+
+			# Mark the splits as not loaded in order to load them again
+			self._splits_loaded = False
 
 	# Get indices of each fold for a given number of folds 
 	def _create_folds(self, n_folds):
