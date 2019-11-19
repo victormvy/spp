@@ -55,6 +55,16 @@ class Experiment:
 		# Load dataset
 		self._ds = Dataset(self._db)
 
+		# Validation config
+		if self._val_type == 'kfold':
+			self._ds.n_folds = self._n_folds
+			self._ds.set_fold(self._current_fold)
+		elif self._val_type == 'holdout':
+			self._ds.n_folds = 1 # 1 fold means holdout
+			self._ds.holdout = self._holdout
+		else:
+			raise Exception('{} is not a valid validation type.'.format(self._val_type))
+
 		# Model and results file names
 		self.model_file = 'model.h5'
 		self.best_model_file = 'best_model.h5'
@@ -490,15 +500,6 @@ class Experiment:
 		# Print model summary
 		model.summary()
 
-		# Validation config
-		if self._val_type == 'kfold':
-			self._ds.n_folds = self._n_folds
-		elif self._val_type == 'holdout':
-			self._ds.n_folds = 1 # 1 fold means holdout
-			self._ds.holdout = self._holdout
-		else:
-			raise Exception('{} is not a valid validation type.'.format(self._val_type))
-
 		# Run training
 		model.fit_generator(self._ds.generate_train(self.batch_size, self.augmentation), epochs=self.epochs,
 							initial_epoch=start_epoch,
@@ -581,10 +582,10 @@ class Experiment:
 			model.load_weights(os.path.join(self.checkpoint_dir, self.best_model_file))
 
 			# Get predictions
-			generator.reset()
+			# generator.reset()
 			predictions = model.predict_generator(generator, steps=step, verbose=1)
 
-			generator.reset()
+			# generator.reset()
 			y_set = []
 			for x, y in generator:
 				y_set.append(y)
