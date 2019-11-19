@@ -1,7 +1,7 @@
 import numpy as np
 import os
 import math
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedKFold
 import keras
 import cv2
 import pandas as pd
@@ -35,8 +35,9 @@ class Dataset:
 		self._seed = seed
 
 		# Default holdout / kfold values
-		self._folds = 1 # Holdout
+		self._n_folds = 1 # Holdout
 		self._holdout = 0.2 # for validation
+		self._folds_indices = None
 
 		# Initialize current fold
 		self._current_fold = 0
@@ -44,6 +45,7 @@ class Dataset:
 		# Load status
 		self._loaded = False
 		self._big_dataset = False
+		self._splits_loaded = False
 
 		# Numpy arrays for small datasets
 		self._x_trainval = None
@@ -88,21 +90,97 @@ class Dataset:
 		# Do not load dataset here. Better load it when we need it.
 		# self.load(name)
 
+	# Load dataset and splits if not loaded
 	def load(self, name):
 		if not self._loaded:
 			if hasattr(self, "_load_" + name):
-				return getattr(self, "_load_" + name)()
+				getattr(self, "_load_" + name)()
 			else:
 				raise Exception('Invalid dataset.')
+
+		# Data hasn't been splitted yet
+		if not self._splits_loaded:
+			if self._n_folds > 1:
+				# K-Fold
+				if self._folds_indices is None:
+					self._folds_indices, _ = self._create_folds(self._n_folds)
+				# Load current fold
+				self._load_partition(self._folds_indices[self._current_fold])
+			else:
+				# Holdout
+				self._load_holdout()
+
+			self._splits_loaded = True
 
 	# Define number of folds
 	def set_folds(self, folds):
 		# If folds == 1 -> hold out
-		self._folds = folds
+		self._n_folds = folds
+
+		self._clear_partitions()
+
 
 	# Define holdout portion for validation
 	def set_holdout(self, portion):
 		self._holdout = portion
+
+		self._clear_partitions()
+
+	# Get indices of each fold for a given number of folds 
+	def _create_folds(self, n_folds):
+		skf = StratifiedKFold(n_splits=n_folds, shuffle=True, random_state=self._seed)
+
+		train_indices = []
+		val_indices = []
+
+		if self._big_dataset:
+			for train, val in skf.split(self._df_trainval[self._x_col], self._df_trainval[self._y_col]):
+				train_indices.append(train)
+				val_indices.append(val)
+		else:
+			for train, val in skf.split(self._x_trainval, self._y_trainval):
+				train_indices.append(train)
+				val_indices.append(val)
+
+		return train_indices, val_indices
+
+	# Load train and val sets from trainval set using given indices
+	def _load_partition(self, train_indices):
+		n = self.size_trainval()
+		train_mask = np.zeros(n, dtype=int)
+		train_mask[train_indices] = 1
+		val_mask = ~train_mask
+
+		if self._big_dataset:
+			self._df_train = self._df_trainval[train_mask]
+			self._df_val = self._df_trainval[val_mask]
+		else:
+			self._x_train = self._x_trainval[train_mask]
+			self._x_val = self._x_trainval[val_mask]
+
+
+	# Load holdout splits
+	def _load_holdout(self):
+		if self._big_dataset:
+			self._df_train, self._df_val = train_test_split(self._df_trainval, test_size=self._holdout, random_state=self._seed)
+		else:
+			self._x_train, self._x_val, self._y_train, self._y_val = train_test_split(self._x_trainval, self._y_trainval, test_size=self._holdout, random_state=self._seed)
+
+
+	# Clear all the variables related to data partitions
+	def _clear_partitions(self):
+		self._folds_indices = None
+		self._current_fold = 0
+
+		self._df_train = None
+		self._df_val = None
+		self._x_train = None
+		self._y_train = None
+		self._x_val = None
+		self._y_val = None
+
+		self._splits_loaded = False
+
 
 	def _load_cifar10(self):
 		# Small dataset
@@ -149,7 +227,7 @@ class Dataset:
 		self._big_dataset = False
 
 		# Load dataframes
-		df_trainval = pd.read_csv('../datasets/wiki_crop/data_processed/train.csv')
+		df_trainval = pd.read_csv('../datasets/wiki_crop/data_processed/trainval.csv')
 		df_test = pd.read_csv('../datasets/wiki_crop/data_processed/test.csv')
 		
 		# Base path for images
@@ -175,7 +253,7 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_trainval = pd.read_csv('../datasets/imdb_crop/data_processed/train.csv')
+		self._df_trainval = pd.read_csv('../datasets/imdb_crop/data_processed/trainval.csv')
 		self._df_test = pd.read_csv('../datasets/imdb_crop/data_processed/test.csv')
 
 		# Set x and y columns
@@ -200,7 +278,7 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_trainval = pd.read_csv('../datasets/retinopathy/data128/train.csv')
+		self._df_trainval = pd.read_csv('../datasets/retinopathy/data128/trainval.csv')
 		self._df_test = pd.read_csv('../datasets/retinopathy/data128/test.csv')
 
 		# Set x and y columns
@@ -225,7 +303,7 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_trainval = pd.read_csv('../datasets/adience/data256/train.csv')
+		self._df_trainval = pd.read_csv('../datasets/adience/data256/trainval.csv')
 		self._df_test = pd.read_csv('../datasets/adience/data256/test.csv')
 
 		# Set x and y columns
@@ -279,9 +357,9 @@ class Dataset:
 		self.load(self._name)
 
 		if self._big_dataset:
-			return BigGenerator(self._df_trainval, self._base_path, self._num_classes, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
+			return BigGenerator(self._df_train, self._base_path, self._num_classes, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
 		else:
-			return SmallGenerator(self._x_trainval, self._y_trainval, self._num_classes, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
+			return SmallGenerator(self._x_train, self._y_train, self._num_classes, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
 
 	def generate_val(self, batch_size):
 		# Load dataset if not loaded
@@ -359,7 +437,7 @@ class Dataset:
 		self.load(self._name)
 
 		if not self._mean_train:
-			self._mean_train = self._mean_big(self._df_trainval) if self._big_dataset else self._mean_small(self._x_trainval)
+			self._mean_train = self._mean_big(self._df_train) if self._big_dataset else self._mean_small(self._x_train)
 
 		return self._mean_train
 
@@ -387,7 +465,7 @@ class Dataset:
 		self.load(self._name)
 
 		if not self._std_train:
-			self._std_train = self._std_big(self._df_trainval, self.mean_train) if self._big_dataset else self._std_small(self._x_trainval)
+			self._std_train = self._std_big(self._df_train, self.mean_train) if self._big_dataset else self._std_small(self._x_train)
 
 		return self._std_train
 
@@ -433,7 +511,7 @@ class Dataset:
 	def sample_shape(self):
 		del self._sample_shape
 
-	def size_train(self):
+	def size_trainval(self):
 		"""
 		Get dataset train size.
 		:return: number of samples.
@@ -443,6 +521,16 @@ class Dataset:
 
 		return 0 if not self._loaded else self._df_trainval.shape[0] if self._big_dataset else self._y_trainval.shape[0]
 
+	def size_train(self):
+		"""
+		Get dataset train size.
+		:return: number of samples.
+		"""
+		# Load dataset if not loaded
+		self.load(self._name)
+
+		return 0 if not self._splits_loaded else self._df_train.shape[0] if self._big_dataset else self._y_train.shape[0]
+
 	def size_val(self):
 		"""
 		Get dataset val size.
@@ -451,7 +539,7 @@ class Dataset:
 		# Load dataset if not loaded
 		self.load(self._name)
 
-		return 0 if not self._loaded else self._df_val.shape[0] if self._big_dataset else self._y_val.shape[0]
+		return 0 if not self._splits_loaded else self._df_val.shape[0] if self._big_dataset else self._y_val.shape[0]
 
 	def size_test(self):
 		"""
@@ -461,7 +549,7 @@ class Dataset:
 		# Load dataset if not loaded
 		self.load(self._name)
 
-		return 0 if not self._loaded else self._df_test.shape[0] if self._big_dataset else self._y_test.shape[0]
+		return 0 if not self._splits_loaded else self._df_test.shape[0] if self._big_dataset else self._y_test.shape[0]
 
 	def num_batches_train(self, batch_size):
 		"""
@@ -497,10 +585,10 @@ class Dataset:
 		self.load(self._name)
 
 		# No weights if not loaded
-		if not self._loaded:
+		if not self._splits_loaded:
 			return {}
 
-		y_label = self._df_trainval[self._y_col] if self._big_dataset else self._y_trainval
+		y_label = self._df_train[self._y_col] if self._big_dataset else self._y_train
 
 		return compute_class_weight('balanced', np.unique(y_label), y_label.ravel())
 
@@ -529,12 +617,12 @@ class Dataset:
 
 	@property
 	def y_train(self):
-		return self._df_trainval[self._y_col].values if self._loaded else np.array([])
+		return self._df_train[self._y_col].values if self._big_dataset else self.y_train if self._loaded else np.array([])
 
 	@property
 	def y_val(self):
-		return self._df_val[self._y_col].values if self._loaded else np.array([])
+		return self._df_val[self._y_col].values if self._big_dataset else self.y_val if self._loaded else np.array([])
 
 	@property
 	def y_test(self):
-		return self._df_test[self._y_col].values if self._loaded else np.array([])
+		return self._df_test[self._y_col].values if self._big_dataset else self._y_test if self._loaded else np.array([])
