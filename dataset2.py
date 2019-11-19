@@ -34,22 +34,36 @@ class Dataset:
 		# Random seed
 		self._seed = seed
 
+		# Default holdout / kfold values
+		self._folds = 1 # Holdout
+		self._holdout = 0.2 # for validation
+
+		# Initialize current fold
+		self._current_fold = 0
+
 		# Load status
 		self._loaded = False
 		self._big_dataset = False
 
 		# Numpy arrays for small datasets
+		self._x_trainval = None
+		self._y_trainval = None
+		self._x_test = None
+		self._y_test = None
+
+		# Numpy arrays for splitted dataset (folds)
 		self._x_train = None
 		self._y_train = None
 		self._x_val = None
 		self._y_val = None
-		self._x_test = None
-		self._y_test = None
 
 		# Dataframes for big datasets
+		self._df_trainval = None
+		self._df_test = None
+
+		# Dataframes for splitted dataset (folds)
 		self._df_train = None
 		self._df_val = None
-		self._df_test = None
 
 		# Set dataframes x and y columns
 		self._x_col = 'path'
@@ -81,6 +95,15 @@ class Dataset:
 			else:
 				raise Exception('Invalid dataset.')
 
+	# Define number of folds
+	def set_folds(self, folds):
+		# If folds == 1 -> hold out
+		self._folds = folds
+
+	# Define holdout portion for validation
+	def set_holdout(self, portion):
+		self._holdout = portion
+
 	def _load_cifar10(self):
 		# Small dataset
 		self._big_dataset = False
@@ -91,11 +114,9 @@ class Dataset:
 
 		# Load data
 		(x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
-		x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.2, random_state=self._seed)
 
 		# Save x and y
-		self._x_train, self._y_train = x_train, y_train
-		self._x_val, self._y_val = x_val, y_val
+		self._x_trainval, self._y_trainval = x_train, y_train
 		self._x_test, self._y_test = x_test, y_test
 
 		# Mark dataset as loaded
@@ -111,16 +132,13 @@ class Dataset:
 
 		# Load data
 		(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
-		x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=0.2, random_state=self._seed)
 
 		# Upscale
 		x_train = self._resize_data(x_train, 32, 32, self.num_channels)
-		x_val = self._resize_data(x_val, 32, 32, self.num_channels)
 		x_test = self._resize_data(x_test, 32, 32, self.num_channels)
 
 		# Save x and y
-		self._x_train, self._y_train = x_train, y_train
-		self._x_val, self._y_val = x_val, y_val
+		self._x_trainval, self._y_trainval = x_train, y_train
 		self._x_test, self._y_test = x_test, y_test
 
 		# Mark dataset as loaded
@@ -131,8 +149,7 @@ class Dataset:
 		self._big_dataset = False
 
 		# Load dataframes
-		df_train = pd.read_csv('../datasets/wiki_crop/data_processed/train.csv')
-		df_val = pd.read_csv('../datasets/wiki_crop/data_processed/val.csv')
+		df_trainval = pd.read_csv('../datasets/wiki_crop/data_processed/train.csv')
 		df_test = pd.read_csv('../datasets/wiki_crop/data_processed/test.csv')
 		
 		# Base path for images
@@ -147,8 +164,7 @@ class Dataset:
 		self._num_classes = 8
 
 		# Load data from dataframe
-		self._x_train, self._y_train = self._load_from_dataframe(df_train, x_col, y_col, base_path)
-		self._x_val, self._y_val = self._load_from_dataframe(df_val, x_col, y_col, base_path)
+		self._x_trainval, self._y_trainval = self._load_from_dataframe(df_trainval, x_col, y_col, base_path)
 		self._x_test, self._y_test = self._load_from_dataframe(df_test, x_col, y_col, base_path)
 
 		# Mark dataset as loaded
@@ -159,8 +175,7 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_train = pd.read_csv('../datasets/imdb_crop/data_processed/train.csv')
-		self._df_val = pd.read_csv('../datasets/imdb_crop/data_processed/val.csv')
+		self._df_trainval = pd.read_csv('../datasets/imdb_crop/data_processed/train.csv')
 		self._df_test = pd.read_csv('../datasets/imdb_crop/data_processed/test.csv')
 
 		# Set x and y columns
@@ -175,8 +190,7 @@ class Dataset:
 		self._num_classes = 8
 
 		# Check that images exist
-		if self._check_dataframe_images(self._df_train, self._x_col, self._base_path) and \
-        self._check_dataframe_images(self._df_val, self._x_col, self._base_path) and \
+		if self._check_dataframe_images(self._df_trainval, self._x_col, self._base_path) and \
         self._check_dataframe_images(self._df_test, self._x_col, self._base_path):
 			# If everything is correct, mark dataset as loaded
 			self._loaded = True
@@ -186,8 +200,7 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_train = pd.read_csv('../datasets/retinopathy/data128/train.csv')
-		self._df_val = pd.read_csv('../datasets/retinopathy/data128/val.csv')
+		self._df_trainval = pd.read_csv('../datasets/retinopathy/data128/train.csv')
 		self._df_test = pd.read_csv('../datasets/retinopathy/data128/test.csv')
 
 		# Set x and y columns
@@ -202,8 +215,7 @@ class Dataset:
 		self._num_classes = 5
 
 		# Check that images exist
-		if self._check_dataframe_images(self._df_train, self._x_col, self._base_path) and \
-				self._check_dataframe_images(self._df_val, self._x_col, self._base_path) and \
+		if self._check_dataframe_images(self._df_trainval, self._x_col, self._base_path) and \
 				self._check_dataframe_images(self._df_test, self._x_col, self._base_path):
 			# If everything is correct, mark dataset as loaded
 			self._loaded = True
@@ -213,8 +225,7 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_train = pd.read_csv('../datasets/adience/data256/train.csv')
-		self._df_val = pd.read_csv('../datasets/adience/data256/val.csv')
+		self._df_trainval = pd.read_csv('../datasets/adience/data256/train.csv')
 		self._df_test = pd.read_csv('../datasets/adience/data256/test.csv')
 
 		# Set x and y columns
@@ -229,8 +240,7 @@ class Dataset:
 		self._num_classes = 8
 
 		# Check that images exist
-		if self._check_dataframe_images(self._df_train, self._x_col, self._base_path) and \
-				self._check_dataframe_images(self._df_val, self._x_col, self._base_path) and \
+		if self._check_dataframe_images(self._df_trainval, self._x_col, self._base_path) and \
 				self._check_dataframe_images(self._df_test, self._x_col, self._base_path):
 			# If everything is correct, mark dataset as loaded
 			self._loaded = True
@@ -269,9 +279,9 @@ class Dataset:
 		self.load(self._name)
 
 		if self._big_dataset:
-			return BigGenerator(self._df_train, self._base_path, self._num_classes, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
+			return BigGenerator(self._df_trainval, self._base_path, self._num_classes, self._x_col, self._y_col, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
 		else:
-			return SmallGenerator(self._x_train, self._y_train, self._num_classes, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
+			return SmallGenerator(self._x_trainval, self._y_trainval, self._num_classes, mean=self.mean_train, std=self.std_train, batch_size=batch_size, augmentation=augmentation)
 
 	def generate_val(self, batch_size):
 		# Load dataset if not loaded
@@ -349,7 +359,7 @@ class Dataset:
 		self.load(self._name)
 
 		if not self._mean_train:
-			self._mean_train = self._mean_big(self._df_train) if self._big_dataset else self._mean_small(self._x_train)
+			self._mean_train = self._mean_big(self._df_trainval) if self._big_dataset else self._mean_small(self._x_trainval)
 
 		return self._mean_train
 
@@ -377,7 +387,7 @@ class Dataset:
 		self.load(self._name)
 
 		if not self._std_train:
-			self._std_train = self._std_big(self._df_train, self.mean_train) if self._big_dataset else self._std_small(self._x_train)
+			self._std_train = self._std_big(self._df_trainval, self.mean_train) if self._big_dataset else self._std_small(self._x_trainval)
 
 		return self._std_train
 
@@ -431,7 +441,7 @@ class Dataset:
 		# Load dataset if not loaded
 		self.load(self._name)
 
-		return 0 if not self._loaded else self._df_train.shape[0] if self._big_dataset else self._y_train.shape[0]
+		return 0 if not self._loaded else self._df_trainval.shape[0] if self._big_dataset else self._y_trainval.shape[0]
 
 	def size_val(self):
 		"""
@@ -490,7 +500,7 @@ class Dataset:
 		if not self._loaded:
 			return {}
 
-		y_label = self._df_train[self._y_col] if self._big_dataset else self._y_train
+		y_label = self._df_trainval[self._y_col] if self._big_dataset else self._y_trainval
 
 		return compute_class_weight('balanced', np.unique(y_label), y_label.ravel())
 
@@ -519,7 +529,7 @@ class Dataset:
 
 	@property
 	def y_train(self):
-		return self._df_train[self._y_col].values if self._loaded else np.array([])
+		return self._df_trainval[self._y_col].values if self._loaded else np.array([])
 
 	@property
 	def y_val(self):
