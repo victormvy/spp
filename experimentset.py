@@ -91,8 +91,8 @@ class ExperimentSet:
 					exec_config['name'] += "_{}".format(execution)
 				exec_config['checkpoint_dir'] += "/{}".format(execution)
 				experiment = Experiment()
-				experiment.set_config(exec_config)
-				experiment.current_fold = execution
+				experiment.current_fold = execution	
+				experiment.set_config(exec_config)				
 				self.add_experiment(experiment)
 			
 	def save_to_file(self, path):

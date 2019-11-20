@@ -177,8 +177,8 @@ class Dataset:
 	# Load train and val sets from trainval set using given indices
 	def _load_partition(self, train_indices):
 		n = self.size_trainval()
-		train_mask = np.zeros(n, dtype=int)
-		train_mask[train_indices] = 1
+		train_mask = np.full(n, False, dtype=bool)
+		train_mask[train_indices] = True
 		val_mask = ~train_mask
 
 		if self._big_dataset:
@@ -186,7 +186,9 @@ class Dataset:
 			self._df_val = self._df_trainval[val_mask]
 		else:
 			self._x_train = self._x_trainval[train_mask]
+			self._y_train = self._y_trainval[train_mask]
 			self._x_val = self._x_trainval[val_mask]
+			self._y_val = self._y_trainval[val_mask]
 
 
 	# Load holdout splits
@@ -229,6 +231,31 @@ class Dataset:
 
 		# Mark dataset as loaded
 		self._loaded = True
+		
+	def _load_cinic10(self):
+		# Big dataset
+		self._big_dataset = True
+
+		# Load dataframes
+		self._df_trainval = pd.read_csv('../datasets/CINIC/data/trainval.csv')
+		self._df_test = pd.read_csv('../datasets/CINIC/data/test.csv')
+
+		# Set x and y columns
+		self._x_col = 'path'
+		self._y_col = 'category'
+
+		# Set base path for images
+		self._base_path = '../datasets/CINIC/data/'
+
+		# Set sample shape and number of classes
+		self._sample_shape = (32, 32, 3)
+		self._num_classes = 10
+
+		# Check that images exist
+		if self._check_dataframe_images(self._df_trainval, self._x_col, self._base_path) and \
+        self._check_dataframe_images(self._df_test, self._x_col, self._base_path):
+			# If everything is correct, mark dataset as loaded
+			self._loaded = True
 
 	def _load_mnist(self):
 		# Small dataset
@@ -447,7 +474,7 @@ class Dataset:
 	@property
 	def mean_train(self):
 		# Load dataset if not loaded
-		self.load(self._name)
+		# self.load(self._name)
 
 		if not self._mean_train:
 			self._mean_train = self._mean_big(self._df_train) if self._big_dataset else self._mean_small(self._x_train)
@@ -457,7 +484,7 @@ class Dataset:
 	@property
 	def mean_val(self):
 		# Load dataset if not loaded
-		self.load(self._name)
+		# self.load(self._name)
 
 		if not self._mean_val:
 			self._mean_val = self._mean_big(self._df_val) if self._big_dataset else self._mean_small(self._x_val)
@@ -466,7 +493,7 @@ class Dataset:
 	@property
 	def mean_test(self):
 		# Load dataset if not loaded
-		self.load(self._name)
+		# self.load(self._name)
 
 		if not self._mean_test:
 			self._mean_test = self._mean_big(self._df_test) if self._big_dataset else self._mean_small(self._x_test)
@@ -475,7 +502,7 @@ class Dataset:
 	@property
 	def std_train(self):
 		# Load dataset if not loaded
-		self.load(self._name)
+		# self.load(self._name)
 
 		if not self._std_train:
 			self._std_train = self._std_big(self._df_train, self.mean_train) if self._big_dataset else self._std_small(self._x_train)
@@ -485,7 +512,7 @@ class Dataset:
 	@property
 	def std_val(self):
 		# Load dataset if not loaded
-		self.load(self._name)
+		# self.load(self._name)
 
 		if not self._std_val:
 			self._std_val = self._std_big(self._df_val, self.mean_val) if self._big_dataset else self._std_small(self._x_val)
@@ -494,7 +521,7 @@ class Dataset:
 	@property
 	def std_test(self):
 		# Load dataset if not loaded
-		self.load(self._name)
+		# self.load(self._name)
 
 		if not self._std_test:
 			self._std_test = self._std_big(self._df_test, self.mean_test) if self._big_dataset else self._std_small(self._x_test)
@@ -530,9 +557,10 @@ class Dataset:
 		:return: number of samples.
 		"""
 		# Load dataset if not loaded
-		self.load(self._name)
-
-		return 0 if not self._loaded else self._df_trainval.shape[0] if self._big_dataset else self._y_trainval.shape[0]
+		# self.load(self._name)
+		# Disabled because of recursion problem		
+		
+		return 0 if not self._loaded else (self._df_trainval.shape[0] if self._big_dataset else self._y_trainval.shape[0])
 
 	def size_train(self):
 		"""
@@ -542,7 +570,7 @@ class Dataset:
 		# Load dataset if not loaded
 		self.load(self._name)
 
-		return 0 if not self._splits_loaded else self._df_train.shape[0] if self._big_dataset else self._y_train.shape[0]
+		return 0 if not self._splits_loaded else (self._df_train.shape[0] if self._big_dataset else self._y_train.shape[0])
 
 	def size_val(self):
 		"""
@@ -552,7 +580,7 @@ class Dataset:
 		# Load dataset if not loaded
 		self.load(self._name)
 
-		return 0 if not self._splits_loaded else self._df_val.shape[0] if self._big_dataset else self._y_val.shape[0]
+		return 0 if not self._splits_loaded else (self._df_val.shape[0] if self._big_dataset else self._y_val.shape[0])
 
 	def size_test(self):
 		"""
@@ -562,7 +590,7 @@ class Dataset:
 		# Load dataset if not loaded
 		self.load(self._name)
 
-		return 0 if not self._splits_loaded else self._df_test.shape[0] if self._big_dataset else self._y_test.shape[0]
+		return 0 if not self._splits_loaded else (self._df_test.shape[0] if self._big_dataset else self._y_test.shape[0])
 
 	def num_batches_train(self, batch_size):
 		"""

@@ -52,18 +52,21 @@ class Experiment:
 
 		self._best_metric = None
 
-		# Load dataset
-		self._ds = Dataset(self._db)
-
-		# Validation config
-		if self._val_type == 'kfold':
-			self._ds.n_folds = self._n_folds
-			self._ds.set_fold(self._current_fold)
-		elif self._val_type == 'holdout':
-			self._ds.n_folds = 1 # 1 fold means holdout
-			self._ds.holdout = self._holdout
-		else:
-			raise Exception('{} is not a valid validation type.'.format(self._val_type))
+		self._ds = None
+#		# Load dataset
+#		self._ds = Dataset(self._db)
+#
+#		# Validation config
+#		print(F"----- VAL TYPE: {self._val_type}")
+#		if self._val_type == 'kfold':
+#			print(F"Setting folds to {self._n_folds}")
+#			self._ds.n_folds = self._n_folds
+#			self._ds.set_fold(self._current_fold)
+#		elif self._val_type == 'holdout':
+#			self._ds.n_folds = 1 # 1 fold means holdout
+#			self._ds.holdout = self._holdout
+#		else:
+#			raise Exception('{} is not a valid validation type.'.format(self._val_type))
 
 		# Model and results file names
 		self.model_file = 'model.h5'
@@ -586,10 +589,10 @@ class Experiment:
 			predictions = model.predict_generator(generator, steps=step, verbose=1)
 
 			# generator.reset()
-			y_set = []
+			y_set = None
 			for x, y in generator:
-				y_set.append(y)
-
+				y_set = np.array(y) if y_set is None else np.vstack((y_set, y))				
+				
 			metrics = self.compute_metrics(y_set, predictions, self._ds.num_classes)
 			self.print_metrics(metrics)
 
@@ -705,17 +708,34 @@ class Experiment:
 		self.val_metrics = 'val_metrics' in config and config['val_metrics'] or ['acc', 'loss']
 		self.rescale_factor = 'rescale_factor' in config and config['rescale_factor'] or 0
 		self.augmentation = 'augmentation' in config and config['augmentation'] or {}
-		self._val_type = 'val_type' in config and config['val_type'] or {}
-		self._holdout = 'holdout' in config and config['holdout'] or {}
-		self._n_folds = 'n_folds' in config and config['n_folds'] or {}
+		self._val_type = 'val_type' in config and config['val_type'] or 'holdout'
+		self._holdout = 'holdout' in config and config['holdout'] or 0.2
+		self._n_folds = 'n_folds' in config and config['n_folds'] or 5
 
 		if 'name' in config:
 			self.name = config['name']
 		else:
 			self.set_auto_name()
 
+		
 		# Load dataset
-		self._ds = Dataset(self.db)
+		self._ds = Dataset(self._db)
+
+		self._setup_validation()
+
+	def _setup_validation(self):
+		if self._ds is None:
+			raise Exception('Cannot setup validation because dataset is not loaded')
+			
+		# Validation config
+		if self._val_type == 'kfold':
+			self._ds.n_folds = self._n_folds
+			self._ds.set_fold(self._current_fold)
+		elif self._val_type == 'holdout':
+			self._ds.n_folds = 1 # 1 fold means holdout
+			self._ds.holdout = self._holdout
+		else:
+			raise Exception('{} is not a valid validation type.'.format(self._val_type))
 
 	def save_to_file(self, path):
 		"""
