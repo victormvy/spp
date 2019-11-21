@@ -709,8 +709,8 @@ class Experiment:
 		self.rescale_factor = 'rescale_factor' in config and config['rescale_factor'] or 0
 		self.augmentation = 'augmentation' in config and config['augmentation'] or {}
 		self._val_type = 'val_type' in config and config['val_type'] or 'holdout'
-		self._holdout = 'holdout' in config and config['holdout'] or 0.2
-		self._n_folds = 'n_folds' in config and config['n_folds'] or 5
+		self._holdout = 'holdout' in config and float(config['holdout']) or 0.2
+		self._n_folds = 'n_folds' in config and int(config['n_folds']) or 5
 
 		if 'name' in config:
 			self.name = config['name']

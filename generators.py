@@ -82,6 +82,12 @@ class SmallGenerator(Sequence):
 
         return np.array(batch_x), np.array(batch_y)
 
+    def __del__(self):
+        if self._p is not None:
+            self._p.close()
+            self._p.terminate()
+            self._p.join()
+
 
 def process_data_path(augmentation, force_rgb, base_path, path):
     img = imread(os.path.join(base_path, path))
@@ -133,3 +139,9 @@ class BigGenerator(Sequence):
             batch_y = to_categorical(batch_y, num_classes=self._num_classes)
 
         return np.array(batch_x), np.array(batch_y)
+
+    def __del__(self):
+        if self._p is not None:
+            self._p.close()
+            self._p.terminate()
+            self._p.join()
