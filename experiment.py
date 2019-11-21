@@ -503,6 +503,8 @@ class Experiment:
 		# Print model summary
 		model.summary()
 
+		print(F'Training on {self._ds.size_train()} samples, validating on {self._ds.size_val()} samples.')
+
 		# Run training
 		model.fit_generator(self._ds.generate_train(self.batch_size, self.augmentation), epochs=self.epochs,
 							initial_epoch=start_epoch,
@@ -689,7 +691,7 @@ class Experiment:
 		"""
 		self.db = 'db' in config and config['db'] or 'cifar10'
 		self.net_type = 'net_type' in config and config['net_type'] or 'vgg19'
-		self.batch_size = 'batch_size' in config and config['batch_size'] or 128
+		self.batch_size = 'batch_size' in config and int(config['batch_size']) or 128
 		self.epochs = 'epochs' in config and config['epochs'] or 100
 		self.checkpoint_dir = 'checkpoint_dir' in config and config['checkpoint_dir'] or 'results'
 		self.loss = 'loss' in config and config['loss'] or 'crossentropy'

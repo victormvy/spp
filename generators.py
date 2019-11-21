@@ -117,15 +117,15 @@ class BigGenerator(Sequence):
         self._p = Pool(self._workers)
         self._one_hot = one_hot
         self._force_rgb = force_rgb
-        
+
         super(BigGenerator, self).__init__()
 
     def __len__(self):
         return int(np.ceil(self._df.shape[0] / float(self._batch_size)))
 
     def __getitem__(self, idx):
-        batch_paths = self._df.loc[idx * self._batch_size : (idx + 1) * self._batch_size, self._x_col]
-        batch_y = self._df.loc[idx * self._batch_size : (idx + 1) * self._batch_size, self._y_col]
+        batch_paths = self._df.iloc[idx * self._batch_size : (idx + 1) * self._batch_size][self._x_col]
+        batch_y = self._df.iloc[idx * self._batch_size : (idx + 1) * self._batch_size][self._y_col]
 
         # Load batch images using multiprocessing
         func = partial(process_data_path, self._augmentation, self._force_rgb, self._base_path)
