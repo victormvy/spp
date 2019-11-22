@@ -99,7 +99,7 @@ class Dataset:
 				raise Exception('Invalid dataset.')
 
 		# Data hasn't been splitted yet
-		if not self._splits_loaded:
+		if self._loaded and not self._splits_loaded:
 			if self._n_folds > 1:
 				# K-Fold
 				if self._folds_indices is None:
@@ -194,9 +194,9 @@ class Dataset:
 	# Load holdout splits
 	def _load_holdout(self):
 		if self._big_dataset:
-			self._df_train, self._df_val = train_test_split(self._df_trainval, test_size=self._holdout, random_state=self._seed)
+			self._df_train, self._df_val = train_test_split(self._df_trainval, test_size=self._holdout, random_state=self._seed, stratify=self._df_trainval[self._y_col])
 		else:
-			self._x_train, self._x_val, self._y_train, self._y_val = train_test_split(self._x_trainval, self._y_trainval, test_size=self._holdout, random_state=self._seed)
+			self._x_train, self._x_val, self._y_train, self._y_val = train_test_split(self._x_trainval, self._y_trainval, test_size=self._holdout, random_state=self._seed, stratify=self._y_trainval)
 
 
 	# Clear all the variables related to data partitions
@@ -658,12 +658,12 @@ class Dataset:
 
 	@property
 	def y_train(self):
-		return self._df_train[self._y_col].values if self._big_dataset else self.y_train if self._loaded else np.array([])
+		return (self._df_train[self._y_col].values if self._big_dataset else self.y_train) if self._loaded else np.array([])
 
 	@property
 	def y_val(self):
-		return self._df_val[self._y_col].values if self._big_dataset else self.y_val if self._loaded else np.array([])
+		return (self._df_val[self._y_col].values if self._big_dataset else self.y_val) if self._loaded else np.array([])
 
 	@property
 	def y_test(self):
-		return self._df_test[self._y_col].values if self._big_dataset else self._y_test if self._loaded else np.array([])
+		return (self._df_test[self._y_col].values if self._big_dataset else self._y_test) if self._loaded else np.array([])
