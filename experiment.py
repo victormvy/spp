@@ -8,7 +8,6 @@ from metrics import np_quadratic_weighted_kappa, top_2_accuracy, top_3_accuracy,
 	minimum_sensitivity, accuracy_off1
 from dataset2 import Dataset
 from sklearn.metrics import confusion_matrix
-import gc
 from keras import backend as K
 
 class Experiment:
@@ -53,20 +52,6 @@ class Experiment:
 		self._best_metric = None
 
 		self._ds = None
-#		# Load dataset
-#		self._ds = Dataset(self._db)
-#
-#		# Validation config
-#		print(F"----- VAL TYPE: {self._val_type}")
-#		if self._val_type == 'kfold':
-#			print(F"Setting folds to {self._n_folds}")
-#			self._ds.n_folds = self._n_folds
-#			self._ds.set_fold(self._current_fold)
-#		elif self._val_type == 'holdout':
-#			self._ds.n_folds = 1 # 1 fold means holdout
-#			self._ds.holdout = self._holdout
-#		else:
-#			raise Exception('{} is not a valid validation type.'.format(self._val_type))
 
 		# Model and results file names
 		self.model_file = 'model.h5'
@@ -407,9 +392,6 @@ class Experiment:
 
 		print('=== RUNNING {} ==='.format(self.name))
 
-		# Garbage collection
-		gc.collect()
-
 		# Initial epoch. 0 by default
 		start_epoch = 0
 
@@ -543,9 +525,7 @@ class Experiment:
 		if os.path.isfile(os.path.join(self.checkpoint_dir, self.model_file)):
 			os.remove(os.path.join(self.checkpoint_dir, self.model_file))
 
-		# Free objects
-		del model
-		del cost_matrix
+
 
 	def evaluate(self):
 		"""
@@ -553,9 +533,6 @@ class Experiment:
 		:return: None
 		"""
 		print('=== EVALUATING {} ==='.format(self.name))
-
-		# Garbage collection
-		gc.collect()
 
 		# Check if best model file exists
 		if not os.path.isfile(os.path.join(self.checkpoint_dir, self.best_model_file)):
@@ -599,13 +576,6 @@ class Experiment:
 			self.print_metrics(metrics)
 
 			all_metrics[set] = metrics
-
-			# Free objects
-			del net_object
-			del model
-			del predictions
-			del metrics
-			gc.collect()
 
 		with open(os.path.join(self.checkpoint_dir, self.evaluation_file), 'wb') as f:
 			pickle.dump({'config': self.get_config(), 'metrics': all_metrics}, f)

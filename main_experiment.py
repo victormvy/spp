@@ -42,8 +42,7 @@ def experiment(file, gpu):
 	config = tf.ConfigProto(allow_soft_placement=True)
 	config.gpu_options.allow_growth = True
 	K.set_session(tf.Session(config=config))
-	experimentSet = ExperimentSet()
-	experimentSet.load_from_file(file)
+	experimentSet = ExperimentSet(file)
 	experimentSet.run_all(gpu_number=gpu)
 
 
