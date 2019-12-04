@@ -11,6 +11,10 @@ from generators import SmallGenerator, BigGenerator
 from multiprocessing import Pool
 from functools import partial
 
+DATASETS_DIR = '../datasets/'
+# Change datasets directory through environ variable
+if 'DATASETS_DIR' in os.environ:
+	DATASETS_DIR = os.environ['DATASETS_DIR']
 
 # Parallel sum of image pixels
 def parallel_img_sum(base_path, path):
@@ -237,15 +241,15 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_trainval = pd.read_csv('../datasets/CINIC/data/trainval.csv')
-		self._df_test = pd.read_csv('../datasets/CINIC/data/test.csv')
+		self._df_trainval = pd.read_csv(os.path.join(DATASETS_DIR, 'CINIC/data/trainval.csv'))
+		self._df_test = pd.read_csv(os.path.join(DATASETS_DIR, 'CINIC/data/test.csv'))
 
 		# Set x and y columns
 		self._x_col = 'path'
 		self._y_col = 'category'
 
 		# Set base path for images
-		self._base_path = '../datasets/CINIC/data/'
+		self._base_path = os.path.join(DATASETS_DIR, 'CINIC/data/')
 
 		# Set sample shape and number of classes
 		self._sample_shape = (32, 32, 3)
@@ -284,11 +288,11 @@ class Dataset:
 		self._big_dataset = False
 
 		# Load dataframes
-		df_trainval = pd.read_csv('../datasets/wiki_crop/data_processed/trainval.csv')
-		df_test = pd.read_csv('../datasets/wiki_crop/data_processed/test.csv')
+		df_trainval = pd.read_csv(os.path.join(DATASETS_DIR, 'wiki_crop/data_processed/trainval.csv'))
+		df_test = pd.read_csv(os.path.join(DATASETS_DIR, 'wiki_crop/data_processed/test.csv'))
 		
 		# Base path for images
-		base_path = '../datasets/wiki_crop/data_processed/'
+		base_path = os.path.join(DATASETS_DIR, 'wiki_crop/data_processed/')
 
 		# Dataframe columns
 		x_col = 'path'
@@ -310,15 +314,15 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_trainval = pd.read_csv('../datasets/imdb_crop/data_processed/trainval.csv')
-		self._df_test = pd.read_csv('../datasets/imdb_crop/data_processed/test.csv')
+		self._df_trainval = pd.read_csv(os.path.join(DATASETS_DIR, 'imdb_crop/data_processed/trainval.csv'))
+		self._df_test = pd.read_csv(os.path.join(DATASETS_DIR, 'imdb_crop/data_processed/test.csv'))
 
 		# Set x and y columns
 		self._x_col = 'path'
 		self._y_col = 'age_cat'
 
 		# Set base path for images
-		self._base_path = '../datasets/imdb_crop/data_processed/'
+		self._base_path = os.path.join(DATASETS_DIR, 'imdb_crop/data_processed/')
 
 		# Set sample shape and number of classes
 		self._sample_shape = (128, 128, 3)
@@ -335,15 +339,15 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_trainval = pd.read_csv('../datasets/retinopathy/data128/trainval.csv')
-		self._df_test = pd.read_csv('../datasets/retinopathy/data128/test.csv')
+		self._df_trainval = pd.read_csv(os.path.join(DATASETS_DIR, 'retinopathy/data128/trainval.csv'))
+		self._df_test = pd.read_csv(os.path.join(DATASETS_DIR, 'retinopathy/data128/test.csv'))
 
 		# Set x and y columns
 		self._x_col = 'path'
 		self._y_col = 'category'
 
 		# Set base path for images
-		self._base_path = '../datasets/retinopathy/data128/'
+		self._base_path = os.path.join(DATASETS_DIR, 'retinopathy/data128/')
 
 		# Set sample shape and number of classes
 		self._sample_shape = (128, 128, 3)
@@ -360,15 +364,15 @@ class Dataset:
 		self._big_dataset = True
 
 		# Load dataframes
-		self._df_trainval = pd.read_csv('../datasets/adience/data256/trainval.csv')
-		self._df_test = pd.read_csv('../datasets/adience/data256/test.csv')
+		self._df_trainval = pd.read_csv(os.path.join(DATASETS_DIR, 'adience/data256/trainval.csv'))
+		self._df_test = pd.read_csv(os.path.join(DATASETS_DIR, 'adience/data256/test.csv'))
 
 		# Set x and y columns
 		self._x_col = 'path'
 		self._y_col = 'category'
 
 		# Set base path for images
-		self._base_path = '../datasets/adience/data256/'
+		self._base_path = os.path.join(DATASETS_DIR, 'adience/data256/')
 
 		# Set sample shape and number of classes
 		self._sample_shape = (256, 256, 3)
