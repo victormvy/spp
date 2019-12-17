@@ -41,3 +41,11 @@ for plot in plots:
 				cid += 1
 	plt.legend()
 	plt.show()
+
+
+
+# Sigmoid
+x = np.arange(-5, 5, 0.001)
+y = 1.0 / (1.0 + np.exp(-x))
+plt.plot(x, y)
+plt.show()

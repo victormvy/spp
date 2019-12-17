@@ -384,10 +384,62 @@ class Dataset:
 			# If everything is correct, mark dataset as loaded
 			self._loaded = True
 
+	def _load_historical(self):
+		# Small dataset
+		self._big_dataset = False
+
+		# Load dataframes
+		df_trainval = pd.read_csv(os.path.join(DATASETS_DIR, 'historical/data_processed/trainval.csv'))
+		df_test = pd.read_csv(os.path.join(DATASETS_DIR, 'historical/data_processed/test.csv'))
+
+		# Base path for images
+		base_path = os.path.join(DATASETS_DIR, 'historical/data_processed/')
+
+		# Dataframe columns
+		x_col = 'path'
+		y_col = 'category'
+
+		# Set sample shape and number of classes
+		self._sample_shape = (256, 256, 3)
+		self._num_classes = 5
+
+		# Load data from dataframe
+		self._x_trainval, self._y_trainval = self._load_from_dataframe(df_trainval, x_col, y_col, base_path)
+		self._x_test, self._y_test = self._load_from_dataframe(df_test, x_col, y_col, base_path)
+
+		# Mark dataset as loaded
+		self._loaded = True
+
+	def _load_fgnet(self):
+		# Small dataset
+		self._big_dataset = False
+
+		# Load dataframes
+		df_trainval = pd.read_csv(os.path.join(DATASETS_DIR, 'fgnet/data_processed/trainval.csv'))
+		df_test = pd.read_csv(os.path.join(DATASETS_DIR, 'fgnet/data_processed/test.csv'))
+
+		# Base path for images
+		base_path = os.path.join(DATASETS_DIR, 'fgnet/data_processed/')
+
+		# Dataframe columns
+		x_col = 'path'
+		y_col = 'category'
+
+		# Set sample shape and number of classes
+		self._sample_shape = (128, 128, 3)
+		self._num_classes = 6
+
+		# Load data from dataframe
+		self._x_trainval, self._y_trainval = self._load_from_dataframe(df_trainval, x_col, y_col, base_path)
+		self._x_test, self._y_test = self._load_from_dataframe(df_test, x_col, y_col, base_path)
+
+		# Mark dataset as loaded
+		self._loaded = True
+
 	# Fully load x and y from dataframe
 	def _load_from_dataframe(self, df, x_col, y_col, base_path):
 		x = []
-		y = list(df[y_col])
+		y = np.array(list(df[y_col]))
 
 		for path in df['path']:
 			img = imread(os.path.join(base_path, path))
@@ -563,7 +615,7 @@ class Dataset:
 		# Load dataset if not loaded
 		# self.load(self._name)
 		# Disabled because of recursion problem		
-		
+
 		return 0 if not self._loaded else (self._df_trainval.shape[0] if self._big_dataset else self._y_trainval.shape[0])
 
 	def size_train(self):

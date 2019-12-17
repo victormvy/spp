@@ -413,8 +413,8 @@ class Experiment:
 
 		# Learning rate scheduler callback
 		def lr_exp_scheduler(epoch):
-			lr = self.lr * np.exp(-0.01 * epoch)
-			print("New LR: {}".format(lr))
+			lr = self.lr * np.exp(-0.025 * epoch)
+			# print("New LR: {}".format(lr))
 
 			return lr
 
@@ -510,7 +510,7 @@ class Experiment:
 							class_weight=class_weight,
 							validation_data=self._ds.generate_val(self.batch_size),
 							validation_steps=self._ds.num_batches_val(self.batch_size),
-							verbose=2
+							verbose=1
 							)
 
 
@@ -587,6 +587,7 @@ class Experiment:
 										  num_classes - 1)
 		ms = minimum_sensitivity(y_true, y_pred)
 		mae = sess.run(K.mean(keras.losses.mean_absolute_error(y_true, y_pred)))
+		omae = sess.run(K.mean(keras.losses.mean_absolute_error(K.argmax(y_true), K.argmax(y_pred))))
 		mse = sess.run(K.mean(keras.losses.mean_squared_error(y_true, y_pred)))
 		acc = sess.run(K.mean(keras.metrics.categorical_accuracy(y_true, y_pred)))
 		top2 = sess.run(top_2_accuracy(y_true, y_pred))
@@ -598,6 +599,7 @@ class Experiment:
 			'QWK': qwk,
 			'MS': ms,
 			'MAE': mae,
+			'OMAE': omae,
 			'MSE': mse,
 			'CCR': acc,
 			'Top-2': top2,
@@ -616,6 +618,7 @@ class Experiment:
 		print('Top-3: {:.4f}'.format(metrics['Top-3']))
 		print('1-off: {:.4f}'.format(metrics['1-off']))
 		print('MAE: {:.4f}'.format(metrics['MAE']))
+		print('OMAE: {:.4f}'.format(metrics['OMAE']))
 		print('MSE: {:.4f}'.format(metrics['MSE']))
 		print('MS: {:.4f}'.format(metrics['MS']))
 
