@@ -3,9 +3,9 @@ import numpy as np
 from net_keras import Net
 import os
 import pickle
-from losses import qwk_loss, make_cost_matrix, ms_n_qwk_loss
+from losses import qwk_loss, make_cost_matrix, ms_n_qwk_loss, emd_loss, rank_cross_entropy
 from metrics import np_quadratic_weighted_kappa, top_2_accuracy, top_3_accuracy, \
-	minimum_sensitivity, accuracy_off1
+	minimum_sensitivity, accuracy_off1, rank_accuracy
 from dataset2 import Dataset
 from sklearn.metrics import confusion_matrix
 from keras import backend as K
@@ -467,17 +467,20 @@ class Experiment:
 			loss = qwk_loss(cost_matrix)
 		elif self.loss == 'msqwk':
 			loss = ms_n_qwk_loss(cost_matrix)
+		elif self.loss == 'emd':
+			loss = emd_loss
+		elif self.loss == 'rankce':
+			loss = rank_cross_entropy
 
 		# Only accuracy for training.
 		# Computing QWK for training properly is too expensive
-		metrics = ['accuracy']
+		metrics = [rank_accuracy(self._ds.num_classes)]
 
 		lr_decay = 1e-6
 
 		# Compile the keras model
 		model.compile(
 			optimizer = keras.optimizers.SGD(lr=self.lr, decay=lr_decay, momentum=0.9, nesterov=True),
-			# keras.optimizers.SGD(lr=self.lr, decay=lr_decay, momentum=0.9, nesterov=True),
 			# keras.optimizers.Adam(lr=self.lr, decay=lr_decay),
 			loss=loss, metrics=metrics
 		)
@@ -571,7 +574,13 @@ class Experiment:
 			y_set = None
 			for x, y in generator:
 				y_set = np.array(y) if y_set is None else np.vstack((y_set, y))				
-				
+
+
+			# CONVERT ONLY FOR RANK OUTPUT
+			predictions = (predictions > 0.5).astype('float').sum(axis=1)
+			predictions = keras.utils.to_categorical(predictions, self._ds.num_classes)
+
+
 			metrics = self.compute_metrics(y_set, predictions, self._ds.num_classes)
 			self.print_metrics(metrics)
 
@@ -587,7 +596,7 @@ class Experiment:
 										  num_classes - 1)
 		ms = minimum_sensitivity(y_true, y_pred)
 		mae = sess.run(K.mean(keras.losses.mean_absolute_error(y_true, y_pred)))
-		omae = sess.run(K.mean(keras.losses.mean_absolute_error(K.argmax(y_true), K.argmax(y_pred))))
+		omae = sess.run(K.mean(keras.losses.mean_absolute_error(K.cast(K.argmax(y_true), K.floatx()), K.cast(K.argmax(y_pred), K.floatx()))))
 		mse = sess.run(K.mean(keras.losses.mean_squared_error(y_true, y_pred)))
 		acc = sess.run(K.mean(keras.metrics.categorical_accuracy(y_true, y_pred)))
 		top2 = sess.run(top_2_accuracy(y_true, y_pred))

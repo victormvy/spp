@@ -464,6 +464,8 @@ class Net:
 			x = CLM(self.num_classes, 'expgauss', self.f_a_params, use_tau=self.use_tau)(x)
 		elif self.final_activation == 'binomial':
 			_add_binom_m(model, self.num_classes, 1.0, 'sigm_learnable')
+		elif self.final_activation == 'sigmoid':
+			x = keras.layers.Dense(self.num_classes - 1, activation='sigmoid')(x)
 		else:
 			x = keras.layers.Dense(self.num_classes)(x)
 			if self.prob_layer == 'geometric':

@@ -1,6 +1,7 @@
 import keras
 import numpy as np
 from keras import backend as K
+import tensorflow as tf
 
 def make_cost_matrix(num_ratings):
 	"""
@@ -80,3 +81,19 @@ def ms_n_qwk_loss(qwk_cost_matrix, alpha=0.5):
 		return alpha * qwk + (1 - alpha) * ms
 
 	return _ms_n_qwk_loss
+
+
+def emd_loss(true_prob, pred_prob):
+	true_cumsum = K.cumsum(true_prob, axis=1)
+	pred_cumsum = K.cumsum(pred_prob, axis=1)
+
+	return K.mean(K.square(pred_cumsum - true_cumsum))
+
+def rank_cross_entropy(true_prob, pred_prob):
+	nc = pred_prob.shape[1] + 1
+	targets = K.argmax(true_prob, axis=1)
+	ref = K.arange(nc - 1, dtype='int64')
+	t = K.repeat_elements(K.expand_dims(targets), nc - 1, axis=1)
+	p = K.cast(ref < t, K.floatx())
+
+	return keras.losses.categorical_crossentropy(p, pred_prob)
