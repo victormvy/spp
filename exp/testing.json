@@ -1,1 +1,0 @@
-[{"db": "adience", "net_type" : "inceptionresnetv2", "batch_size" : 15, "epochs" : 100, "checkpoint_dir" : "../results_testing/irnv2_all_adience_15_pomp_1e-2", "loss" : "qwk", "activation" : "elu", "final_activation" : "pomp", "prob_layer" : "", "lr" : 1e-2, "dropout" : 0, "executions": 5, "workers": 15}]

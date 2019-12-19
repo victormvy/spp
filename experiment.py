@@ -573,7 +573,7 @@ class Experiment:
 			# generator.reset()
 			y_set = None
 			for x, y in generator:
-				y_set = np.array(y) if y_set is None else np.vstack((y_set, y))				
+				y_set = np.array(y) if y_set is None else np.vstack((y_set, y))
 
 
 			# CONVERT ONLY FOR RANK OUTPUT
