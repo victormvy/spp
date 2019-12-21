@@ -202,12 +202,3 @@ def accuracy_off1(y_true, y_pred):
 	correct = mask * conf_mat
 
 	return 1.0 * np.sum(correct) / np.sum(conf_mat)
-
-
-def rank_accuracy(num_classes):
-	def _rank_accuracy(y_true, y_pred):
-		r_hat = K.sum(K.cast(y_pred > 0.5, 'int64'), axis=1)
-		r_hat = K.one_hot(r_hat, num_classes)
-
-		return keras.metrics.categorical_accuracy(y_true, r_hat)
-	return _rank_accuracy
