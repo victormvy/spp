@@ -510,7 +510,7 @@ class Experiment:
 							class_weight=class_weight,
 							validation_data=self._ds.generate_val(self.batch_size),
 							validation_steps=self._ds.num_batches_val(self.batch_size),
-							verbose=1
+							verbose=2
 							)
 
 
