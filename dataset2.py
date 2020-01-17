@@ -235,6 +235,24 @@ class Dataset:
 
 		# Mark dataset as loaded
 		self._loaded = True
+
+	def _load_cifar100(self):
+		# Small dataset
+		self._big_dataset = False
+
+		# Set sample shape and number of classes
+		self._sample_shape = (32, 32, 3)
+		self._num_classes = 100
+
+		# Load data
+		(x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data()
+
+		# Save x and y
+		self._x_trainval, self._y_trainval = x_train, y_train
+		self._x_test, self._y_test = x_test, y_test
+
+		# Mark dataset as loaded
+		self._loaded = True
 		
 	def _load_cinic10(self):
 		# Big dataset

@@ -195,7 +195,7 @@ def show_latex_table(results_path, show_std=False):
 									metrics['Validation'][metric] = [value]
 
 						for metric, value in p['metrics']['Test'].items():
-							if metric != 'Confusion matrix':
+							if metric != 'Confusion matrix' and metric != 'OMAE':
 								if metric in metrics['Test']:
 									metrics['Test'][metric].append(value)
 								else:
@@ -208,20 +208,20 @@ def show_latex_table(results_path, show_std=False):
 				header = 'Dataset & BS & LF & LR & ACT'
 
 				for metric, value in metrics['Train'].items():
-					if metric != 'Confusion matrix':
+					if metric != 'Confusion matrix' and metric != 'OMAE':
 						header += ' & $\overline{{\\text{{{}}}}}{}$'.format(metric, '_{{(SD)}}' if show_std else '')
 
 				header += '\\\\\\hline'
 
-			t = '{} & {} & {} & {}'.format(
+			t = '{} & {} & {} & {} & {}'.format(
 				p['config']['db'],
 				p['config']['batch_size'],
 				p['config']['final_activation'].replace('poml', 'logit')
 												 .replace('pomp', 'probit')
 												 .replace('pomclog', 'c log-log'),
-				p['config']['activation'],
 			'${:.0E}}}$'.format(p['config']['lr']).replace('E-0', '0^{-')
-				.replace('E+0', '0^{+')
+				.replace('E+0', '0^{+'),
+				p['config']['activation']
 			)
 
 			train += t
@@ -230,27 +230,27 @@ def show_latex_table(results_path, show_std=False):
 
 			for metric, values in metrics['Train'].items():
 				if metric != 'Confusion matrix':
-					train += ' & ${:.3f}'.format(round(np.mean(values), 3))
+					train += ' & ${:.5f}'.format(round(np.mean(values), 5))
 					if show_std:
-						train += '_{{({:.3f})}}'.format(round(np.std(values, ddof=min(1, len(values)-1)), 3))
+						train += '_{{({:.5f})}}'.format(round(np.std(values, ddof=min(1, len(values)-1)), 5))
 					train += '$'
 
 			train += '\\\\\n'
 
 			for metric, values in metrics['Validation'].items():
 				if metric != 'Confusion matrix':
-					val += ' & ${:.3f}'.format(round(np.mean(values), 3))
+					val += ' & ${:.5f}'.format(round(np.mean(values), 5))
 					if show_std:
-						val += '_{{({:.3f})}}'.format(round(np.std(values, ddof=min(1, len(values)-1)), 3))
+						val += '_{{({:.5f})}}'.format(round(np.std(values, ddof=min(1, len(values)-1)), 5))
 					val += '$'
 
 			val += '\\\\\n'
 
 			for metric, values in metrics['Test'].items():
 				if metric != 'Confusion matrix':
-					test += ' & ${:.3f}'.format(round(np.mean(values), 3))
+					test += ' & ${:.5f}'.format(round(np.mean(values), 5))
 					if show_std:
-						test += '_{{({:.3f})}}'.format(round(np.std(values, ddof=min(1, len(values)-1)), 3))
+						test += '_{{({:.5f})}}'.format(round(np.std(values, ddof=min(1, len(values)-1)), 5))
 					test += '$'
 
 			test += '\\\\\n'
