@@ -198,6 +198,93 @@ class Net:
 
 		return model
 
+	def vgg16_32f(self):
+		# Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.
+		model = Sequential()
+		weight_decay = 0.0005
+
+		model.add(Conv2D(64, (3, 3), padding='same',
+						 input_shape=(self.size, self.size, self.num_channels), kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+		model.add(Dropout(0.3))
+
+		model.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+
+		model.add(MaxPooling2D(pool_size=(2, 2)))
+
+		model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+		model.add(Dropout(0.4))
+
+		model.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+
+		model.add(MaxPooling2D(pool_size=(2, 2)))
+
+		model.add(Conv2D(256, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+		model.add(Dropout(0.4))
+
+		model.add(Conv2D(256, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+		model.add(Dropout(0.4))
+
+		model.add(Conv2D(256, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+
+		model.add(MaxPooling2D(pool_size=(2, 2)))
+
+		model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+		model.add(Dropout(0.4))
+
+		model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+		model.add(Dropout(0.4))
+
+		model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+
+		model.add(MaxPooling2D(pool_size=(2, 2)))
+
+		model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+		model.add(Dropout(0.4))
+
+		model.add(Conv2D(512, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+		model.add(Dropout(0.4))
+
+		model.add(Conv2D(32, (3, 3), padding='same', kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+
+		model.add(MaxPooling2D(pool_size=(2, 2)))
+		# model.add(Dropout(0.5))
+
+		model.add(Flatten())
+		model.add(Dense(32, kernel_regularizer=regularizers.l2(weight_decay)))
+		model.add(self.__activation())
+		model.add(BatchNormalization())
+
+		model.add(Dense(self.num_classes))
+		model.add(Activation('softmax'))
+
+		return model
+
 	def vgg16pu(self):
 		# Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.
 		model = Sequential()
