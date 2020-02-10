@@ -198,9 +198,19 @@ class Dataset:
 	# Load holdout splits
 	def _load_holdout(self):
 		if self._big_dataset:
-			self._df_train, self._df_val = train_test_split(self._df_trainval, test_size=self._holdout, random_state=self._seed, stratify=self._df_trainval[self._y_col])
+			if self._holdout > 0.0:
+				self._df_train, self._df_val = train_test_split(self._df_trainval, test_size=self._holdout, random_state=self._seed, stratify=self._df_trainval[self._y_col])
+			else:
+				self._df_train = self._df_trainval
+				self._df_val = pd.DataFrame(data={self._x_col : [], self._y_col : []})
 		else:
-			self._x_train, self._x_val, self._y_train, self._y_val = train_test_split(self._x_trainval, self._y_trainval, test_size=self._holdout, random_state=self._seed, stratify=self._y_trainval)
+			if self._holdout > 0.0:
+				self._x_train, self._x_val, self._y_train, self._y_val = train_test_split(self._x_trainval, self._y_trainval, test_size=self._holdout, random_state=self._seed, stratify=self._y_trainval)
+			else:
+				self._x_train = self._x_trainval
+				self._x_val = np.array([])
+				self._y_train = self._y_trainval
+				self._y_val = np.array([])
 
 
 	# Clear all the variables related to data partitions
@@ -454,6 +464,28 @@ class Dataset:
 		# Mark dataset as loaded
 		self._loaded = True
 
+	def _load_fashion_mnist(self):
+		# Small dataset
+		self._big_dataset = False
+
+		# Set sample shape and number of classes
+		self._sample_shape = (32, 32, 1)
+		self._num_classes = 10
+
+		# Load data
+		(x_train, y_train), (x_test, y_test) = keras.datasets.fashion_mnist.load_data()
+
+		# Upscale
+		x_train = self._resize_data(x_train, 32, 32, self.num_channels)
+		x_test = self._resize_data(x_test, 32, 32, self.num_channels)
+
+		# Save x and y
+		self._x_trainval, self._y_trainval = x_train, y_train
+		self._x_test, self._y_test = x_test, y_test
+
+		# Mark dataset as loaded
+		self._loaded = True
+
 	# Fully load x and y from dataframe
 	def _load_from_dataframe(self, df, x_col, y_col, base_path):
 		x = []
@@ -615,7 +647,7 @@ class Dataset:
 
 	@property
 	def sample_shape(self):
-		return self._sample_shape if self._sample_shape is not None else ()
+		return self._sample_shape if hasattr(self, "_sample_shape") else ()
 
 	@sample_shape.setter
 	def sample_shape(self, sample_shape):
@@ -732,11 +764,11 @@ class Dataset:
 
 	@property
 	def y_train(self):
-		return (self._df_train[self._y_col].values if self._big_dataset else self.y_train) if self._loaded else np.array([])
+		return (self._df_train[self._y_col].values if self._big_dataset else self._y_train) if self._loaded else np.array([])
 
 	@property
 	def y_val(self):
-		return (self._df_val[self._y_col].values if self._big_dataset else self.y_val) if self._loaded else np.array([])
+		return (self._df_val[self._y_col].values if self._big_dataset else self._y_val) if self._loaded else np.array([])
 
 	@property
 	def y_test(self):
