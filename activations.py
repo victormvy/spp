@@ -122,7 +122,7 @@ class RTPReLU(keras.layers.PReLU):
 		shape = [int(input_shape[-1])]  # Number of channels
 
 		self.a = self.add_weight(name='a', shape=shape, dtype=K.floatx(),
-								 initializer=keras.initializers.RandomUniform(minval=-1, maxval=1),
+								 initializer=keras.initializers.RandomNormal(mean=0.0, stddev=1.0),
 								 trainable=False)
 
 		# Call PReLU build method
