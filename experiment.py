@@ -476,9 +476,12 @@ class Experiment:
 
 		# Compile the keras model
 		model.compile(
-			optimizer = keras.optimizers.SGD(lr=self.lr, decay=lr_decay, momentum=0.9, nesterov=True),
-			# keras.optimizers.SGD(lr=self.lr, decay=lr_decay, momentum=0.9, nesterov=True),
-			# keras.optimizers.Adam(lr=self.lr, decay=lr_decay),
+			optimizer = # keras.optimizers.Nadam(lr=self.lr),
+			keras.optimizers.SGD(lr=self.lr, decay=lr_decay, momentum=0.9, nesterov=True),
+			# keras.optimizers.Adam(lr=self.lr),
+			# keras.optimizers.RMSprop(lr=self.lr),
+			# keras.optimizers.Adagrad(lr=self.lr),
+			# keras.optimizers.Adadelta(lr=self.lr),
 			loss=loss, metrics=metrics
 		)
 
@@ -493,16 +496,14 @@ class Experiment:
 							steps_per_epoch=self._ds.num_batches_train(self.batch_size),
 							callbacks=[keras.callbacks.LearningRateScheduler(lr_scheduler),
 									   #keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=25, mode='min', min_lr=1e-4, verbose=1),
-									   keras.callbacks.ModelCheckpoint(
-										   os.path.join(self.checkpoint_dir, self.model_file)),
+									   # keras.callbacks.ModelCheckpoint(
+										#   os.path.join(self.checkpoint_dir, self.model_file)),
 									   save_epoch_callback,
 									   keras.callbacks.CSVLogger(os.path.join(self.checkpoint_dir, self.csv_file),
 																	append=True),
-									   keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
+									   # keras.callbacks.TensorBoard(log_dir=self.checkpoint_dir),
 									   # keras.callbacks.TerminateOnNaN(),
-									   keras.callbacks.EarlyStopping(min_delta=0.0005, patience=40, verbose=1),
-									   # PrintWeightsCallback(class_weight),
-									   # ReweightClassesCallback(val_generator=val_generator, val_steps=steps_val, class_weights=class_weight)
+									   keras.callbacks.EarlyStopping(min_delta=0.0005, patience=40, verbose=1)
 									   ],
 							workers=self.workers,
 							use_multiprocessing=False,
