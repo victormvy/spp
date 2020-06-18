@@ -1,6 +1,8 @@
 import os
 import json
 import tensorflow as tf
+import numpy as np
+import random
 from keras import backend as K
 from experiment import Experiment
 
@@ -45,11 +47,30 @@ class ExperimentSet:
 		:return: None
 		"""
 		for experiment in self._generate_experiments():
+			# Reset keras session and set seed
+			self.reset_keras(1)
+
 			os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_number)
 			with tf.device('/device:GPU:' + str(gpu_number)):
 				if not experiment.finished and experiment.task != 'test': # 'train' or 'both'
 					experiment.run()
 				if experiment.task != 'train': # 'test' or 'both'
 					experiment.evaluate()
-			# Clear session
-			K.clear_session()
+
+
+
+	# Reset Keras Session keeping the same seeds
+	def reset_keras(self, seed):
+		sess = K.get_session()
+		K.clear_session()
+		sess.close()
+		sess = K.get_session()
+		np.random.seed(seed)  # numpy seed
+		tf.set_random_seed(seed)  # tensorflow seed
+		random.seed(seed)  # random seed
+		os.environ['TF_DETERMINISTIC_OPS'] = str(seed)
+		os.environ['TF_CUDNN_DETERMINISM'] = str(seed)
+		os.environ['PYTHONHASHSEED'] = str(seed)
+		config = tf.ConfigProto(allow_soft_placement=True)
+		config.gpu_options.allow_growth = True
+		K.set_session(tf.Session(config=config))
