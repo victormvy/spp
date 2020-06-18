@@ -67,9 +67,9 @@ def resume_one_metric_csv(metric, results_path, csv_path):
 	max_train_values = 0
 	max_val_values = 0
 	max_test_values = 0
+
 	for i, item in enumerate(sorted(os.listdir(results_path))):
 		if os.path.isdir(os.path.join(results_path, item)):
-			train, val, test = '', '', ''
 			train_values, val_values, test_values = np.array([]), np.array([]), np.array([])
 			for item2 in sorted(os.listdir(os.path.join(results_path, item))):
 				if os.path.isdir(os.path.join(results_path, item, item2)) and os.path.isfile(os.path.join(results_path, item, item2, evaluation_file)):
@@ -77,10 +77,6 @@ def resume_one_metric_csv(metric, results_path, csv_path):
 						p = pickle.load(f)
 
 						if metric in p['metrics']['Train'] and metric in p['metrics']['Validation'] and metric in p['metrics']['Test']:
-							# train += '{:.5};'.format(round(p['metrics']['Train'][metric], 5))
-							# val += '{:.5};'.format(round(p['metrics']['Validation'][metric], 5))
-							# test += '{:.5};'.format(round(p['metrics']['Test'][metric], 5))
-
 							# Accumulate sums
 							train_values = np.append(train_values, p['metrics']['Train'][metric])
 							val_values = np.append(val_values, p['metrics']['Validation'][metric])
@@ -90,7 +86,32 @@ def resume_one_metric_csv(metric, results_path, csv_path):
 			max_val_values = val_values.size if val_values.size > max_val_values else max_val_values
 			max_test_values = test_values.size if test_values.size > max_test_values else max_test_values
 
+
+	for i, item in enumerate(sorted(os.listdir(results_path))):
+		if os.path.isdir(os.path.join(results_path, item)):
+			train_values, val_values, test_values = np.array([]), np.array([]), np.array([])
+			for item2 in sorted(os.listdir(os.path.join(results_path, item))):
+				if os.path.isdir(os.path.join(results_path, item, item2)) and os.path.isfile(os.path.join(results_path, item, item2, evaluation_file)):
+					with open(os.path.join(results_path, item, item2, evaluation_file), 'rb') as f:
+						p = pickle.load(f)
+
+						if metric in p['metrics']['Train'] and metric in p['metrics']['Validation'] and metric in p['metrics']['Test']:
+							# Accumulate sums
+							train_values = np.append(train_values, p['metrics']['Train'][metric])
+							val_values = np.append(val_values, p['metrics']['Validation'][metric])
+							test_values = np.append(test_values, p['metrics']['Test'][metric])
+
 			if 'p' in locals():
+				train_mean = train_values.size > 0 and round(np.mean(train_values), 5) or 0
+				train_std = train_values.size > 0 and round(np.std(train_values), 5) or 0
+				val_mean = val_values.size > 0 and round(np.mean(val_values), 5) or 0
+				val_std = val_values.size > 0 and round(np.std(val_values), 5) or 0
+				test_mean = test_values.size > 0 and round(np.mean(test_values), 5) or 0
+				test_std = test_values.size > 0 and round(np.std(test_values), 5) or 0
+				train_values.resize(max_train_values, refcheck=False)
+				val_values.resize(max_val_values, refcheck=False)
+				test_values.resize(max_test_values, refcheck=False)
+
 				t.append([
 					i,
 					item,
@@ -100,14 +121,14 @@ def resume_one_metric_csv(metric, results_path, csv_path):
 					p['config']['final_activation'],
 					p['config']['activation'],
 					*list(train_values.round(5)),
-					train_values.size > 0 and round(np.mean(train_values), 5) or 0,
-					train_values.size > 0 and round(np.std(train_values), 5) or 0,
+					train_mean,
+					train_std,
 					*list(val_values.round(5)),
-					val_values.size > 0 and round(np.mean(val_values), 5) or 0,
-					val_values.size > 0 and round(np.std(val_values), 5) or 0,
+					val_mean,
+					val_std,
 					*list(test_values.round(5)),
-					test_values.size > 0 and round(np.mean(test_values), 5) or 0,
-					test_values.size > 0 and round(np.std(test_values), 5) or 0
+					test_mean,
+					test_std
 				])
 
 	header = ['#', 'Name', 'Dataset', 'BS', 'LR', 'LF', 'ACT']
