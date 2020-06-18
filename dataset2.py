@@ -486,6 +486,58 @@ class Dataset:
 		# Mark dataset as loaded
 		self._loaded = True
 
+	def _load_caltech_ucsd_birds(self):
+		# Big dataset
+		self._big_dataset = True
+
+		# Load dataframes
+		self._df_trainval = pd.read_csv(os.path.join(DATASETS_DIR, 'caltech_ucsd_birds_200_2011/data_processed/train.csv'))
+		self._df_test = pd.read_csv(os.path.join(DATASETS_DIR, 'caltech_ucsd_birds_200_2011/data_processed/test.csv'))
+
+		# Set x and y columns
+		self._x_col = 'path'
+		self._y_col = 'category'
+
+		# Set base path for images
+		self._base_path = os.path.join(DATASETS_DIR, 'caltech_ucsd_birds_200_2011/data_processed')
+
+		# Set sample shape and number of classes
+		self._sample_shape = (128, 128, 3)
+		self._num_classes = 200
+
+		# Check that images exist
+		if self._check_dataframe_images(self._df_trainval, self._x_col, self._base_path) and \
+				self._check_dataframe_images(self._df_test, self._x_col, self._base_path):
+			# If everything is correct, mark dataset as loaded
+			self._loaded = True
+
+	def _load_stanford_dogs(self):
+		# Big dataset
+		self._big_dataset = True
+
+		# Load dataframes
+		self._df_trainval = pd.read_csv(
+			os.path.join(DATASETS_DIR, 'stanford_dogs/data_processed/train.csv'))
+		self._df_test = pd.read_csv(
+			os.path.join(DATASETS_DIR, 'stanford_dogs/data_processed/test.csv'))
+
+		# Set x and y columns
+		self._x_col = 'path'
+		self._y_col = 'category'
+
+		# Set base path for images
+		self._base_path = os.path.join(DATASETS_DIR, 'stanford_dogs/data_processed')
+
+		# Set sample shape and number of classes
+		self._sample_shape = (128, 128, 3)
+		self._num_classes = 120
+
+		# Check that images exist
+		if self._check_dataframe_images(self._df_trainval, self._x_col, self._base_path) and \
+				self._check_dataframe_images(self._df_test, self._x_col, self._base_path):
+			# If everything is correct, mark dataset as loaded
+			self._loaded = True
+
 	# Fully load x and y from dataframe
 	def _load_from_dataframe(self, df, x_col, y_col, base_path):
 		x = []
