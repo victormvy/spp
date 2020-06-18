@@ -1,5 +1,6 @@
 import math
 import keras
+import tensorflow as tf
 from tensorflow import distributions, matrix_band_part, igamma, lgamma
 from keras import backend as K
 
@@ -302,6 +303,69 @@ class PTELU(keras.layers.Layer):
 		neg = self.alpha * K.tanh(- self.beta * keras.activations.relu(-inputs))
 
 		return pos + neg
+
+class ELUPlus(keras.layers.Layer):
+	def __init__(self, **kwargs):
+		super(ELUPlus, self).__init__(**kwargs)
+
+	def build(self, input_shape):
+		self.lmbd = self.add_weight(name='lambda', shape=(int(input_shape[-1]),), dtype=K.floatx(),
+									 initializer=keras.initializers.Constant(value=0.5))
+
+		self.lmbd = K.clip(self.lmbd, 0.0, 1.0)
+
+		super(ELUPlus, self).build(input_shape)
+
+	def call(self, inputs, **kwargs):
+		# is_pos = K.cast(K.greater_equal(inputs, 0), dtype=K.floatx())
+		# is_neg = K.cast(K.less(inputs, 0), dtype=K.floatx())
+		# pos = is_pos * (self.lmbd * inputs + (1.0 - self.lmbd) * K.log(1.0 + K.exp(inputs)))
+		# neg = is_neg * (self.lmbd * (K.exp(inputs) - 1.0) + (1.0 - self.lmbd) * K.log(1.0 + K.exp(inputs)))
+
+		return self.lmbd * K.elu(inputs) + (1 - self.lmbd) * K.softplus(inputs)
+
+
+class ELUSPPT(keras.layers.Layer):
+	def __init__(self, **kwargs):
+		super(ELUSPPT, self).__init__(**kwargs)
+
+	def build(self, input_shape):
+		self.lmbd = self.add_weight(name='lambda', shape=(int(input_shape[-1]),), dtype=K.floatx(),
+									 initializer=keras.initializers.Constant(value=0.5))
+
+		self.lmbd = K.clip(self.lmbd, 0.0, 1.0)
+
+		self.alpha = self.add_weight(name='alpha', shape=(1,), dtype=K.floatx(),
+									 initializer=keras.initializers.RandomUniform(minval=0, maxval=1),
+									 trainable=True)
+
+		super(ELUSPPT, self).build(input_shape)
+
+	def call(self, inputs, **kwargs):
+		output = self.lmbd * K.elu(inputs) + (1 - self.lmbd) * (K.softplus(inputs) - self.alpha)
+
+		# return tf.Print(output, data=[K.mean(output), K.std(output), K.min(output), K.max(output)], message='elusppt', summarize=10000)
+
+		return output
+
+
+# CIFAR-10 c = 1, k = 2
+# CIFAR-100 c = 2, k = 1
+# MNIST c = 100, k = 1.2
+# CINIC-10 c = 1, k = 2
+# Fashion-MNIST c = 100, k = 1.2
+class Softplusplus(keras.layers.Layer):
+	def __init__(self, c = 1.0, k = 2.0, **kwargs):
+		super(Softplusplus, self).__init__(**kwargs)
+		self.c = c
+		self.k = k
+
+	def build(self, input_shape):
+		super(Softplusplus, self).build(input_shape)
+
+	def call(self, inputs, **kwargs):
+		return tf.math.softplus(self.k * inputs) + (inputs / self.c) - tf.math.log(2.0)
+		# return tf.math.log(1.0 + tf.math.exp(self.k * inputs)) + (inputs / self.c) - tf.math.log(2.0)
 
 
 class Antirectifier(keras.layers.Layer):
