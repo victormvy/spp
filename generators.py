@@ -27,7 +27,7 @@ def generate_random_augmentation(p, shape):
         aug['zy'] = aug['zx'] = random.uniform(1 - p['zoom_range'], 1 + p['zoom_range'])
 
     if 'flip_horizontal' in p:
-        aug['flip_horizontal'] = p['flip_horizontagenerate_random_augmentationl']
+        aug['flip_horizontal'] = p['flip_horizontal']
 
     if 'flip_vertical' in p:
         aug['flip_vertical'] = p['flip_vertical']
