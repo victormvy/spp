@@ -39,9 +39,9 @@ def cli():
 @click.option('--file', '-f', required=True, help=u'File that contains the experiments that will be executed.')
 @click.option('--gpu', '-g', required=False, default=0, help=u'GPU index')
 def experiment(file, gpu):
-	config = tf.ConfigProto(allow_soft_placement=True)
-	config.gpu_options.allow_growth = True
-	K.set_session(tf.Session(config=config))
+	# config = tf.ConfigProto(allow_soft_placement=True)
+	# config.gpu_options.allow_growth = True
+	# K.set_session(tf.Session(config=config))
 	experimentSet = ExperimentSet(file)
 	experimentSet.run_all(gpu_number=gpu)
 
